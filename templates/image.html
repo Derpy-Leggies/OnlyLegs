@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <header>
+        <img src="/file/{{ fileName }}" alt="leaves"/>
+        <span></span>
+    </header>
+    <div class="app">
+        <div class="image__container">
+            <img class="image__item" src="/file/{{ fileName }}" onload="imgFade(this)" style="display:none;"/>
+        </div>
+        <div class="image__info">
+            <h2>{{ fileName }}</h2>
+            <p>{{ id }}</p>
+        </div>
+    </div>
+{% endblock %}

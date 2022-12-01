@@ -1,0 +1,444 @@
+$black100: #151515;
+$black200: #121212;
+$black300: #101010;
+
+$white100: #e8e3e3;
+
+$red: #B66467;
+$orange: #D8A657;
+$yellow: #D9BC8C;
+$green: #8C977D;
+$blue: #8DA3B9;
+$purple: #A988B0;
+
+$rad: 0.5rem;
+$font-header: "Hubot-Sans", sans-serif;
+$font-body: "Mona-Sans", sans-serif;
+
+@font-face {
+  font-family: "Mona-Sans";
+  src: url("f../onts/Mona-Sans.woff2") format("woff2 supports variations"),
+    url("../fonts/Mona-Sans.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Hubot-Sans";
+  src: url("../fonts/Hubot-Sans.woff2") format("woff2 supports variations"),
+    url("../fonts/Hubot-Sans.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+  font-display: swap;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+
+    min-height: 100vh;
+
+    background-color: $black100;
+
+    scroll-behavior: smooth;
+}
+
+nav {
+    margin: 0;
+    padding: 0;
+
+    max-width: calc(100vw - 3.5rem);
+    width: 3.5rem;
+    height: 100dvh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    background-color: rgba($black300, 0.6);
+    color: $white100;
+    backdrop-filter: blur(5rem) saturate(200%);
+
+    box-sizing: border-box;
+    z-index: 2;
+    overflow: hidden;
+    transition: width 0.4s ease-in-out, background-color 0.3s ease-in-out;
+
+    &:hover {
+        width: 25rem;
+
+        background-color: $black300;
+
+        a span {
+            opacity: 1;
+        }
+    }
+
+    div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        a {
+            margin: 0;
+            padding: 1rem 1rem 1rem 0.7rem;
+            
+            width: 100%;
+            height: 3.5rem;
+    
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
+    
+            text-decoration: none;
+            color: $white100;
+            border-left: 0.3rem solid #00000000;
+    
+            box-sizing: border-box;
+    
+            
+            i {
+                margin: 0;
+                
+                font-size: 1.5rem;
+    
+                color: $white100;
+            }
+            span {
+                display: block;
+    
+                font-family: $font-body;
+                font-size: 1.25rem;
+                font-stretch: expanded;
+                font-weight: 500;
+    
+                color: $white100;
+                opacity: 0; // hidden
+
+                transition: opacity 0.3s ease-in-out;
+            }
+    
+            &:hover {
+                background-color: $black200;
+                border-left: 0.3rem solid $green;
+    
+                * {
+                    color: $green;
+                }
+            }
+        }
+    }
+}
+
+main {
+    margin: 0;
+    padding: 0;
+
+    background-color: $black100;
+    color: $white100;
+
+    min-height: 100vh;
+
+    overflow-y: auto;
+    box-sizing: border-box;
+
+    header {
+        margin: 0 0 -15rem 0;
+        padding: 0;
+    
+        width: 100%;
+        height: 40vh;
+
+        background-color: $black200;
+        position: fixed;
+        top: 0;
+
+        box-sizing: border-box;
+    
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+    
+            width: 100%;
+            height: 100%;
+    
+            object-fit: cover;
+        }
+        span {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background-image: linear-gradient(to bottom, #00000000, rgba($black100, 1));
+            backdrop-filter: blur(0.5rem);
+
+            z-index: +1;
+        }
+    }
+}
+
+#topButton {
+    margin: 0;
+    padding: 0.25rem;
+    
+    position: fixed;
+    bottom: 1rem;
+    right: -3rem;
+
+    font-size: 3rem;
+
+    display: flex; // hidden
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    background-color: $black300;
+    opacity: 0; // hidden
+
+    z-index: 2;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background-color: $black200;
+        color: $green;
+    }
+}
+
+.app {
+    margin: 10rem 1rem 0 4.5rem;
+    padding: 1rem;
+
+    width: auto;
+    min-height: calc(150vh - 10rem);
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    background-color: $black100;
+    color: $white100;
+    border-radius: $rad $rad 0 0;
+
+    box-sizing: border-box;
+    z-index: 1;
+    overflow: unset;
+
+    h1 {
+        margin: 0;
+        padding: 0;
+
+        font-family: $font-header;
+        font-size: 2.5rem;
+        font-stretch: ultra-expanded;
+        font-weight: 600;
+
+        color: $green;
+    }
+}
+
+.gallery {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    gap: 0.5rem;
+
+    .gallery__item {
+        margin: 0;
+        padding: 0;
+
+        height: auto;
+
+        position: relative;
+
+        background-color: $black200;
+        border-radius: calc($rad / 2);
+
+        box-sizing: border-box;
+        overflow: hidden;
+
+        &:after {
+            content: "";
+            display: block;
+            padding-bottom: 100%;
+        }
+
+        .gallery__item-info {
+            margin: 0;
+            padding: 0;
+    
+            width: 100%;
+            height: 100%;
+
+            position: absolute;
+            left: 0;
+            bottom: 0;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+
+            background-image: linear-gradient(to bottom, #00000000, rgba($black100, 0.8));
+
+            z-index: +1;
+
+            opacity: 0; // hide
+            transform: scale(1.05); // scale up
+            transition: all 0.35s ease-in-out;
+
+            h2 {
+                margin: 0;
+                padding: 0 1rem 0.5rem;
+    
+                font-family: $font-header;
+                font-size: 1rem;
+                font-stretch: ultra-expanded;
+                font-weight: 600;
+    
+                color: $green;
+
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                opacity: 0; // hide
+                transition: all 0.35s ease-in-out;
+            }
+
+            p {
+                margin: 0;
+                padding: 0 1rem 0.5rem;
+
+                font-family: $font-body;
+                font-size: 0.8rem;
+                font-weight: 500;
+
+                color: $white100;
+
+                text-overflow: ellipsis;
+                overflow: hidden;
+
+                opacity: 0; // hide
+                transition: all 0.35s ease-in-out;
+            }
+
+            &:hover {
+                opacity: 1;
+                transform: scale(1);
+
+                h2, p {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .gallery__item-image {
+            margin: 0;
+            padding: 0;
+    
+            width: 100%;
+            height: 100%;
+
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+    
+            object-fit: cover;
+            object-position: center;
+
+            border-radius: $rad;
+        }
+    }
+
+}
+
+.image__container {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: calc(100vh - 12rem);
+
+    position: sticky;
+    top: 0;
+
+    display: flex;
+
+    border-radius: calc($rad / 2);
+    background-color: $black200;
+
+    box-sizing: border-box;
+
+    img {
+        margin: auto;
+        padding: 0;
+
+        max-width: 100%;
+        max-height: 100%;
+
+        object-fit: contain;
+        object-position: center;
+
+        border-radius: calc($rad / 2);
+    }
+}
+.image__info {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: $black200;
+    border-radius: calc($rad / 2);
+
+    box-sizing: border-box;
+
+    h2 {
+        margin: 0;
+        padding: 0 1rem 0.5rem;
+
+        font-family: $font-header;
+        font-size: 1rem;
+        font-stretch: ultra-expanded;
+        font-weight: 600;
+
+        color: $green;
+
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    p {
+        margin: 0;
+        padding: 0 1rem 0.5rem;
+
+        font-family: $font-body;
+        font-size: 0.8rem;
+        font-weight: 500;
+
+        color: $white100;
+
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <header>
+        <img src="{{ url_for('static', filename='images/leaves.jpg') }}" alt="leaves"/>
+        <span></span>
+    </header>
+    <div class="app">
+        <h1 style="margin-bottom: 1rem">Gallery</h1>
+        <div id="gallery" class="gallery"></div>
+    </div>
+    <script>
+        $.ajax({
+            url: '/fileList',
+            type: 'get',
+            success: function(response) {
+                for (var i = 0; i < response.length; i++) {
+                    var imgDiv = `
+                    <a class="gallery__item" href="/image/${i}">
+                        <div class="gallery__item-info">
+                            <p>${i}</p>\
+                            <h2>${response[i]}</h2>
+                        </div>
+                        <span class="gallery__item-filter"></span>
+                        <img class="gallery__item-image" src="/file/${response[i]}" onload="imgFade(this)" style="display:none;"/>
+                    </a>
+                    `;
+
+                    $(imgDiv).hide().appendTo('#gallery').fadeIn(250);
+                }
+            }
+        });
+    </script>
+{% endblock %}

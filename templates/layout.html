@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" defer>
+    <script 
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+    </script>
+    <script src="https://unpkg.com/phosphor-icons" defer></script>
+</head>
+<body>
+    <nav>
+        <div>
+            <a href="{{ url_for('home') }}"><i class="ph-house-line-fill"></i><span>Home</span></a>
+            <a href=""><i class="ph-package-fill"></i><span>Groups</span></a>
+            <a href=""><i class="ph-upload-fill"></i><span>Upload</span></a>
+        </div>
+        <div>
+            <a href=""><i class="ph-user-circle-fill"></i><span>Profile</span></a>
+            <a href=""><i class="ph-gear-fill"></i><span>Settings</span></a>
+        </div>
+    </nav>
+    <main>
+        {% block content %}
+        {% endblock %}
+        <i class="ph-arrow-circle-up-fill" id="topButton"></i>
+    </main>
+
+    <script>
+        document.onscroll = function() {
+            document.querySelector('header').style.opacity = `${1 - window.scrollY / 169}`;
+            document.querySelector('header').style.height = `calc(40vh + ${window.scrollY / 5}px)`;
+
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+                document.querySelector('#topButton').style.opacity = 1;
+                document.querySelector('#topButton').style.right = "1rem";
+            } else {
+                document.querySelector('#topButton').style.opacity = 0;
+                document.querySelector('#topButton').style.right = "-3rem";
+            }
+        }
+
+        document.querySelector('#topButton').onclick = function() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        function imgFade(obj) {
+            $(obj).fadeIn(1000);
+        }
+    </script>
+</body>
+</html>
