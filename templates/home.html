@@ -5,28 +5,51 @@
         <span></span>
     </header>
     <div class="app">
-        <h1 style="margin-bottom: 1rem">Gallery</h1>
+        <h1>Gallery</h1>
         <div id="gallery" class="gallery"></div>
     </div>
     <script>
+        let imageList = [];
+        let imageIndex = 0;
+
+        function loadMore(startIndex, amount = 10) {
+            for (let i = startIndex; i < startIndex + amount; i++) {
+                if (i < imageList.length) {
+                    loadImg(i, imageList[i]);
+                }
+            }
+        }
+
+        function loadImg(id, fileName) {
+            var imgDiv = `
+                <a class="gallery__item" href="/image/${id}">
+                    <div class="gallery__item-info">
+                        <p>${id}</p>\
+                        <h2>${fileName}</h2>
+                    </div>
+                    <span class="gallery__item-filter"></span>
+                    <img class="gallery__item-image" src="/uploads/original/${fileName}" onload="imgFade(this)" style="display:none;">
+                </a>
+                `;
+
+            $(imgDiv).hide().appendTo('#gallery').fadeIn(250);
+        }
+
         $.ajax({
-            url: '/fileList',
+            url: '/fileList/original',
             type: 'get',
             success: function(response) {
-                for (var i = 0; i < response.length; i++) {
-                    var imgDiv = `
-                    <a class="gallery__item" href="/image/${i}">
-                        <div class="gallery__item-info">
-                            <p>${i}</p>\
-                            <h2>${response[i]}</h2>
-                        </div>
-                        <span class="gallery__item-filter"></span>
-                        <img class="gallery__item-image" src="/file/${response[i]}" onload="imgFade(this)" style="display:none;"/>
-                    </a>
-                    `;
+                imageList = response;
 
-                    $(imgDiv).hide().appendTo('#gallery').fadeIn(250);
-                }
+                loadMore(0, 20);
+                imageIndex += 20;
+            }
+        });
+
+        $(window).scroll(function() {
+            if ($(window).height() + $(window).scrollTop() >= $(document).height() - 100) {
+                loadMore(imageIndex);
+                imageIndex += 10;
             }
         });
     </script>

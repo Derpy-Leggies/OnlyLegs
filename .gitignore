@@ -1,5 +1,11 @@
-# temporarily remove image folder
-static/images
+# Remove all development files
+uploads/
+
+# remove all PyCharm files
+.idea
+
+# remove all VSCode files
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

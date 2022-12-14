@@ -39,7 +39,7 @@ nav {
   box-sizing: border-box;
   z-index: 2;
   overflow: hidden;
-  transition: width 0.4s ease-in-out, background-color 0.3s ease-in-out;
+  transition: width 0.4s cubic-bezier(0.86, 0, 0.07, 1), background-color 0.3s ease-in-out;
 }
 nav:hover {
   width: 25rem;
@@ -100,13 +100,11 @@ main {
   box-sizing: border-box;
 }
 main header {
-  margin: 0 0 -15rem 0;
+  margin: 0 0 -10vh 0;
   padding: 0;
   width: 100%;
   height: 40vh;
   background-color: #121212;
-  position: fixed;
-  top: 0;
   box-sizing: border-box;
 }
 main header img {
@@ -115,6 +113,7 @@ main header img {
   left: 0;
   width: 100%;
   height: 100%;
+  filter: blur(0.5rem);
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -125,8 +124,6 @@ main header span {
   width: 100%;
   height: 100%;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), #151515);
-  -webkit-backdrop-filter: blur(0.5rem);
-          backdrop-filter: blur(0.5rem);
   z-index: 1;
 }
 
@@ -145,7 +142,7 @@ main header span {
   opacity: 0;
   z-index: 2;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s cubic-bezier(0.86, 0, 0.07, 1);
 }
 #topButton:hover {
   background-color: #121212;
@@ -153,17 +150,17 @@ main header span {
 }
 
 .app {
-  margin: 10rem 1rem 0 4.5rem;
+  margin: 0 0 0 3.5rem;
   padding: 1rem;
   width: auto;
-  min-height: calc(150vh - 10rem);
+  min-height: 90vh;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   background-color: #151515;
   color: #e8e3e3;
-  border-radius: 0.5rem 0.5rem 0 0;
+  border-radius: 8px 8px 0 0;
   box-sizing: border-box;
   z-index: 1;
   overflow: unset;
@@ -178,6 +175,29 @@ main header span {
   color: #8C977D;
 }
 
+@-webkit-keyframes imgLoading {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes imgLoading {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 .gallery {
   margin: 0;
   padding: 0;
@@ -191,8 +211,11 @@ main header span {
   padding: 0;
   height: auto;
   position: relative;
-  background-color: #121212;
-  border-radius: 0.25rem;
+  background: linear-gradient(-45deg, #151515, #0e0e0e, #151515);
+  background-size: 400% 400%;
+  border-radius: 4px;
+  -webkit-animation: imgLoading 10s ease infinite;
+          animation: imgLoading 10s ease infinite;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -216,7 +239,7 @@ main header span {
   z-index: 1;
   opacity: 0;
   transform: scale(1.05);
-  transition: all 0.35s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.79, 0.14, 0.15, 0.86);
 }
 .gallery .gallery__item .gallery__item-info h2 {
   margin: 0;
@@ -229,7 +252,7 @@ main header span {
   text-overflow: ellipsis;
   overflow: hidden;
   opacity: 0;
-  transition: all 0.35s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 .gallery .gallery__item .gallery__item-info p {
   margin: 0;
@@ -241,7 +264,7 @@ main header span {
   text-overflow: ellipsis;
   overflow: hidden;
   opacity: 0;
-  transition: all 0.35s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 .gallery .gallery__item .gallery__item-info:hover {
   opacity: 1;
@@ -264,7 +287,7 @@ main header span {
      object-fit: cover;
   -o-object-position: center;
      object-position: center;
-  border-radius: 0.5rem;
+  border-radius: 4px;
 }
 
 .image__container {
@@ -276,7 +299,7 @@ main header span {
   position: sticky;
   top: 0;
   display: flex;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   background-color: #121212;
   box-sizing: border-box;
 }
@@ -289,7 +312,7 @@ main header span {
      object-fit: contain;
   -o-object-position: center;
      object-position: center;
-  border-radius: 0.25rem;
+  border-radius: 4px;
 }
 
 .image__info {
@@ -299,7 +322,7 @@ main header span {
   display: flex;
   flex-direction: column;
   background-color: #121212;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   box-sizing: border-box;
 }
 .image__info h2 {

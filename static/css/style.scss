@@ -1,6 +1,7 @@
 $black100: #151515;
 $black200: #121212;
 $black300: #101010;
+$black400: #0e0e0e;
 
 $white100: #e8e3e3;
 
@@ -11,7 +12,7 @@ $green: #8C977D;
 $blue: #8DA3B9;
 $purple: #A988B0;
 
-$rad: 0.5rem;
+$rad: 8px;
 $font-header: "Hubot-Sans", sans-serif;
 $font-body: "Mona-Sans", sans-serif;
 
@@ -66,7 +67,7 @@ nav {
     box-sizing: border-box;
     z-index: 2;
     overflow: hidden;
-    transition: width 0.4s ease-in-out, background-color 0.3s ease-in-out;
+    transition: width 0.4s cubic-bezier(.86,0,.07,1), background-color 0.3s ease-in-out;
 
     &:hover {
         width: 25rem;
@@ -148,15 +149,13 @@ main {
     box-sizing: border-box;
 
     header {
-        margin: 0 0 -15rem 0;
+        margin: 0 0 calc((10vh) * -1) 0;
         padding: 0;
     
         width: 100%;
         height: 40vh;
 
         background-color: $black200;
-        position: fixed;
-        top: 0;
 
         box-sizing: border-box;
     
@@ -168,6 +167,8 @@ main {
             width: 100%;
             height: 100%;
     
+            filter: blur(0.5rem);
+
             object-fit: cover;
         }
         span {
@@ -179,7 +180,6 @@ main {
             height: 100%;
 
             background-image: linear-gradient(to bottom, #00000000, rgba($black100, 1));
-            backdrop-filter: blur(0.5rem);
 
             z-index: +1;
         }
@@ -208,7 +208,7 @@ main {
 
     cursor: pointer;
 
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s cubic-bezier(.86,0,.07,1);
 
     &:hover {
         background-color: $black200;
@@ -217,11 +217,11 @@ main {
 }
 
 .app {
-    margin: 10rem 1rem 0 4.5rem;
+    margin: 0 0 0 3.5rem;
     padding: 1rem;
 
     width: auto;
-    min-height: calc(150vh - 10rem);
+    min-height: 90vh;
 
     position: relative;
 
@@ -250,6 +250,18 @@ main {
     }
 }
 
+@keyframes imgLoading {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
 .gallery {
     margin: 0;
     padding: 0;
@@ -268,9 +280,11 @@ main {
 
         position: relative;
 
-        background-color: $black200;
+        background: linear-gradient(-45deg, $black100, $black400, $black100);
+        background-size: 400% 400%;
         border-radius: calc($rad / 2);
-
+	    animation: imgLoading 10s ease infinite;
+        
         box-sizing: border-box;
         overflow: hidden;
 
@@ -301,7 +315,7 @@ main {
 
             opacity: 0; // hide
             transform: scale(1.05); // scale up
-            transition: all 0.35s ease-in-out;
+            transition: all 0.5s cubic-bezier(.79,.14,.15,.86);
 
             h2 {
                 margin: 0;
@@ -318,7 +332,7 @@ main {
                 overflow: hidden;
 
                 opacity: 0; // hide
-                transition: all 0.35s ease-in-out;
+                transition: all 0.2s ease-in-out;
             }
 
             p {
@@ -335,7 +349,7 @@ main {
                 overflow: hidden;
 
                 opacity: 0; // hide
-                transition: all 0.35s ease-in-out;
+                transition: all 0.2s ease-in-out;
             }
 
             &:hover {
@@ -364,7 +378,7 @@ main {
             object-fit: cover;
             object-position: center;
 
-            border-radius: $rad;
+            border-radius: calc($rad / 2);
         }
     }
 
