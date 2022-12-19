@@ -12,10 +12,10 @@
         let imageList = [];
         let imageIndex = 0;
         
-        function loadMore(startIndex, amount = 10) {
+        function loadMore(startIndex, amount = 20) {
             for (let i = startIndex; i < startIndex + amount; i++) {
                 if (i < imageList.length) {
-                    loadImg(i, imageList[i]);
+                    loadImg(imageList[i][0], imageList[i][1]);
                 }
             }
         }
@@ -41,13 +41,13 @@
             success: function(response) {
                 imageList = response;
 
-                loadMore(0, 20);
-                imageIndex += 20;
+                loadMore(0, 30);
+                imageIndex += 30;
             }
         });
 
         $(window).scroll(function() {
-            if ($(window).height() + $(window).scrollTop() >= $(document).height() - 200) {
+            if ($(window).height() + $(window).scrollTop() >= $(document).height() - 500) {
                 loadMore(imageIndex);
                 imageIndex += 10;
             }

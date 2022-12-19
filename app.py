@@ -1,5 +1,7 @@
 from flask import Flask, render_template, send_from_directory, abort, url_for, jsonify, redirect, request, session
 from werkzeug.utils import secure_filename
+import mysql.connector
+from mysql.connector import Error
 import os
 
 # Get database stuff
@@ -8,7 +10,27 @@ DB_PASS = os.environ.get('PASSWORD')
 DB_HOST = os.environ.get('HOST')
 DB_PORT = os.environ.get('PORT')
 
-DB = os.environ.get('DATABASE')
+DB_NAME = os.environ.get('DATABASE')
+
+try:
+    DB = mysql.connector.connect(host=DB_HOST,
+                                         port=DB_PORT,
+                                         database=DB_NAME,
+                                         user=DB_USER,
+                                         password=DB_PASS)
+    if DB.is_connected():
+        db_Info = DB.get_server_info()
+        print("Connected to MySQL Server version ", db_Info)
+        
+        cursor = DB.cursor()
+        cursor.execute("select database();")
+        
+        record = cursor.fetchone()
+        print("You're connected to database: ", record)
+
+except Error as e:
+    print("Error while connecting to MySQL", e)
+
 
 # Set flask config
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -64,17 +86,24 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/image/<file_id>')
-def image(file_id):
+@app.route('/image/<request_id>')
+def image(request_id):
+    # Check if request_id is valid
     try:
-        file_id = int(file_id)
+        request_id = int(request_id)
     except ValueError:
         abort(404)
+    
+    # SQL injection prevention
+    sql = "SELECT imagename FROM images WHERE id = %s"
+    img_id = (request_id,)
+    
+    # Get image details
+    cursor = DB.cursor()
+    cursor.execute(sql, img_id)
+    result = cursor.fetchone()
 
-    file_list = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'], 'original'))
-    file_name = file_list[file_id]
-
-    return render_template('image.html', fileName=file_name, id=file_id)
+    return render_template('image.html', fileName=result[0], id=request_id)
 
 
 #
@@ -84,27 +113,28 @@ def image(file_id):
 def image_list(item_type):
     if request.method != 'GET':
         abort(405)
+    
+    cursor = DB.cursor()
+    cursor.execute("SELECT id,imagename FROM images ORDER BY id DESC")
+    
+    item_list = cursor.fetchall()
 
-    item_type = secure_filename(item_type)
-    type_dir = os.path.join(app.config['UPLOAD_FOLDER'], item_type)
-    if not os.path.isdir(type_dir):
-        abort(404)
-
-    return jsonify(os.listdir(type_dir))
+    return jsonify(item_list)
 
 
-@app.route('/uploads/<item_type>/<file_id>', methods=['GET'])
-def uploads(item_type, file_id):
+@app.route('/uploads/<quality>/<request_file>', methods=['GET'])
+def uploads(quality, request_file):
     if request.method != 'GET':
         abort(405)
 
-    item_type = secure_filename(item_type)
-    type_dir = os.path.join(app.config['UPLOAD_FOLDER'], item_type)
-    if not os.path.isdir(type_dir):
+    quality = secure_filename(quality)
+    quality_dir = os.path.join(app.config['UPLOAD_FOLDER'], quality)
+    if not os.path.isdir(quality_dir):
         abort(404)
 
-    file_id = secure_filename(file_id)
-    if not os.path.isfile(os.path.join(type_dir, file_id)):
+    request_file = secure_filename(request_file)
+
+    if not os.path.isfile(os.path.join(quality_dir, request_file)):
         abort(404)
 
-    return send_from_directory(type_dir, file_id)
+    return send_from_directory(quality_dir, request_file)

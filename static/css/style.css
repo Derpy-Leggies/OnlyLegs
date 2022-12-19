@@ -52,7 +52,7 @@ nav div {
 }
 nav div a {
   margin: 0;
-  padding: 1rem 1rem 1rem 0.7rem;
+  padding: 1rem 1rem 1rem calc(1rem - 2px);
   width: 100%;
   height: 3.5rem;
   display: flex;
@@ -61,7 +61,7 @@ nav div a {
   gap: 0.5rem;
   text-decoration: none;
   color: #e8e3e3;
-  border-left: 0.3rem solid rgba(0, 0, 0, 0);
+  border-left: 2px solid rgba(0, 0, 0, 0);
   box-sizing: border-box;
 }
 nav div a i {
@@ -81,7 +81,7 @@ nav div a span {
 }
 nav div a:hover {
   background-color: #121212;
-  border-left: 0.3rem solid #8C977D;
+  border-left: 2px solid #8C977D;
 }
 nav div a:hover * {
   color: #8C977D;
@@ -101,6 +101,7 @@ main header {
   padding: 0;
   width: 100%;
   height: 40vh;
+  position: relative;
   background-color: #121212;
   border-radius: 8px;
   box-sizing: border-box;
@@ -153,7 +154,7 @@ main header span {
   margin: 0 0 0 3.5rem;
   padding: 0.5rem;
   width: auto;
-  min-height: 90vh;
+  min-height: 100vh;
   position: relative;
   display: flex;
   flex-direction: column;
