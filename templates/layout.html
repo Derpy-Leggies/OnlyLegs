@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/phosphor-icons" defer></script>
 </head>
 <body>
-    <nav>
+    <nav id="navRoot">
         <div>
             <a href="{{ url_for('home') }}"><i class="ph-house-line-fill"></i><span>Home</span></a>
             <a href=""><i class="ph-package-fill"></i><span>Groups</span></a>
@@ -31,13 +31,15 @@
     </main>
 
     <script>
+        let navToggle = true;
+
         document.onscroll = function() {
             document.querySelector('header').style.opacity = `${1 - window.scrollY / 169}`;
-            document.querySelector('header').style.height = `calc(40vh + ${window.scrollY / 5}px)`;
+            document.querySelector('header img').style.cssText = `object-position: center ${window.scrollY / 2}px`;
 
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
                 document.querySelector('#topButton').style.opacity = 1;
-                document.querySelector('#topButton').style.right = "1rem";
+                document.querySelector('#topButton').style.right = "0.75rem";
             } else {
                 document.querySelector('#topButton').style.opacity = 0;
                 document.querySelector('#topButton').style.right = "-3rem";

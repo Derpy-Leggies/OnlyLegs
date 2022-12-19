@@ -60,9 +60,8 @@ nav {
     top: 0;
     left: 0;
 
-    background-color: rgba($black300, 0.6);
+    background-color: $black300;
     color: $white100;
-    backdrop-filter: blur(5rem) saturate(200%);
 
     box-sizing: border-box;
     z-index: 2;
@@ -70,9 +69,7 @@ nav {
     transition: width 0.4s cubic-bezier(.86,0,.07,1), background-color 0.3s ease-in-out;
 
     &:hover {
-        width: 25rem;
-
-        background-color: $black300;
+        width: 30rem;
 
         a span {
             opacity: 1;
@@ -149,13 +146,14 @@ main {
     box-sizing: border-box;
 
     header {
-        margin: 0 0 calc((10vh) * -1) 0;
+        margin: 0;
         padding: 0;
     
         width: 100%;
         height: 40vh;
 
         background-color: $black200;
+        border-radius: $rad;
 
         box-sizing: border-box;
     
@@ -170,6 +168,7 @@ main {
             filter: blur(0.5rem);
 
             object-fit: cover;
+            object-position: center 0px;
         }
         span {
             position: absolute;
@@ -191,7 +190,7 @@ main {
     padding: 0.25rem;
     
     position: fixed;
-    bottom: 1rem;
+    bottom: 0.75rem;
     right: -3rem;
 
     font-size: 3rem;
@@ -218,7 +217,7 @@ main {
 
 .app {
     margin: 0 0 0 3.5rem;
-    padding: 1rem;
+    padding: 0.5rem;
 
     width: auto;
     min-height: 90vh;
@@ -231,7 +230,6 @@ main {
 
     background-color: $black100;
     color: $white100;
-    border-radius: $rad $rad 0 0;
 
     box-sizing: border-box;
     z-index: 1;
@@ -389,15 +387,15 @@ main {
     padding: 0;
 
     width: 100%;
-    height: calc(100vh - 12rem);
+    height: auto;
 
     position: sticky;
     top: 0;
 
     display: flex;
+    overflow: hidden;
 
     border-radius: calc($rad / 2);
-    background-color: $black200;
 
     box-sizing: border-box;
 
@@ -406,7 +404,7 @@ main {
         padding: 0;
 
         max-width: 100%;
-        max-height: 100%;
+        max-height: 75vh;
 
         object-fit: contain;
         object-position: center;

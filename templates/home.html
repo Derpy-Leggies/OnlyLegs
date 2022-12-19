@@ -11,7 +11,7 @@
     <script>
         let imageList = [];
         let imageIndex = 0;
-
+        
         function loadMore(startIndex, amount = 10) {
             for (let i = startIndex; i < startIndex + amount; i++) {
                 if (i < imageList.length) {
@@ -47,7 +47,7 @@
         });
 
         $(window).scroll(function() {
-            if ($(window).height() + $(window).scrollTop() >= $(document).height() - 100) {
+            if ($(window).height() + $(window).scrollTop() >= $(document).height() - 200) {
                 loadMore(imageIndex);
                 imageIndex += 10;
             }
