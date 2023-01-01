@@ -1,5 +1,6 @@
 # Remove all development files
 uploads/
+static/css/style.css
 
 # remove all PyCharm files
 .idea

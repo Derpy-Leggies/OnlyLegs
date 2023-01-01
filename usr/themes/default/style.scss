@@ -33,6 +33,8 @@ $font-body: "Mona-Sans", sans-serif;
   font-display: swap;
 }
 
+@import 'buttons/btn';
+
 html, body {
     margin: 0;
     padding: 0;
@@ -82,7 +84,7 @@ nav {
         gap: 0.25rem;
 
         a {
-            margin: 0;
+            margin: 0.5rem;
             padding: 1rem 1rem 1rem calc(1rem - 2px);
             
             width: 100%;

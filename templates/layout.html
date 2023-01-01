@@ -15,13 +15,13 @@
 <body>
     <nav id="navRoot">
         <div>
-            <a href="{{ url_for('home') }}"><i class="ph-house-line"></i><span>Home</span></a>
-            <a href=""><i class="ph-package"></i><span>Groups</span></a>
-            <a href=""><i class="ph-upload"></i><span>Upload</span></a>
+            <a href="{{ url_for('home') }}" class="btn"><i class="ph-house-line"></i><span>Home</span></a>
+            <a href="{{ url_for('home') }}" class="btn"><i class="ph-package"></i><span>Groups</span></a>
+            <a href="{{ url_for('home') }}" class="btn"><i class="ph-upload"></i><span>Upload</span></a>
         </div>
         <div>
-            <a href=""><i class="ph-user-circle"></i><span>Profile</span></a>
-            <a href=""><i class="ph-gear"></i><span>Settings</span></a>
+            <a href="{{ url_for('home') }}" class="btn"><i class="ph-user-circle"></i><span>Profile</span></a>
+            <a href="{{ url_for('home') }}" class="btn"><i class="ph-gear"></i><span>Settings</span></a>
         </div>
     </nav>
     <main>

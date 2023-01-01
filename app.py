@@ -1,40 +1,22 @@
+# Import required OnlyLegs packages
+import os
+import sys
+sys.path.insert(1, './packages')
+
+# Import database manager
+import onlylegsDB
+onlylegsDB = onlylegsDB.DBmanager()
+# Import sass compiler
+import onlylegsSass
+onlylegsSass = onlylegsSass.Sassy('default')
+
+# Import flask
 from flask import Flask, render_template, send_from_directory, abort, url_for, jsonify, redirect, request, session
 from werkzeug.utils import secure_filename
-import mysql.connector
-from mysql.connector import Error
-import os
-
-# Get database stuff
-DB_USER = os.environ.get('USERNAME')
-DB_PASS = os.environ.get('PASSWORD')
-DB_HOST = os.environ.get('HOST')
-DB_PORT = os.environ.get('PORT')
-
-DB_NAME = os.environ.get('DATABASE')
-
-try:
-    DB = mysql.connector.connect(host=DB_HOST,
-                                         port=DB_PORT,
-                                         database=DB_NAME,
-                                         user=DB_USER,
-                                         password=DB_PASS)
-    if DB.is_connected():
-        db_Info = DB.get_server_info()
-        print("Connected to MySQL Server version ", db_Info)
-        
-        cursor = DB.cursor()
-        cursor.execute("select database();")
-        
-        record = cursor.fetchone()
-        print("You're connected to database: ", record)
-
-except Error as e:
-    print("Error while connecting to MySQL", e)
-
 
 # Set flask config
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'usr', 'uploads')
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -94,16 +76,11 @@ def image(request_id):
     except ValueError:
         abort(404)
     
-    # SQL injection prevention
-    sql = "SELECT imagename FROM images WHERE id = %s"
-    img_id = (request_id,)
+    result = onlylegsDB.getImage(request_id)
     
-    # Get image details
-    cursor = DB.cursor()
-    cursor.execute(sql, img_id)
-    result = cursor.fetchone()
-
-    return render_template('image.html', fileName=result[0], id=request_id)
+    print (result)
+    
+    return render_template('image.html', fileName=result[1], id=request_id)
 
 
 #
@@ -114,7 +91,7 @@ def image_list(item_type):
     if request.method != 'GET':
         abort(405)
     
-    cursor = DB.cursor()
+    cursor = onlylegsDB.cursor()
     cursor.execute("SELECT id,imagename FROM images ORDER BY id DESC")
     
     item_list = cursor.fetchall()
