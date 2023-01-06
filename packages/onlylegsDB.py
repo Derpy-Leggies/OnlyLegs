@@ -13,7 +13,14 @@ class DBmanager():
             sys.exit(1)
         
         try:
-            load_dotenv(os.path.join('usr', '.env'))
+            env_path = os.path.join('usr', '.env')
+            
+            if not os.path.exists(env_path):
+                print("Error: could not find .env file")
+                print("Exiting...")
+                sys.exit(1)
+            
+            load_dotenv(env_path)
             print("### OnlyLegs Database Manager ###")
             print("Connecting to database...")
             
@@ -34,10 +41,10 @@ class DBmanager():
                 record = cursor.fetchone()
                 print("Connected to database:", record[0])
                 
-                print("Finished\n")
+                print("Done!\n")
         
         except Error as e:
-            print("Error while connecting to Database! Full error:\n", e)
+            print("Error while connecting to Database!\nFull error:", e)
             print("Exiting...")
             sys.exit(1)
             

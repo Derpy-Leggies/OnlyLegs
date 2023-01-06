@@ -3,10 +3,14 @@ import time
 import sys
 import os
 
-print("""OnlyLegs - created by Fluffy Bean
-Version: 060123
----------------------------------
-Starting...
+print("""
+  ___        _       _
+ / _ \ _ __ | |_   _| |    ___  __ _ ___
+| | | | '_ \| | | | | |   / _ \/ _` / __|
+| |_| | | | | | |_| | |__|  __/ (_| \__ \\
+ \___/|_| |_|_|\__, |_____\___|\__, |___/
+               |___/           |___/
+Created by Fluffy Bean  -  Version: 060123
 """)
 time.sleep(1)
 

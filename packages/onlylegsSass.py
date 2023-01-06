@@ -1,5 +1,6 @@
 import time
 import sys
+import shutil
 import os
 
 class Sassy():
@@ -13,24 +14,82 @@ class Sassy():
             print("Exiting...")
             sys.exit(1)
         
-        path_to_sass = os.path.join('usr', 'themes', theme, 'style.scss')
+        theme_path = os.path.join('usr', 'themes', theme, 'style.scss')
         
-        if os.path.exists(path_to_sass):
-            print(f"Theme '{theme}' found at:", path_to_sass)
+        if os.path.exists(theme_path):
+            print(f"Theme '{theme}' found at:", theme_path)
             self.sass = sass
-            self.loadTheme(path_to_sass)
+            self.loadTheme(theme_path)
         else:
             print("No theme found!")
             print("Exiting...")
             sys.exit(1)
+            
+        font_path = os.path.join('usr', 'themes', theme, 'fonts')
+        
+        if os.path.exists(font_path):
+            print("Fonts found at:", font_path)
+            self.loadFonts(font_path)
+        else:
+            print("No fonts found!")
+        
+        print("Done!\n")
     
     def loadTheme (self, theme):
         with open('static/css/style.css', 'w') as f:
             try:
                 f.write(self.sass.compile(filename=theme, output_style='compressed'))
-                print("Compiled successfully to:", f.name)#
-                print("Finished\n")
+                print("Compiled successfully to:", f.name)
             except self.sass.CompileError as e:
-                print("Failed to compile! Full error:\n", e)
+                print("Failed to compile!\nFull error:", e)
                 print("Exiting...")
                 sys.exit(1)
+    
+    def loadFonts (self, font_path):
+        dest = os.path.join('static', 'css', 'fonts')
+        
+        if os.path.exists(dest):
+            print("Removing old fonts...")
+            try:
+                shutil.rmtree(dest)
+                print("Removed old fonts!")
+            except Exception as e:
+                print("Failed to remove old fonts!\nFull error:", e)
+                print("Exiting...")
+                sys.exit(1)
+        
+        try:
+            shutil.copytree(font_path, dest)
+            print("Copied fonts to:", dest)
+        except Exception as e:
+            print("Failed to copy fonts!\nFull error:", e)
+            print("Exiting...")
+            sys.exit(1)
+        
+        #print ("Removing old fonts from:", dest)
+        #for old in os.listdir(dest):
+        #    dir = os.path.join(dest , old)
+        #    
+        #    try:
+        #        if os.path.isfile(dir) or os.path.islink(dir):
+        #            os.unlink(dir)
+        #            print("Removed:", old)
+        #        elif os.path.isdir(dir):
+        #            shutil.rmtree(dir)
+        #            print("Removed:", old)
+        #    except Exception as e:
+        #        print("Failed to remove:", dir)
+        #        print("Full error:", e)
+        
+        #print ("Loading new fonts")
+        #for font in os.listdir(font_path):
+        #    dir = os.path.join(font_path, dest)
+        #    new_dir = os.path.join(dest, font)
+        #        
+        #    try:
+        #        if os.path.isfile(dir):
+        #            shutil.copy(dir, new_dir)
+        #            print("Copied font:", font)
+        #    except Exception as e:
+        #        print("Failed to copy font:", font)
+        #        print("Full error:", e)
