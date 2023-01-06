@@ -14,6 +14,8 @@ class DBmanager():
         try:
             load_dotenv(os.path.join('usr', '.env'))
             
+            print("Connecting to MySQL database...")
+            
             database = mysql.connector.connect(host=os.environ.get('HOST'),
                                             port=os.environ.get('PORT'),
                                             database=os.environ.get('DATABASE'),
@@ -23,16 +25,16 @@ class DBmanager():
             
             if database.is_connected():
                 db_Info = database.get_server_info()
-                print("Connected to MySQL Server version: ", db_Info)
+                print("Connected to MySQL Server version:", db_Info)
                 
                 cursor = database.cursor()
                 cursor.execute("select database();")
                 
                 record = cursor.fetchone()
-                print("You're connected to database: ", record)
+                print("Connected to database:", record[0])
         
         except Error as e:
-            print("Error while connecting to MySQL\n", e)
+            print("Error while connecting to MySQL!\n", e)
             sys.exit(1)
             
         self.database = database
