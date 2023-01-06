@@ -18,6 +18,7 @@
                     loadImg(imageList[i][0], imageList[i][1]);
                 }
             }
+            imageIndex = startIndex + amount;
         }
 
         function loadImg(id, fileName) {
@@ -40,16 +41,13 @@
             type: 'get',
             success: function(response) {
                 imageList = response;
-
                 loadMore(0, 30);
-                imageIndex += 30;
             }
         });
 
         $(window).scroll(function() {
             if ($(window).height() + $(window).scrollTop() >= $(document).height() - 500) {
                 loadMore(imageIndex);
-                imageIndex += 10;
             }
         });
     </script>

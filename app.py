@@ -1,13 +1,19 @@
-# Import required OnlyLegs packages
-import os
+# Import base packages
+import time
 import sys
-sys.path.insert(1, './packages')
+import os
 
-# Import database manager
-import onlylegsDB
+print("""OnlyLegs - created by Fluffy Bean
+Version: 060123
+---------------------------------
+Starting...
+""")
+time.sleep(1)
+
+# Import required OnlyLegs packages
+from packages import onlylegsDB
 onlylegsDB = onlylegsDB.DBmanager()
-# Import sass compiler
-import onlylegsSass
+from packages import onlylegsSass
 onlylegsSass = onlylegsSass.Sassy('default')
 
 # Import flask
@@ -31,13 +37,11 @@ def method_not_allowed(e):
     msg = 'Method sussy wussy'
     return render_template('error.html', error=error, msg=msg), 404
 
-
 @app.errorhandler(404)
 def page_not_found(e):
     error = '404'
     msg = 'Could not find what you need!'
     return render_template('error.html', error=error, msg=msg), 404
-
 
 @app.errorhandler(403)
 def forbidden(e):
@@ -45,13 +49,11 @@ def forbidden(e):
     msg = 'Go away! This is no place for you!'
     return render_template('error.html', error=error, msg=msg), 403
 
-
 @app.errorhandler(410)
 def gone(e):
     error = '410'
     msg = 'The page is no longer available! *sad face*'
     return render_template('error.html', error=error, msg=msg), 410
-
 
 @app.errorhandler(500)
 def internal_server_error(e):
@@ -67,7 +69,6 @@ def internal_server_error(e):
 def home():
     return render_template('home.html')
 
-
 @app.route('/image/<request_id>')
 def image(request_id):
     # Check if request_id is valid
@@ -77,8 +78,6 @@ def image(request_id):
         abort(404)
     
     result = onlylegsDB.getImage(request_id)
-    
-    print (result)
     
     return render_template('image.html', fileName=result[1], id=request_id)
 
@@ -97,7 +96,6 @@ def image_list(item_type):
     item_list = cursor.fetchall()
 
     return jsonify(item_list)
-
 
 @app.route('/uploads/<quality>/<request_file>', methods=['GET'])
 def uploads(quality, request_file):

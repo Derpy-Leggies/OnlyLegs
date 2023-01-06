@@ -1,3 +1,4 @@
+import time
 import sys
 import os
 
@@ -8,19 +9,19 @@ class DBmanager():
             from mysql.connector import Error
             from dotenv import load_dotenv
         except ImportError:
-            print("Error: could not import required modules")
+            print("Error: could not import required packages")
             sys.exit(1)
         
         try:
             load_dotenv(os.path.join('usr', '.env'))
+            print("### OnlyLegs Database Manager ###")
+            print("Connecting to database...")
             
-            print("Connecting to MySQL database...")
-            
-            database = mysql.connector.connect(host=os.environ.get('HOST'),
-                                            port=os.environ.get('PORT'),
-                                            database=os.environ.get('DATABASE'),
-                                            user=os.environ.get('USERNAME'),
-                                            password=os.environ.get('PASSWORD')
+            database = mysql.connector.connect(host=os.environ.get('DB_HOST'),
+                                            port=os.environ.get('DB_PORT'),
+                                            database=os.environ.get('DB_NAME'),
+                                            user=os.environ.get('DB_USER'),
+                                            password=os.environ.get('DB_PASS')
                                             )
             
             if database.is_connected():
@@ -32,9 +33,12 @@ class DBmanager():
                 
                 record = cursor.fetchone()
                 print("Connected to database:", record[0])
+                
+                print("Finished\n")
         
         except Error as e:
-            print("Error while connecting to MySQL!\n", e)
+            print("Error while connecting to Database! Full error:\n", e)
+            print("Exiting...")
             sys.exit(1)
             
         self.database = database

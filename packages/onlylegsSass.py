@@ -1,12 +1,16 @@
+import time
 import sys
 import os
 
 class Sassy():
     def __init__(self, theme):
+        print("### OnlyLegs Theme Manager ###")
+        
         try:
             import sass
         except ImportError:
-            print("Error: libsass not found")
+            print("Could not find libsass!")
+            print("Exiting...")
             sys.exit(1)
         
         path_to_sass = os.path.join('usr', 'themes', theme, 'style.scss')
@@ -16,13 +20,17 @@ class Sassy():
             self.sass = sass
             self.loadTheme(path_to_sass)
         else:
-            print("Error: theme not found")
+            print("No theme found!")
+            print("Exiting...")
             sys.exit(1)
     
     def loadTheme (self, theme):
         with open('static/css/style.css', 'w') as f:
             try:
                 f.write(self.sass.compile(filename=theme, output_style='compressed'))
-                print("Sass compiled successfully to:", f.name)
+                print("Compiled successfully to:", f.name)#
+                print("Finished\n")
             except self.sass.CompileError as e:
-                print("Error: sass compilation failed:\n", e)
+                print("Failed to compile! Full error:\n", e)
+                print("Exiting...")
+                sys.exit(1)

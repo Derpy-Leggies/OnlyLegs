@@ -1,18 +1,3 @@
-@mixin button($color) {
-    border-color: rgba($color, 0.3);
-    background-color: rgba($color, 0);
-    color: $color;
-
-    &:hover {
-        background-color: rgba($color, 0.2);
-    }
-    &:active {
-        border-color: rgba($color, 1);
-        background-color: rgba($color, 0.5);
-        color: $color;
-    }
-}
-
 .btn {    
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
@@ -23,31 +8,8 @@
 
     transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
 
-    &:hover {
-        background-color: rgba($white100, 0.2);
-    }
     &:active {
         border-color: rgba($white100, 1);
-        background-color: rgba($white100, 0.5);
         color: $white100;
-    }
-
-    &.red {
-        @include button($red);
-    }
-    &.orange {
-        @include button($orange);
-    }
-    &.yellow {
-        @include button($yellow);
-    }
-    &.green {
-        @include button($green);
-    }
-    &.blue {
-        @include button($blue);
-    }
-    &.purple {
-        @include button($purple);
     }
 }
