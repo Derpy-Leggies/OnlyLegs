@@ -2,10 +2,10 @@ print("""
   ___        _       _
  / _ \ _ __ | |_   _| |    ___  __ _ ___
 | | | | '_ \| | | | | |   / _ \/ _` / __|
-| |_| | | | | | |_| | |__|  __/ (_| \__ \\
+| |_| | | | | | |_| | |__|  __/ (_| \__ \ 
  \___/|_| |_|_|\__, |_____\___|\__, |___/
                |___/           |___/
-Created by Fluffy Bean  -  Version: 080123
+Created by Fluffy Bean  -  Version 080123
 """)
 
 # Import base packages
@@ -73,6 +73,10 @@ def internal_server_error(e):
 @app.route('/')
 def home():
     return render_template('home.html')
+
+@app.route('/upload')
+def upload():
+    return render_template('upload.html')
 
 @app.route('/image/<request_id>')
 def image(request_id):

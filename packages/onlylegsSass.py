@@ -13,7 +13,6 @@ class Sassy():
             import sass
         except ImportError:
             print("Could not find libsass!")
-            print("Exiting...")
             sys.exit(1)
         
         theme_path = os.path.join('usr', 'themes', theme, 'style.scss')
@@ -24,7 +23,6 @@ class Sassy():
             self.loadTheme(theme_path)
         else:
             print("No theme found!")
-            print("Exiting...")
             sys.exit(1)
             
         font_path = os.path.join('usr', 'themes', theme, 'fonts')
@@ -38,17 +36,16 @@ class Sassy():
         print(f"{now.hour}:{now.minute}:{now.second} - Done!\n")
     
     def loadTheme (self, theme):
-        with open('static/css/style.css', 'w') as f:
+        with open('static/theme/style.css', 'w') as f:
             try:
                 f.write(self.sass.compile(filename=theme, output_style='compressed'))
                 print("Compiled successfully to:", f.name)
             except self.sass.CompileError as e:
                 print("Failed to compile!\nFull error:", e)
-                print("Exiting...")
                 sys.exit(1)
     
     def loadFonts (self, font_path):
-        dest = os.path.join('static', 'css', 'fonts')
+        dest = os.path.join('static', 'theme', 'fonts')
         
         if os.path.exists(dest):
             print("Removing old fonts...")
@@ -57,7 +54,6 @@ class Sassy():
                 print("Removed old fonts!")
             except Exception as e:
                 print("Failed to remove old fonts!\nFull error:", e)
-                print("Exiting...")
                 sys.exit(1)
         
         try:
@@ -65,7 +61,6 @@ class Sassy():
             print("Copied fonts to:", dest)
         except Exception as e:
             print("Failed to copy fonts!\nFull error:", e)
-            print("Exiting...")
             sys.exit(1)
         
         #print ("Removing old fonts from:", dest)
