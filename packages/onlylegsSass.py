@@ -1,4 +1,5 @@
-import time
+import datetime
+now = datetime.datetime.now()
 import sys
 import shutil
 import os
@@ -6,6 +7,7 @@ import os
 class Sassy():
     def __init__(self, theme):
         print("### OnlyLegs Theme Manager ###")
+        print(f"{now.hour}:{now.minute}:{now.second} - Loading theme...")
         
         try:
             import sass
@@ -33,7 +35,7 @@ class Sassy():
         else:
             print("No fonts found!")
         
-        print("Done!\n")
+        print(f"{now.hour}:{now.minute}:{now.second} - Done!\n")
     
     def loadTheme (self, theme):
         with open('static/css/style.css', 'w') as f:

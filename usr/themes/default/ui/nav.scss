@@ -1,0 +1,95 @@
+nav {
+    margin: 0;
+    padding: 0;
+
+    max-width: 100vw;
+    width: 3.5rem;
+    height: 100dvh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    background-color: $black300;
+    color: $white100;
+
+    box-sizing: border-box;
+    z-index: 2;
+    transition: width 0.4s cubic-bezier(.76,0,.17,1), background-color 0.3s ease-in-out;
+
+    div {
+        display: flex;
+        flex-direction: column;
+        //gap: 0.25rem;
+
+        a {
+            margin: 0;
+            padding: 1rem;
+
+            width: 3.5rem;
+            height: 3.5rem;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            //gap: 0.5rem;
+
+            position: relative;
+
+            text-decoration: none;
+            color: $white100;
+
+            box-sizing: border-box;
+
+            i, svg {
+                margin: 0;
+                font-size: 1.5rem;
+                color: $white100;
+                transition: color 0.2s ease-out;
+            }
+
+            span {
+                margin: 0;
+                padding: 0.5rem 1rem;
+
+                display: block;
+
+                position: absolute;
+                top: 50%;
+                left: 3rem;
+                transform: translateY(-50%);
+
+                font-family: $font-body;
+                font-size: 1rem;
+                font-weight: 600;
+
+                background-color: $black300;
+                color: $white100;
+                opacity: 0;
+                border-radius: $rad;
+
+                transition: opacity 0.2s cubic-bezier(.76,0,.17,1), left 0.2s cubic-bezier(.76,0,.17,1);
+
+                pointer-events: none;
+            }
+
+            &:hover {
+                //background-color: $black200;
+
+                i, svg {
+                    color: $green;
+                }
+
+                span {
+                    opacity: 1;
+                    left: 3.8rem;
+                    //transition-delay: 0.5s;
+                }
+            }
+        }
+    }
+}

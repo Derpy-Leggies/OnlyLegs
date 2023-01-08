@@ -1,8 +1,3 @@
-# Import base packages
-import time
-import sys
-import os
-
 print("""
   ___        _       _
  / _ \ _ __ | |_   _| |    ___  __ _ ___
@@ -10,13 +5,19 @@ print("""
 | |_| | | | | | |_| | |__|  __/ (_| \__ \\
  \___/|_| |_|_|\__, |_____\___|\__, |___/
                |___/           |___/
-Created by Fluffy Bean  -  Version: 060123
+Created by Fluffy Bean  -  Version: 080123
 """)
-time.sleep(1)
+
+# Import base packages
+import time
+import sys
+import os
 
 # Import required OnlyLegs packages
 from packages import onlylegsDB
 onlylegsDB = onlylegsDB.DBmanager()
+onlylegsDB.initialize()
+
 from packages import onlylegsSass
 onlylegsSass = onlylegsSass.Sassy('default')
 
@@ -94,8 +95,8 @@ def image_list(item_type):
     if request.method != 'GET':
         abort(405)
     
-    cursor = onlylegsDB.cursor()
-    cursor.execute("SELECT id,imagename FROM images ORDER BY id DESC")
+    cursor = onlylegsDB.database.cursor()
+    cursor.execute("SELECT * FROM posts ORDER BY id DESC")
     
     item_list = cursor.fetchall()
 

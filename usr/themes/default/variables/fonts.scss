@@ -1,0 +1,35 @@
+@font-face {
+    font-family: "Mona-Sans";
+    src: url("fonts/Mona-Sans.woff2") format("woff2 supports variations"),
+        url("fonts/Mona-Sans.woff2") format("woff2-variations");
+    font-weight: 200 900;
+    font-stretch: 75% 125%;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Hubot-Sans";
+    src: url("fonts/Hubot-Sans.woff2") format("woff2 supports variations"),
+        url("fonts/Hubot-Sans.woff2") format("woff2-variations");
+    font-weight: 200 900;
+    font-stretch: 75% 125%;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Work Sans';
+    src: url('fonts/worksans-regular.woff2');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Work Sans';
+    src: url('fonts/worksans-bold.woff2');
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'Work Sans';
+    src: url('fonts/worksans-black.woff2');
+    font-weight: 900;
+}

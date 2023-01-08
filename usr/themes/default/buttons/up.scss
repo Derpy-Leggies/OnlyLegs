@@ -1,0 +1,29 @@
+#topButton {
+    margin: 0;
+    padding: 0.25rem;
+
+    position: fixed;
+    bottom: 0.75rem;
+    right: -3rem;
+
+    font-size: 3rem;
+
+    display: flex; // hidden
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    background-color: $black300;
+    opacity: 0; // hidden
+
+    z-index: 2;
+
+    cursor: pointer;
+
+    transition: all 0.2s cubic-bezier(.86, 0, .07, 1);
+
+    &:hover {
+        background-color: $black200;
+        color: $green;
+    }
+}

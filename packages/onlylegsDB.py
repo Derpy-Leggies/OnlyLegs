@@ -1,4 +1,5 @@
-import time
+import datetime
+now = datetime.datetime.now()
 import sys
 import os
 
@@ -22,7 +23,7 @@ class DBmanager():
             
             load_dotenv(env_path)
             print("### OnlyLegs Database Manager ###")
-            print("Connecting to database...")
+            print(f"{now.hour}:{now.minute}:{now.second} - Connecting to database...")
             
             database = mysql.connector.connect(host=os.environ.get('DB_HOST'),
                                             port=os.environ.get('DB_PORT'),
@@ -41,7 +42,7 @@ class DBmanager():
                 record = cursor.fetchone()
                 print("Connected to database:", record[0])
                 
-                print("Done!\n")
+                print(f"{now.hour}:{now.minute}:{now.second} - Done!\n")
         
         except Error as e:
             print("Error while connecting to Database!\nFull error:", e)
@@ -50,14 +51,54 @@ class DBmanager():
             
         self.database = database
         
-    def cursor(self):
-        return self.database.cursor()
+    def initialize(self):
+        dir = os.path.join('packages', 'tables')
+        
+        if not os.path.exists(dir+'/generate.sql'):
+            print("Error: could not find tables directory")
+            print("Exiting...")
+            sys.exit(1)
+        else:
+            print(f"{now.hour}:{now.minute}:{now.second} - Initializing tables...")
+            
+        with open(dir+'/generate.sql', 'r') as f:
+            sql = f.read()
+            
+            cursor = self.database.cursor()
+            query = cursor.execute(sql, multi=True)
+
+            for res in query:
+                #print("Running query...")
+                print(f"Affected {res.rowcount} rows")
+                
+            self.database.commit()
+            
+        if not os.path.exists(dir+'/junctions.sql'):
+            print("Error: could not find junctions directory")
+            print("Exiting...")
+            sys.exit(1)
+        else:
+            print(f"{now.hour}:{now.minute}:{now.second} - Initializing junctions...")
+            
+        with open(dir+'/junctions.sql', 'r') as f:
+            sql = f.read()
+            
+            cursor = self.database.cursor()
+            query = cursor.execute(sql, multi=True)
+
+            for res in query:
+                #print("Running query...")
+                print(f"Affected {res.rowcount} rows")
+                
+            self.database.commit()
+        
+        print(f"{now.hour}:{now.minute}:{now.second} - Done!\n")
     
     def getImage(self, id):
-        sql = "SELECT * FROM images WHERE id = %s"
+        sql = "SELECT * FROM posts WHERE id = %s"
         img = (id,)
         
-        cursor = self.cursor()
+        cursor = self.database.cursor()
         cursor.execute(sql, img)
         
         return cursor.fetchone()
