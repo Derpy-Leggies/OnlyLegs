@@ -74,9 +74,39 @@ def internal_server_error(e):
 def home():
     return render_template('home.html')
 
+@app.route('/group')
+def group():
+    return render_template('group.html', group_id='gwa gwa')
+
+@app.route('/group/<group_id>')
+def group_id(group_id):
+    try:
+        group_id = int(group_id)
+    except ValueError:
+        abort(404)
+    
+    return render_template('group.html', group_id=group_id)
+
 @app.route('/upload')
 def upload():
     return render_template('upload.html')
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html', user_id='gwa gwa')
+
+@app.route('/profile/<user_id>')
+def profile_id(user_id):
+    try:
+        user_id = int(user_id)
+    except ValueError:
+        abort(404)
+        
+    return render_template('profile.html', user_id=user_id)
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
 
 @app.route('/image/<request_id>')
 def image(request_id):

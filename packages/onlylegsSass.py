@@ -62,31 +62,3 @@ class Sassy():
         except Exception as e:
             print("Failed to copy fonts!\nFull error:", e)
             sys.exit(1)
-        
-        #print ("Removing old fonts from:", dest)
-        #for old in os.listdir(dest):
-        #    dir = os.path.join(dest , old)
-        #    
-        #    try:
-        #        if os.path.isfile(dir) or os.path.islink(dir):
-        #            os.unlink(dir)
-        #            print("Removed:", old)
-        #        elif os.path.isdir(dir):
-        #            shutil.rmtree(dir)
-        #            print("Removed:", old)
-        #    except Exception as e:
-        #        print("Failed to remove:", dir)
-        #        print("Full error:", e)
-        
-        #print ("Loading new fonts")
-        #for font in os.listdir(font_path):
-        #    dir = os.path.join(font_path, dest)
-        #    new_dir = os.path.join(dest, font)
-        #        
-        #    try:
-        #        if os.path.isfile(dir):
-        #            shutil.copy(dir, new_dir)
-        #            print("Copied font:", font)
-        #    except Exception as e:
-        #        print("Failed to copy font:", font)
-        #        print("Full error:", e)

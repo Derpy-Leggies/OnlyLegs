@@ -55,6 +55,35 @@
     }
 }
 
+.err-warning {
+    min-height: 60vh;
+
+    gap: 0;
+
+    h1 {
+        margin: 0 auto;
+        padding: 0;
+
+        font-family: $font-header;
+        font-size: 5rem;
+        font-weight: 900;
+        line-height: 1;
+
+        color: $green;
+    }
+    p {
+        margin: 0 auto;
+        padding: 0;
+
+        font-family: $font-body;
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 1;
+
+        color: $white100;
+    }
+}
+
 .gallery {
     margin: 0;
     padding: 0;
