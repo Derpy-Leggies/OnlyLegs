@@ -2,11 +2,12 @@
     margin: 0;
     padding: 0.25rem;
 
+    width: 3rem;
+    height: 3rem;
+
     position: fixed;
     bottom: 0.75rem;
     right: -3rem;
-
-    font-size: 3rem;
 
     display: flex; // hidden
     justify-content: center;

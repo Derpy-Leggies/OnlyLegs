@@ -1,0 +1,5 @@
+include gallery/schema.sql
+graft gallery/static
+graft gallery/templates
+graft gallery/user
+global-exclude *.pyc

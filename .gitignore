@@ -1,5 +1,5 @@
 # Remove all development files
-uploads/
+gallery/user/uploads/*
 gallery/static/theme/*
 
 .idea

@@ -32,7 +32,7 @@ def create_app(test_config=None):
         SECRET_KEY=os.environ.get('FLASK_SECRET'),
         DATABASE=os.path.join(app.instance_path, 'gallery.sqlite'),
         UPLOAD_FOLDER=os.path.join(app.root_path, 'user', 'uploads'),
-        ALLOWED_EXTENSIONS=['png', 'jpg', 'jpeg', 'webp'],
+        ALLOWED_EXTENSIONS=os.environ.get('FLASK_EXTENSIONS'),
     )
     
     if test_config is None:

@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-    <img src="/uploads/original/{{ fileName }}" alt="leaves" onload="imgFade(this)" style="display: none;"/>
+    <img src="/uploads/original/{{ image['file_name'] }}" alt="leaves" onload="imgFade(this)" style="display: none;"/>
 {% endblock %}
 
 {% block content %}
@@ -9,13 +9,19 @@
         <div class="image__container">
             <img
                 class="image__item"
-                src="/uploads/original/{{ fileName }}"
+                src="/uploads/original/{{ image['file_name'] }}"
                 onload="imgFade(this)" style="display:none;"
             />
         </div>
         <div class="image__info">
-            <h2>{{ fileName }}</h2>
-            <p>{{ id }}</p>
+            <h2>{{ image['file_name'] }}</h2>
+            <p>{{ image['id'] }}</p>
+            <p>{{ image['author_id'] }}</p>
+        </div>
+        <div class="image__info">
+            {% for tag in exif %}
+                <p>{{ tag }}: {{ exif[tag] }}</p>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

@@ -5,6 +5,8 @@ from gallery.auth import login_required
 from gallery.db import get_db
 import os
 import datetime
+from PIL import Image
+from PIL.ExifTags import TAGS
 dt = datetime.datetime.now()
 
 blueprint = Blueprint('gallery', __name__)
@@ -23,16 +25,29 @@ def index():
 @blueprint.route('/image/<int:id>')
 def image(id):    
     db = get_db()
-    post = db.execute(
+    image = db.execute(
         'SELECT * FROM posts'
         ' WHERE id = ?',
         (id,)
     ).fetchone()
     
-    if post is None:
+    if image is None:
         abort(404)
     
-    return render_template('image.html', fileName=post['file_name'], id=id)
+    file = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], 'original', image['file_name']))
+    
+    raw_exif = file.getexif()
+    human_exif = {}
+    for tag in raw_exif:
+        name = TAGS.get(tag, tag)
+        value = raw_exif.get(tag)
+        
+        if isinstance(value, bytes):
+            value = value.decode()
+        
+        human_exif[name] = value
+    
+    return render_template('image.html', image=image, exif=human_exif)
 
 
 @blueprint.route('/group')
