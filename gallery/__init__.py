@@ -17,17 +17,20 @@ import os
 from flask import *
 from werkzeug.utils import secure_filename
 
-def create_app(test_config=None):
-    # Get environment variables
-    from dotenv import load_dotenv
-    load_dotenv(os.path.join('./gallery', 'user', '.env'))
-    
+# Import dotenv
+from dotenv import load_dotenv
+
+def create_app(test_config=None):    
     # create and configure the app
     app = Flask(__name__)
+    
+    # Get environment variables
+    load_dotenv(os.path.join(app.root_path, 'user', '.env'))
     
     app.config.from_mapping(
         SECRET_KEY=os.environ.get('FLASK_SECRET'),
         DATABASE=os.path.join(app.instance_path, 'gallery.sqlite'),
+        UPLOAD_FOLDER=os.path.join(app.root_path, 'user', 'uploads'),
     )
     
     if test_config is None:
@@ -49,8 +52,8 @@ def create_app(test_config=None):
     db.init_app(app)
     
     # Load theme
-    #from . import sassy
-    #sassy.compile('default')
+    from . import sassy
+    sassy.compile('default', app.root_path)
 
 
     @app.errorhandler(405)

@@ -1,10 +1,12 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, current_app
 )
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from gallery.auth import login_required
 from gallery.db import get_db
+import json
+import os
 blueprint = Blueprint('gallery', __name__)
 
 
@@ -41,9 +43,13 @@ def upload():
         file = request.files['file']
         form = request.form
         
-        if secure_filename(file.filename) == '':
+        if not file:
             flash('No selected file')
-            return redirect('gallery.upload')
+            return abort(404)
+        
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+        
+        return json.dumps({'filename': secure_filename(file.filename), 'form': form})
            
     return render_template('upload.html')
 
