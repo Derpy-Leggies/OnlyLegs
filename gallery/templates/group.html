@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<img src="{{ url_for('static', filename='images/leaves.jpg') }}" alt="leaves" onload="imgFade(this)" style="display: none;"/>
+{% endblock %}
+
+{% block content %}
+    <div class="app">
+        <h1>Image Group</h1>
+        <p>{{group_id}}</p>
+    </div>
+{% endblock %}

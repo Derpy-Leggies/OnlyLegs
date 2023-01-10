@@ -1,6 +1,10 @@
 {% extends 'layout.html' %}
-{% block content %}
 
+{% block header %}
+<img src="{{ url_for('static', filename='images/leaves.jpg') }}" alt="leaves" onload="imgFade(this)" style="display: none;"/>
+{% endblock %}
+
+{% block content %}
     <div class="app">
         <div class="image__container">
             <img class="image__item" src="/uploads/original/{{ fileName }}" onload="imgFade(this)" style="display:none;"/>

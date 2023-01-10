@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+    <img src="{{ url_for('static', filename='images/leaves.jpg') }}" alt="leaves" onload="imgFade(this)" style="display: none;"/>
+{% endblock %}
+
+{% block content %}
+    <div class="app">
+        <h1>Login</h1>
+        <div id="login" class="login">
+            <form method="post">
+                <label for="username">Username</label>
+                <input name="username" id="username" required>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" required>
+                <input type="submit" value="Log In">
+            </form>
+        
+            {% for message in get_flashed_messages() %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
