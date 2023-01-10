@@ -1,11 +1,11 @@
 print("""
   ___        _       _
- / _ \ _ __ | |_   _| |    ___  __ _ ___
-| | | | '_ \| | | | | |   / _ \/ _` / __|
-| |_| | | | | | |_| | |__|  __/ (_| \__ \ 
- \___/|_| |_|_|\__, |_____\___|\__, |___/
+ / _ \\ _ __ | |_   _| |    ___  __ _ ___
+| | | | '_ \\| | | | | |   / _ \\/ _` / __|
+| |_| | | | | | |_| | |__|  __/ (_| \\__ \\
+ \\___/|_| |_|_|\\__, |_____\\___|\\__, |___/
                |___/           |___/
-Created by Fluffy Bean  -  Version 080123
+Created by Fluffy Bean  -  Version 100123
 """)
 
 # Import base packages
@@ -90,6 +90,13 @@ def group_id(group_id):
 @app.route('/upload')
 def upload():
     return render_template('upload.html')
+
+@app.route('/upload/form', methods=['POST'])
+def upload_form():
+    if request.method != 'POST':
+        abort(405)
+
+    return 'balls'
 
 @app.route('/profile')
 def profile():

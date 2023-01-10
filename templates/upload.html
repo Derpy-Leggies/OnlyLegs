@@ -7,46 +7,93 @@
     <div class="app">
         <h1>Upload!!!!!</h1>
         <div id="upload" class="upload">
-            <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data"
-                <span>
+            <form method="post" enctype="multipart/form-data" id="uploadForm" style="display: flex;flex-direction: column;gap: 1rem;">
+                <label>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
                         <path d="M8 3.414v5.642a1 1 0 1 1-2 0V3.414L4.879 4.536A1 1 0 0 1 3.464 3.12L6.293.293a1 1 0 0 1 1.414 0l2.829 2.828A1 1 0 1 1 9.12 4.536L8 3.414zM1 12h12a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2z"></path>
                     </svg>
-                    <input type="file" name="file" id="file" class="inputfile"/>
-                </span>
+                    <input type="file" name="file" id="file" class="input-file"/>
+                </label>
 
-                <span>
+
+                <label>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -2 24 24" width="24" fill="currentColor">
                         <path d="M14 8.322V2H2v12h3.576l3.97-5.292A3 3 0 0 1 14 8.322zm0 3.753l-1.188-2.066a1 1 0 0 0-1.667-.101L8.076 14H14v-1.925zM14 16H2v2h12v-2zM2 0h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm4 9a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
                     </svg>
-                    <input type="text" name="alt" placeholder="alt" />
-                </span>
+                    <input type="text" name="alt" placeholder="alt" id="alt"/>
+                </label>
                 
-                <span>
+                <label>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor">
                         <path d="M5.72 14.456l1.761-.508 10.603-10.73a.456.456 0 0 0-.003-.64l-.635-.642a.443.443 0 0 0-.632-.003L6.239 12.635l-.52 1.82zM18.703.664l.635.643c.876.887.884 2.318.016 3.196L8.428 15.561l-3.764 1.084a.901.901 0 0 1-1.11-.623.915.915 0 0 1-.002-.506l1.095-3.84L15.544.647a2.215 2.215 0 0 1 3.159.016zM7.184 1.817c.496 0 .898.407.898.909a.903.903 0 0 1-.898.909H3.592c-.992 0-1.796.814-1.796 1.817v10.906c0 1.004.804 1.818 1.796 1.818h10.776c.992 0 1.797-.814 1.797-1.818v-3.635c0-.502.402-.909.898-.909s.898.407.898.91v3.634c0 2.008-1.609 3.636-3.593 3.636H3.592C1.608 19.994 0 18.366 0 16.358V5.452c0-2.007 1.608-3.635 3.592-3.635h3.592z"></path>
                     </svg>
-                    <input type="text" name="description" placeholder="description" />
-                </span>
+                    <input type="text" name="description" placeholder="description" id="description"/>
+                </label>
 
-                <span>
+                <label>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -3 24 24" width="24" fill="currentColor">
                         <path d="M11.586 15.071L13 13.657l1.414 1.414 6.165-6.165 1.09-3.552-2.484-2.483-1.079.336-1.598-1.598L18.591.96a2 2 0 0 1 2.008.496l2.483 2.483a2 2 0 0 1 .498 2L22.345 9.97l-7.93 7.93-2.83-2.828zM14.236.75l2.482 2.483a2 2 0 0 1 .498 2l-1.235 4.028-7.93 7.931-7.78-7.778L8.17 1.516 12.227.254a2 2 0 0 1 2.008.496zM3.1 9.414l4.95 4.95 6.164-6.165 1.09-3.552-2.484-2.483-3.585 1.115L3.1 9.414zm7.424-2.475a1.5 1.5 0 1 1 2.121-2.121 1.5 1.5 0 0 1-2.12 2.121zm6.886 1.022l.782-2.878c.45.152.755.325.917.518a1.5 1.5 0 0 1-.185 2.113c-.29.244-.795.326-1.514.247z"></path>
                     </svg>
-                    <input type="text" name="tags" placeholder="tags" />
-                </span>
+                    <input type="text" name="tags" placeholder="tags" id="tags"/>
+                </label>
 
-                <span>
+                <label>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24" fill="currentColor">
                         <path d="M10.83 2H17a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3h5c1.306 0 2.417.835 2.83 2zM17 4H9.415l-.471-1.334A1.001 1.001 0 0 0 8 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z"></path><path d="M1 5h18v2H1z"></path>
                     </svg>
-                    <input type="checkbox" name="group" placeholder="group" />
-                </span>
-                <input type="submit" value="Upload" name="submit" />
+                    <span>group1</span>
+                    <input type="checkbox" name="group" placeholder="group"/>
+
+                    <span>group2</span>
+                    <input type="checkbox" name="group" placeholder="group"/>
+
+                    <span>group3</span>
+                    <input type="checkbox" name="group" placeholder="group"/>
+
+                    <span>group4</span>
+                    <input type="checkbox" name="group" placeholder="group"/>
+                </label>
+
+                <input type="submit" value="Upload" name="submit" id="submit"/>
             </form>
         </div>
     </div>
     <script>
+        $("#uploadForm").submit(function(event) {
+            // AJAX takes control of subby form
+			event.preventDefault();
 
+            // Check for empty upload
+			if ($("#file").val() === "") {
+				alert('Gwha! Pls provide image');
+            } else {
+                // Make form
+                var formData = new FormData();
+                formData.append("file", $("#file").prop("files")[0]);
+                formData.append("alt", $("#alt").val());
+                formData.append("description", $("#description").val());
+                formData.append("tags", $("#tags").val());
+                formData.append("submit", $("#submit").val());
+
+                // Upload the information
+                $.ajax({
+                    url: '/upload/form',
+                    type: 'post',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        alert(response)
+                    }
+                });
+
+                // Empty values
+                $("#image").val("");
+                $("#alt").val("");
+                $("#description").val("");
+                $("#tags").val("");
+                $("#submit").val("");
+            }
+		});
     </script>
 {% endblock %}
