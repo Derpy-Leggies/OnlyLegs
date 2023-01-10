@@ -1,30 +1,38 @@
-from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, current_app
-)
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, current_app
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from gallery.auth import login_required
 from gallery.db import get_db
-import json
 import os
+import datetime
+dt = datetime.datetime.now()
+
 blueprint = Blueprint('gallery', __name__)
 
 
 @blueprint.route('/')
 def index():
-    return render_template('index.html')
+    db = get_db()
+    images = db.execute(
+        'SELECT * FROM posts'
+        ' ORDER BY created_at DESC'
+    ).fetchall()
+    
+    return render_template('index.html', images=images)
 
-@blueprint.route('/image/<request_id>')
-def image(request_id):
-    # Check if request_id is valid
-    try:
-        request_id = int(request_id)
-    except ValueError:
+@blueprint.route('/image/<int:id>')
+def image(id):    
+    db = get_db()
+    post = db.execute(
+        'SELECT * FROM posts'
+        ' WHERE id = ?',
+        (id,)
+    ).fetchone()
+    
+    if post is None:
         abort(404)
     
-    result = onlylegsDB.getImage(request_id)
-    
-    return render_template('image.html', fileName=result[1], id=request_id)
+    return render_template('image.html', fileName=post['file_name'], id=id)
 
 
 @blueprint.route('/group')
@@ -46,10 +54,19 @@ def upload():
         if not file:
             flash('No selected file')
             return abort(404)
+        if secure_filename(file.filename).lower().split('.')[-1] in current_app.config['ALLOWED_EXTENSIONS']:
+            file_name = f"GWAGWA_{dt.year}{dt.month}{dt.day}-{dt.microsecond}.{secure_filename(file.filename).lower().split('.')[-1]}"
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER']+'/original', file_name))
+            
+        db = get_db()
+        db.execute(
+            'INSERT INTO posts (file_name, author_id, description, alt)'
+            ' VALUES (?, ?, ?, ?)',
+            (file_name, g.user['id'], form['description'], form['alt'])
+        )
+        db.commit()
         
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
-        
-        return json.dumps({'filename': secure_filename(file.filename), 'form': form})
+        return 'Gwa Gwa'
            
     return render_template('upload.html')
 

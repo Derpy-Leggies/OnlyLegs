@@ -7,7 +7,18 @@
 {% block content %}
     <div class="app">
         <h1>Gallery</h1>
-        <div id="gallery" class="gallery"></div>
+        <div id="gallery" class="gallery">
+            {% for image in images %}
+                <a class="gallery__item" href="/image/{{ image['id'] }}">
+                    <div class="gallery__item-info">
+                        <p>{{ image['id'] }}</p>
+                        <h2>{{ image['file_name'] }}</h2>
+                    </div>
+                    <span class="gallery__item-filter"></span>
+                    <img class="gallery__item-image" src="/uploads/original/{{ image['file_name'] }}" onload="imgFade(this)" style="display:none;">
+                </a>
+            {% endfor %}
+        </div>
     </div>
     <script>
         let imageList = [];

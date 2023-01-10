@@ -26,11 +26,13 @@ def create_app(test_config=None):
     
     # Get environment variables
     load_dotenv(os.path.join(app.root_path, 'user', '.env'))
-    
+
+    # App configuration    
     app.config.from_mapping(
         SECRET_KEY=os.environ.get('FLASK_SECRET'),
         DATABASE=os.path.join(app.instance_path, 'gallery.sqlite'),
         UPLOAD_FOLDER=os.path.join(app.root_path, 'user', 'uploads'),
+        ALLOWED_EXTENSIONS=['png', 'jpg', 'jpeg', 'webp'],
     )
     
     if test_config is None:
@@ -91,14 +93,13 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.blueprint)
     
-    # Load apis
-    from . import api
-    app.register_blueprint(api.blueprint)
-    
     # Load routes for home and images
     from . import gallery
     app.register_blueprint(gallery.blueprint)
     app.add_url_rule('/', endpoint='index')
-
+    
+    # Load APIs
+    from . import api
+    app.register_blueprint(api.blueprint)
 
     return app

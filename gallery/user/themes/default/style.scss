@@ -68,6 +68,7 @@
         font-size: 5rem;
         font-weight: 900;
         line-height: 1;
+        text-align: center;
 
         color: $green;
     }
@@ -79,6 +80,7 @@
         font-size: 2rem;
         font-weight: 600;
         line-height: 1;
+        text-align: center;
 
         color: $white100;
     }
@@ -208,7 +210,7 @@
 }
 
 .image__container {
-    margin: 0;
+    margin: -40vh 0 0 0;
     padding: 0;
 
     width: 100%;
