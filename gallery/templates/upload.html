@@ -78,7 +78,7 @@
 
                 // Upload the information
                 $.ajax({
-                    url: '/upload/form',
+                    url: '/upload',
                     type: 'post',
                     data: formData,
                     contentType: false,
@@ -89,7 +89,7 @@
                 });
 
                 // Empty values
-                $("#image").val("");
+                $("#file").val("");
                 $("#alt").val("");
                 $("#description").val("");
                 $("#tags").val("");

@@ -13,19 +13,12 @@ import time
 import sys
 import os
 
-# Import required OnlyLegs packages
-#from packages import onlylegsDB
-#onlylegsDB = onlylegsDB.DBmanager()
-#onlylegsDB.initialize()
-
-#from packages import onlylegsSass
-#onlylegsSass = onlylegsSass.Sassy('default')
-
 # Import flask
 from flask import *
 from werkzeug.utils import secure_filename
 
 def create_app(test_config=None):
+    # Get environment variables
     from dotenv import load_dotenv
     load_dotenv(os.path.join('./gallery', 'user', '.env'))
     
@@ -49,6 +42,16 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+    
+    
+    # Load database
+    from . import db
+    db.init_app(app)
+    
+    # Load theme
+    #from . import sassy
+    #sassy.compile('default')
+
 
     @app.errorhandler(405)
     def method_not_allowed(e):
@@ -80,47 +83,19 @@ def create_app(test_config=None):
         msg = 'Server died inside :c'
         return render_template('error.html', error=error, msg=msg), 500
     
-    from . import auth
-    app.register_blueprint(auth.bp)
     
-    from . import routes
-    app.register_blueprint(routes.bp)
+    # Load login, registration and logout manager
+    from . import auth
+    app.register_blueprint(auth.blueprint)
+    
+    # Load apis
+    from . import api
+    app.register_blueprint(api.blueprint)
+    
+    # Load routes for home and images
+    from . import gallery
+    app.register_blueprint(gallery.blueprint)
     app.add_url_rule('/', endpoint='index')
 
-
-    #
-    #   METHODS
-    #
-    @app.route('/fileList/<item_type>', methods=['GET'])
-    def image_list(item_type):
-        if request.method != 'GET':
-            abort(405)
-        
-        cursor = onlylegsDB.database.cursor()
-        cursor.execute("SELECT * FROM posts ORDER BY id DESC")
-        
-        item_list = cursor.fetchall()
-
-        return jsonify(item_list)
-
-    @app.route('/uploads/<quality>/<request_file>', methods=['GET'])
-    def uploads(quality, request_file):
-        if request.method != 'GET':
-            abort(405)
-
-        quality = secure_filename(quality)
-        quality_dir = os.path.join(app.config['UPLOAD_FOLDER'], quality)
-        if not os.path.isdir(quality_dir):
-            abort(404)
-
-        request_file = secure_filename(request_file)
-
-        if not os.path.isfile(os.path.join(quality_dir, request_file)):
-            abort(404)
-
-        return send_from_directory(quality_dir, request_file)
-
-    from . import db
-    db.init_app(app)
 
     return app
