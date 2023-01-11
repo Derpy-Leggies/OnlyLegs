@@ -22,41 +22,13 @@ def index():
     
     return render_template('index.html', images=images)
 
-@blueprint.route('/image/<int:id>')
-def image(id):    
-    db = get_db()
-    image = db.execute(
-        'SELECT * FROM posts'
-        ' WHERE id = ?',
-        (id,)
-    ).fetchone()
-    
-    if image is None:
-        abort(404)
-    
-    file = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], 'original', image['file_name']))
-    
-    raw_exif = file.getexif()
-    human_exif = {}
-    for tag in raw_exif:
-        name = TAGS.get(tag, tag)
-        value = raw_exif.get(tag)
-        
-        if isinstance(value, bytes):
-            value = value.decode()
-        
-        human_exif[name] = value
-    
-    return render_template('image.html', image=image, exif=human_exif)
-
-
 @blueprint.route('/group')
 def groups():
-    return render_template('groups/group.html', group_id='gwa gwa')
+    return render_template('group.html', group_id='gwa gwa')
 
 @blueprint.route('/group/<int:id>')
 def group(id):    
-    return render_template('groups/group.html', group_id=id)
+    return render_template('group.html', group_id=id)
 
 
 @blueprint.route('/upload', methods=('GET', 'POST'))
@@ -82,7 +54,8 @@ def upload():
         db.commit()
         
         return 'Gwa Gwa'
-           
+
+    # GET, or in human language, when you visit the page
     return render_template('upload.html')
 
 

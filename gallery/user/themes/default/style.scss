@@ -5,6 +5,7 @@
 @import 'ui/nav';
 @import 'ui/main';
 
+@import 'buttons/img-tool';
 @import 'buttons/btn';
 @import 'buttons/up';
 
@@ -28,6 +29,31 @@
     z-index: 1;
     overflow: unset;
 
+    > h1 {
+        margin: 0 auto;
+        padding: 0;
+
+        font-family: $font-header;
+        font-size: 5rem;
+        font-weight: 900;
+        line-height: 1;
+        text-align: center;
+
+        color: $green;
+    }
+    > p {
+        margin: 0 auto;
+        padding: 0;
+
+        font-family: $font-body;
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 1;
+        text-align: center;
+
+        color: $white100;
+    }
+    /*
     h1 {
         margin: 0;
         padding: 0;
@@ -39,6 +65,7 @@
 
         color: $green;
     }
+    */
 }
 
 @keyframes imgLoading {
@@ -60,7 +87,7 @@
 
     gap: 0;
 
-    h1 {
+    > h1 {
         margin: 0 auto;
         padding: 0;
 
@@ -72,7 +99,7 @@
 
         color: $green;
     }
-    p {
+    > p {
         margin: 0 auto;
         padding: 0;
 
@@ -231,12 +258,16 @@
         padding: 0;
 
         max-width: 100%;
+        height: 100%;
         max-height: 75vh;
+
+        background: linear-gradient(-45deg, $black100, $black400 40%, $black100);
+        background-size: 400% 400%;
+        border-radius: $rad;
+        animation: imgLoading 10s ease infinite;
 
         object-fit: contain;
         object-position: center;
-
-        border-radius: $rad;
     }
 }
 
@@ -283,5 +314,26 @@
 
         text-overflow: ellipsis;
         overflow: hidden;
+    }
+}
+
+.img-tools {
+    width: 100%;
+    height: 2rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    > div {
+        margin: 0;
+        padding: 0;
+
+        display: flex;
+        gap: 0.5rem;
+
+        background-color: $black200;
+        border-radius: $rad;
     }
 }

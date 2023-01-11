@@ -5,7 +5,7 @@ print("""
 | |_| | | | | | |_| | |__|  __/ (_| \\__ \\
  \\___/|_| |_|_|\\__, |_____\\___|\\__, |___/
                |___/           |___/
-Created by Fluffy Bean  -  Version 100123
+Created by Fluffy Bean  -  Version 110123
 """)
 
 # Import base packages
@@ -97,6 +97,10 @@ def create_app(test_config=None):
     from . import gallery
     app.register_blueprint(gallery.blueprint)
     app.add_url_rule('/', endpoint='index')
+    
+    # Load routes for images
+    from . import image
+    app.register_blueprint(image.blueprint)
     
     # Load APIs
     from . import api

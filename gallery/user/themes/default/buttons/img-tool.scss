@@ -1,0 +1,29 @@
+.tool-btn {
+    margin: 0;
+    padding: 0.5rem;
+
+    width: 2.5rem;
+    height: 2.5rem;
+
+    border: none;
+    background-color: transparent;
+    color: $white100;
+
+    svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    &:hover {
+        cursor: pointer;
+
+        color: $green;
+    }
+}
+.tool-btn--evil {
+    color: $red;
+
+    &:hover {
+        color: $white100;
+    }
+}
