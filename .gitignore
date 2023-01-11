@@ -1,5 +1,7 @@
 # Remove all development files
 gallery/user/uploads/*
+gallery/user/conf.yml
+gallery/user/conf.json
 gallery/static/theme/*
 
 .idea

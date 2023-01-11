@@ -5,8 +5,6 @@ from gallery.auth import login_required
 from gallery.db import get_db
 import os
 import datetime
-from PIL import Image
-from PIL.ExifTags import TAGS
 dt = datetime.datetime.now()
 
 blueprint = Blueprint('gallery', __name__)
@@ -41,9 +39,11 @@ def upload():
         if not file:
             flash('No selected file')
             return abort(404)
-        if secure_filename(file.filename).lower().split('.')[-1] in current_app.config['ALLOWED_EXTENSIONS']:
-            file_name = f"GWAGWA_{dt.year}{dt.month}{dt.day}-{dt.microsecond}.{secure_filename(file.filename).lower().split('.')[-1]}"
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER']+'/original', file_name))
+        if not secure_filename(file.filename).lower().split('.')[-1] in current_app.config['ALLOWED_EXTENSIONS']:
+            abort(403)
+        
+        file_name = file_name = f"GWAGWA_{dt.year}{dt.month}{dt.day}-{dt.microsecond}.{secure_filename(file.filename).lower().split('.')[-1]}"
+        file.save(os.path.join(current_app.config['UPLOAD_FOLDER']+'/original', file_name))
             
         db = get_db()
         db.execute(

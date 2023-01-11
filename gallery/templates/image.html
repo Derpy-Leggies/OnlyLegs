@@ -5,30 +5,44 @@
 {% endblock %}
 
 {% block content %}
+    <div class="image__fullscreen">
+        <img
+            src="/uploads/original/{{ image['file_name'] }}"
+            onload="imgFade(this)" style="display:none;"
+            onerror="this.style.display='none'"
+        />
+    </div>
+
     <div class="app">
         <div class="image__container">
             <img
                 class="image__item"
                 src="/uploads/original/{{ image['file_name'] }}"
                 onload="imgFade(this)" style="display:none;"
+                onerror="this.src='/static/images/error.png'"
             />
         </div>
         <div class="img-tools">
             <div>
-                <button class="tool-btn" id="img-download">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" fill="currentColor">
-                        <path d="M8 6.641l1.121-1.12a1 1 0 0 1 1.415 1.413L7.707 9.763a.997.997 0 0 1-1.414 0L3.464 6.934A1 1 0 1 1 4.88 5.52L6 6.641V1a1 1 0 1 1 2 0v5.641zM1 12h12a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2z"></path>
-                    </svg>
-                </button>
-                <button class="tool-btn" id="img-fullscreen">
+                <button class="tool-btn" id="img-info">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" fill="currentColor">
-                        <path d="M19 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V3.414L11.414 10 18 16.586V13a1 1 0 0 1 2 0v6a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h3.586L10 11.414 3.414 18H7a1 1 0 0 1 0 2H1a1 1 0 0 1-1-1v-6a1 1 0 0 1 2 0v3.586L8.586 10 2 3.414V7a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H3.414L10 8.586 16.586 2H13a1 1 0 0 1 0-2h6z"></path>
+                        <path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-10a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm0-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>
                     </svg>
+                    <span class="tool-tip">Info</span>
+                </button>
+            </div>
+            <div>
+                <button class="tool-btn" id="img-fullscreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 24 24" fill="currentColor">
+                        <path d="M12.586 2H11a1 1 0 0 1 0-2h4a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0V3.414L9.414 8 14 12.586V11a1 1 0 0 1 2 0v4a1 1 0 0 1-1 1h-4a1 1 0 0 1 0-2h1.586L8 9.414 3.414 14H5a1 1 0 0 1 0 2H1a1 1 0 0 1-1-1v-4a1 1 0 0 1 2 0v1.586L6.586 8 2 3.414V5a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H3.414L8 6.586 12.586 2z"></path>
+                    </svg>
+                    <span class="tool-tip">Fullscreen</span>
                 </button>
                 <button class="tool-btn" id="img-share">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -3 24 24" fill="currentColor">
                         <path d="M3.19 9.345a.97.97 0 0 1 1.37 0 .966.966 0 0 1 0 1.367l-2.055 2.052a1.932 1.932 0 0 0 0 2.735 1.94 1.94 0 0 0 2.74 0l4.794-4.787a.966.966 0 0 0 0-1.367.966.966 0 0 1 0-1.368.97.97 0 0 1 1.37 0 2.898 2.898 0 0 1 0 4.103l-4.795 4.787a3.879 3.879 0 0 1-5.48 0 3.864 3.864 0 0 1 0-5.47L3.19 9.344zm11.62-.69a.97.97 0 0 1-1.37 0 .966.966 0 0 1 0-1.367l2.055-2.052a1.932 1.932 0 0 0 0-2.735 1.94 1.94 0 0 0-2.74 0L7.962 7.288a.966.966 0 0 0 0 1.367.966.966 0 0 1 0 1.368.97.97 0 0 1-1.37 0 2.898 2.898 0 0 1 0-4.103l4.795-4.787a3.879 3.879 0 0 1 5.48 0 3.864 3.864 0 0 1 0 5.47L14.81 8.656z"></path>
                     </svg>
+                    <span class="tool-tip">Share</span>
                 </button>
             </div>
             {% if g.user['id'] == image['author_id'] %}
@@ -37,27 +51,30 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -2 24 24" fill="currentColor">
                             <path d="M6 2V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-.133l-.68 10.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.137 7H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4zm10 2H2v1h14V4zM4.141 7l.687 10.068a1 1 0 0 0 .998.932h6.368a1 1 0 0 0 .998-.934L13.862 7h-9.72zM7 8a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path>
                         </svg>
+                        <span class="tool-tip">Delete</span>
                     </button>
                     <button class="tool-btn tool-btn--evil" id="img-edit">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.5 -2.5 24 24" fill="currentColor">
                             <path d="M12.238 5.472L3.2 14.51l-.591 2.016 1.975-.571 9.068-9.068-1.414-1.415zM13.78 3.93l1.414 1.414 1.318-1.318a.5.5 0 0 0 0-.707l-.708-.707a.5.5 0 0 0-.707 0L13.781 3.93zm3.439-2.732l.707.707a2.5 2.5 0 0 1 0 3.535L5.634 17.733l-4.22 1.22a1 1 0 0 1-1.237-1.241l1.248-4.255 12.26-12.26a2.5 2.5 0 0 1 3.535 0z"></path>
                         </svg>
-                    </button>
-                    <button class="tool-btn tool-btn--evil" id="img-tags">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -3 24 24" fill="currentColor">
-                            <path d="M11.586 15.071L13 13.657l1.414 1.414 6.165-6.165 1.09-3.552-2.484-2.483-1.079.336-1.598-1.598L18.591.96a2 2 0 0 1 2.008.496l2.483 2.483a2 2 0 0 1 .498 2L22.345 9.97l-7.93 7.93-2.83-2.828zM14.236.75l2.482 2.483a2 2 0 0 1 .498 2l-1.235 4.028-7.93 7.931-7.78-7.778L8.17 1.516 12.227.254a2 2 0 0 1 2.008.496zM3.1 9.414l4.95 4.95 6.164-6.165 1.09-3.552-2.484-2.483-3.585 1.115L3.1 9.414zm7.424-2.475a1.5 1.5 0 1 1 2.121-2.121 1.5 1.5 0 0 1-2.12 2.121zm6.886 1.022l.782-2.878c.45.152.755.325.917.518a1.5 1.5 0 0 1-.185 2.113c-.29.244-.795.326-1.514.247z"></path>
-                        </svg>
+                        <span class="tool-tip">Edit</span>
                     </button>
                 </div>
             {% endif %}
         </div>
+        {% if image['description'] != '' %}
+            <div class="image__info">
+                <h2>Description</h2>
+                <p>{{ image['description'] }}</p>
+            </div>
+        {% endif %}
         <div class="image__info">
             <h2>Info</h2>
-            <p>{{ image['file_name'] }}</p>
-            <p>{{ image['id'] }}</p>
-            <p>{{ image['author_id'] }}</p>
-            <p>{{ image['created_at'] }}</p>
-            <p>{{ image['description'] }}</p>
+            <p>Filename: {{ image['file_name'] }}</p>
+            <p>Image ID: {{ image['id'] }}</p>
+            <p>Author: {{ image['author_id'] }}</p>
+            <p>Upload date: {{ image['created_at'] }}</p>
+            <p>Dimensions: {{ file['width'] }}x{{ file['height'] }}</p>
         </div>
         {% if exif is not false %}
             <div class="image__info">
@@ -69,14 +86,19 @@
         {% endif %}
     </div>
     <script>
-        $('#img-download').click(function() {
-            window.location.href = '/image/{{ image['id'] }}/download';
+        $('.image__fullscreen').click(function() {
+            $('.image__fullscreen').removeClass('image__fullscreen--active');
         });
+
         $('#img-fullscreen').click(function() {
-            
+            $('.image__fullscreen').addClass('image__fullscreen--active');
         });
         $('#img-share').click(function() {
-            navigator.clipboard.writeText(window.location.href);
+            //navigator.clipboard.writeText(window.location.href);
+            console.log('Non https debug: Copied to clipboard');
+        });
+        $('#img-info').click(function() {
+            
         });
 
         {% if g.user['id'] == image['author_id'] %}
@@ -95,10 +117,6 @@
             $('#img-edit').click(function() {
                 window.location.href = '/image/{{ image['id'] }}/edit';
             });
-            $('#img-tags').click(function() {
-                window.location.href = '/image/{{ image['id'] }}/tags';
-            });
-
         {% endif %}
     </script>
 {% endblock %}

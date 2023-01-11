@@ -12,6 +12,7 @@ Created by Fluffy Bean  -  Version 110123
 import time
 import sys
 import os
+import yaml
 
 # Import flask
 from flask import *
@@ -26,13 +27,19 @@ def create_app(test_config=None):
     
     # Get environment variables
     load_dotenv(os.path.join(app.root_path, 'user', '.env'))
+    
+    # Get config file
+    with open(os.path.join(app.root_path, 'user', 'conf.yml'), 'r') as f:
+        conf = yaml.load(f, Loader=yaml.FullLoader)
+        print("Loaded config")
+        print(conf['upload']['allowed-extensions'])
 
     # App configuration    
     app.config.from_mapping(
         SECRET_KEY=os.environ.get('FLASK_SECRET'),
         DATABASE=os.path.join(app.instance_path, 'gallery.sqlite'),
         UPLOAD_FOLDER=os.path.join(app.root_path, 'user', 'uploads'),
-        ALLOWED_EXTENSIONS=os.environ.get('FLASK_EXTENSIONS'),
+        ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
     )
     
     if test_config is None:
