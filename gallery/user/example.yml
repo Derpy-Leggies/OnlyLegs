@@ -7,10 +7,10 @@ admin:
 
 upload:
   allowed-extensions: 
-    - png
-    - jpg
-    - jpeg
-    - webp
+    - .png
+    - .jpg
+    - .jpeg
+    - .webp
   max-size: 69MB
   rename: GWA_{{username}}_{{time}}
 

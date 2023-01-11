@@ -32,13 +32,13 @@ def create_app(test_config=None):
     with open(os.path.join(app.root_path, 'user', 'conf.yml'), 'r') as f:
         conf = yaml.load(f, Loader=yaml.FullLoader)
         print("Loaded config")
-        print(conf['upload']['allowed-extensions'])
 
     # App configuration    
     app.config.from_mapping(
         SECRET_KEY=os.environ.get('FLASK_SECRET'),
         DATABASE=os.path.join(app.instance_path, 'gallery.sqlite'),
         UPLOAD_FOLDER=os.path.join(app.root_path, 'user', 'uploads'),
+        MAX_CONTENT_LENGTH = 1024 * 1024 * conf['upload']['max-size'],
         ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
     )
     

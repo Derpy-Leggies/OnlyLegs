@@ -3,6 +3,7 @@ from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from gallery.auth import login_required
 from gallery.db import get_db
+from PIL import Image
 import os
 import datetime
 dt = datetime.datetime.now()
@@ -29,33 +30,9 @@ def group(id):
     return render_template('group.html', group_id=id)
 
 
-@blueprint.route('/upload', methods=('GET', 'POST'))
+@blueprint.route('/upload')
 @login_required
 def upload():
-    if request.method == 'POST':
-        file = request.files['file']
-        form = request.form
-        
-        if not file:
-            flash('No selected file')
-            return abort(404)
-        if not secure_filename(file.filename).lower().split('.')[-1] in current_app.config['ALLOWED_EXTENSIONS']:
-            abort(403)
-        
-        file_name = file_name = f"GWAGWA_{dt.year}{dt.month}{dt.day}-{dt.microsecond}.{secure_filename(file.filename).lower().split('.')[-1]}"
-        file.save(os.path.join(current_app.config['UPLOAD_FOLDER']+'/original', file_name))
-            
-        db = get_db()
-        db.execute(
-            'INSERT INTO posts (file_name, author_id, description, alt)'
-            ' VALUES (?, ?, ?, ?)',
-            (file_name, g.user['id'], form['description'], form['alt'])
-        )
-        db.commit()
-        
-        return 'Gwa Gwa'
-
-    # GET, or in human language, when you visit the page
     return render_template('upload.html')
 
 

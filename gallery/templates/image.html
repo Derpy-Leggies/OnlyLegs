@@ -1,13 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-    <img src="/uploads/original/{{ image['file_name'] }}" alt="leaves" onload="imgFade(this)" style="display: none;"/>
+    <img src="/api/uploads/original/{{ image['file_name'] }}" alt="leaves" onload="imgFade(this)" style="display: none;"/>
 {% endblock %}
 
 {% block content %}
     <div class="image__fullscreen">
         <img
-            src="/uploads/original/{{ image['file_name'] }}"
+            src="/api/uploads/original/{{ image['file_name'] }}"
             onload="imgFade(this)" style="display:none;"
             onerror="this.style.display='none'"
         />
@@ -17,20 +17,12 @@
         <div class="image__container">
             <img
                 class="image__item"
-                src="/uploads/original/{{ image['file_name'] }}"
+                src="/api/uploads/original/{{ image['file_name'] }}"
                 onload="imgFade(this)" style="display:none;"
                 onerror="this.src='/static/images/error.png'"
             />
         </div>
         <div class="img-tools">
-            <div>
-                <button class="tool-btn" id="img-info">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" fill="currentColor">
-                        <path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-10a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm0-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>
-                    </svg>
-                    <span class="tool-tip">Info</span>
-                </button>
-            </div>
             <div>
                 <button class="tool-btn" id="img-fullscreen">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 24 24" fill="currentColor">
@@ -61,6 +53,14 @@
                     </button>
                 </div>
             {% endif %}
+            <div>
+                <button class="tool-btn" id="img-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" fill="currentColor">
+                        <path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-10a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm0-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>
+                    </svg>
+                    <span class="tool-tip">Info</span>
+                </button>
+            </div>
         </div>
         {% if image['description'] != '' %}
             <div class="image__info">
@@ -104,13 +104,16 @@
         {% if g.user['id'] == image['author_id'] %}
             $('#img-delete').click(function() {
                 $.ajax({
-                    url: '/image/{{ image['id'] }}',
+                    url: '/api/remove/{{ image['id'] }}',
                     type: 'post',
                     data: {
                         action: 'delete'
                     },
-                    success: function(result) {
+                    success: function(response) {
                         window.location.href = '/';
+                    },
+                    error: function(response) {
+                        alert(response);
                     }
                 });
             });

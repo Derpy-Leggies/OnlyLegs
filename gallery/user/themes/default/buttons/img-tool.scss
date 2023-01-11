@@ -24,7 +24,7 @@
         .tool-tip {
             opacity: 1;
             top: -2.5rem;
-            //transition-delay: 0.5s;
+            transform: translateX(calc(-50% + 1.25rem ));
         }
     }
 }
@@ -33,6 +33,17 @@
 
     span {
         background-color: $red;
+    }
+
+    &:hover {
+        color: $white100;
+    }
+}
+.tool-btn--blu {
+    color: $blue;
+
+    span {
+        background-color: $blue;
     }
 
     &:hover {
