@@ -9,6 +9,7 @@
     </script>
 </head>
 <body>
+    <div class="notification-list"></div>
     <nav id="navRoot">
         <div>
             <a href="{{url_for('gallery.index')}}">
@@ -66,7 +67,6 @@
 
         document.onscroll = function() {
             document.querySelector('header').style.opacity = `${1 - window.scrollY / 621}`;
-            //document.querySelector('header').style.height = `calc(50vh - ${window.scrollY / 2}px)`;
             document.querySelector('header').style.top = `-${window.scrollY / 5}px`;
 
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {

@@ -15,7 +15,7 @@
                         <h2>{{ image['file_name'] }}</h2>
                     </div>
                     <span class="gallery__item-filter"></span>
-                    <img class="gallery__item-image" src="/api/uploads/original/{{ image['file_name'] }}" onload="imgFade(this)" style="display:none;">
+                    <img class="gallery__item-image" src="/api/uploads/{{ image['file_name'] }}/400" onload="imgFade(this)" style="display:none;">
                 </a>
             {% endfor %}
         </div>

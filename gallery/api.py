@@ -1,95 +1,97 @@
-from flask import Blueprint, render_template, current_app, send_from_directory, request, g, abort, flash
+from flask import Blueprint, render_template, current_app, send_from_directory, send_file, request, g, abort, flash
 from werkzeug.utils import secure_filename
 from gallery.auth import login_required
 from gallery.db import get_db
-from PIL import Image
+from PIL import Image, ImageOps
+import io
 import os
 from uuid import uuid4
 
 blueprint = Blueprint('viewsbp', __name__, url_prefix='/api')
 
 
-@blueprint.route('/uploads/<quality>/<file>')
-def uploads(quality, file):
-    dir = os.path.join(current_app.config['UPLOAD_FOLDER'], secure_filename(quality))
-    file = secure_filename(file)
+@blueprint.route('/uploads/<file>/<int:quality>', methods=['GET'])
+def uploads(file, quality):
+    # If quality is 0, return original file
+    if quality == 0:
+        return send_from_directory(current_app.config['UPLOAD_FOLDER'], secure_filename(file), as_attachment=True)
 
-    return send_from_directory(dir, file, as_attachment=True)
+    # Set variables
+    set_ext = {'jpg': 'jpeg', 'jpeg': 'jpeg', 'png': 'png', 'webp': 'webp'}
+    buff = io.BytesIO()
+    
+    # Open image and set extension
+    img = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], secure_filename(file)))
+    img_ext = os.path.splitext(secure_filename(file))[-1].lower().replace('.', '')
+    img_ext = set_ext[img_ext]
+    
+    # Resize image and orientate correctly
+    img.thumbnail((quality, quality), Image.LANCZOS)
+    img = ImageOps.exif_transpose(img)
+    img.save(buff, img_ext)
+
+    # Seek to beginning of buffer and return
+    buff.seek(0)
+    return send_file(buff, mimetype='image/'+img_ext)
 
 @blueprint.route('/upload', methods=['POST'])
 @login_required
 def upload():
-    file = request.files['file']
+    form_file = request.files['file']
     form = request.form
-    
-    # Check if file has been submitted
-    if not file:
-        flash('No selected file')
+
+    if not form_file:
         return abort(404)
     
-    # New file name and check if file extension is allowed
-    file_ext = os.path.splitext(file.filename)[1].lower()
-    file_name = f"GWAGWA_{uuid4().__str__()}{file_ext}"
+    img_ext = os.path.splitext(secure_filename(form_file.filename))[-1].lower()
+    img_name = f"GWAGWA_{uuid4().__str__()}{img_ext}"
 
-    if not file_ext in current_app.config['ALLOWED_EXTENSIONS']:
-        return 'File extension not allowed: '+file_ext
+    if not img_ext in current_app.config['ALLOWED_EXTENSIONS']:
+        return 'File extension not allowed: '+img_ext
     
+    # Save to database
     try:
-        file.save(os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER']+'/original', file_name))
-    except:
-        return 'Could not save file'
-
-    # Resize image
-    thumbnail_size = 300, 300
-    preview_size = 1000, 1000
-    img_file = Image.open(os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER']+'/original', file_name))
-    
-    try:
-        # save thumbnail
-        img_file.thumbnail(thumbnail_size, Image.Resampling.LANCZOS)
-        img_file.save(os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER']+'/thumbnail', file_name))
-        
-        # save preview
-        img_file.thumbnail(preview_size, Image.Resampling.LANCZOS)
-        img_file.save(os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER']+'/preview', file_name))
+        db = get_db()
+        db.execute(
+            'INSERT INTO posts (file_name, author_id, description, alt)'
+            ' VALUES (?, ?, ?, ?)',
+            (img_name, g.user['id'], form['description'], form['alt'])
+        )
+        db.commit()
     except Exception as e:
-        return 'Could not resize image: '+ str(e)
+        abort(500)
     
-    db = get_db()
-    db.execute(
-        'INSERT INTO posts (file_name, author_id, description, alt)'
-        ' VALUES (?, ?, ?, ?)',
-        (file_name, g.user['id'], form['description'], form['alt'])
-    )
-    db.commit()
+    # Save file  
+    try:
+        form_file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], img_name))
+    except:
+        abort(500)
     
     return 'Gwa Gwa'
 
 @blueprint.route('/remove/<int:id>', methods=['POST'])
 @login_required
 def remove(id):
-    image = get_db().execute(
+    img = get_db().execute(
         'SELECT author_id, file_name FROM posts WHERE id = ?',
         (id,)
     ).fetchone()
 
-    if image is None:
+    if img is None:
         abort(404)
-    if image['author_id'] != g.user['id']:
+    if img['author_id'] != g.user['id']:
         abort(403)
     
     try:
-        os.remove(os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER'], 'original', image['file_name']))
-        os.remove(os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER'], 'thumbnail', image['file_name']))
-        os.remove(os.path.join(current_app.instance_path, current_app.config['UPLOAD_FOLDER'], 'preview', image['file_name']))
+        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
     except Exception as e:
-        return 'file error: '+str(e)
+        abort(500)
     
     try:
         db = get_db()
         db.execute('DELETE FROM posts WHERE id = ?', (id,))
         db.commit()
     except:
-        return 'database error'
+        abort(500)
     
     return 'Gwa Gwa'
