@@ -1,15 +1,15 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-    <img src="/api/uploads/{{ image['file_name'] }}/1000" alt="leaves" onload="imgFade(this)" style="display: none;"/>
+    <img src="/api/uploads/{{ image['file_name'] }}/1000" alt="leaves" onload="imgFade(this)" style="opacity:0;"/>
 {% endblock %}
 
 {% block content %}
     <div class="image__fullscreen">
         <img
-            src="/api/uploads/{{ image['file_name'] }}/0"
-            onload="imgFade(this)" style="display:none;"
-            onerror="this.style.display='none'"
+            src=""
+            onload="imgFade(this)"
+            style="opacity:0;"
         />
     </div>
 
@@ -18,7 +18,7 @@
             <img
                 class="image__item"
                 src="/api/uploads/{{ image['file_name'] }}/1000"
-                onload="imgFade(this)" style="display:none;"
+                onload="imgFade(this)" style="opacity:0;"
                 onerror="this.src='/static/images/error.png'"
             />
         </div>
@@ -122,16 +122,29 @@
         {% endif %}
     </div>
     <script>
+        /*
+        const url = new URL(window.location);
+        if (url.searchParams.get('i') == 'full') {
+            $('.image__fullscreen').addClass('image__fullscreen--active');
+            $('.image__fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}/0');
+        } else {
+            $('.image__fullscreen').removeClass('image__fullscreen--active');
+        }
+        */
+
         $('.image__fullscreen').click(function() {
             $('.image__fullscreen').removeClass('image__fullscreen--active');
+            //window.history.replaceState({}, '', `${url}`);
         });
 
         $('#img-fullscreen').click(function() {
             $('.image__fullscreen').addClass('image__fullscreen--active');
+            $('.image__fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}/0');
+            //window.history.replaceState({}, '', url+'?i=full');
         });
         $('#img-share').click(function() {
             //navigator.clipboard.writeText(window.location.href);
-            console.log('Non https debug: Copied to clipboard');
+            addNotification("Copied link!", 4);
         });
         $('#img-info').click(function() {
             
@@ -145,11 +158,15 @@
                     data: {
                         action: 'delete'
                     },
-                    success: function(response) {
-                        window.location.href = '/';
+                    
+                    success: function (response) {
+                        addNotification("Image was all in le head", 1);
+                        setTimeout(function() {
+                            window.location.href = '/';
+                        }, 1000);
                     },
-                    error: function(response) {
-                        alert(response);
+                    error: function (response) {
+                        addNotification(`Image *clings*: ${response}`, 2);
                     }
                 });
             });

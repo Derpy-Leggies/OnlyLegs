@@ -47,7 +47,7 @@ def upload():
     img_name = f"GWAGWA_{uuid4().__str__()}{img_ext}"
 
     if not img_ext in current_app.config['ALLOWED_EXTENSIONS']:
-        return 'File extension not allowed: '+img_ext
+        abort(403)
     
     # Save to database
     try:

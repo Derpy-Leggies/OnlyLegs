@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-<img src="{{ url_for('static', filename='images/leaves.jpg') }}" alt="leaves" onload="imgFade(this)" style="display: none;"/>
+    <img src="{{ url_for('static', filename='images/background.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
 {% endblock %}
 
 {% block content %}
@@ -40,7 +40,7 @@
 
             // Check for empty upload
 			if ($("#file").val() === "") {
-				alert('Gwha! Pls provide image');
+				addNotification("Please select a file to upload", 2);
             } else {
                 // Make form
                 var formData = new FormData();
@@ -58,7 +58,16 @@
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        alert(response)
+                        addNotification("File uploaded successfully!", 1);
+                    },
+                    error: function (response) {
+                        if (response.status === 500) {
+                            addNotification('Error uploading file, blame the server', 2);
+                        } else if (response.status === 400 || response.status === 404 || response.status === 403) {
+                            addNotification('Error uploading file, blame yourself', 2);
+                        } else {
+                            addNotification('Error uploading file, blame someone', 2);
+                        }
                     }
                 });
 
