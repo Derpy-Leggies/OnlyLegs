@@ -131,10 +131,15 @@
             div.appendChild(icon);
 
             // Create text element and append to notification
-            var gwagwa = document.createElement('span');
-            gwagwa.classList.add('sniffle__notification-text');
-            gwagwa.innerHTML = text;
-            div.appendChild(gwagwa);
+            var description = document.createElement('span');
+            description.classList.add('sniffle__notification-text');
+            description.innerHTML = text;
+            div.appendChild(description);
+
+            // Create span to show time remaining
+            var timer = document.createElement('span');
+            timer.classList.add('sniffle__notification-time');
+            div.appendChild(timer);
 
             // Append notification to container
             container.appendChild(div);
