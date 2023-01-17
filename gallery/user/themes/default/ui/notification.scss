@@ -43,7 +43,7 @@
     box-sizing: border-box;
     overflow: hidden;
 
-    transition: all 0.5s ease-in-out;
+    transition: all 0.25s ease-in-out;
 }
 .sniffle__notification-icon {
     margin: 0;
@@ -94,7 +94,7 @@
 
     background-color: $white100;
 
-    animation: sniffle 2.5s linear;
+    animation: sniffle 4.9s linear;
 }
 .sniffle__notification--success {
     color: $green;
@@ -123,4 +123,9 @@
     .sniffle__notification-time {
         background-color: $blue;
     }
+}
+
+.sniffle__notification--hide {
+    opacity: 0;
+    transform: translateX(100%);
 }

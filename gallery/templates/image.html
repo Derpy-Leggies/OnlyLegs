@@ -8,7 +8,7 @@
     <div class="image__fullscreen">
         <img
             src=""
-            onload="imgFade(this)"
+            onload="imgFade(this);"
             style="opacity:0;"
         />
     </div>
@@ -20,6 +20,8 @@
                 src="/api/uploads/{{ image['file_name'] }}/1000"
                 onload="imgFade(this)" style="opacity:0;"
                 onerror="this.src='/static/images/error.png'"
+                width="{{ file['width'] }}"
+                height="{{ file['height'] }}"
             />
         </div>
         <div class="img-tools">
@@ -122,29 +124,23 @@
         {% endif %}
     </div>
     <script>
-        /*
-        const url = new URL(window.location);
-        if (url.searchParams.get('i') == 'full') {
-            $('.image__fullscreen').addClass('image__fullscreen--active');
-            $('.image__fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}/0');
-        } else {
-            $('.image__fullscreen').removeClass('image__fullscreen--active');
-        }
-        */
-
         $('.image__fullscreen').click(function() {
             $('.image__fullscreen').removeClass('image__fullscreen--active');
-            //window.history.replaceState({}, '', `${url}`);
         });
 
         $('#img-fullscreen').click(function() {
             $('.image__fullscreen').addClass('image__fullscreen--active');
-            $('.image__fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}/0');
-            //window.history.replaceState({}, '', url+'?i=full');
+            if ($('.image__fullscreen img').attr('src') == '') {
+                $('.image__fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}/0');
+            }
         });
         $('#img-share').click(function() {
-            //navigator.clipboard.writeText(window.location.href);
-            addNotification("Copied link!", 4);
+            try {
+                navigator.clipboard.writeText(window.location.href);
+                addNotification("Copied link!", 4);
+            } catch (err) {
+                addNotification("Failed to copy link! Are you on HTTP?", 2);
+            }
         });
         $('#img-info').click(function() {
             

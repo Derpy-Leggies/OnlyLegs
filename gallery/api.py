@@ -24,11 +24,13 @@ def uploads(file, quality):
     img = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], secure_filename(file)))
     img_ext = os.path.splitext(secure_filename(file))[-1].lower().replace('.', '')
     img_ext = set_ext[img_ext]
+    img_icc = img.info.get("icc_profile") # Get ICC profile as it alters colours
     
     # Resize image and orientate correctly
     img.thumbnail((quality, quality), Image.LANCZOS)
     img = ImageOps.exif_transpose(img)
-    img.save(buff, img_ext)
+    img.save(buff, img_ext, icc_profile=img_icc)
+    img.close()
 
     # Seek to beginning of buffer and return
     buff.seek(0)

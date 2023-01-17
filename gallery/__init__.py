@@ -5,21 +5,13 @@ print("""
 | |_| | | | | | |_| | |__|  __/ (_| \\__ \\
  \\___/|_| |_|_|\\__, |_____\\___|\\__, |___/
                |___/           |___/
-Created by Fluffy Bean  -  Version 140123
+Created by Fluffy Bean  -  Version 170123
 """)
 
-# Import base packages
-import time
-import sys
-import os
-import yaml
-
-# Import flask
-from flask import *
-from werkzeug.utils import secure_filename
-
-# Import dotenv
+from flask import Flask, render_template
 from dotenv import load_dotenv
+import yaml
+import os
 
 def create_app(test_config=None):    
     # create and configure the app
@@ -27,6 +19,7 @@ def create_app(test_config=None):
     
     # Get environment variables
     load_dotenv(os.path.join(app.root_path, 'user', '.env'))
+    print("Loaded env")
     
     # Get config file
     with open(os.path.join(app.root_path, 'user', 'conf.yml'), 'r') as f:

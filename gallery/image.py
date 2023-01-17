@@ -25,7 +25,7 @@ def image(id):
     
     # Get exif data from image
     try:
-        file = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], 'original', image['file_name']))
+        file = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
         raw_exif = file.getexif()
         human_exif = {}
         
