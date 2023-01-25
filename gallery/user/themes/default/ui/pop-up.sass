@@ -1,0 +1,259 @@
+@mixin pop-up-btn($color, $fill: false)
+    @if $fill
+        color: $white
+        background-color: $color
+        border: 2px solid $color
+
+        &:hover
+            background-color: $white
+            color: $color
+    @else
+        color: $color
+        background-color: $white
+        border: 2px solid $color
+
+        &:hover
+            background-color: $color
+            color: $white
+    
+.pop-up
+    width: calc(100% - 3.5rem)
+    height: 100vh
+
+    position: fixed
+    top: 100%
+    left: 3.5rem
+
+    background-color: rgba($black, 0.8)
+    backdrop-filter: blur(1rem)
+
+    opacity: 0
+    z-index: 68
+
+    transition: opacity 0.2s ease
+
+.pop-up-wrapper
+    margin: 0
+    padding: 0.5rem
+
+    width: 621px
+    height: auto
+
+    position: absolute
+    bottom: 50%
+    left: 50%
+    transform: translate(-50%, 50%) scale(0.8)
+
+    display: flex
+    flex-direction: column
+    gap: 0.5rem
+
+    background-color: $white
+    border-radius: $rad
+
+    overflow: hidden
+
+    transition: transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)
+
+.pop-up-content
+    margin: 0
+    padding: 0
+
+    width: 100%
+    height: auto
+    max-height: 50vh
+
+    display: flex
+    flex-direction: column
+    gap: 0.5rem
+
+    overflow-y: auto
+    overflow-x: hidden
+    text-size-adjust: auto;
+    text-overflow: ellipsis
+
+    h3
+        margin: 0
+
+        width: 100%
+
+        position: sticky
+        top: 0
+
+        font-size: 2.5rem
+        font-weight: 600
+        text-align: center
+        line-height: 1
+
+        color: $black
+        background-color: $white
+    
+    p
+        margin: 0
+
+        width: 100%
+
+        font-size: 1rem
+        font-weight: 500
+        text-align: center
+        line-height: 1
+
+        color: $black
+
+    img
+        margin: auto
+        padding: 0
+
+        width: auto
+        height: auto
+        max-width: 100%
+        max-height: 40vh
+
+        border-radius: $rad-inner
+
+    form
+        margin: 0
+        padding: 0
+
+        width: 100%
+        height: auto
+
+        display: flex
+        flex-direction: column
+        gap: 0.5rem
+
+        justify-content: center
+
+.pop-up-controlls
+    margin: 0
+    padding: 0
+
+    width: 100%
+    height: auto
+
+    display: flex
+    flex-direction: column
+    gap: 0.5rem
+
+    justify-content: center
+
+.pop-up__btn
+    margin: 0
+    padding: 0.5rem
+
+    width: 100%
+    height: 2.5rem
+
+    display: flex
+    justify-content: center
+    align-items: center
+
+    font-size: 1rem
+    font-weight: 600
+    text-align: center
+    line-height: 1
+
+    border-radius: $rad-inner
+
+    cursor: pointer
+    transition: background-color 0.2s ease, color 0.2s ease
+
+    @include pop-up-btn($black)
+
+    &:focus
+        outline: none
+.pop-up__btn-fill
+    @include pop-up-btn($black, true)
+
+.pop-up__btn-primary
+    @include pop-up-btn($primary)
+.pop-up__btn-primary-fill
+    @include pop-up-btn($primary, true)
+
+.pop-up__btn-info
+    @include pop-up-btn($info)
+.pop-up__btn-info-fill
+    @include pop-up-btn($info, true)
+
+.pop-up__btn-warning
+    @include pop-up-btn($warning)
+.pop-up__btn-warning-fill
+    @include pop-up-btn($warning, true)
+
+.pop-up__btn-critical
+    @include pop-up-btn($critical)
+.pop-up__btn-critical-fill
+    @include pop-up-btn($critical, true)
+
+.pop-up__input
+    margin: 0
+    padding: 0.5rem
+
+    width: 100%
+    height: 2.5rem
+
+    font-size: 1rem
+    font-weight: 600
+    text-align: left
+    line-height: 1
+
+    border-radius: $rad-inner
+
+    background-color: $white
+    border: 2px solid $black
+
+    &:focus
+        outline: none
+        border-color: $primary
+
+.pop-up__link
+    color: $primary
+    text-decoration: none
+
+    &:hover
+        text-decoration: underline
+        cursor: pointer
+
+.pop-up__active
+    opacity: 1
+    top: 0
+
+    .pop-up-wrapper
+        transform: translate(-50%, 50%) scale(1)
+
+@media (max-width: $breakpoint)
+    .pop-up
+        width: 100%
+        height: calc(100vh - 3.5rem)
+        height: calc(100dvh - 3.5rem)
+
+        position: fixed
+        left: 0
+        bottom: 3.5rem
+
+        backdrop-filter: blur(0.5rem)
+
+    .pop-up-wrapper
+        width: 100%
+        max-height: calc(100vh - 1rem)
+        max-height: calc(100dvh - 1rem)
+
+        left: 0
+        bottom: 0
+
+        border-radius: $rad
+        transform: translateY(5rem)
+        box-shadow: 0px 8px 0px $black2;
+
+    .pop-up-content
+        max-height: 100%
+
+        img 
+            max-height: 50vh
+    
+    .pop-up__active
+        opacity: 1
+        top: unset
+
+        .pop-up-wrapper
+            transform: translateY(0)

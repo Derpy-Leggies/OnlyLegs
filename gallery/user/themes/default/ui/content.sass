@@ -1,0 +1,14 @@
+@import "wrappers/index"
+@import "wrappers/image"
+
+.content
+    width: calc(100% - 3.5rem)
+    min-height: 100vh
+
+    position: relative
+    left: 3.5rem
+
+@media (max-width: $breakpoint)
+    .content
+        width: 100%
+        left: 0

@@ -5,58 +5,61 @@ print("""
 | |_| | | | | | |_| | |__|  __/ (_| \\__ \\
  \\___/|_| |_|_|\\__, |_____\\___|\\__, |___/
                |___/           |___/
-Created by Fluffy Bean  -  Version 170123
+Created by Fluffy Bean  -  Version 210123
 """)
 
 from flask import Flask, render_template
+from flask_compress import Compress
 from dotenv import load_dotenv
 import yaml
 import os
 
-def create_app(test_config=None):    
+compress = Compress()
+
+
+def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
-    
+    compress.init_app(app)
+
     # Get environment variables
     load_dotenv(os.path.join(app.root_path, 'user', '.env'))
     print("Loaded env")
-    
+
     # Get config file
     with open(os.path.join(app.root_path, 'user', 'conf.yml'), 'r') as f:
         conf = yaml.load(f, Loader=yaml.FullLoader)
         print("Loaded config")
 
-    # App configuration    
+    # App configuration
     app.config.from_mapping(
         SECRET_KEY=os.environ.get('FLASK_SECRET'),
         DATABASE=os.path.join(app.instance_path, 'gallery.sqlite'),
         UPLOAD_FOLDER=os.path.join(app.root_path, 'user', 'uploads'),
-        MAX_CONTENT_LENGTH = 1024 * 1024 * conf['upload']['max-size'],
+        MAX_CONTENT_LENGTH=1024 * 1024 * conf['upload']['max-size'],
         ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
     )
-    
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
     else:
         # load the test config if passed in
         app.config.from_mapping(test_config)
-    
+
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    
-    
+
     # Load database
     from . import db
     db.init_app(app)
-    
+
     # Load theme
     from . import sassy
     sassy.compile('default', app.root_path)
-
 
     @app.errorhandler(405)
     def method_not_allowed(e):
@@ -87,21 +90,16 @@ def create_app(test_config=None):
         error = '500'
         msg = 'Server died inside :c'
         return render_template('error.html', error=error, msg=msg), 500
-    
-    
+
     # Load login, registration and logout manager
     from . import auth
     app.register_blueprint(auth.blueprint)
-    
+
     # Load routes for home and images
     from . import gallery
     app.register_blueprint(gallery.blueprint)
     app.add_url_rule('/', endpoint='index')
-    
-    # Load routes for images
-    from . import image
-    app.register_blueprint(image.blueprint)
-    
+
     # Load APIs
     from . import api
     app.register_blueprint(api.blueprint)

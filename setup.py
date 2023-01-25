@@ -2,11 +2,12 @@ from setuptools import find_packages, setup
 
 setup(
     name='onlylegs',
-    version='170123',
+    version='210123',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
         'flask',
+        'flask-compress',
         'libsass',
         'python-dotenv',
         'pillow',

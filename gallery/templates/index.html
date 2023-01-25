@@ -1,35 +1,34 @@
 {% extends 'layout.html' %}
 
-{% block header %}
-    <img src="{{ url_for('static', filename='images/background.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
-{% endblock %}
+{% block nav_home %}navigation-item__selected{% endblock %}
+{% block wrapper_class %}index-wrapper{% endblock %}
 
 {% block content %}
-    <div class="app">
-        <!--<h1>Gallery</h1>-->
-        <div id="gallery" class="gallery">
-            {% for image in images %}
-                <a class="gallery__item" href="/image/{{ image['id'] }}">
-                    <div class="gallery__item-info">
-                        <p>{{ image['id'] }}</p>
-                        <h2>{{ image['created_at'] }}</h2>
-                    </div>
-                    <span class="gallery__item-filter"></span>
-                    <img
-                        class="gallery__item-image"
-                        src="/api/uploads/{{ image['file_name'] }}/400"
-                        onload="imgFade(this)"
-                        style="opacity:0;"
-                        loading="lazy"
-                    />
-                </a>
-            {% endfor %}
-        </div>
+    <div class="gallery">
+        {% for image in images %}
+            <a class="gallery__item" href="/image/{{ image['id'] }}">
+                <div class="gallery__item-info">
+                    <p>{{ image['id'] }}</p>
+                    <h2>{{ image['created_at'] }}</h2>
+                </div>
+                <span class="gallery__item-filter"></span>
+                <img
+                    class="gallery__item-image"
+                    src="/api/uploads/{{ image['file_name'] }}/400"
+                    onload="imgFade(this)"
+                    style="opacity:0;"
+                    loading="lazy"
+                />
+            </a>
+        {% endfor %}
     </div>
+{% endblock %}
+
+{% block script %}
     <script>
         let imageList = [];
         let imageIndex = 0;
-        
+
         function loadMore(startIndex, amount = 20) {
             for (let i = startIndex; i < startIndex + amount; i++) {
                 if (i < imageList.length) {

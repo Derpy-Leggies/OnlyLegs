@@ -5,21 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery</title>
     <link rel="stylesheet" href="{{url_for('static', filename='theme/style.css')}}" defer>
-    <script src="{{url_for('static', filename='jquery-3.6.3.min.js')}}">
-    </script>
+    <script src="{{url_for('static', filename='jquery-3.6.3.min.js')}}"></script>
 </head>
 <body>
-    <div class="sniffle"></div>
-    <nav id="navRoot">
-        <div>
-            <a href="{{url_for('gallery.index')}}">
+    <div class="wrapper">
+        <div class="notifications"></div>
+
+        <svg class="jumpUp" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" fill="currentColor">
+            <path d="M11 8.414V14a1 1 0 0 1-2 0V8.414L6.464 10.95A1 1 0 1 1 5.05 9.536l4.243-4.243a.997.997 0 0 1 1.414 0l4.243 4.243a1 1 0 1 1-1.414 1.414L11 8.414zM10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"></path>
+        </svg>
+
+        {% block header %}{% endblock %}
+
+        <div class="navigation">
+            <a href="{{url_for('gallery.index')}}" class="navigation-item {% block nav_home %}{% endblock %}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor">
                     <path d="M2 8v10h12V8H2zm2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2v4a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2zm2 0h8a2 2 0 0 1 2 2v4h2V2H6v4zm0 9a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path><path d="M7 6a3 3 0 1 1 6 0h-2a1 1 0 0 0-2 0H7zm1.864 13.518l2.725-4.672a1 1 0 0 1 1.6-.174l1.087 1.184 1.473-1.354-1.088-1.183a3 3 0 0 0-4.8.52L7.136 18.51l1.728 1.007zm6.512-12.969a2.994 2.994 0 0 1 3.285.77l1.088 1.183-1.473 1.354-1.087-1.184A1 1 0 0 0 16 8.457V8c0-.571-.24-1.087-.624-1.451z"></path>
                 </svg>
                 <span>Home</span>
             </a>
 
-            <a href="{{url_for('gallery.groups')}}">
+            <a href="{{url_for('gallery.groups')}}" class="navigation-item {% block nav_groups %}{% endblock %}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -4 24 24" width="24" fill="currentColor">
                     <path d="M17 4H9.415l-.471-1.334A1.001 1.001 0 0 0 8 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1zm-6.17-2H17a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3h5c1.306 0 2.417.835 2.83 2z"></path>
                 </svg>
@@ -27,88 +33,93 @@
             </a>
 
             {% if g.user %}
-                <a href="{{url_for('gallery.upload')}}">
+                <button class="navigation-item {% block nav_upload %}{% endblock %}" onclick="showUpload()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
                         <path d="M8 3.414v5.642a1 1 0 1 1-2 0V3.414L4.879 4.536A1 1 0 0 1 3.464 3.12L6.293.293a1 1 0 0 1 1.414 0l2.829 2.828A1 1 0 1 1 9.12 4.536L8 3.414zM1 12h12a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2z"></path>
                     </svg>
                     <span>Upload</span>
-                </a>
+                </button>
             {% endif %}
-        </div>
-        <div>            
+
+            <span></span>
+
             {% if g.user %}
-                <a href="{{url_for('gallery.profile')}}">
+                <a href="{{url_for('gallery.profile')}}" class="navigation-item {% block nav_profile %}{% endblock %}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" fill="currentColor">
                         <path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-14a4 4 0 0 1 4 4v2a4 4 0 1 1-8 0V8a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v2a2 2 0 1 0 4 0V8a2 2 0 0 0-2-2zM5.91 16.876a8.033 8.033 0 0 1-1.58-1.232 5.57 5.57 0 0 1 2.204-1.574 1 1 0 1 1 .733 1.86c-.532.21-.993.538-1.358.946zm8.144.022a3.652 3.652 0 0 0-1.41-.964 1 1 0 1 1 .712-1.868 5.65 5.65 0 0 1 2.284 1.607 8.032 8.032 0 0 1-1.586 1.225z"></path>
                     </svg>
                     <span>Profile</span>
                 </a>
             
-                <a href="{{url_for('gallery.settings')}}">
+                <a href="{{url_for('gallery.settings')}}" class="navigation-item {% block nav_settings %}{% endblock %}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -2 24 24" width="24" fill="currentColor">
                         <path d="M9.815 3.094a3.467 3.467 0 0 1-2.78-1.09l-.084-.001a3.467 3.467 0 0 1-2.781 1.09 3.477 3.477 0 0 1-1.727 2.51 3.471 3.471 0 0 1 0 2.794 3.477 3.477 0 0 1 1.727 2.51 3.467 3.467 0 0 1 2.78 1.09h.084a3.467 3.467 0 0 1 2.78-1.09 3.477 3.477 0 0 1 1.727-2.51 3.471 3.471 0 0 1 0-2.794 3.477 3.477 0 0 1-1.726-2.51zM14 5.714a1.474 1.474 0 0 0 0 2.572l-.502 1.684a1.473 1.473 0 0 0-1.553 2.14l-1.443 1.122A1.473 1.473 0 0 0 8.143 14l-2.304-.006a1.473 1.473 0 0 0-2.352-.765l-1.442-1.131A1.473 1.473 0 0 0 .5 9.968L0 8.278a1.474 1.474 0 0 0 0-2.555l.5-1.69a1.473 1.473 0 0 0 1.545-2.13L3.487.77A1.473 1.473 0 0 0 5.84.005L8.143 0a1.473 1.473 0 0 0 2.358.768l1.444 1.122a1.473 1.473 0 0 0 1.553 2.14L14 5.714zm-5.812 9.198a7.943 7.943 0 0 0 2.342-.73 3.468 3.468 0 0 1-.087.215 3.477 3.477 0 0 1 1.727 2.51 3.467 3.467 0 0 1 2.78 1.09h.084a3.467 3.467 0 0 1 2.78-1.09 3.477 3.477 0 0 1 1.727-2.51 3.471 3.471 0 0 1 0-2.794 3.477 3.477 0 0 1-1.726-2.51 3.467 3.467 0 0 1-2.78-1.09h-.084l-.015.016a8.077 8.077 0 0 0 .002-2.016L16.144 6a1.473 1.473 0 0 0 2.358.768l1.444 1.122a1.473 1.473 0 0 0 1.553 2.14L22 11.714a1.474 1.474 0 0 0 0 2.572l-.502 1.684a1.473 1.473 0 0 0-1.553 2.14l-1.443 1.122a1.473 1.473 0 0 0-2.359.768l-2.304-.006a1.473 1.473 0 0 0-2.352-.765l-1.442-1.131a1.473 1.473 0 0 0-1.545-2.13l-.312-1.056zM7 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm8 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
                     </svg>
                     <span>Settings</span>
                 </a>
             {% else %}
-                <a href="{{url_for('auth.login')}}">
+                <button class="navigation-item {% block nav_login %}{% endblock %}" onclick="showLogin()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -3 24 24" fill="currentColor">
                         <path d="M6.641 9.828H1a1 1 0 1 1 0-2h5.641l-1.12-1.12a1 1 0 0 1 1.413-1.415L9.763 8.12a.997.997 0 0 1 0 1.415l-2.829 2.828A1 1 0 0 1 5.52 10.95l1.121-1.122zM13 0a1 1 0 0 1 1 1v16a1 1 0 0 1-2 0V1a1 1 0 0 1 1-1z"></path>
                     </svg>
-                    <span>Register</span>
-                </a>
+                    <span>Login</span>
+                </button>
             {% endif %}
         </div>
-    </nav>
-    <main>
-        <header>
-            {% block header %}{% endblock %}
-            <span></span>
-        </header>
 
-        {% block content %}
-        {% endblock %}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" fill="currentColor" id="topButton">
-            <path d="M11 8.414V14a1 1 0 0 1-2 0V8.414L6.464 10.95A1 1 0 1 1 5.05 9.536l4.243-4.243a.997.997 0 0 1 1.414 0l4.243 4.243a1 1 0 1 1-1.414 1.414L11 8.414zM10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"></path>
-        </svg>
-    </main>
+        <div class="content {% block wrapper_class %}{% endblock %}">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <div class="pop-up">
+            <div class="pop-up-wrapper">
+                <div class="pop-up-content">
+                    <h3>Title</h3>
+                    <p>Very very very drawn out example description</p>
+                </div>
+                <div class="pop-up-controlls">
+                    <button class="pop-up__btn" onclick="popupClose()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         let navToggle = true;
 
         document.onscroll = function() {
-            document.querySelector('header').style.opacity = `${1 - window.scrollY / 621}`;
-            document.querySelector('header').style.top = `-${window.scrollY / 5}px`;
+            document.querySelector('.background-decoration').style.opacity = `${1 - window.scrollY / 621}`;
+            document.querySelector('.background-decoration').style.top = `-${window.scrollY / 5}px`;
 
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
-                document.querySelector('#topButton').style.opacity = 1;
-                document.querySelector('#topButton').style.right = "0.75rem";
+                document.querySelector('.jumpUp').style.opacity = 1;
+                document.querySelector('.jumpUp').style.right = "0.75rem";
             } else {
-                document.querySelector('#topButton').style.opacity = 0;
-                document.querySelector('#topButton').style.right = "-3rem";
+                document.querySelector('.jumpUp').style.opacity = 0;
+                document.querySelector('.jumpUp').style.right = "-3rem";
             }
         }
 
-        document.querySelector('#topButton').onclick = function() {
+        document.querySelector('.jumpUp').onclick = function() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
 
         function imgFade(obj) {
             $(obj).animate({opacity: 1}, 500);
-            $(obj).parent().css('background', 'transparent');
+            //$(obj).parent().style.backgroundColor = 'transparent';
         }
 
         function addNotification(text='Sample notification', type=4) {
-            var container = document.querySelector('.sniffle');
+            var container = document.querySelector('.notifications');
 
             // Create notification element
             var div = document.createElement('div');
             div.classList.add('sniffle__notification');
             div.onclick = function() {
                 if (div.parentNode) {
-                    div.style.opacity = 0;
-                    div.style.transform = 'translateX(100%)';
+                    div.classList.add('sniffle__notification--hide');
 
                     setTimeout(function() {
                         container.removeChild(div);
@@ -119,26 +130,31 @@
             // Create icon element and append to notification
             var icon = document.createElement('span');
             icon.classList.add('sniffle__notification-icon');
-            if (type == 1) {
-                div.classList.add('sniffle__notification--success');
-                icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -7 24 24" fill="currentColor">\
-                    <path d="M5.486 9.73a.997.997 0 0 1-.707-.292L.537 5.195A1 1 0 1 1 1.95 3.78l3.535 3.535L11.85.952a1 1 0 0 1 1.415 1.414L6.193 9.438a.997.997 0 0 1-.707.292z"></path>\
-                </svg>';
-            } else if (type == 2) {
-                div.classList.add('sniffle__notification--error');
-                icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" fill="currentColor">\
-                    <path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path>\
-                </svg>';
-            } else if (type == 3) {
-                div.classList.add('sniffle__notification--warning');
-                icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -3 24 24" fill="currentColor">\
-                    <path d="M12.8 1.613l6.701 11.161c.963 1.603.49 3.712-1.057 4.71a3.213 3.213 0 0 1-1.743.516H3.298C1.477 18 0 16.47 0 14.581c0-.639.173-1.264.498-1.807L7.2 1.613C8.162.01 10.196-.481 11.743.517c.428.276.79.651 1.057 1.096zm-2.22.839a1.077 1.077 0 0 0-1.514.365L2.365 13.98a1.17 1.17 0 0 0-.166.602c0 .63.492 1.14 1.1 1.14H16.7c.206 0 .407-.06.581-.172a1.164 1.164 0 0 0 .353-1.57L10.933 2.817a1.12 1.12 0 0 0-.352-.365zM10 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1z"></path>\
-                </svg>';
-            } else if (type == 4) {
-                div.classList.add('sniffle__notification--info');
-                icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" fill="currentColor">\
-                    <path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-10a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm0-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>\
-                </svg>';
+            switch (type) {
+                case 1:
+                    div.classList.add('sniffle__notification--success');
+                    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -7 24 24" fill="currentColor">\
+                        <path d="M5.486 9.73a.997.997 0 0 1-.707-.292L.537 5.195A1 1 0 1 1 1.95 3.78l3.535 3.535L11.85.952a1 1 0 0 1 1.415 1.414L6.193 9.438a.997.997 0 0 1-.707.292z"></path>\
+                    </svg>';
+                    break;
+                case 2:
+                    div.classList.add('sniffle__notification--error');
+                    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 24 24" fill="currentColor">\
+                        <path d="M7.314 5.9l3.535-3.536A1 1 0 1 0 9.435.95L5.899 4.485 2.364.95A1 1 0 1 0 .95 2.364l3.535 3.535L.95 9.435a1 1 0 1 0 1.414 1.414l3.535-3.535 3.536 3.535a1 1 0 1 0 1.414-1.414L7.314 5.899z"></path>\
+                    </svg>';
+                    break;
+                case 3:
+                    div.classList.add('sniffle__notification--warning');
+                    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -3 24 24" fill="currentColor">\
+                        <path d="M12.8 1.613l6.701 11.161c.963 1.603.49 3.712-1.057 4.71a3.213 3.213 0 0 1-1.743.516H3.298C1.477 18 0 16.47 0 14.581c0-.639.173-1.264.498-1.807L7.2 1.613C8.162.01 10.196-.481 11.743.517c.428.276.79.651 1.057 1.096zm-2.22.839a1.077 1.077 0 0 0-1.514.365L2.365 13.98a1.17 1.17 0 0 0-.166.602c0 .63.492 1.14 1.1 1.14H16.7c.206 0 .407-.06.581-.172a1.164 1.164 0 0 0 .353-1.57L10.933 2.817a1.12 1.12 0 0 0-.352-.365zM10 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0-9a1 1 0 0 1 1 1v4a1 1 0 0 1-2 0V6a1 1 0 0 1 1-1z"></path>\
+                    </svg>';
+                    break;
+                default:
+                    div.classList.add('sniffle__notification--info');
+                    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" fill="currentColor">\
+                        <path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-10a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm0-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path>\
+                    </svg>';
+                    break;
             }
             div.appendChild(icon);
 
@@ -155,6 +171,9 @@
 
             // Append notification to container
             container.appendChild(div);
+            setTimeout(function() {
+                div.classList.add('sniffle__notification-show');
+            }, 100);
 
             // Remove notification after 5 seconds
             setTimeout(function() {
@@ -167,6 +186,232 @@
                 }
             }, 5000);
         }
+
+        function popUpShow(title, body, actions, content) {
+            var popup = document.querySelector('.pop-up');
+            var popupContent = document.querySelector('.pop-up-content');
+            var popupActions = document.querySelector('.pop-up-controlls');
+
+            // Set tile and description
+            h3 = document.createElement('h3');
+            h3.innerHTML = title;
+            p = document.createElement('p');
+            p.innerHTML = body;
+
+            popupContent.innerHTML = '';
+            popupContent.appendChild(h3);
+            popupContent.appendChild(p);
+
+            // Set content
+            if (content != '') {
+                popupContent.innerHTML += content;
+            }
+
+            // Set buttons that will be displayed
+            popupActions.innerHTML = '';
+            if (actions != '') {
+                popupActions.innerHTML += actions;
+            }
+            popupActions.innerHTML += '<button class="pop-up__btn pop-up__btn-fill" onclick="popupDissmiss()">Nooooooo</button>';
+
+            // Show popup
+            popup.classList.add('pop-up__active');
+        }
+
+        function popupDissmiss() {
+            var popup = document.querySelector('.pop-up');
+            popup.classList.remove('pop-up__active');
+        }
+
+        {% if g.user %}
+            function showUpload() {
+                popUpShow(
+                    'Upload funny stuff',
+                    'May the world see your stuff 👀',
+                    '',
+                    '<form onsubmit="return uploadFile(event)">\
+                        <input class="pop-up__input" type="file" id="file"/>\
+                        <input class="pop-up__input" type="text" placeholder="alt" id="alt"/>\
+                        <input class="pop-up__input" type="text" placeholder="description" id="description"/>\
+                        <input class="pop-up__input" type="text" placeholder="tags" id="tags"/>\
+                        <button class="pop-up__btn pop-up__btn-primary-fill">Upload</button>\
+                    </form>'
+                );
+            };
+            function uploadFile(){
+                // AJAX takes control of subby form
+                event.preventDefault();
+    
+                // Check for empty upload
+                if ($("#file").val() === "") {
+                    addNotification("Please select a file to upload", 2);
+                } else {
+                    // Make form
+                    var formData = new FormData();
+                    formData.append("file", $("#file").prop("files")[0]);
+                    formData.append("alt", $("#alt").val());
+                    formData.append("description", $("#description").val());
+                    formData.append("tags", $("#tags").val());
+                    formData.append("submit", $("#submit").val());
+    
+                    // Upload the information
+                    $.ajax({
+                        url: '/api/upload',
+                        type: 'post',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            addNotification("File uploaded successfully!", 1);
+                            // popupDissmiss(); // Close popup
+                        },
+                        error: function (response) {
+                            switch (response.status) {
+                                case 500:
+                                    addNotification('Server exploded, F\'s in chat', 2);
+                                    break;
+                                case 400:
+                                case 404:
+                                    addNotification('Error uploading. Blame yourself', 2);
+                                    break;
+                                case 403:
+                                    addNotification('None but devils play past here...', 2);
+                                    break;
+                                case 413:
+                                    addNotification('File too large!!!!!!', 3);
+                                    break;
+                                default:
+                                    addNotification('Error uploading file, blame someone', 2);
+                                    break;
+                            }
+                        }
+                    });
+    
+                    // Empty values
+                    $("#file").val("");
+                    $("#alt").val("");
+                    $("#description").val("");
+                    $("#tags").val("");
+                }
+            };
+        {% else %}
+            function showLogin() {
+                popUpShow(
+                    'idk what to put here, just login please',
+                    'Need an account? <span class="pop-up__link" onclick="showRegister()">Register!</span>',
+                    '',
+                    '<form onsubmit="return login(event)">\
+                        <input class="pop-up__input" type="text" placeholder="Namey" id="username"/>\
+                        <input class="pop-up__input" type="password" placeholder="Passywassy" id="password"/>\
+                        <button class="pop-up__btn pop-up__btn-primary-fill">Login</button>\
+                    </form>'
+                );
+            };
+            function showRegister() {
+                popUpShow(
+                    'Who are you?',
+                    'Already have an account? <span class="pop-up__link" onclick="showLogin()">Login!</span>',
+                    '',
+                    '<form onsubmit="return register(event)">\
+                        <input class="pop-up__input" type="text" placeholder="Namey" id="username"/>\
+                        <input class="pop-up__input" type="text" placeholder="E mail!" id="email"/>\
+                        <input class="pop-up__input" type="password" placeholder="Passywassy" id="password"/>\
+                        <input class="pop-up__input" type="password" placeholder="Passywassy again!" id="password-repeat"/>\
+                        <button class="pop-up__btn pop-up__btn-primary-fill">Register</button>\
+                    </form>'
+                );
+            };
+
+            function login(event) {
+                // AJAX takes control of subby form
+                event.preventDefault();
+
+                if ($("#username").val() === "" || $("#password").val() === "") {
+                    addNotification("Please fill in all fields", 3);
+                } else {
+                    // Make form
+                    var formData = new FormData();
+                    formData.append("username", $("#username").val());
+                    formData.append("password", $("#password").val());
+
+                    $.ajax({
+                        url: '/auth/login',
+                        type: 'post',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (response) {
+                            switch (response.status) {
+                                case 500:
+                                    addNotification('Server exploded, F\'s in chat', 2);
+                                    break;
+                                case 403:
+                                    addNotification('None but devils play past here... Wrong information', 2);
+                                    break;
+                                default:
+                                    addNotification('Error logging in, blame someone', 2);
+                                    break;
+                            }
+                        }
+                    });
+                }
+            }
+            function register(obj) {
+                // AJAX takes control of subby form
+                event.preventDefault();
+
+                if ($("#username").val() === "" || $("#email").val() === "" || $("#password").val() === "" || $("#password-repeat").val() === "") {
+                    addNotification("Please fill in all fields", 3);
+                } else {
+                    // Make form
+                    var formData = new FormData();
+                    formData.append("username", $("#username").val());
+                    formData.append("email", $("#email").val());
+                    formData.append("password", $("#password").val());
+                    formData.append("password-repeat", $("#password-repeat").val());
+
+                    $.ajax({
+                        url: '/auth/register',
+                        type: 'post',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            if (response === "gwa gwa") {
+                                addNotification('Registered successfully! Now please login to continue', 1);
+                                showLogin();
+                            } else {
+                                for (var i = 0; i < response.length; i++) {
+                                    addNotification(response[i], 2);
+                                }
+                            }
+                        },
+                        error: function (response) {
+                            switch (response.status) {
+                                case 500:
+                                    addNotification('Server exploded, F\'s in chat', 2);
+                                    break;
+                                case 403:
+                                    addNotification('None but devils play past here...', 2);
+                                    break;
+                                default:
+                                    addNotification('Error logging in, blame someone', 2);
+                                    break;
+                            }
+                        }
+                    });
+                }
+            }
+        {% endif %}
+
+        {% for message in get_flashed_messages() %}
+            // Show notifications on page load
+            addNotification('{{ message[0] }}', '{{ message[1] }}');
+        {% endfor %}
     </script>
+    {% block script %}{% endblock %}
 </body>
 </html>

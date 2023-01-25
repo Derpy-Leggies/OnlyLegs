@@ -1,11 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-    <img src="{{ url_for('static', filename='images/background.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
+    <div class="background-decoration">
+        <img src="{{ url_for('static', filename='images/background.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
+        <span></span>
+    </div>
 {% endblock %}
 
+{% block nav_settings %}navigation-item__selected{% endblock %}
+
 {% block content %}
-    <div class="app">
-        <h1>Settings</h1>
-    </div>
+    <h1>Settings</h1>
 {% endblock %}
