@@ -1,10 +1,13 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, current_app
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
+
 from gallery.auth import login_required
 from gallery.db import get_db
+
 from PIL import Image
 from PIL.ExifTags import TAGS
+
 import os
 import datetime
 
@@ -26,20 +29,18 @@ def index():
 def image(id):
     # Get image from database
     db = get_db()
-    image = db.execute('SELECT * FROM posts'
-                       ' WHERE id = ?', (id, )).fetchone()
+    image = db.execute('SELECT * FROM posts WHERE id = ?', (id, )).fetchone()
 
     if image is None:
         abort(404)
 
     # Get exif data from image
-    try:
-        file = Image.open(
-            os.path.join(current_app.config['UPLOAD_FOLDER'],
-                         image['file_name']))
-        raw_exif = file.getexif()
-        human_exif = {}
+    file = Image.open(
+        os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
+    raw_exif = file.getexif()
+    human_exif = {}
 
+    try:
         for tag in raw_exif:
             name = TAGS.get(tag, tag)
             value = raw_exif.get(tag)
@@ -48,19 +49,25 @@ def image(id):
                 value = value.decode()
 
             human_exif[name] = value
-
-        if len(human_exif) == 0:
-            human_exif = False
-    except:
-        # Cringe, no file present
+    except Exception as e:
         human_exif = False
-        file = False
+
+    def human_size(num, suffix="B"):
+        for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
+            if abs(num) < 1024.0:
+                return f"{num:3.1f}{unit}{suffix}"
+            num /= 1024.0
+        return f"{num:.1f}Yi{suffix}"
+
+    size = os.path.getsize(
+        os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
 
     # All in le head
     return render_template('image.html',
                            image=image,
                            exif=human_exif,
-                           file=file)
+                           file=file,
+                           size=human_size(size))
 
 
 @blueprint.route('/group')

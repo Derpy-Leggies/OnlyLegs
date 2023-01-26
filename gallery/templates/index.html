@@ -6,12 +6,11 @@
 {% block content %}
     <div class="gallery">
         {% for image in images %}
-            <a class="gallery__item" href="/image/{{ image['id'] }}">
-                <div class="gallery__item-info">
+            <a id="image-{{ image['id'] }}" class="gallery__item" href="/image/{{ image['id'] }}">
+                <span class="gallery__item-info">
                     <p>{{ image['id'] }}</p>
                     <h2>{{ image['created_at'] }}</h2>
-                </div>
-                <span class="gallery__item-filter"></span>
+                </span>
                 <img
                     class="gallery__item-image"
                     src="/api/uploads/{{ image['file_name'] }}/400"
@@ -26,46 +25,17 @@
 
 {% block script %}
     <script>
-        let imageList = [];
-        let imageIndex = 0;
+        const urlParams = new URLSearchParams(window.location.search);
+        const src = urlParams.get('src');
 
-        function loadMore(startIndex, amount = 20) {
-            for (let i = startIndex; i < startIndex + amount; i++) {
-                if (i < imageList.length) {
-                    loadImg(imageList[i][0], imageList[i][1]);
-                }
-            }
-            imageIndex = startIndex + amount;
+        if (src) {
+            var imgOffset = document.getElementById('image-' + src).offsetTop;
+            var imgHeight = document.getElementById('image-' + src).offsetHeight;
+            var windowHeight = window.innerHeight;
+            
+            document.querySelector('html').style.scrollBehavior = 'auto';
+            window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));
+            document.querySelector('html').style.scrollBehavior = 'smooth';
         }
-
-        function loadImg(id, fileName) {
-            var imgDiv = `
-                <a class="gallery__item" href="/image/${id}">
-                    <div class="gallery__item-info">
-                        <p>${id}</p>\
-                        <h2>${fileName}</h2>
-                    </div>
-                    <span class="gallery__item-filter"></span>
-                    <img class="gallery__item-image" src="https://supersecreteuploadtest.leggy.dev/usr/images/${fileName}" onload="imgFade(this)" style="display:none;">
-                </a>
-                `;
-
-            $(imgDiv).hide().appendTo('#gallery').fadeIn(250);
-        }
-
-        $.ajax({
-            url: '/fileList/original',
-            type: 'get',
-            success: function(response) {
-                imageList = response;
-                loadMore(0, 30);
-            }
-        });
-
-        $(window).scroll(function() {
-            if ($(window).height() + $(window).scrollTop() >= $(document).height() - 500) {
-                loadMore(imageIndex);
-            }
-        });
     </script>
 {% endblock %}

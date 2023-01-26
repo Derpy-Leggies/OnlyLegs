@@ -28,7 +28,7 @@
     backdrop-filter: blur(1rem)
 
     opacity: 0
-    z-index: 68
+    z-index: 101
 
     transition: opacity 0.2s ease
 
@@ -224,26 +224,26 @@
 @media (max-width: $breakpoint)
     .pop-up
         width: 100%
-        height: calc(100vh - 3.5rem)
-        height: calc(100dvh - 3.5rem)
+        height: 100vh
+        height: 100dvh
 
         position: fixed
         left: 0
-        bottom: 3.5rem
+        bottom: 0
 
         backdrop-filter: blur(0.5rem)
 
     .pop-up-wrapper
-        width: 100%
+        width: calc(100vw - 1rem)
         max-height: calc(100vh - 1rem)
         max-height: calc(100dvh - 1rem)
 
-        left: 0
-        bottom: 0
+        left: 0.5rem
+        bottom: 0.5rem
 
         border-radius: $rad
         transform: translateY(5rem)
-        box-shadow: 0px 8px 0px $black2;
+        //box-shadow: 0px 8px 0px $black2;
 
     .pop-up-content
         max-height: 100%

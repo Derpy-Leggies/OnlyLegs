@@ -19,7 +19,7 @@
     flex-direction: column
     gap: 0.3rem
 
-    z-index: 70
+    z-index: 621
 
 .sniffle__notification
     margin: 0
@@ -27,6 +27,7 @@
 
     width: 450px
     height: auto
+    max-height: 100px
 
     display: flex
     flex-direction: row
@@ -90,8 +91,9 @@
     left: 0px
 
     background-color: $white
+    opacity: 0
 
-    animation: notificationTimeout 4.9s linear
+    animation: notificationTimeout 5.1s linear
 
 .sniffle__notification--success
     @include notification($succes)
@@ -110,6 +112,9 @@
     transform: scale(1)
 
 .sniffle__notification--hide
+    margin-bottom: -0.3rem // compensate for gap
+    max-height: 0 // prevent divs from jumping when removed
+
     opacity: 0
     transform: translateX(100%)
 

@@ -6,16 +6,12 @@
         <span></span>
     </div>
 {% endblock %}
-
+{% block scrollPosition %}?src={{ image['id'] }}{% endblock %}
 {% block wrapper_class %}image-wrapper{% endblock %}
 
 {% block content %}
     <div class="image-fullscreen">
-        <img
-            src=""
-            onload="imgFade(this);"
-            style="opacity:0;"
-        />
+        <img src="" onload="imgFade(this);" style="opacity:0;" />
     </div>
 
     <div class="image-container">
@@ -116,12 +112,11 @@
                 <p>Image ID: {{ image['id'] }}</p>
                 <p>Author: {{ image['author_id'] }}</p>
                 <p>Upload date: {{ image['created_at'] }}</p>
-                {% if file is not false %}
-                    <p>Dimensions: {{ file['width'] }}x{{ file['height'] }}</p>
-                {% endif %}
+                <p>Dimensions: {{ file['width'] }}x{{ file['height'] }}</p>
+                <p>File size: {{ size }}</p>
             </div>
         </div>
-        {% if exif is not false %}
+        {% if exif %}
             <div class="image-info">
                 <div class="image-info__header">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" fill="currentColor">
@@ -147,6 +142,7 @@
 
         $('#img-fullscreen').click(function() {
             $('.image-fullscreen').addClass('image-fullscreen__active');
+            
             if ($('.image-fullscreen img').attr('src') == '') {
                 $('.image-fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}/0');
             }
