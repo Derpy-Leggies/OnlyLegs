@@ -9,14 +9,13 @@
             <a id="image-{{ image['id'] }}" class="gallery__item" href="/image/{{ image['id'] }}">
                 <span class="gallery__item-info">
                     <p>{{ image['id'] }}</p>
-                    <h2>{{ image['created_at'] }}</h2>
+                    <h2><span class="time">{{ image['created_at'] }}</span></h2>
                 </span>
                 <img
                     class="gallery__item-image"
-                    src="/api/uploads/{{ image['file_name'] }}/400"
+                    data-src="{{ image['file_name'] }}"
                     onload="imgFade(this)"
                     style="opacity:0;"
-                    loading="lazy"
                 />
             </a>
         {% endfor %}
@@ -25,6 +24,30 @@
 
 {% block script %}
     <script>
+        var images = document.querySelectorAll('.gallery__item-image');
+
+        window.onload = function() {
+            for (var i = 0; i < images.length; i++) {
+                var image = images[i];
+                if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
+                    if (!image.src) {
+                        image.src = `/api/uploads/${image.getAttribute('data-src')}/400`
+                    }
+                }
+            }
+        };
+
+        window.onscroll = function() {
+            for (var i = 0; i < images.length; i++) {
+                var image = images[i];
+                if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
+                    if (!image.src) {
+                        image.src = `/api/uploads/${image.getAttribute('data-src')}/400`
+                    }
+                }
+            }
+        };
+
         const urlParams = new URLSearchParams(window.location.search);
         const src = urlParams.get('src');
 

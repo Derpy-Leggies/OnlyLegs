@@ -17,12 +17,11 @@
 
     display: flex
     flex-direction: column
-    gap: 0.3rem
 
     z-index: 621
 
 .sniffle__notification
-    margin: 0
+    margin: 0 0 0.3rem 0
     padding: 0
 
     width: 450px
@@ -95,25 +94,17 @@
 
     animation: notificationTimeout 5.1s linear
 
-.sniffle__notification--success
-    @include notification($succes)
-
-.sniffle__notification--error
-    @include notification($critical)
-
-.sniffle__notification--warning
-    @include notification($warning)
-
-.sniffle__notification--info
-    @include notification($info)
+@each $name, $colour in (success: $succes, error: $critical, warning: $warning, info: $info)
+    .sniffle__notification--#{$name}
+        @include notification($colour)
 
 .sniffle__notification-show
     opacity: 1
     transform: scale(1)
 
 .sniffle__notification--hide
-    margin-bottom: -0.3rem // compensate for gap
-    max-height: 0 // prevent divs from jumping when removed
+    margin: 0
+    max-height: 0
 
     opacity: 0
     transform: translateX(100%)

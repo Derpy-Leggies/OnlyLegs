@@ -38,7 +38,7 @@
                 </svg>
                 <span class="tool-tip">Share</span>
             </button>
-            <a class="pill-item" href="/api/uploads/{{ image['file_name'] }}/0" download>
+            <a class="pill-item" id="img-download" href="/api/uploads/{{ image['file_name'] }}/0" download>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" fill="currentColor">
                     <path d="M8 6.641l1.121-1.12a1 1 0 0 1 1.415 1.413L7.707 9.763a.997.997 0 0 1-1.414 0L3.464 6.934A1 1 0 1 1 4.88 5.52L6 6.641V1a1 1 0 1 1 2 0v5.641zM1 12h12a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2z"></path>
                 </svg>
@@ -111,7 +111,7 @@
                 <p>Filename: {{ image['file_name'] }}</p>
                 <p>Image ID: {{ image['id'] }}</p>
                 <p>Author: {{ image['author_id'] }}</p>
-                <p>Upload date: {{ image['created_at'] }}</p>
+                <p>Upload date: <span class="time">{{ image['created_at'] }}</span></p>
                 <p>Dimensions: {{ file['width'] }}x{{ file['height'] }}</p>
                 <p>File size: {{ size }}</p>
             </div>
@@ -155,8 +155,8 @@
                 addNotification("Failed to copy link! Are you on HTTP?", 2);
             }
         });
-        $('#img-info').click(function() {
-            
+        $('#img-download').click(function() {
+            addNotification("Download started!", 4);
         });
 
         {% if g.user['id'] == image['author_id'] %}

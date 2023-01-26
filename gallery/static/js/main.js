@@ -23,6 +23,13 @@ function imgFade(obj) {
     //$(obj).parent().style.backgroundColor = 'transparent';
 }
 
+var times = document.getElementsByClassName('time');
+for (var i = 0; i < times.length; i++) {
+    var time = times[i].innerHTML;
+    var date = new Date(time);
+    times[i].innerHTML = date.toLocaleString( 'en-GB', { timeZone: 'UTC' } );
+}
+
 function addNotification(text='Sample notification', type=4) {
     var container = document.querySelector('.notifications');
 

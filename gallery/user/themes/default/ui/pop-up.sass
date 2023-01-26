@@ -165,25 +165,11 @@
 .pop-up__btn-fill
     @include pop-up-btn($black, true)
 
-.pop-up__btn-primary
-    @include pop-up-btn($primary)
-.pop-up__btn-primary-fill
-    @include pop-up-btn($primary, true)
-
-.pop-up__btn-info
-    @include pop-up-btn($info)
-.pop-up__btn-info-fill
-    @include pop-up-btn($info, true)
-
-.pop-up__btn-warning
-    @include pop-up-btn($warning)
-.pop-up__btn-warning-fill
-    @include pop-up-btn($warning, true)
-
-.pop-up__btn-critical
-    @include pop-up-btn($critical)
-.pop-up__btn-critical-fill
-    @include pop-up-btn($critical, true)
+@each $name, $colour in (primary: $primary, info: $info, warning: $warning, critical: $critical)
+    .pop-up__btn-#{$name}
+        @include pop-up-btn($colour)
+    .pop-up__btn-#{$name}-fill
+        @include pop-up-btn($colour, true)
 
 .pop-up__input
     margin: 0
