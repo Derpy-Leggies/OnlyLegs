@@ -10,6 +10,7 @@ from PIL import Image
 
 import os
 from datetime import datetime
+
 dt = datetime.now()
 
 blueprint = Blueprint('gallery', __name__)
@@ -33,7 +34,8 @@ def image(id):
     if image is None:
         abort(404)
 
-    exif = mt.metadata.yoink(os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
+    exif = mt.metadata.yoink(
+        os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
 
     return render_template('image.html', image=image, exif=exif)
 

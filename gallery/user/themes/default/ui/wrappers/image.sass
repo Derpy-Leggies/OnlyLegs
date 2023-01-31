@@ -105,8 +105,36 @@
     display: flex
     flex-direction: column
 
+    position: relative
+
     background-color: $black
     border-radius: $rad
+
+.image-info__collapse
+    margin: 0
+    padding: 0
+
+    width: 1.5rem
+    height: 1.5rem
+
+    display: flex
+    justify-content: center
+    align-items: center
+
+    position: absolute
+    top: 0.5rem
+    right: 0.5rem
+
+    cursor: pointer
+    z-index: +2
+
+    transition: transform 0.15s cubic-bezier(.79, .14, .15, .86)
+
+    svg
+        margin: 0
+        padding: 0
+
+        fill: $primary
 
 .image-info__header
     margin: 0
@@ -159,6 +187,8 @@
 
     overflow-x: hidden
 
+    transition: opacity 0.3s cubic-bezier(.79, .14, .15, .86)
+
     p
         margin: 0
         padding: 0
@@ -186,8 +216,11 @@
 
             white-space: nowrap
 
+            td
+                padding-bottom: 0.5rem
+
             td:first-child
-                padding: 0.25rem 1rem 0.25rem 0
+                padding-right: 0.5rem
 
                 width: 50%
                 max-width: 0
@@ -199,7 +232,7 @@
                 font-size: 1rem
                 font-weight: 500
             td:last-child
-                padding: 0.25rem 0
+                padding: 0
 
                 width: 50%
                 max-width: 0
@@ -213,6 +246,19 @@
 
             td.empty-table
                 opacity: 0.3
+
+        tr:last-of-type td
+            padding-bottom: 0
+
+.image-info__collapsed
+    height: 2.5rem
+
+    .image-info__collapse
+        transform: rotate(90deg)
+
+    .image-info__content
+        padding: 0
+        opacity: 0
 
 #image-tools
     margin-bottom: 0.5rem
@@ -259,6 +305,10 @@
 
     .image-info__header
         border-radius: $rad $rad 0 0
+
+    .image-info__collapsed
+        .image-info__header
+            border-radius: $rad
 
 @media (max-width: $breakpoint)
     .image-fullscreen

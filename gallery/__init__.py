@@ -5,7 +5,7 @@ print("""
 | |_| | | | | | |_| | |__|  __/ (_| \\__ \\
  \\___/|_| |_|_|\\__, |_____\\___|\\__, |___/
                |___/           |___/
-Created by Fluffy Bean  -  Version 260123
+Created by Fluffy Bean  -  Version 310123
 """)
 
 from flask import Flask, render_template
@@ -14,13 +14,10 @@ from dotenv import load_dotenv
 import yaml
 import os
 
-compress = Compress()
-
-
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
-    compress.init_app(app)
+    compress = Compress()
 
     # Get environment variables
     load_dotenv(os.path.join(app.root_path, 'user', '.env'))
@@ -104,4 +101,5 @@ def create_app(test_config=None):
     from . import api
     app.register_blueprint(api.blueprint)
 
+    compress.init_app(app)
     return app

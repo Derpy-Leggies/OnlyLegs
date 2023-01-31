@@ -6,6 +6,7 @@ import os
 
 
 class metadata:
+
     def yoink(filename):
         exif = metadata.getFile(filename)
         file_size = os.path.getsize(filename)
@@ -13,7 +14,8 @@ class metadata:
         file_resolution = Image.open(filename).size
 
         if exif:
-            unformatted_exif = metadata.format(exif, file_size, file_name, file_resolution)
+            unformatted_exif = metadata.format(exif, file_size, file_name,
+                                               file_resolution)
         else:
             # No EXIF data, get some basic informaton from the file
             unformatted_exif = {
@@ -43,10 +45,10 @@ class metadata:
             }
 
         formatted_exif = {}
-        
+
         for section in unformatted_exif:
             tmp = {}
-            
+
             for value in unformatted_exif[section]:
                 if unformatted_exif[section][value]['raw'] != None:
                     raw_type = unformatted_exif[section][value]['raw']
@@ -54,12 +56,12 @@ class metadata:
                         raw_type = raw_type.__float__()
                     elif isinstance(raw_type, bytes):
                         raw_type = raw_type.decode('utf-8')
-                    
-                    tmp[value] = unformatted_exif[section][value]  
-            
+
+                    tmp[value] = unformatted_exif[section][value]
+
             if len(tmp) > 0:
                 formatted_exif[section] = tmp
-                    
+
         return formatted_exif
 
     def getFile(filename):
@@ -126,14 +128,21 @@ class metadata:
                 'raw': raw['LensModel']['raw'],
             },
             'Lense Spec': {
-                'type': 'text',
-                'raw': raw['LensSpecification']['raw'],
-                'formatted': metadata.lensSpecification(raw['LensSpecification']['raw'])
+                'type':
+                'text',
+                'raw':
+                raw['LensSpecification']['raw'],
+                'formatted':
+                metadata.lensSpecification(raw['LensSpecification']['raw'])
             },
             'Component Config': {
-                'type': 'text',
-                'raw': raw['ComponentsConfiguration']['raw'],
-                'formatted': metadata.componentsConfiguration(raw['ComponentsConfiguration']['raw'])
+                'type':
+                'text',
+                'raw':
+                raw['ComponentsConfiguration']['raw'],
+                'formatted':
+                metadata.componentsConfiguration(
+                    raw['ComponentsConfiguration']['raw'])
             },
             'Date Processed': {
                 'type': 'date',
@@ -175,7 +184,8 @@ class metadata:
             'Focal Length (35mm format)': {
                 'type': 'focal',
                 'raw': raw["FocalLengthIn35mmFilm"]["raw"],
-                'formatted': metadata.focal(raw["FocalLengthIn35mmFilm"]["raw"])
+                'formatted':
+                metadata.focal(raw["FocalLengthIn35mmFilm"]["raw"])
             },
             'Max Aperture': {
                 'type': 'fnumber',
@@ -203,9 +213,12 @@ class metadata:
                 'formatted': metadata.iso(raw["ISOSpeed"]["raw"])
             },
             'Sensitivity Type': {
-                'type': 'number',
-                'raw': raw["SensitivityType"]["raw"],
-                'formatted': metadata.sensitivityType(raw["SensitivityType"]["raw"])
+                'type':
+                'number',
+                'raw':
+                raw["SensitivityType"]["raw"],
+                'formatted':
+                metadata.sensitivityType(raw["SensitivityType"]["raw"])
             },
             'Exposure Bias': {
                 'type': 'ev',
@@ -223,9 +236,12 @@ class metadata:
                 'formatted': metadata.exposureMode(raw["ExposureMode"]["raw"])
             },
             'Exposure Program': {
-                'type': 'number',
-                'raw': raw["ExposureProgram"]["raw"],
-                'formatted': metadata.exposureProgram(raw["ExposureProgram"]["raw"])
+                'type':
+                'number',
+                'raw':
+                raw["ExposureProgram"]["raw"],
+                'formatted':
+                metadata.exposureProgram(raw["ExposureProgram"]["raw"])
             },
             'White Balance': {
                 'type': 'number',
@@ -248,9 +264,12 @@ class metadata:
                 'formatted': metadata.lightSource(raw["LightSource"]["raw"])
             },
             'Scene Capture Type': {
-                'type': 'number',
-                'raw': raw["SceneCaptureType"]["raw"],
-                'formatted': metadata.sceneCaptureType(raw["SceneCaptureType"]["raw"])
+                'type':
+                'number',
+                'raw':
+                raw["SceneCaptureType"]["raw"],
+                'formatted':
+                metadata.sceneCaptureType(raw["SceneCaptureType"]["raw"])
             },
             'Scene Type': {
                 'type': 'number',
@@ -265,7 +284,8 @@ class metadata:
             'Rating Percent': {
                 'type': 'number',
                 'raw': raw["RatingPercent"]["raw"],
-                'formatted': metadata.ratingPercent(raw["RatingPercent"]["raw"])
+                'formatted':
+                metadata.ratingPercent(raw["RatingPercent"]["raw"])
             },
         }
         exif['Software'] = {
@@ -322,7 +342,8 @@ class metadata:
             'Resolution Units': {
                 'type': 'number',
                 'raw': raw["ResolutionUnit"]["raw"],
-                'formatted': metadata.resolutionUnit(raw["ResolutionUnit"]["raw"])
+                'formatted':
+                metadata.resolutionUnit(raw["ResolutionUnit"]["raw"])
             },
         }
         #exif['Raw'] = {}
@@ -339,7 +360,7 @@ class metadata:
         #        }
 
         return exif
-    
+
     def human_size(num, suffix="B"):
         for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
             if abs(num) < 1024.0:
@@ -360,19 +381,19 @@ class metadata:
             return 'f/' + str(value)
         else:
             return None
-        
+
     def iso(value):
         if value != None:
             return 'ISO ' + str(value)
         else:
             return None
-    
+
     def shutter(value):
         if value != None:
             return str(value) + 's'
         else:
             return None
-    
+
     def focal(value):
         if value != None:
             try:
@@ -381,54 +402,72 @@ class metadata:
                 return str(value) + 'mm'
         else:
             return None
-        
+
     def ev(value):
         if value != None:
             return str(value) + 'EV'
         else:
             return None
-        
+
     def colorSpace(value):
-        types = {
-            1: 'sRGB',
-            65535: 'Uncalibrated',
-            0: 'Reserved'
-        }
+        types = {1: 'sRGB', 65535: 'Uncalibrated', 0: 'Reserved'}
         try:
             return types[int(value)]
         except:
             return None
-        
+
     def flash(value):
         types = {
-            0: 'Flash did not fire',
-            1: 'Flash fired',
-            5: 'Strobe return light not detected',
-            7: 'Strobe return light detected',
-            9: 'Flash fired, compulsory flash mode',
-            13: 'Flash fired, compulsory flash mode, return light not detected',
-            15: 'Flash fired, compulsory flash mode, return light detected',
-            16: 'Flash did not fire, compulsory flash mode',
-            24: 'Flash did not fire, auto mode',
-            25: 'Flash fired, auto mode',
-            29: 'Flash fired, auto mode, return light not detected',
-            31: 'Flash fired, auto mode, return light detected',
-            32: 'No flash function',
-            65: 'Flash fired, red-eye reduction mode',
-            69: 'Flash fired, red-eye reduction mode, return light not detected',
-            71: 'Flash fired, red-eye reduction mode, return light detected',
-            73: 'Flash fired, compulsory flash mode, red-eye reduction mode',
-            77: 'Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected',
-            79: 'Flash fired, compulsory flash mode, red-eye reduction mode, return light detected',
-            89: 'Flash fired, auto mode, red-eye reduction mode',
-            93: 'Flash fired, auto mode, return light not detected, red-eye reduction mode',
-            95: 'Flash fired, auto mode, return light detected, red-eye reduction mode'
+            0:
+            'Flash did not fire',
+            1:
+            'Flash fired',
+            5:
+            'Strobe return light not detected',
+            7:
+            'Strobe return light detected',
+            9:
+            'Flash fired, compulsory flash mode',
+            13:
+            'Flash fired, compulsory flash mode, return light not detected',
+            15:
+            'Flash fired, compulsory flash mode, return light detected',
+            16:
+            'Flash did not fire, compulsory flash mode',
+            24:
+            'Flash did not fire, auto mode',
+            25:
+            'Flash fired, auto mode',
+            29:
+            'Flash fired, auto mode, return light not detected',
+            31:
+            'Flash fired, auto mode, return light detected',
+            32:
+            'No flash function',
+            65:
+            'Flash fired, red-eye reduction mode',
+            69:
+            'Flash fired, red-eye reduction mode, return light not detected',
+            71:
+            'Flash fired, red-eye reduction mode, return light detected',
+            73:
+            'Flash fired, compulsory flash mode, red-eye reduction mode',
+            77:
+            'Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected',
+            79:
+            'Flash fired, compulsory flash mode, red-eye reduction mode, return light detected',
+            89:
+            'Flash fired, auto mode, red-eye reduction mode',
+            93:
+            'Flash fired, auto mode, return light not detected, red-eye reduction mode',
+            95:
+            'Flash fired, auto mode, return light detected, red-eye reduction mode'
         }
         try:
             return types[int(value)]
         except:
             return None
-        
+
     def exposureProgram(value):
         types = {
             0: 'Not defined',
@@ -445,7 +484,7 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def meteringMode(value):
         types = {
             0: 'Unknown',
@@ -461,7 +500,7 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def resolutionUnit(value):
         types = {
             1: 'No absolute unit of measurement',
@@ -472,7 +511,7 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def lightSource(value):
         types = {
             0: 'Unknown',
@@ -501,7 +540,7 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def sceneCaptureType(value):
         types = {
             0: 'Standard',
@@ -513,13 +552,13 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def sceneType(value):
         if value:
             return 'Directly photographed image'
         else:
             return None
-        
+
     def whiteBalance(value):
         types = {
             0: 'Auto white balance',
@@ -529,7 +568,7 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def exposureMode(value):
         types = {
             0: 'Auto exposure',
@@ -540,29 +579,38 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def sensitivityType(value):
         types = {
-            0: 'Unknown',
-            1: 'Standard Output Sensitivity',
-            2: 'Recommended Exposure Index',
-            3: 'ISO Speed',
-            4: 'Standard Output Sensitivity and Recommended Exposure Index',
-            5: 'Standard Output Sensitivity and ISO Speed',
-            6: 'Recommended Exposure Index and ISO Speed',
-            7: 'Standard Output Sensitivity, Recommended Exposure Index and ISO Speed',
+            0:
+            'Unknown',
+            1:
+            'Standard Output Sensitivity',
+            2:
+            'Recommended Exposure Index',
+            3:
+            'ISO Speed',
+            4:
+            'Standard Output Sensitivity and Recommended Exposure Index',
+            5:
+            'Standard Output Sensitivity and ISO Speed',
+            6:
+            'Recommended Exposure Index and ISO Speed',
+            7:
+            'Standard Output Sensitivity, Recommended Exposure Index and ISO Speed',
         }
         try:
             return types[int(value)]
         except:
             return None
-        
+
     def lensSpecification(value):
         if value:
-            return str(value[0] / value[1]) + 'mm - ' + str(value[2] / value[3]) + 'mm'
+            return str(value[0] / value[1]) + 'mm - ' + str(
+                value[2] / value[3]) + 'mm'
         else:
             return None
-        
+
     def compression(value):
         types = {
             1: 'Uncompressed',
@@ -619,7 +667,7 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def orientation(value):
         types = {
             1: 'Horizontal (normal)',
@@ -635,7 +683,7 @@ class metadata:
             return types[int(value)]
         except:
             return None
-        
+
     def componentsConfiguration(value):
         types = {
             0: '',
@@ -650,9 +698,9 @@ class metadata:
             return ''.join([types[int(x)] for x in value])
         except:
             return None
-        
+
     def rating(value):
         return str(value) + ' stars'
-    
+
     def ratingPercent(value):
         return str(value) + '%'

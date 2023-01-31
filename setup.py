@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='onlylegs',
-    version='260123',
+    version='310123',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[

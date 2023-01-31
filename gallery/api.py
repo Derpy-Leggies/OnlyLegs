@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, send_from_directory, send_file, request, g, abort, flash, jsonify
+from flask import Blueprint, current_app, send_from_directory, send_file, request, g, abort, flash, jsonify
 from werkzeug.utils import secure_filename
 from gallery.auth import login_required
 from gallery.db import get_db
@@ -109,6 +109,7 @@ def remove(id):
     flash(['Image was all in Le Head!', 1])
     return 'Gwa Gwa'
 
+
 @blueprint.route('/metadata/<int:id>', methods=['GET'])
 def metadata(id):
     img = get_db().execute(
@@ -117,7 +118,8 @@ def metadata(id):
 
     if img is None:
         abort(404)
-        
-    exif = mt.metadata.yoink(os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
+
+    exif = mt.metadata.yoink(
+        os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
 
     return jsonify(exif)
