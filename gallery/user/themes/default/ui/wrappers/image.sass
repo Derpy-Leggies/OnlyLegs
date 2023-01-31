@@ -170,7 +170,7 @@
         overflow: hidden
 
     table
-        margin: 0 0 0 1rem
+        margin: 0
         padding: 0
 
         max-width: 100%
@@ -190,7 +190,10 @@
                 padding: 0.25rem 1rem 0.25rem 0
 
                 width: 50%
+                max-width: 0
 
+                overflow: hidden
+                text-overflow: ellipsis
                 white-space: nowrap
 
                 font-size: 1rem
@@ -264,15 +267,6 @@
     .image-wrapper
         padding-bottom: 4rem
 
-    .image-info__content
-        table
-            margin: 0
-
-            tr
-                td:first-child
-                    width: auto
-                td:last-child
-                    width: 75%
     .image-info__header
         background-image: none
         background-color: $black2

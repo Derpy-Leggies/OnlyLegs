@@ -96,8 +96,8 @@ def create_app(test_config=None):
     app.register_blueprint(auth.blueprint)
 
     # Load routes for home and images
-    from . import gallery
-    app.register_blueprint(gallery.blueprint)
+    from . import routing
+    app.register_blueprint(routing.blueprint)
     app.add_url_rule('/', endpoint='index')
 
     # Load APIs

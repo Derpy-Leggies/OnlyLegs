@@ -11,14 +11,6 @@ from uuid import uuid4
 blueprint = Blueprint('viewsbp', __name__, url_prefix='/api')
 
 
-def human_size(num, suffix="B"):
-    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
-        if abs(num) < 1024.0:
-            return f"{num:3.1f}{unit}{suffix}"
-        num /= 1024.0
-    return f"{num:.1f}Yi{suffix}"
-
-
 @blueprint.route('/uploads/<file>/<int:quality>', methods=['GET'])
 def uploads(file, quality):
     # If quality is 0, return original file
@@ -127,6 +119,5 @@ def metadata(id):
         abort(404)
         
     exif = mt.metadata.yoink(os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
-    filesize = os.path.getsize(os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
 
-    return jsonify({'metadata': exif, 'filesize': {'bytes': filesize, 'human': human_size(filesize)}})
+    return jsonify(exif)

@@ -15,14 +15,6 @@ dt = datetime.now()
 blueprint = Blueprint('gallery', __name__)
 
 
-def human_size(num, suffix="B"):
-    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
-        if abs(num) < 1024.0:
-            return f"{num:3.1f}{unit}{suffix}"
-        num /= 1024.0
-    return f"{num:.1f}Yi{suffix}"
-    
-
 @blueprint.route('/')
 def index():
     db = get_db()
@@ -42,18 +34,8 @@ def image(id):
         abort(404)
 
     exif = mt.metadata.yoink(os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
-    file_size = human_size(os.path.getsize(os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name'])))
-    
-    try:
-        width = exif['File']['Width']['value']
-        height = exif['File']['Height']['value']
-    except:
-        try:
-            width, height = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name'])).size
-        except:
-            width, height = 0, 0
 
-    return render_template('image.html', image=image, exif=exif, file_size=file_size, width=width, height=height)
+    return render_template('image.html', image=image, exif=exif)
 
 
 @blueprint.route('/group')
