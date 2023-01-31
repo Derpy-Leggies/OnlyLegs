@@ -20,14 +20,13 @@ document.querySelector('.jumpUp').onclick = function() {
 
 function imgFade(obj) {
     $(obj).animate({opacity: 1}, 500);
-    //$(obj).parent().style.backgroundColor = 'transparent';
 }
 
 var times = document.getElementsByClassName('time');
 for (var i = 0; i < times.length; i++) {
     var time = times[i].innerHTML;
     var date = new Date(time);
-    times[i].innerHTML = date.toLocaleString( 'en-GB', { timeZone: 'UTC' } );
+    times[i].innerHTML = date.toLocaleString('en-GB');
 }
 
 function addNotification(text='Sample notification', type=4) {

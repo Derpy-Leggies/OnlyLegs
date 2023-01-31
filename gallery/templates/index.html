@@ -24,33 +24,29 @@
 
 {% block script %}
     <script>
-        var images = document.querySelectorAll('.gallery__item-image');
-
+        function loadOnView() {
+            var images = document.querySelectorAll('.gallery__item-image');
+            for (var i = 0; i < images.length; i++) {
+                var image = images[i];
+                if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
+                    if (!image.src) {
+                        image.src = `/api/uploads/${image.getAttribute('data-src')}/400`
+                    }
+                }
+            }
+        }
         window.onload = function() {
-            for (var i = 0; i < images.length; i++) {
-                var image = images[i];
-                if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
-                    if (!image.src) {
-                        image.src = `/api/uploads/${image.getAttribute('data-src')}/400`
-                    }
-                }
-            }
+            loadOnView();
         };
-
         window.onscroll = function() {
-            for (var i = 0; i < images.length; i++) {
-                var image = images[i];
-                if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
-                    if (!image.src) {
-                        image.src = `/api/uploads/${image.getAttribute('data-src')}/400`
-                    }
-                }
-            }
+            loadOnView();
+        };
+        window.onresize = function() {
+            loadOnView();
         };
 
         const urlParams = new URLSearchParams(window.location.search);
         const src = urlParams.get('src');
-
         if (src) {
             var imgOffset = document.getElementById('image-' + src).offsetTop;
             var imgHeight = document.getElementById('image-' + src).offsetHeight;

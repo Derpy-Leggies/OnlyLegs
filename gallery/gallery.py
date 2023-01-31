@@ -5,16 +5,23 @@ from werkzeug.utils import secure_filename
 from gallery.auth import login_required
 from gallery.db import get_db
 
+from . import metadata as mt
 from PIL import Image
-from PIL.ExifTags import TAGS
 
 import os
-import datetime
-
-dt = datetime.datetime.now()
+from datetime import datetime
+dt = datetime.now()
 
 blueprint = Blueprint('gallery', __name__)
 
+
+def human_size(num, suffix="B"):
+    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f}{unit}{suffix}"
+        num /= 1024.0
+    return f"{num:.1f}Yi{suffix}"
+    
 
 @blueprint.route('/')
 def index():
@@ -34,40 +41,19 @@ def image(id):
     if image is None:
         abort(404)
 
-    # Get exif data from image
-    file = Image.open(
-        os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
-    raw_exif = file.getexif()
-    human_exif = {}
-
+    exif = mt.metadata.yoink(os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
+    file_size = human_size(os.path.getsize(os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name'])))
+    
     try:
-        for tag in raw_exif:
-            name = TAGS.get(tag, tag)
-            value = raw_exif.get(tag)
+        width = exif['File']['Width']['value']
+        height = exif['File']['Height']['value']
+    except:
+        try:
+            width, height = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name'])).size
+        except:
+            width, height = 0, 0
 
-            if isinstance(value, bytes):
-                value = value.decode()
-
-            human_exif[name] = value
-    except Exception as e:
-        human_exif = False
-
-    def human_size(num, suffix="B"):
-        for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
-            if abs(num) < 1024.0:
-                return f"{num:3.1f}{unit}{suffix}"
-            num /= 1024.0
-        return f"{num:.1f}Yi{suffix}"
-
-    size = os.path.getsize(
-        os.path.join(current_app.config['UPLOAD_FOLDER'], image['file_name']))
-
-    # All in le head
-    return render_template('image.html',
-                           image=image,
-                           exif=human_exif,
-                           file=file,
-                           size=human_size(size))
+    return render_template('image.html', image=image, exif=exif, file_size=file_size, width=width, height=height)
 
 
 @blueprint.route('/group')

@@ -107,6 +107,7 @@
 
     background-color: $black
     border-radius: $rad
+
 .image-info__header
     margin: 0
     padding: 0.5rem
@@ -119,7 +120,11 @@
     align-items: center
     gap: 0.5rem
 
-    background-color: $black2
+    position: sticky
+    top: 0
+    z-index: +1
+
+    background-image: linear-gradient(to right, rgba($black2, 1), rgba($black, 1))
 
     svg
         margin: 0
@@ -150,6 +155,10 @@
     flex-direction: column
     gap: 0.5rem
 
+    color: $white
+
+    overflow-x: hidden
+
     p
         margin: 0
         padding: 0
@@ -157,10 +166,50 @@
         font-size: 1rem
         font-weight: 500
 
-        color: $white
-
         text-overflow: ellipsis
         overflow: hidden
+
+    table
+        margin: 0 0 0 1rem
+        padding: 0
+
+        max-width: 100%
+
+        overflow-x: hidden
+        border-collapse: collapse
+
+        tr
+            margin: 0
+            padding: 0
+
+            width: 100%
+
+            white-space: nowrap
+
+            td:first-child
+                padding: 0.25rem 1rem 0.25rem 0
+
+                width: 50%
+
+                white-space: nowrap
+
+                font-size: 1rem
+                font-weight: 500
+            td:last-child
+                padding: 0.25rem 0
+
+                width: 50%
+                max-width: 0
+
+                overflow: hidden
+                text-overflow: ellipsis
+                white-space: nowrap
+
+                font-size: 1rem
+                font-weight: 500
+
+            td.empty-table
+                opacity: 0.3
 
 #image-tools
     margin-bottom: 0.5rem
@@ -214,3 +263,16 @@
 
     .image-wrapper
         padding-bottom: 4rem
+
+    .image-info__content
+        table
+            margin: 0
+
+            tr
+                td:first-child
+                    width: auto
+                td:last-child
+                    width: 75%
+    .image-info__header
+        background-image: none
+        background-color: $black2

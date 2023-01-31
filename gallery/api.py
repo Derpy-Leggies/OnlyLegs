@@ -1,13 +1,22 @@
-from flask import Blueprint, render_template, current_app, send_from_directory, send_file, request, g, abort, flash
+from flask import Blueprint, render_template, current_app, send_from_directory, send_file, request, g, abort, flash, jsonify
 from werkzeug.utils import secure_filename
 from gallery.auth import login_required
 from gallery.db import get_db
 from PIL import Image, ImageOps
+from . import metadata as mt
 import io
 import os
 from uuid import uuid4
 
 blueprint = Blueprint('viewsbp', __name__, url_prefix='/api')
+
+
+def human_size(num, suffix="B"):
+    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f}{unit}{suffix}"
+        num /= 1024.0
+    return f"{num:.1f}Yi{suffix}"
 
 
 @blueprint.route('/uploads/<file>/<int:quality>', methods=['GET'])
@@ -107,3 +116,17 @@ def remove(id):
 
     flash(['Image was all in Le Head!', 1])
     return 'Gwa Gwa'
+
+@blueprint.route('/metadata/<int:id>', methods=['GET'])
+def metadata(id):
+    img = get_db().execute(
+        'SELECT file_name, description, alt FROM posts WHERE id = ?',
+        (id, )).fetchone()
+
+    if img is None:
+        abort(404)
+        
+    exif = mt.metadata.yoink(os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
+    filesize = os.path.getsize(os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
+
+    return jsonify({'metadata': exif, 'filesize': {'bytes': filesize, 'human': human_size(filesize)}})
