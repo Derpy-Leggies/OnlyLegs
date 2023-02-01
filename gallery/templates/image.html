@@ -6,7 +6,6 @@
         <span></span>
     </div>
 {% endblock %}
-{% block scrollPosition %}?src={{ image['id'] }}{% endblock %}
 {% block wrapper_class %}image-wrapper{% endblock %}
 
 {% block content %}
@@ -209,10 +208,15 @@
 
 {% block script %}
     <script>
-        var collapseButton = document.querySelectorAll('#collapse-info');
-
-        for (var i = 0; i < collapseButton.length; i++) {
-            collapseButton[i].addEventListener('click', function() {
+        var infoCollapse = document.querySelectorAll('#collapse-info');
+        for (var i = 0; i < infoCollapse.length; i++) {
+            infoCollapse[i].addEventListener('click', function() {
+                this.parentNode.classList.toggle('image-info__collapsed');
+            });
+        }
+        var infoHeader = document.querySelectorAll('.image-info__header');
+        for (var i = 0; i < infoHeader.length; i++) {
+            infoHeader[i].addEventListener('click', function() {
                 this.parentNode.classList.toggle('image-info__collapsed');
             });
         }

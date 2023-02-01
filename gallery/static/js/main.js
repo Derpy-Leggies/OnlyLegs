@@ -1,15 +1,17 @@
 let navToggle = true;
 
 document.onscroll = function() {
-    document.querySelector('.background-decoration').style.opacity = `${1 - window.scrollY / 621}`;
-    document.querySelector('.background-decoration').style.top = `-${window.scrollY / 5}px`;
+    try {
+        document.querySelector('.background-decoration').style.opacity = `${1 - window.scrollY / 621}`;
+        document.querySelector('.background-decoration').style.top = `-${window.scrollY / 5}px`;
+    } catch (e) {
+        console.log('No background decoration found');
+    }
 
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
-        document.querySelector('.jumpUp').style.opacity = 1;
-        document.querySelector('.jumpUp').style.right = "0.75rem";
+        document.querySelector('.jumpUp').classList = 'jumpUp jumpUp--show';
     } else {
-        document.querySelector('.jumpUp').style.opacity = 0;
-        document.querySelector('.jumpUp').style.right = "-3rem";
+        document.querySelector('.jumpUp').classList = 'jumpUp';
     }
 }
 

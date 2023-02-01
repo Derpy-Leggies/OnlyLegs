@@ -45,13 +45,13 @@
             loadOnView();
         };
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const src = urlParams.get('src');
-        if (src) {
-            var imgOffset = document.getElementById('image-' + src).offsetTop;
-            var imgHeight = document.getElementById('image-' + src).offsetHeight;
+        if (document.referrer.includes('image')) {
+            var referrerId = document.referrer.split('/').pop();
+
+            var imgOffset = document.getElementById('image-' + referrerId).offsetTop;
+            var imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
             var windowHeight = window.innerHeight;
-            
+
             document.querySelector('html').style.scrollBehavior = 'auto';
             window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));
             document.querySelector('html').style.scrollBehavior = 'smooth';
