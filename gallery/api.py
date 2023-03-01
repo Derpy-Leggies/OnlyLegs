@@ -1,14 +1,20 @@
 from flask import Blueprint, current_app, send_from_directory, send_file, request, g, abort, flash, jsonify
 from werkzeug.utils import secure_filename
+
 from gallery.auth import login_required
 from gallery.db import get_db
+
 from PIL import Image, ImageOps
 from . import metadata as mt
+
+from .logger import logger
+
+from uuid import uuid4
 import io
 import os
-from uuid import uuid4
+import time
 
-blueprint = Blueprint('viewsbp', __name__, url_prefix='/api')
+blueprint = Blueprint('api', __name__, url_prefix='/api')
 
 
 @blueprint.route('/uploads/<file>/<int:quality>', methods=['GET'])
@@ -20,13 +26,18 @@ def uploads(file, quality):
                                    as_attachment=True)
 
     # Set variables
-    set_ext = {'jpg': 'jpeg', 'jpeg': 'jpeg', 'png': 'png', 'webp': 'webp'}
+    set_ext = current_app.config['ALLOWED_EXTENSIONS']
     buff = io.BytesIO()
 
     # Open image and set extension
-    img = Image.open(
-        os.path.join(current_app.config['UPLOAD_FOLDER'],
-                     secure_filename(file)))
+    try:
+        img = Image.open(
+            os.path.join(current_app.config['UPLOAD_FOLDER'],
+                        secure_filename(file)))
+    except Exception as e:
+        logger.server(600, f"Error opening image: {e}")
+        abort(500)
+        
     img_ext = os.path.splitext(secure_filename(file))[-1].lower().replace(
         '.', '')
     img_ext = set_ext[img_ext]
@@ -36,7 +47,17 @@ def uploads(file, quality):
     # Resize image and orientate correctly
     img.thumbnail((quality, quality), Image.LANCZOS)
     img = ImageOps.exif_transpose(img)
-    img.save(buff, img_ext, icc_profile=img_icc)
+    try:
+        img.save(buff, img_ext, icc_profile=img_icc)
+    except OSError:
+        # This usually happens when saving a JPEG with an ICC profile
+        # Convert to RGB and try again
+        img = img.convert('RGB')
+        img.save(buff, img_ext, icc_profile=img_icc)
+    except:
+        logger.server(600, f"Error resizing image: {file}")
+        abort(500)
+        
     img.close()
 
     # Seek to beginning of buffer and return
@@ -53,11 +74,15 @@ def upload():
     if not form_file:
         return abort(404)
 
-    img_ext = os.path.splitext(secure_filename(form_file.filename))[-1].lower()
-    img_name = f"GWAGWA_{uuid4().__str__()}{img_ext}"
+    img_ext = os.path.splitext(secure_filename(form_file.filename))[-1].replace('.', '').lower()
+    img_name = f"GWAGWA_{uuid4().__str__()}.{img_ext}"
 
-    if not img_ext in current_app.config['ALLOWED_EXTENSIONS']:
+    if not img_ext in current_app.config['ALLOWED_EXTENSIONS'].keys():
+        logger.add(303, f"File extension not allowed: {img_ext}")
         abort(403)
+        
+    if os.path.isdir(current_app.config['UPLOAD_FOLDER']) == False:
+        os.mkdir(current_app.config['UPLOAD_FOLDER'])
 
     # Save to database
     try:
@@ -66,15 +91,17 @@ def upload():
             'INSERT INTO posts (file_name, author_id, description, alt)'
             ' VALUES (?, ?, ?, ?)',
             (img_name, g.user['id'], form['description'], form['alt']))
-        db.commit()
     except Exception as e:
+        logger.server(600, f"Error saving to database: {e}")
         abort(500)
-
+        
     # Save file
     try:
         form_file.save(
             os.path.join(current_app.config['UPLOAD_FOLDER'], img_name))
-    except:
+        db.commit()
+    except Exception as e:
+        logger.server(600, f"Error saving file: {e}")
         abort(500)
 
     return 'Gwa Gwa'
@@ -97,6 +124,7 @@ def remove(id):
             os.path.join(current_app.config['UPLOAD_FOLDER'],
                          img['file_name']))
     except Exception as e:
+        logger.server(600, f"Error removing file: {e}")
         abort(500)
 
     try:
@@ -104,8 +132,10 @@ def remove(id):
         db.execute('DELETE FROM posts WHERE id = ?', (id, ))
         db.commit()
     except:
+        logger.server(600, f"Error removing from database: {e}")
         abort(500)
 
+    logger.server(301, f"Removed image {id}")
     flash(['Image was all in Le Head!', 1])
     return 'Gwa Gwa'
 
@@ -123,3 +153,43 @@ def metadata(id):
         os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
 
     return jsonify(exif)
+
+@blueprint.route('/logfile')
+@login_required
+def logfile():
+    filename = logger.filename()
+    log_dict = {}
+    i = 0
+    
+    with open(filename) as f:
+        for line in f:
+            line = line.split(' : ')
+            
+            event = line[0].strip().split(' ')
+            event_data = {
+                'date': event[0],
+                'time': event[1],
+                'severity': event[2],
+                'owner': event[3]
+            }
+            
+            message = line[1].strip()
+            try:
+                message_data = {
+                    'code': int(message[1:4]),
+                    'message': message[5:].strip()
+                }
+            except:
+                message_data = {
+                    'code': 0,
+                    'message': message
+                }
+                
+            log_dict[i] = {
+                'event': event_data,
+                'message': message_data
+            }
+                            
+            i += 1 # Line number, starts at 0
+        
+    return jsonify(log_dict)

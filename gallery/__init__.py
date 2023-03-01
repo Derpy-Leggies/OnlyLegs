@@ -5,14 +5,17 @@ print("""
 | |_| | | | | | |_| | |__|  __/ (_| \\__ \\
  \\___/|_| |_|_|\\__, |_____\\___|\\__, |___/
                |___/           |___/
-Created by Fluffy Bean  -  Version 310123
+Created by Fluffy Bean - Version 23.03.01
 """)
 
 from flask import Flask, render_template
 from flask_compress import Compress
+from flask.helpers import get_root_path
 from dotenv import load_dotenv
 import yaml
 import os
+
+print(f"Running at {get_root_path(__name__)}\n")
 
 def create_app(test_config=None):
     # create and configure the app
@@ -21,12 +24,12 @@ def create_app(test_config=None):
 
     # Get environment variables
     load_dotenv(os.path.join(app.root_path, 'user', '.env'))
-    print("Loaded env")
-
+    print("Loaded environment variables")
+    
     # Get config file
     with open(os.path.join(app.root_path, 'user', 'conf.yml'), 'r') as f:
         conf = yaml.load(f, Loader=yaml.FullLoader)
-        print("Loaded config")
+        print("Loaded gallery config")
 
     # App configuration
     app.config.from_mapping(
@@ -35,6 +38,7 @@ def create_app(test_config=None):
         UPLOAD_FOLDER=os.path.join(app.root_path, 'user', 'uploads'),
         MAX_CONTENT_LENGTH=1024 * 1024 * conf['upload']['max-size'],
         ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
+        WEBSITE=conf['website'],
     )
 
     if test_config is None:
@@ -57,35 +61,39 @@ def create_app(test_config=None):
     # Load theme
     from . import sassy
     sassy.compile('default', app.root_path)
+    
+    # Load logger
+    from .logger import logger
+    logger.innit_logger(app)
 
     @app.errorhandler(405)
     def method_not_allowed(e):
         error = '405'
-        msg = 'Method sussy wussy'
-        return render_template('error.html', error=error, msg=msg), 404
+        msg = e.description
+        return render_template('error.html', error=error, msg=e), 404
 
     @app.errorhandler(404)
     def page_not_found(e):
         error = '404'
-        msg = 'Could not find what you need!'
+        msg = e.description
         return render_template('error.html', error=error, msg=msg), 404
 
     @app.errorhandler(403)
     def forbidden(e):
         error = '403'
-        msg = 'Go away! This is no place for you!'
+        msg = e.description
         return render_template('error.html', error=error, msg=msg), 403
 
     @app.errorhandler(410)
     def gone(e):
         error = '410'
-        msg = 'The page is no longer available! *sad face*'
+        msg = e.description
         return render_template('error.html', error=error, msg=msg), 410
 
     @app.errorhandler(500)
     def internal_server_error(e):
         error = '500'
-        msg = 'Server died inside :c'
+        msg = e.description
         return render_template('error.html', error=error, msg=msg), 500
 
     # Load login, registration and logout manager
@@ -96,6 +104,10 @@ def create_app(test_config=None):
     from . import routing
     app.register_blueprint(routing.blueprint)
     app.add_url_rule('/', endpoint='index')
+    
+    # Load routes for settings
+    from . import settings
+    app.register_blueprint(settings.blueprint)
 
     # Load APIs
     from . import api

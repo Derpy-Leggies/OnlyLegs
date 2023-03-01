@@ -1,6 +1,6 @@
 import datetime
-
 now = datetime.datetime.now()
+
 import sys
 import shutil
 import os
@@ -8,7 +8,6 @@ import sass
 
 
 class compile():
-
     def __init__(self, theme, dir):
         print(f"Loading '{theme}' theme...")
 
@@ -16,7 +15,7 @@ class compile():
         font_path = os.path.join(dir, 'user', 'themes', theme, 'fonts')
         dest = os.path.join(dir, 'static', 'theme')
 
-        print(f"Theme path: {theme_path}")
+        # print(f"Theme path: {theme_path}")
 
         if os.path.exists(theme_path):
             if os.path.exists(os.path.join(theme_path, 'style.scss')):
@@ -52,7 +51,7 @@ class compile():
         dest = os.path.join(dest, 'fonts')
 
         if os.path.exists(dest):
-            print("Removing old fonts...")
+            print("Updating fonts...")
             try:
                 shutil.rmtree(dest)
             except Exception as e:
@@ -61,7 +60,8 @@ class compile():
 
         try:
             shutil.copytree(source, dest)
-            print("Copied fonts to:", dest)
+            # print("Copied fonts to:", dest)
+            print("Copied new fonts!")
         except Exception as e:
             print("Failed to copy fonts!\n", e)
             sys.exit(1)

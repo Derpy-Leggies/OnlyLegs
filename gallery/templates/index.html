@@ -1,5 +1,18 @@
 {% extends 'layout.html' %}
 
+{% block header %}
+    <div class="banner">
+        <img src="{{ url_for('static', filename='images/leaves.jpg') }}" onload="imgFade(this)" style="opacity:0;"/>
+        <span></span>
+
+        <div class="banner__content">
+            {% block banner_subtitle%}{% endblock %}
+            <p>{{ motto }}</p>
+            <h1>{{ name }}</h1>
+            <p>Serving {{ image_count }} images</p>
+        </div>
+    </div>
+{% endblock %}
 {% block nav_home %}navigation-item__selected{% endblock %}
 {% block wrapper_class %}index-wrapper{% endblock %}
 

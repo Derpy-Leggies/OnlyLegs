@@ -43,16 +43,24 @@
 
         transform: scale(0.8)
 
-    &__active
-        top: 0
+.image-fullscreen__active
+    top: 0
 
-        opacity: 1 // show
+    opacity: 1 // show
 
-        transition: opacity 0.3s cubic-bezier(.79, .14, .15, .86)
+    transition: opacity 0.3s cubic-bezier(.79, .14, .15, .86)
 
-        img
-            transform: scale(1)
-            transition: transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)
+    img
+        transform: scale(1)
+        transition: transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)
+.image-fullscreen__hide
+    opacity: 0 // hide
+
+    transition: opacity 0.2s cubic-bezier(.79, .14, .15, .86)
+
+    img
+        transform: scaleY(0) // scale(0.8) 
+        transition: transform 0.2s ease
 
 .image-container
     margin: auto
@@ -114,16 +122,16 @@
     margin: 0
     padding: 0
 
-    width: 1.5rem
-    height: 1.5rem
+    width: 1.25rem
+    height: 1.25rem
 
     display: flex
     justify-content: center
     align-items: center
 
     position: absolute
-    top: 0.5rem
-    right: 0.5rem
+    top: 0.6rem
+    right: 0.6rem
 
     cursor: pointer
     z-index: +2

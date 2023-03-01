@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, current_app
+from flask import Blueprint, render_template, current_app
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 
@@ -12,7 +12,6 @@ import os
 from datetime import datetime
 
 dt = datetime.now()
-
 blueprint = Blueprint('gallery', __name__)
 
 
@@ -22,7 +21,11 @@ def index():
     images = db.execute('SELECT * FROM posts'
                         ' ORDER BY created_at DESC').fetchall()
 
-    return render_template('index.html', images=images)
+    return render_template('index.html',
+                           images=images,
+                           image_count=len(images),
+                           name=current_app.config['WEBSITE']['name'],
+                           motto=current_app.config['WEBSITE']['motto'])
 
 
 @blueprint.route('/image/<int:id>')
@@ -64,9 +67,3 @@ def profile():
 @blueprint.route('/profile/<int:id>')
 def profile_id(id):
     return render_template('profile.html', user_id=id)
-
-
-@blueprint.route('/settings')
-@login_required
-def settings():
-    return render_template('settings.html')

@@ -1,0 +1,30 @@
+{% extends 'settings/settings_layout.html' %}
+
+{% block settings_logs %}settings-nav__item-selected{% endblock %}
+{% block settings_content %}
+    <h2>Logs</h2>
+    <div class="settings-list" id="logs">
+        <div class="log" style="display:flex;flex-direction:row;gap:0.5rem;"></div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        const output = document.getElementById('logs');
+
+        setInterval(function() {
+            $.ajax({
+                url: '{{ url_for('api.logfile') }}',
+                type: 'GET',
+                dataType: "json",
+                success: function(response) {
+                    
+                    // for each item in response, log to console
+                    response.forEach(function(item) {
+                        console.log(item);
+                    });
+                }
+            });
+        }, 1000); // 10 seconds
+    </script>
+{% endblock %}

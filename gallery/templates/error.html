@@ -1,12 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block header %}
-    <div class="background-decoration">
-        <img src="{{ url_for('static', filename='images/background.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
-        <span></span>
-    </div>
-{% endblock %}
-
+{% block wrapper_class %}error-wrapper{% endblock %}
 {% block content %}
     <h1>{{error}}</h1>
     <p>{{msg}}</p>

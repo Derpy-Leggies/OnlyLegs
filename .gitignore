@@ -1,4 +1,5 @@
 # Remove all development files
+gallery/user/logs/*
 gallery/user/uploads/*
 gallery/user/conf.yml
 gallery/user/conf.json

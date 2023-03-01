@@ -166,12 +166,12 @@
                         </svg>
                         <h2>Software</h2>
                     </div>
-                {% elif tag == 'Photo' %}
+                {% elif tag == 'File' %}
                     <div class="image-info__header">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -2 24 24" fill="currentColor">
                             <path d="M14 8.322V2H2v12h3.576l3.97-5.292A3 3 0 0 1 14 8.322zm0 3.753l-1.188-2.066a1 1 0 0 0-1.667-.101L8.076 14H14v-1.925zM14 16H2v2h12v-2zM2 0h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm4 9a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
                         </svg>
-                        <h2>Photo</h2>
+                        <h2>File</h2>
                     </div>
                 {% else %}
                     <div class="image-info__header">
@@ -222,7 +222,10 @@
         }
 
         $('.image-fullscreen').click(function() {
-            $('.image-fullscreen').removeClass('image-fullscreen__active');
+            $('.image-fullscreen').addClass('image-fullscreen__hide');
+            setTimeout(function() {
+                $('.image-fullscreen').removeClass('image-fullscreen__active image-fullscreen__hide');
+            }, 200);
         });
 
         $('#img-fullscreen').click(function() {

@@ -32,6 +32,17 @@
 
     transition: opacity 0.2s ease
 
+.pop-up__click-off
+    width: 100vw
+    height: 100vh
+    height: 100dvh
+
+    position: absolute
+    top: 0
+    left: 0
+
+    z-index: +1
+
 .pop-up-wrapper
     margin: 0
     padding: 0.5rem
@@ -54,6 +65,7 @@
     overflow: hidden
 
     transition: transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)
+    z-index: +2
 
 .pop-up-content
     margin: 0
@@ -207,6 +219,14 @@
     .pop-up-wrapper
         transform: translate(-50%, 50%) scale(1)
 
+.pop-up__hide
+    opacity: 0
+    transition: opacity 0.2s ease
+
+    .pop-up-wrapper
+        transform: translate(-50%, 50%) scaleY(0)
+        transition: transform 0.2s ease
+
 @media (max-width: $breakpoint)
     .pop-up
         width: 100%
@@ -242,3 +262,11 @@
 
         .pop-up-wrapper
             transform: translateY(0)
+
+    .pop-up__hide
+        opacity: 0
+        transition: opacity 0.2s ease
+
+        .pop-up-wrapper
+            transform: translateY(5rem)
+            transition: transform 0.2s ease

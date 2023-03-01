@@ -8,6 +8,17 @@ document.onscroll = function() {
         console.log('No background decoration found');
     }
 
+    try {
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+            document.querySelector('.banner').classList = 'banner banner-scrolled';
+        } else {
+            document.querySelector('.banner').classList = 'banner';
+        }
+    }
+    catch (e) {
+        console.log('No banner found');
+    }
+
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
         document.querySelector('.jumpUp').classList = 'jumpUp jumpUp--show';
     } else {
@@ -21,7 +32,7 @@ document.querySelector('.jumpUp').onclick = function() {
 }
 
 function imgFade(obj) {
-    $(obj).animate({opacity: 1}, 500);
+    $(obj).animate({opacity: 1}, 250);
 }
 
 var times = document.getElementsByClassName('time');
@@ -140,5 +151,10 @@ function popUpShow(title, body, actions, content) {
 
 function popupDissmiss() {
     var popup = document.querySelector('.pop-up');
-    popup.classList.remove('pop-up__active');
+
+    popup.classList.add('pop-up__hide');
+
+    setTimeout(function() {
+        popup.classList = 'pop-up';
+    }, 200);
 }

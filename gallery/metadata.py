@@ -6,7 +6,6 @@ import os
 
 
 class metadata:
-
     def yoink(filename):
         exif = metadata.getFile(filename)
         file_size = os.path.getsize(filename)
