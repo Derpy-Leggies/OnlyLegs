@@ -31,3 +31,4 @@ Currently only for reference
 
     poetry install
     poetry run python3 -m flask --app gallery --debug run --host 0.0.0.0
+    poetry run python3 -m gunicorn -w 4 -b 0.0.0.0:5000 'gallery:create_app()'

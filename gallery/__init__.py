@@ -8,41 +8,37 @@ print("""
 Created by Fluffy Bean - Version 23.03.02
 """)
 
+
 from flask import Flask, render_template
 from flask_compress import Compress
 
 from dotenv import load_dotenv
 import platformdirs
 
+# Load logger
+from gallery.logger import logger
+logger.innit_logger()
+
 import yaml
 import os
 
-# I could use something other than the config dir, but this works well enough
+
+# Check if any of the required files are missing
+if not os.path.exists(platformdirs.user_config_dir('onlylegs')):
+    from setup import setup
+    setup()
+
+
 user_dir = platformdirs.user_config_dir('onlylegs')
-if not os.path.exists(user_dir):
-    os.makedirs(user_dir)
-    print("Created user directory")
-# Location of instance folder, where sqlite db is stored
 instance_path = os.path.join(user_dir, 'instance')
-if not os.path.exists(instance_path):
-    os.makedirs(instance_path)
-    print("Created instance directory")
 
 # Get environment variables
 if os.path.exists(os.path.join(user_dir, '.env')):
     load_dotenv(os.path.join(user_dir, '.env'))
     print("Loaded environment variables")
 else:
-    conf = {
-        'FLASK_SECRETE': 'dev',
-    }
-    # Create .env file with default values
-    with open(os.path.join(user_dir, '.env'), 'w') as f:
-        for key, value in conf.items():
-            f.write(f"{key}={value}\n")
-        print("Created default environment variables at:",
-              os.path.join(user_dir, '.env'),
-              "\nCHANGE THESE VALUES USING TEHE GALLERY!")
+    print("No environment variables found!")
+    exit(1)
 
 # Get config file
 if os.path.exists(os.path.join(user_dir, 'conf.yml')):
@@ -50,44 +46,13 @@ if os.path.exists(os.path.join(user_dir, 'conf.yml')):
         conf = yaml.load(f, Loader=yaml.FullLoader)
         print("Loaded gallery config")
 else:
-    conf = {
-        'admin': {
-            'name': 'Real Person',
-            'username': 'User',
-            'email': 'real-email@some.place'
-        },
-        'upload': {
-            'allowed-extensions': {
-                'jpg': 'jpeg',
-                'jpeg': 'jpeg',
-                'png': 'png',
-                'webp': 'webp'
-            },
-            'max-size': 69,
-            'rename': 'GWA_\{\{username\}\}_\{\{time\}\}'
-        },
-        'website': {
-            'name': 'OnlyLegs',
-            'motto': 'Gwa Gwa',
-            'language': 'english'
-        }
-    }
-    # Create yaml config file with default values
-    with open(os.path.join(user_dir, 'conf.yml'), 'w') as f:
-        yaml.dump(conf, f, default_flow_style=False)
-        print("Created default gallery config at:",
-              os.path.join(user_dir, 'conf.yml'),
-              "\nCHANGE THESE VALUES USING TEHE GALLERY!")
-
-# Load logger
-from .logger import logger
-
-logger.innit_logger()
+    print("No config file found!")
+    exit(1)
 
 
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__, instance_path=instance_path)
+    app = Flask(__name__,instance_path=instance_path)
     compress = Compress()
 
     # App configuration
@@ -95,8 +60,8 @@ def create_app(test_config=None):
         SECRET_KEY=os.environ.get('FLASK_SECRET'),
         DATABASE=os.path.join(app.instance_path, 'gallery.sqlite'),
         UPLOAD_FOLDER=os.path.join(user_dir, 'uploads'),
-        MAX_CONTENT_LENGTH=1024 * 1024 * conf['upload']['max-size'],
         ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
+        MAX_CONTENT_LENGTH=1024 * 1024 * conf['upload']['max-size'],
         WEBSITE=conf['website'],
     )
 
