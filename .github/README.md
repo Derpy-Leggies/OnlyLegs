@@ -1,8 +1,12 @@
-# onlylegs
-The successor to the PHP based only legs gallery. This project is still under heavy development, not reccommended for use just yet!
+<div align="center">
+    <img src="OnlyLegs.png" width="200" height="200"/>
+    <h1>OnlyLegs</h1>
+    <p>Gallery built for fast and simple image management</p>
+</div>
+
+<br>
 
 ## Features
-
 ### Currently implemented
 - Easy uploading and managing of a gallery of images
 - Multi user support, helping you manage a whole group of photographers
