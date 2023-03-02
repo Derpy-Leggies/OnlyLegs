@@ -2,11 +2,10 @@ function showLogin() {
     popUpShow(
         'idk what to put here, just login please',
         'Need an account? <span class="pop-up__link" onclick="showRegister()">Register!</span>',
-        '',
-        '<form onsubmit="return login(event)">\
+        '<button class="pop-up__btn pop-up__btn-primary-fill" form="loginForm" type="submit">Login</button>',
+        '<form id="loginForm"  onsubmit="return login(event)">\
             <input class="pop-up__input" type="text" placeholder="Namey" id="username"/>\
             <input class="pop-up__input" type="password" placeholder="Passywassy" id="password"/>\
-            <button class="pop-up__btn pop-up__btn-primary-fill">Login</button>\
         </form>'
     );
 };
@@ -14,13 +13,12 @@ function showRegister() {
     popUpShow(
         'Who are you?',
         'Already have an account? <span class="pop-up__link" onclick="showLogin()">Login!</span>',
-        '',
-        '<form onsubmit="return register(event)">\
+        '<button class="pop-up__btn pop-up__btn-primary-fill" form="registerForm" type="submit">Register</button>',
+        '<form id="registerForm" onsubmit="return register(event)">\
             <input class="pop-up__input" type="text" placeholder="Namey" id="username"/>\
             <input class="pop-up__input" type="text" placeholder="E mail!" id="email"/>\
             <input class="pop-up__input" type="password" placeholder="Passywassy" id="password"/>\
             <input class="pop-up__input" type="password" placeholder="Passywassy again!" id="password-repeat"/>\
-            <button class="pop-up__btn pop-up__btn-primary-fill">Register</button>\
         </form>'
     );
 };

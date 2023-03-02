@@ -158,3 +158,11 @@ function popupDissmiss() {
         popup.classList = 'pop-up';
     }, 200);
 }
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        if (document.querySelector('.pop-up').classList.contains('pop-up__active')) {
+            popupDissmiss();
+        }
+    }
+});

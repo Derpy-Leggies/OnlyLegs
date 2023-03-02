@@ -2,7 +2,7 @@
 
 {% block header %}
     <div class="background-decoration">
-        <img src="/api/uploads/{{ image['file_name'] }}/1000" onload="imgFade(this)" style="opacity:0;"/>
+        <img src="/api/uploads/{{ image['file_name'] }}?w=1000&h=1000" onload="imgFade(this)" style="opacity:0;"/>
         <span></span>
     </div>
 {% endblock %}
@@ -15,7 +15,7 @@
 
     <div class="image-container">
         <img
-            src="/api/uploads/{{ image['file_name'] }}/1000"
+            src="/api/uploads/{{ image['file_name'] }}?w=1000&h=1000"
             onload="imgFade(this)" style="opacity:0;"
             onerror="this.src='/static/images/error.png'"
             width="{{ exif['File']['Width']['raw'] }}"
@@ -227,14 +227,14 @@
                 $('.image-fullscreen').removeClass('image-fullscreen__active image-fullscreen__hide');
             }, 200);
         });
-
         $('#img-fullscreen').click(function() {
             $('.image-fullscreen').addClass('image-fullscreen__active');
             
             if ($('.image-fullscreen img').attr('src') == '') {
-                $('.image-fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}/0');
+                $('.image-fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}');
             }
         });
+
         $('#img-share').click(function() {
             try {
                 navigator.clipboard.writeText(window.location.href);
@@ -253,7 +253,7 @@
                     'DESTRUCTION!!!!!!',
                     'This will delete the image and all of its data!!! This action is irreversible!!!!! Are you sure you want to do this?????',
                     '<button class="pop-up__btn pop-up__btn-critical-fill" onclick="deleteImage()">Dewww eeeet!</button>',
-                    '<img src="/api/uploads/{{ image['file_name'] }}/1000" />'
+                    '<img src="/api/uploads/{{ image['file_name'] }}?w=1000&h=1000" />'
                     );
             });
             $('#img-edit').click(function() {

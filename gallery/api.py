@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from gallery.auth import login_required
 from gallery.db import get_db
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageFilter
 from . import metadata as mt
 
 from .logger import logger
@@ -12,20 +12,30 @@ from .logger import logger
 from uuid import uuid4
 import io
 import os
-import time
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
 
 
-@blueprint.route('/uploads/<file>/<int:quality>', methods=['GET'])
-def uploads(file, quality):
-    # If quality is 0, return original file
-    if quality == 0:
+@blueprint.route('/uploads/<file>', methods=['GET'])
+def uploads(file):
+    # Get args
+    width = request.args.get('w', default=0, type=int)  # Width of image
+    height = request.args.get('h', default=0, type=int)  # Height of image
+    filtered = request.args.get('f', default=False, type=bool)  # Whether to apply filters to image,
+    # such as blur for NSFW images
+
+    # if no args are passed, return the raw file
+    if width == 0 and height == 0 and not filtered:
         return send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                    secure_filename(file),
                                    as_attachment=True)
 
-    # Set variables
+    # Of either width or height is 0, set it to the other value to keep aspect ratio
+    if width > 0 and height == 0:
+        height = width
+    elif width == 0 and height > 0:
+        width = height
+
     set_ext = current_app.config['ALLOWED_EXTENSIONS']
     buff = io.BytesIO()
 
@@ -33,11 +43,11 @@ def uploads(file, quality):
     try:
         img = Image.open(
             os.path.join(current_app.config['UPLOAD_FOLDER'],
-                        secure_filename(file)))
+                         secure_filename(file)))
     except Exception as e:
         logger.server(600, f"Error opening image: {e}")
         abort(500)
-        
+
     img_ext = os.path.splitext(secure_filename(file))[-1].lower().replace(
         '.', '')
     img_ext = set_ext[img_ext]
@@ -45,8 +55,15 @@ def uploads(file, quality):
         "icc_profile")  # Get ICC profile as it alters colours
 
     # Resize image and orientate correctly
-    img.thumbnail((quality, quality), Image.LANCZOS)
+    img.thumbnail((width, height), Image.LANCZOS)
     img = ImageOps.exif_transpose(img)
+    
+    # TODO: Add filters
+    # If has NSFW tag, blur image, etc.
+    if filtered:
+        #pass
+        img = img.filter(ImageFilter.GaussianBlur(20))
+    
     try:
         img.save(buff, img_ext, icc_profile=img_icc)
     except OSError:
@@ -57,7 +74,7 @@ def uploads(file, quality):
     except:
         logger.server(600, f"Error resizing image: {file}")
         abort(500)
-        
+
     img.close()
 
     # Seek to beginning of buffer and return
@@ -74,13 +91,14 @@ def upload():
     if not form_file:
         return abort(404)
 
-    img_ext = os.path.splitext(secure_filename(form_file.filename))[-1].replace('.', '').lower()
+    img_ext = os.path.splitext(secure_filename(
+        form_file.filename))[-1].replace('.', '').lower()
     img_name = f"GWAGWA_{uuid4().__str__()}.{img_ext}"
 
     if not img_ext in current_app.config['ALLOWED_EXTENSIONS'].keys():
         logger.add(303, f"File extension not allowed: {img_ext}")
         abort(403)
-        
+
     if os.path.isdir(current_app.config['UPLOAD_FOLDER']) == False:
         os.mkdir(current_app.config['UPLOAD_FOLDER'])
 
@@ -94,7 +112,7 @@ def upload():
     except Exception as e:
         logger.server(600, f"Error saving to database: {e}")
         abort(500)
-        
+
     # Save file
     try:
         form_file.save(
@@ -154,17 +172,18 @@ def metadata(id):
 
     return jsonify(exif)
 
+
 @blueprint.route('/logfile')
 @login_required
 def logfile():
     filename = logger.filename()
     log_dict = {}
     i = 0
-    
+
     with open(filename) as f:
         for line in f:
             line = line.split(' : ')
-            
+
             event = line[0].strip().split(' ')
             event_data = {
                 'date': event[0],
@@ -172,7 +191,7 @@ def logfile():
                 'severity': event[2],
                 'owner': event[3]
             }
-            
+
             message = line[1].strip()
             try:
                 message_data = {
@@ -180,16 +199,10 @@ def logfile():
                     'message': message[5:].strip()
                 }
             except:
-                message_data = {
-                    'code': 0,
-                    'message': message
-                }
-                
-            log_dict[i] = {
-                'event': event_data,
-                'message': message_data
-            }
-                            
-            i += 1 # Line number, starts at 0
-        
+                message_data = {'code': 0, 'message': message}
+
+            log_dict[i] = {'event': event_data, 'message': message_data}
+
+            i += 1  # Line number, starts at 0
+
     return jsonify(log_dict)

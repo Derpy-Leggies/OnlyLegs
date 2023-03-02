@@ -11,8 +11,8 @@ class compile():
     def __init__(self, theme, dir):
         print(f"Loading '{theme}' theme...")
 
-        theme_path = os.path.join(dir, 'user', 'themes', theme)
-        font_path = os.path.join(dir, 'user', 'themes', theme, 'fonts')
+        theme_path = os.path.join(dir, 'themes', theme)
+        font_path = os.path.join(dir, 'themes', theme, 'fonts')
         dest = os.path.join(dir, 'static', 'theme')
 
         # print(f"Theme path: {theme_path}")

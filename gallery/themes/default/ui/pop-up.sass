@@ -45,7 +45,7 @@
 
 .pop-up-wrapper
     margin: 0
-    padding: 0.5rem
+    padding: 0
 
     width: 621px
     height: auto
@@ -57,7 +57,6 @@
 
     display: flex
     flex-direction: column
-    gap: 0.5rem
 
     background-color: $white
     border-radius: $rad
@@ -69,7 +68,7 @@
 
 .pop-up-content
     margin: 0
-    padding: 0
+    padding: 0.5rem 0.5rem 0
 
     width: 100%
     height: auto
@@ -138,22 +137,21 @@
 
 .pop-up-controlls
     margin: 0
-    padding: 0
+    padding: 0.5rem
 
     width: 100%
     height: auto
 
     display: flex
-    flex-direction: column
+    flex-direction: row
+    justify-content: flex-end
     gap: 0.5rem
-
-    justify-content: center
 
 .pop-up__btn
     margin: 0
-    padding: 0.5rem
+    padding: 0.5rem 1rem
 
-    width: 100%
+    width: auto
     height: 2.5rem
 
     display: flex
@@ -255,6 +253,13 @@
 
         img 
             max-height: 50vh
+
+    .pop-up-controlls
+        flex-direction: column
+        justify-content: center
+
+    .pop-up__btn
+        width: 100%
     
     .pop-up__active
         opacity: 1

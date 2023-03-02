@@ -43,7 +43,7 @@
                 var image = images[i];
                 if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
                     if (!image.src) {
-                        image.src = `/api/uploads/${image.getAttribute('data-src')}/400`
+                        image.src = `/api/uploads/${image.getAttribute('data-src')}?w=500&h=500`
                     }
                 }
             }

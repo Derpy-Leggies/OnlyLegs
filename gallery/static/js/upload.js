@@ -2,13 +2,12 @@ function showUpload() {
     popUpShow(
         'Upload funny stuff',
         'May the world see your stuff 👀',
-        '',
-        '<form onsubmit="return uploadFile(event)">\
+        '<button class="pop-up__btn pop-up__btn-primary-fill" form="uploadForm" type"submit">Upload</button>',
+        '<form id="uploadForm" onsubmit="return uploadFile(event)">\
             <input class="pop-up__input" type="file" id="file"/>\
             <input class="pop-up__input" type="text" placeholder="alt" id="alt"/>\
             <input class="pop-up__input" type="text" placeholder="description" id="description"/>\
             <input class="pop-up__input" type="text" placeholder="tags" id="tags"/>\
-            <button class="pop-up__btn pop-up__btn-primary-fill">Upload</button>\
         </form>'
     );
 };

@@ -1,14 +1,15 @@
 import logging
 import os
 from datetime import datetime
+import platformdirs
 
 # Prevent werkzeug from logging
 logging.getLogger('werkzeug').disabled = True
 
 
 class logger:
-    def innit_logger(app):
-        filepath = os.path.join(app.root_path, 'user', 'logs')
+    def innit_logger():
+        filepath = os.path.join(platformdirs.user_config_dir('onlylegs'), 'logs')
         #filename = f'onlylogs_{datetime.now().strftime("%Y%m%d")}.log'
         filename = 'only.log'
 
