@@ -25,3 +25,9 @@ Homescreen
 
 Image view
 ![screenshot](imageview.png)
+
+## Running
+Currently only for reference
+
+    poetry install
+    poetry run python3 -m flask --app gallery --debug run --host 0.0.0.0

@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "onlylegs"
+version = "23.03.02"
+description = "Gallery built for fast and simple image management"
+authors = ["Fluffy-Bean <michal-gdula@protonmail.com>"]
+license = "MIT"
+readme = ".github/README.md"
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^2.2.2"
+flask-compress = "^1.13"
+python-dotenv = "^0.21.0"
+pyyaml = "^6.0"
+libsass = "^0.22.0"
+colorthief = "^0.2.1"
+Pillow = "^9.4.0"
+platformdirs = "^3.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
