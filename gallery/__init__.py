@@ -8,14 +8,12 @@ print("""
 Created by Fluffy Bean - Version 23.03.02
 """)
 
-
 from flask import Flask, render_template
 from flask_compress import Compress
 
 from dotenv import load_dotenv
 import platformdirs
 
-# Load logger
 from gallery.logger import logger
 logger.innit_logger()
 
@@ -25,7 +23,7 @@ import os
 
 # Check if any of the required files are missing
 if not os.path.exists(platformdirs.user_config_dir('onlylegs')):
-    from setup import setup
+    from .setup import setup
     setup()
 
 
@@ -78,13 +76,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # Load database
-    from . import db
-    db.init_app(app)
 
     # Load theme
     from . import sassy
     sassy.compile('default', app.root_path)
+
 
     @app.errorhandler(405)
     def method_not_allowed(e):

@@ -2,7 +2,11 @@ from flask import Blueprint, current_app, send_from_directory, send_file, reques
 from werkzeug.utils import secure_filename
 
 from gallery.auth import login_required
-from gallery.db import get_db
+
+from . import db
+from sqlalchemy.orm import sessionmaker
+db_session = sessionmaker(bind=db.engine)
+db_session = db_session()
 
 from PIL import Image, ImageOps, ImageFilter
 from . import metadata as mt
@@ -104,11 +108,9 @@ def upload():
 
     # Save to database
     try:
-        db = get_db()
-        db.execute(
-            'INSERT INTO posts (file_name, author_id, description, alt)'
-            ' VALUES (?, ?, ?, ?)',
-            (img_name, g.user['id'], form['description'], form['alt']))
+        tr = db.posts(img_name, form['description'], form['alt'], g.user.id)
+        db_session.add(tr)
+        db_session.commit()
     except Exception as e:
         logger.server(600, f"Error saving to database: {e}")
         abort(500)
@@ -117,7 +119,6 @@ def upload():
     try:
         form_file.save(
             os.path.join(current_app.config['UPLOAD_FOLDER'], img_name))
-        db.commit()
     except Exception as e:
         logger.server(600, f"Error saving file: {e}")
         abort(500)
@@ -128,28 +129,25 @@ def upload():
 @blueprint.route('/remove/<int:id>', methods=['POST'])
 @login_required
 def remove(id):
-    img = get_db().execute(
-        'SELECT author_id, file_name FROM posts WHERE id = ?',
-        (id, )).fetchone()
+    img = db_session.query(db.posts).filter_by(id=id).first()
 
     if img is None:
         abort(404)
-    if img['author_id'] != g.user['id']:
+    if img.author_id != g.user.id:
         abort(403)
 
     try:
         os.remove(
             os.path.join(current_app.config['UPLOAD_FOLDER'],
-                         img['file_name']))
+                         img.file_name))
     except Exception as e:
         logger.server(600, f"Error removing file: {e}")
         abort(500)
 
     try:
-        db = get_db()
-        db.execute('DELETE FROM posts WHERE id = ?', (id, ))
-        db.commit()
-    except:
+        db_session.query(db.posts).filter_by(id=id).delete()
+        db_session.commit()
+    except Exception as e:
         logger.server(600, f"Error removing from database: {e}")
         abort(500)
 
@@ -160,15 +158,13 @@ def remove(id):
 
 @blueprint.route('/metadata/<int:id>', methods=['GET'])
 def metadata(id):
-    img = get_db().execute(
-        'SELECT file_name, description, alt FROM posts WHERE id = ?',
-        (id, )).fetchone()
+    img = db_session.query(db.posts).filter_by(id=id).first()
 
     if img is None:
         abort(404)
 
     exif = mt.metadata.yoink(
-        os.path.join(current_app.config['UPLOAD_FOLDER'], img['file_name']))
+        os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name))
 
     return jsonify(exif)
 

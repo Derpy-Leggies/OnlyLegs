@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, url_for
 from werkzeug.exceptions import abort
 
 from gallery.auth import login_required
-from gallery.db import get_db
 
 from datetime import datetime
 

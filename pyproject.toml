@@ -18,6 +18,7 @@ libsass = "^0.22.0"
 colorthief = "^0.2.1"
 Pillow = "^9.4.0"
 platformdirs = "^3.0.0"
+SQLAlchemy = "^2.0.3"
 
 
 [build-system]
