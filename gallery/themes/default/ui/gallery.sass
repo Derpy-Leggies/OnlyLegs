@@ -5,12 +5,8 @@
     width: 100%
 
     display: grid
-    grid-template-columns: auto auto auto auto auto auto
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
     gap: 0.5rem
-
-@media (max-width: 1300px)
-    .gallery
-        grid-template-columns: auto auto auto auto
 
 @media (max-width: 800px)
     .gallery
