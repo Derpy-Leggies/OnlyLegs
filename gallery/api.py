@@ -180,8 +180,8 @@ def metadata(img_id):
     if img is None:
         abort(404)
 
-    exif = mt.metadata.yoink(
-        os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name))
+    img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name)
+    exif = mt.Metadata(img_path).yoink()
 
     return jsonify(exif)
 
