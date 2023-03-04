@@ -24,3 +24,9 @@ SQLAlchemy = "^2.0.3"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.messages_control]
+# C0415: Flask uses it to register blueprints
+# W1401: Anomalous backslash in string used in __init__
+# W0718: Exception are logged so we don't need to raise them
+disable = "C0415, W1401, W0718"
