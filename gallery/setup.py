@@ -1,49 +1,66 @@
-# Import dependencies
-import platformdirs
+"""
+OnlyLegs - Setup
+Runs when the app detects that there is no user directory
+"""
 import os
+import sys
+import platformdirs
 import yaml
 
-class setup:
-    def __init__(self):
-        self.user_dir = platformdirs.user_config_dir('onlylegs')
+USER_DIR = platformdirs.user_config_dir('onlylegs')
 
+class SetupApp:
+    """
+    Setup the application on first run
+    """
+    def __init__(self):
+        """
+        Main setup function
+        """
         print("Running setup...")
-        
-        if not os.path.exists(self.user_dir):
+
+        if not os.path.exists(USER_DIR):
             self.make_dir()
-        if not os.path.exists(os.path.join(self.user_dir, '.env')):
+        if not os.path.exists(os.path.join(USER_DIR, '.env')):
             self.make_env()
-        if not os.path.exists(os.path.join(self.user_dir, 'conf.yml')):
+        if not os.path.exists(os.path.join(USER_DIR, 'conf.yml')):
             self.make_yaml()
-        
+
     def make_dir(self):
+        """
+        Create the user directory
+        """
         try:
-            os.makedirs(self.user_dir)
-            os.makedirs(os.path.join(self.user_dir, 'instance'))
-            
-            print("Created user directory at:", self.user_dir)
-        except Exception as e:
-            print("Error creating user directory:", e)
-            exit(1) # exit with error code
-        
+            os.makedirs(USER_DIR)
+            os.makedirs(os.path.join(USER_DIR, 'instance'))
+
+            print("Created user directory at:", USER_DIR)
+        except Exception as err:
+            print("Error creating user directory:", err)
+            sys.exit(1) # exit with error code
+
     def make_env(self):
-        # Create .env file with default values 
+        """
+        Create the .env file with default values
+        """
         env_conf = {
             'FLASK_SECRETE': 'dev',
         }
         try:
-            with open(os.path.join(self.user_dir, '.env'), 'w') as f:
+            with open(os.path.join(USER_DIR, '.env'), encoding='utf-8') as file:
                 for key, value in env_conf.items():
-                    f.write(f"{key}={value}\n")
+                    file.write(f"{key}={value}\n")
                 print("Created environment variables")
-        except Exception as e:
-            print("Error creating environment variables:", e)
-            exit(1)
-            
+        except Exception as err:
+            print("Error creating environment variables:", err)
+            sys.exit(1)
+
         print("Generated default .env file. EDIT IT BEFORE RUNNING THE APP AGAIN!")
-        
+
     def make_yaml(self):
-        # Create yaml config file with default values
+        """
+        Create the YAML config file with default values
+        """
         yaml_conf = {
             'admin': {
                 'name': 'Real Person',
@@ -71,11 +88,11 @@ class setup:
             },
         }
         try:
-            with open(os.path.join(self.user_dir, 'conf.yml'), 'w') as f:
-                yaml.dump(yaml_conf, f, default_flow_style=False)
+            with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as file:
+                yaml.dump(yaml_conf, file, default_flow_style=False)
                 print("Created default gallery config")
-        except Exception as e:
-            print("Error creating default gallery config:", e)
-            exit(1)
-            
+        except Exception as err:
+            print("Error creating default gallery config:", err)
+            sys.exit(1)
+
         print("Generated default YAML config. EDIT IT BEFORE RUNNING THE APP AGAIN!")

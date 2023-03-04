@@ -6,9 +6,8 @@ authors = ["Fluffy-Bean <michal-gdula@protonmail.com>"]
 license = "MIT"
 readme = ".github/README.md"
 
-
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 Flask = "^2.2.2"
 flask-compress = "^1.13"
 gunicorn = "^20.1.0"
@@ -19,8 +18,14 @@ colorthief = "^0.2.1"
 Pillow = "^9.4.0"
 platformdirs = "^3.0.0"
 SQLAlchemy = "^2.0.3"
-
+pylint = "^2.16.3"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.messages_control]
+# C0415: Flask uses it to register blueprints
+# W1401: Anomalous backslash in string used in __init__
+# W0718: Exception are logged so we don't need to raise them
+disable = "C0415, W1401, W0718"

@@ -16,6 +16,9 @@
     <a href="https://github.com/Fluffy-Bean/onlylegs/blob/main/LICENSE">
         <img src="https://img.shields.io/github/license/Fluffy-Bean/onlylegs?style=for-the-badge">
     </a>
+    <a href="https://wakatime.com/badge/user/29bd1733-45f0-41c0-901e-d6daf49094d4/project/6aae41df-003f-4b17-ae8f-62cecfb3fc24">
+        <img src="https://wakatime.com/badge/user/29bd1733-45f0-41c0-901e-d6daf49094d4/project/6aae41df-003f-4b17-ae8f-62cecfb3fc24.svg?style=for-the-badge" alt="wakatime">
+        </a>
 </div>
 
 ## Features
