@@ -6,9 +6,8 @@ authors = ["Fluffy-Bean <michal-gdula@protonmail.com>"]
 license = "MIT"
 readme = ".github/README.md"
 
-
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 Flask = "^2.2.2"
 flask-compress = "^1.13"
 gunicorn = "^20.1.0"
@@ -20,7 +19,6 @@ Pillow = "^9.4.0"
 platformdirs = "^3.0.0"
 SQLAlchemy = "^2.0.3"
 pylint = "^2.16.3"
-
 
 [build-system]
 requires = ["poetry-core"]
