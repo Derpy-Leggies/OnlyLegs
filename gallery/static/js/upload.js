@@ -20,12 +20,14 @@ function uploadFile(){
         addNotification("Please select a file to upload", 2);
     } else {
         // Make form
-        var formData = new FormData();
+        let formData = new FormData();
         formData.append("file", $("#file").prop("files")[0]);
         formData.append("alt", $("#alt").val());
         formData.append("description", $("#description").val());
         formData.append("tags", $("#tags").val());
         formData.append("submit", $("#submit").val());
+
+        //let bar = $('.bar');
 
         // Upload the information
         $.ajax({
@@ -34,9 +36,25 @@ function uploadFile(){
             data: formData,
             contentType: false,
             processData: false,
+            beforeSend: function() {
+                //bar.width('0%');
+                var percentVal = 0;
+                console.log("Uploading...");
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                //bar.width(percentComplete + '%');
+                percentVal = percentComplete;
+                console.log(percentVal);
+            },
+            complete: function(xhr) {
+                //bar.width('100%');
+                //bar.class += " loading";
+                console.log("Upload complete");
+            },
             success: function (response) {
                 addNotification("File uploaded successfully!", 1);
                 // popupDissmiss(); // Close popup
+                console.log('File processed successfully');
             },
             error: function (response) {
                 switch (response.status) {
@@ -57,6 +75,10 @@ function uploadFile(){
                         addNotification('Error uploading file, blame someone', 2);
                         break;
                 }
+            },
+            always: function (response) {
+                //bar.class += "";
+                console.log("Upload complete");
             }
         });
 

@@ -41,8 +41,6 @@ CAMERA_MAPPING = {
     'LightSource':              ['Light Source', 'light_source'],
     'SceneCaptureType':         ['Scene Capture Type', 'scene_capture_type'],
     'SceneType':                ['Scene Type', 'scene_type'],
-    'Rating':                   ['Rating', 'rating'],
-    'RatingPercent':            ['Rating Percent', 'rating_percent'],
 }
 SOFTWARE_MAPPING = {
     'Software':     ['Software'],
@@ -59,4 +57,6 @@ FILE_MAPPING = {
     'XResolution':      ['X-resolution'],
     'YResolution':      ['Y-resolution'],
     'ResolutionUnit':   ['Resolution Units', 'resolution_unit'],
+    'Rating':           ['Rating', 'rating'],
+    'RatingPercent':    ['Rating Percent', 'rating_percent'],
 }

@@ -6,11 +6,13 @@ from uuid import uuid4
 import os
 import io
 import logging
+from datetime import datetime as dt
 
 from flask import (
     Blueprint, current_app, send_from_directory, send_file, request, g, abort, flash, jsonify)
 from werkzeug.utils import secure_filename
 
+from colorthief import ColorThief
 from PIL import Image, ImageOps # ImageFilter
 from sqlalchemy.orm import sessionmaker
 
@@ -103,12 +105,15 @@ def upload():
     """
     form_file = request.files['file']
     form = request.form
+    form_description = form['description']
+    form_alt = form['alt']
 
     if not form_file:
         return abort(404)
 
     img_ext = os.path.splitext(form_file.filename)[-1].replace('.', '').lower()
-    img_name = f"GWAGWA_{str(uuid4())}.{img_ext}"
+    img_name = "GWAGWA_"+str(uuid4())
+    img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img_name+'.'+img_ext)
 
     if not img_ext in current_app.config['ALLOWED_EXTENSIONS'].keys():
         logging.info('File extension not allowed: %s', img_ext)
@@ -117,20 +122,33 @@ def upload():
     if os.path.isdir(current_app.config['UPLOAD_FOLDER']) is False:
         os.mkdir(current_app.config['UPLOAD_FOLDER'])
 
-    # Save to database
-    try:
-        db_session.add(db.posts(img_name, form['description'], form['alt'], g.user.id))
-        db_session.commit()
-    except Exception as err:
-        logging.error('Could not save to database: %s', err)
-        abort(500)
 
     # Save file
     try:
-        form_file.save(
-            os.path.join(current_app.config['UPLOAD_FOLDER'], img_name))
+        form_file.save(img_path)
     except Exception as err:
         logging.error('Could not save file: %s', err)
+        abort(500)
+
+    # Get metadata and colors
+    img_exif = mt.Metadata(img_path).yoink()
+    img_colors = ColorThief(img_path).get_palette(color_count=3)
+
+    # Save to database
+    try:        
+        query = db.Posts(author_id = g.user.id,
+                              created_at = dt.now(),
+                              file_name = img_name+'.'+img_ext,
+                              file_type = img_ext,
+                              image_exif = img_exif,
+                              image_colours = img_colors,
+                              post_description = form_description,
+                              post_alt = form_alt)
+        
+        db_session.add(query)
+        db_session.commit()
+    except Exception as err:
+        logging.error('Could not save to database: %s', err)
         abort(500)
 
     return 'Gwa Gwa'
@@ -142,7 +160,7 @@ def remove(img_id):
     """
     Deletes an image from the server and database
     """
-    img = db_session.query(db.posts).filter_by(id=img_id).first()
+    img = db_session.query(db.Posts).filter_by(id=img_id).first()
 
     if img is None:
         abort(404)
@@ -159,7 +177,7 @@ def remove(img_id):
         abort(500)
 
     try:
-        db_session.query(db.posts).filter_by(id=img_id).delete()
+        db_session.query(db.Posts).filter_by(id=img_id).delete()
         db_session.commit()
     except Exception as err:
         logging.error('Could not remove from database: %s', err)
@@ -175,7 +193,7 @@ def metadata(img_id):
     """
     Yoinks metadata from an image
     """
-    img = db_session.query(db.posts).filter_by(id=img_id).first()
+    img = db_session.query(db.Posts).filter_by(id=img_id).first()
 
     if img is None:
         abort(404)

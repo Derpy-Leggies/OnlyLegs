@@ -73,7 +73,7 @@
     </div>
 
     <div class="image-info__container">
-        {% if image['alt'] != '' %}
+        {% if image['post_alt'] %}
             <div class="image-info">
                 <span class="image-info__collapse" id="collapse-info">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" fill="currentColor">
@@ -87,11 +87,11 @@
                     <h2>Alt</h2>
                 </div>
                 <div class="image-info__content">
-                    <p>{{ image['alt'] }}</p>
+                    <p>{{ image['post_alt'] }}</p>
                 </div>
             </div>
         {% endif %}
-        {% if image['description'] != '' %}
+        {% if image['post_description'] %}
             <div class="image-info">
                 <span class="image-info__collapse" id="collapse-info">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" fill="currentColor">
@@ -105,7 +105,7 @@
                     <h2>Description</h2>
                 </div>
                 <div class="image-info__content">
-                    <p>{{ image['description'] }}</p>
+                    <p>{{ image['post_description'] }}</p>
                 </div>
             </div>
         {% endif %}

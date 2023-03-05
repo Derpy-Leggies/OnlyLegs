@@ -22,8 +22,8 @@ def index():
     """
     Home page of the website, shows the feed of latest images
     """
-    images = db_session.query(db.posts).order_by(db.posts.id.desc()).all()
-
+    images = db_session.query(db.Posts.file_name, db.Posts.id, db.Posts.created_at).order_by(db.Posts.id.desc()).all()
+ 
     return render_template('index.html',
                            images=images,
                            image_count=len(images),
@@ -35,15 +35,12 @@ def image(image_id):
     """
     Image view, shows the image and its metadata
     """
-    img = db_session.query(db.posts).filter_by(id=image_id).first()
+    img = db_session.query(db.Posts).filter_by(id=image_id).first()
 
     if img is None:
         abort(404)
 
-    img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name)
-    exif = mt.Metadata(img_path).yoink()
-
-    return render_template('image.html', image=img, exif=exif)
+    return render_template('image.html', image=img, exif=img.image_exif)
 
 @blueprint.route('/group')
 def groups():

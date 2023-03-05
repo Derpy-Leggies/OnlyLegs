@@ -4,10 +4,9 @@ Parse metadata from images if available
 otherwise get some basic information from the file
 """
 import os
-import logging
 
 from PIL import Image
-from PIL.ExifTags import TAGS, GPSTAGS
+from PIL.ExifTags import TAGS
 
 from .helpers import *
 from .mapping import *
@@ -72,6 +71,7 @@ class Metadata:
                     }
             elif data in CAMERA_MAPPING:
                 if len(CAMERA_MAPPING[data]) == 2:
+                    # Camera - Exif Tag name
                     exif['Camera'][CAMERA_MAPPING[data][0]] = {
                             'raw': encoded_exif[data],
                             'formatted':
