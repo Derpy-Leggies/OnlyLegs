@@ -133,7 +133,7 @@ def upload():
     # Get metadata and colors
     img_exif = mt.Metadata(img_path).yoink()
     img_colors = ColorThief(img_path).get_palette(color_count=3)
-
+    
     # Save to database
     try:        
         query = db.Posts(author_id = g.user.id,

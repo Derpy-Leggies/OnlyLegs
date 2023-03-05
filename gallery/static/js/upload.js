@@ -26,9 +26,7 @@ function uploadFile(){
         formData.append("description", $("#description").val());
         formData.append("tags", $("#tags").val());
         formData.append("submit", $("#submit").val());
-
-        //let bar = $('.bar');
-
+    
         // Upload the information
         $.ajax({
             url: '/api/upload',
@@ -37,23 +35,10 @@ function uploadFile(){
             contentType: false,
             processData: false,
             beforeSend: function() {
-                //bar.width('0%');
-                var percentVal = 0;
                 console.log("Uploading...");
-            },
-            uploadProgress: function(event, position, total, percentComplete) {
-                //bar.width(percentComplete + '%');
-                percentVal = percentComplete;
-                console.log(percentVal);
-            },
-            complete: function(xhr) {
-                //bar.width('100%');
-                //bar.class += " loading";
-                console.log("Upload complete");
             },
             success: function (response) {
                 addNotification("File uploaded successfully!", 1);
-                // popupDissmiss(); // Close popup
                 console.log('File processed successfully');
             },
             error: function (response) {
@@ -75,11 +60,8 @@ function uploadFile(){
                         addNotification('Error uploading file, blame someone', 2);
                         break;
                 }
+                console.log('Error uploading file');
             },
-            always: function (response) {
-                //bar.class += "";
-                console.log("Upload complete");
-            }
         });
 
         // Empty values

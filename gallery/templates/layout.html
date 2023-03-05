@@ -6,7 +6,20 @@
     <title>Gallery</title>
     <link rel="icon" href="{{url_for('static', filename='images/icon.png')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='theme/style.css')}}" defer>
+
+    <!-- Jquery for AJAX -->
     <script src="{{url_for('static', filename='js/jquery-3.6.3.min.js')}}"></script>
+
+    <!-- Main Script -->
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+
+    <!-- Login and Upload -->
+    <script src="{{ url_for('static', filename='js/upload.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}" defer></script>
+
+    <!-- UI -->
+    <script src="{{ url_for('static', filename='js/ui/popup.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/ui/notifications.js') }}" defer></script>
 </head>
 <body>
     <div class="wrapper">
@@ -87,12 +100,6 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    {% if g.user %}
-        <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
-    {% else %}
-        <script src="{{ url_for('static', filename='js/login.js') }}"></script>
-    {% endif %}
     <script>
         {% for message in get_flashed_messages() %}
             // Show notifications on page load

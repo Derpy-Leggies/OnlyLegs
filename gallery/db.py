@@ -12,6 +12,8 @@ from sqlalchemy.orm import declarative_base, relationship, backref, mapped_colum
 
 path_to_db = os.path.join(platformdirs.user_config_dir('onlylegs'), 'gallery.sqlite')
 engine = create_engine(f'sqlite:///{path_to_db}', echo=False)
+# engine = create_engine(f'postgresql://username:password@host:port/database_name', echo=False)
+# engine = create_engine(f'mysql://username:password@host:port/database_name', echo=False)
 base = declarative_base()
 
 
