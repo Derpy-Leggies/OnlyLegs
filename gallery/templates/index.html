@@ -1,31 +1,27 @@
 {% extends 'layout.html' %}
 
-{% block header %}
+{% block nav_home %}navigation-item__selected{% endblock %}
+
+{% block content %}
     <div class="banner">
         <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
         <span></span>
 
-        <div class="banner__content">
-            {% block banner_subtitle%}{% endblock %}
+        <div class="banner-content">
             <p>{{ motto }}</p>
             <h1>{{ name }}</h1>
             <p>Serving {{ image_count }} images</p>
         </div>
     </div>
-{% endblock %}
-{% block nav_home %}navigation-item__selected{% endblock %}
-{% block wrapper_class %}index-wrapper{% endblock %}
 
-{% block content %}
-    <div class="gallery">
+    <div class="gallery-grid">
         {% for image in images %}
-            <a id="image-{{ image['id'] }}" class="gallery__item" href="/image/{{ image['id'] }}" style="background-color: rgb({{ image['image_colours'][0][0] }}, {{ image['image_colours'][0][1] }}, {{ image['image_colours'][0][2] }})">
-                <span class="gallery__item-info">
+            <a id="image-{{ image['id'] }}" class="gallery-item" href="/image/{{ image['id'] }}" style="background-color: rgb({{ image['image_colours'][0][0] }}, {{ image['image_colours'][0][1] }}, {{ image['image_colours'][0][2] }})">
+                <span>
                     <p></p>
                     <h2><span class="time">{{ image['created_at'] }}</span></h2>
                 </span>
                 <img
-                    class="gallery__item-image"
                     data-src="{{ image['file_name'] }}"
                     onload="imgFade(this)"
                     style="opacity:0;"
@@ -38,7 +34,8 @@
 {% block script %}
     <script>
         function loadOnView() {
-            var images = document.querySelectorAll('.gallery__item-image');
+            var images = document.querySelectorAll('.gallery-item img');
+
             for (var i = 0; i < images.length; i++) {
                 var image = images[i];
                 if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {

@@ -4,18 +4,18 @@
 @import "variables"
 @import "animations"
 
-@import "ui/notification"
-@import "ui/pop-up"
-@import "ui/upload-panel"
+@import "components/elements/notification"
+@import "components/elements/pop-up"
+@import "components/elements/upload-panel"
 
-@import "ui/navigation"
-@import "ui/content"
-@import "ui/background"
-@import "ui/banner"
-@import "ui/gallery"
+@import "components/navigation"
+@import "components/banner"
+@import "components/gallery"
 
-@import "buttons/jumpUp"
-@import "buttons/pill"
+@import "components/buttons/jumpUp"
+@import "components/buttons/pill"
+
+@import "components/image-view/view"
 
 // Reset
 *
@@ -36,9 +36,57 @@ html, body
 
 .wrapper
     margin: 0
-    padding: 0
+    padding: 0 0 0 3.5rem
 
     min-height: 100vh
 
+    display: flex
+    flex-direction: column
+
     background-color: $white
     color: $black
+
+
+.error-page
+    width: 100%
+    height: 100vh
+
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+
+    background-color: $black
+
+    h1
+        margin: 0 2rem
+        
+        font-size: 6.9rem
+        font-weight: 900
+        text-align: center
+
+        color: $primary
+
+    p
+        margin: 0 2rem
+
+        max-width: 40rem
+        font-size: 1.25rem
+        font-weight: 400
+        text-align: center
+
+        color: $white
+
+@media (max-width: $breakpoint)
+    .wrapper
+        padding: 0 0 3.5rem 0
+
+    .error-page
+        height: calc(100vh - 3.5rem)
+
+        h1
+            font-size: 4.5rem
+
+        p
+            max-width: 100%
+            font-size: 1rem

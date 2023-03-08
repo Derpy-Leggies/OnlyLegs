@@ -1,29 +1,27 @@
 {% extends 'layout.html' %}
 
-{% block header %}
+{% block nav_groups %}navigation-item__selected{% endblock %}
+
+{% block content %}
     <div class="banner">
         <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
         <span></span>
 
-        <div class="banner__content">
+        <div class="banner-content">
             {% block banner_subtitle%}{% endblock %}
             <h1>Groups</h1>
             <p>gwa gwa</p>
         </div>
     </div>
-{% endblock %}
-{% block nav_groups %}navigation-item__selected{% endblock %}
 
-{% block content %}
-    <div class="gallery">
+    <div class="gallery-grid">
         {% for group in groups %}
-            <a id="group-{{ group['id'] }}" class="gallery__item" href="/group/{{ group['id'] }}">
-                <span class="gallery__item-info">
+            <a id="group-{{ group['id'] }}" class="gallery-item" href="/group/{{ group['id'] }}">
+                <span>
                     <p>{{ group['id'] }}</p>
                     <h2><span class="time">{{ group['created_at'] }}</span></h2>
                 </span>
                 <img
-                    class="gallery__item-group"
                     data-src="{{ group['file_name'] }}"
                     onload="imgFade(this)"
                     style="opacity:0;"

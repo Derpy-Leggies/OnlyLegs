@@ -1,21 +1,18 @@
 {% extends 'layout.html' %}
 
-{% block header %}
+{% block nav_settings %}navigation-item__selected{% endblock %}
+{% block content %}
     <div class="banner">
-        <img src="{{ url_for('static', filename='images/leaves.jpg') }}" onload="imgFade(this)" style="opacity:0;"/>
+        <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
         <span></span>
 
-        <div class="banner__content">
+        <div class="banner-content">
             {% block banner_subtitle%}{% endblock %}
             <h1>Settings</h1>
             <p>All the red buttons in one place, what could go wrong?</p>
         </div>
     </div>
-{% endblock %}
-{% block nav_settings %}navigation-item__selected{% endblock %}
-{% block wrapper_class %}settings-wrapper{% endblock %}
 
-{% block content %}
     <div class="settings-nav">
         <a href="{{ url_for('settings.general') }}" class="settings-nav__item {% block settings_general %}{% endblock %}">General</a>
         <a href="{{ url_for('settings.server') }}" class="settings-nav__item {% block settings_server %}{% endblock %}">Server</a>

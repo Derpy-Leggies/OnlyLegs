@@ -1,0 +1,66 @@
+@import 'background'
+@import 'fullscreen'
+@import 'info-tab'
+@import 'image'
+
+
+.image-grid
+    padding: 0
+
+    position: relative
+
+    display: grid
+    grid-template-areas: 'info image' 'info tools'
+    grid-template-columns: 25rem 1fr
+    grid-template-rows: 1fr auto
+    gap: 0
+
+    height: 100vh
+
+    z-index: 3
+
+#image-info
+    grid-area: info
+#image-tools
+    grid-area: tools
+    padding: 0 0 0.5rem 0
+#image-container
+    grid-area: image
+
+
+@media (max-width: 1100px)
+    .image-grid
+        padding: 0.5rem
+
+        display: flex
+        flex-direction: column
+        gap: 0.5rem
+
+        height: auto
+
+    .image-container
+        margin: 0 auto
+        padding: 0
+
+        max-height: 69vh
+
+        img
+            max-height: 69vh
+
+    #image-tools
+        padding: 0
+
+    .info-container
+        gap: 0.5rem
+        background: transparent
+    
+    .info-header
+        border-radius: $rad $rad 0 0
+
+    .info-tab.collapsed .info-header
+        border-radius: $rad
+
+@media (max-width: $breakpoint)
+    .image-fullscreen
+        padding: 0 0 3.5rem 0
+        

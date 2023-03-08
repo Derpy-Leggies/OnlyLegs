@@ -41,11 +41,12 @@ def image(image_id):
     Image view, shows the image and its metadata
     """
     img = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
-    author = db_session.query(db.Users.username).filter(db.Users.id == img.author_id).first()[0]
-    img.author_username = author
-    
+
     if img is None:
         abort(404, 'Image not found')
+
+    author = db_session.query(db.Users.username).filter(db.Users.id == img.author_id).first()[0]
+    img.author_username = author
 
     return render_template('image.html', image=img, exif=img.image_exif)
 
