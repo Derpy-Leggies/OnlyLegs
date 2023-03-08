@@ -100,7 +100,7 @@ def register():
         register_user = db.Users(username=username,
                                  email=email,
                                  password=generate_password_hash(password),
-                                 created_at=dt.now())
+                                 created_at=dt.utcnow())
         db_session.add(register_user)
         db_session.commit()
     except exc.IntegrityError:
@@ -148,7 +148,7 @@ def login():
                                    ip_address=request.remote_addr,
                                    user_agent=request.user_agent.string,
                                    active=True,
-                                   created_at=dt.now())
+                                   created_at=dt.utcnow())
 
         db_session.add(session_query)
         db_session.commit()

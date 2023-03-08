@@ -1,24 +1,6 @@
 let navToggle = true;
 
 document.onscroll = function() {
-    try {
-        document.querySelector('.background-decoration').style.opacity = `${1 - window.scrollY / 621}`;
-        document.querySelector('.background-decoration').style.top = `-${window.scrollY / 5}px`;
-    } catch (e) {
-        // Do nothing if banner not found
-    }
-
-    try {
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
-            document.querySelector('.banner').classList = 'banner banner-scrolled';
-        } else {
-            document.querySelector('.banner').classList = 'banner';
-        }
-    }
-    catch (e) {
-        // Do nothing if banner not found
-    }
-
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
         document.querySelector('.jumpUp').classList = 'jumpUp jumpUp--show';
     } else {
@@ -35,9 +17,21 @@ function imgFade(obj) {
     $(obj).animate({opacity: 1}, 250);
 }
 
-var times = document.getElementsByClassName('time');
-for (var i = 0; i < times.length; i++) {
-    var time = times[i].innerHTML;
-    var date = new Date(time);
-    times[i].innerHTML = date.toLocaleString('en-GB');
+let times = document.getElementsByClassName('time');
+for (let i = 0; i < times.length; i++) {
+    // Remove milliseconds
+    const raw = times[i].innerHTML.split('.')[0];
+
+    // Parse YYYY-MM-DD HH:MM:SS to Date object
+    const time = raw.split(' ')[1]
+    const date = raw.split(' ')[0].split('-');
+
+    // Format to YYYY/MM/DD HH:MM:SS
+    let formatted = date[0] + '/' + date[1] + '/' + date[2] + ' ' + time + ' UTC';
+
+    // Convert to UTC Date object
+    let dateTime = new Date(formatted);
+
+    // Convert to local time
+    times[i].innerHTML = dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
 }

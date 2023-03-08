@@ -143,7 +143,7 @@ def upload():
     # Save to database
     try:        
         query = db.Posts(author_id = g.user.id,
-                              created_at = dt.now(),
+                              created_at = dt.utcnow(),
                               file_name = img_name+'.'+img_ext,
                               file_type = img_ext,
                               image_exif = img_exif,

@@ -1,7 +1,6 @@
 """
 Onlylegs Gallery - Routing
 """
-import os
 from datetime import datetime as dt
 
 from flask import Blueprint, render_template, current_app, request, g
