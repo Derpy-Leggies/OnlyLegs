@@ -15,6 +15,7 @@ import logging
 
 # Flask
 from flask_compress import Compress
+from flask_caching import Cache
 from flask import Flask, render_template
 
 # Configuration
@@ -73,6 +74,7 @@ def create_app(test_config=None):
     """
     app = Flask(__name__,instance_path=INSTANCE_PATH)
     compress = Compress()
+    cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 69})
 
     # App configuration
     app.config.from_mapping(
@@ -146,4 +148,5 @@ def create_app(test_config=None):
     app.register_blueprint(api.blueprint)
 
     compress.init_app(app)
+    cache.init_app(app)
     return app

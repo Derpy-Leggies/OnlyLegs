@@ -93,7 +93,7 @@
 
     animation: notificationTimeout 5.1s linear
 
-@each $name, $colour in (success: $succes, error: $critical, warning: $warning, info: $info)
+@each $name, $colour in (success: $success, error: $critical, warning: $warning, info: $info)
     .sniffle__notification--#{$name}
         @include notification($colour)
 

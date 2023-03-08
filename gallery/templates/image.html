@@ -3,7 +3,7 @@
 {% block header %}
     <div class="background-decoration">
         <img src="/api/uploads/{{ image['file_name'] }}?w=1000&h=1000" onload="imgFade(this)" style="opacity:0;"/>
-        <span></span>
+        <span style="background-image: linear-gradient(to top, rgba({{ image['image_colours'][0][0] }}, {{ image['image_colours'][0][1] }}, {{ image['image_colours'][0][2] }}, 1), transparent);"></span>
     </div>
 {% endblock %}
 {% block wrapper_class %}image-wrapper{% endblock %}

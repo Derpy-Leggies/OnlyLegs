@@ -1,15 +1,45 @@
 {% extends 'layout.html' %}
 
 {% block header %}
-    <div class="background-decoration">
-        <img src="{{ url_for('static', filename='images/background.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
+    <div class="banner">
+        <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
         <span></span>
+
+        <div class="banner__content">
+            {% block banner_subtitle%}{% endblock %}
+            <h1>Groups</h1>
+            <p>gwa gwa</p>
+        </div>
     </div>
 {% endblock %}
-
 {% block nav_groups %}navigation-item__selected{% endblock %}
 
 {% block content %}
-    <h1>Image Group</h1>
-    <p>{{group_id}}</p>
+    <div class="gallery">
+        {% for group in groups %}
+            <a id="group-{{ group['id'] }}" class="gallery__item" href="/group/{{ group['id'] }}">
+                <span class="gallery__item-info">
+                    <p>{{ group['id'] }}</p>
+                    <h2><span class="time">{{ group['created_at'] }}</span></h2>
+                </span>
+                <img
+                    class="gallery__item-group"
+                    data-src="{{ group['file_name'] }}"
+                    onload="imgFade(this)"
+                    style="opacity:0;"
+                />
+            </a>
+        {% endfor %}
+    </div>
+    <form action="/group" method="post" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="name">
+        <input type="text" name="description" placeholder="description">
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script>
+        
+    </script>
 {% endblock %}

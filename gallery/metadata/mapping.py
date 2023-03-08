@@ -31,7 +31,7 @@ CAMERA_MAPPING = {
     'ISOSpeedRatings':          ['ISO Speed Ratings', 'iso'],
     'ISOSpeed':                 ['ISO Speed', 'iso'],
     'SensitivityType':          ['Sensitivity Type', 'sensitivity_type'],
-    'ExposureBiasValue':        ['Exposure Bias', 'ev'],
+    'ExposureBiasValue':        ['Exposure Bias', 'exposure'],
     'ExposureTime':             ['Exposure Time', 'shutter'],
     'ExposureMode':             ['Exposure Mode', 'exposure_mode'],
     'ExposureProgram':          ['Exposure Program', 'exposure_program'],

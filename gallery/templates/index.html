@@ -2,7 +2,7 @@
 
 {% block header %}
     <div class="banner">
-        <img src="{{ url_for('static', filename='images/leaves.jpg') }}" onload="imgFade(this)" style="opacity:0;"/>
+        <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
         <span></span>
 
         <div class="banner__content">
@@ -19,9 +19,9 @@
 {% block content %}
     <div class="gallery">
         {% for image in images %}
-            <a id="image-{{ image['id'] }}" class="gallery__item" href="/image/{{ image['id'] }}">
+            <a id="image-{{ image['id'] }}" class="gallery__item" href="/image/{{ image['id'] }}" style="background-color: rgb({{ image['image_colours'][0][0] }}, {{ image['image_colours'][0][1] }}, {{ image['image_colours'][0][2] }})">
                 <span class="gallery__item-info">
-                    <p>{{ image['id'] }}</p>
+                    <p></p>
                     <h2><span class="time">{{ image['created_at'] }}</span></h2>
                 </span>
                 <img
@@ -59,15 +59,19 @@
         };
 
         if (document.referrer.includes('image')) {
-            var referrerId = document.referrer.split('/').pop();
-
-            var imgOffset = document.getElementById('image-' + referrerId).offsetTop;
-            var imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
-            var windowHeight = window.innerHeight;
-
-            document.querySelector('html').style.scrollBehavior = 'auto';
-            window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));
-            document.querySelector('html').style.scrollBehavior = 'smooth';
+            try {
+                var referrerId = document.referrer.split('/').pop();
+    
+                var imgOffset = document.getElementById('image-' + referrerId).offsetTop;
+                var imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
+                var windowHeight = window.innerHeight;
+    
+                document.querySelector('html').style.scrollBehavior = 'auto';
+                window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));
+                document.querySelector('html').style.scrollBehavior = 'smooth';
+            } catch (e) {
+                console.log(e);
+            }
         }
     </script>
 {% endblock %}

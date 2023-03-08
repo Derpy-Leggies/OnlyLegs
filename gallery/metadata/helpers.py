@@ -352,6 +352,7 @@ def orientation(value):
     Maps the value of the orientation to a human readable format
     """
     value_map = {
+        0: 'Undefined',
         1: 'Horizontal (normal)',
         2: 'Mirror horizontal',
         3: 'Rotate 180',

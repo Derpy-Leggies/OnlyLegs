@@ -13,7 +13,7 @@ from flask import (
 from werkzeug.utils import secure_filename
 
 from colorthief import ColorThief
-from PIL import Image, ImageOps # ImageFilter
+from PIL import Image, ImageOps, ImageFilter
 from sqlalchemy.orm import sessionmaker
 
 from gallery.auth import login_required
@@ -33,11 +33,13 @@ def uploads(file):
     Returns a file from the uploads folder
     w and h are the width and height of the image for resizing
     f is whether to apply filters to the image, such as blurring NSFW images
+    b is whether to force blur the image, even if it's not NSFW
     """
     # Get args
     width = request.args.get('w', default=0, type=int)  # Width of image
     height = request.args.get('h', default=0, type=int)  # Height of image
-    filtered = request.args.get('f', default=False, type=bool)  # Whether to apply filters
+    filtered = request.args.get('f', default=False, type=bool) # Whether to apply filters
+    blur = request.args.get('b', default=False, type=bool) # Whether to force blur
 
     # if no args are passed, return the raw file
     if width == 0 and height == 0 and not filtered:
@@ -78,6 +80,10 @@ def uploads(file):
     if filtered:
         #img = img.filter(ImageFilter.GaussianBlur(20))
         pass
+    
+    # If forced to blur, blur image
+    if blur:
+        img = img.filter(ImageFilter.GaussianBlur(20))
 
     try:
         img.save(buff, img_ext, icc_profile=img_icc)

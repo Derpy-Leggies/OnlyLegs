@@ -69,6 +69,7 @@ class Metadata:
                 exif['Photographer'][PHOTOGRAHER_MAPPING[data][0]] = {
                         'raw': encoded_exif[data],
                     }
+                continue
             elif data in CAMERA_MAPPING:
                 if len(CAMERA_MAPPING[data]) == 2:
                     # Camera - Exif Tag name
@@ -81,6 +82,7 @@ class Metadata:
                     exif['Camera'][CAMERA_MAPPING[data][0]] = {
                             'raw': encoded_exif[data],
                         }
+                continue
             elif data in SOFTWARE_MAPPING:
                 if len(SOFTWARE_MAPPING[data]) == 2:
                     exif['Software'][SOFTWARE_MAPPING[data][0]] = {
@@ -92,6 +94,7 @@ class Metadata:
                     exif['Software'][SOFTWARE_MAPPING[data][0]] = {
                             'raw': encoded_exif[data],
                         }
+                continue
             elif data in FILE_MAPPING:
                 if len(FILE_MAPPING[data]) == 2:
                     exif['File'][FILE_MAPPING[data][0]] = {

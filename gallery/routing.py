@@ -2,8 +2,9 @@
 Onlylegs Gallery - Routing
 """
 import os
+from datetime import datetime as dt
 
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, request, g
 from werkzeug.exceptions import abort
 
 from sqlalchemy.orm import sessionmaker
@@ -23,9 +24,10 @@ def index():
     Home page of the website, shows the feed of latest images
     """
     images = db_session.query(db.Posts.file_name,
-                              db.Posts.id,
-                              db.Posts.created_at
-                              ).order_by(db.Posts.id.desc()).all()
+                              db.Posts.image_colours,
+                              db.Posts.author_id,
+                              db.Posts.created_at,
+                              db.Posts.id).order_by(db.Posts.id.desc()).all()
  
     return render_template('index.html',
                            images=images,
@@ -47,12 +49,25 @@ def image(image_id):
 
     return render_template('image.html', image=img, exif=img.image_exif)
 
-@blueprint.route('/group')
+@blueprint.route('/group', methods=['GET', 'POST'])
 def groups():
     """
     Group overview, shows all image groups
     """
-    return render_template('group.html', group_id='gwa gwa')
+    if request.method == 'GET':
+        groups = db_session.query(db.Groups.name, db.Groups.author_id).all()
+        
+        return render_template('group.html', groups=groups)
+    elif request.method == 'POST':
+        group_name = request.form['name']
+        group_description = request.form['description']
+        group_author = g.user.id
+        
+        new_group = db.Groups(name=group_name, description=group_description, author_id=group_author, created_at=dt.now())
+        
+        db_session.add(new_group)
+        
+        return ':3'
 
 @blueprint.route('/group/<int:group_id>')
 def group(group_id):

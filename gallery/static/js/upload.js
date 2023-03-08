@@ -1,19 +1,8 @@
-function showUpload() {
-    popUpShow(
-        'Upload funny stuff',
-        'May the world see your stuff 👀',
-        '<button class="pop-up__btn pop-up__btn-primary-fill" form="uploadForm" type"submit">Upload</button>',
-        '<form id="uploadForm" onsubmit="return uploadFile(event)">\
-            <input class="pop-up__input" type="file" id="file"/>\
-            <input class="pop-up__input" type="text" placeholder="alt" id="alt"/>\
-            <input class="pop-up__input" type="text" placeholder="description" id="description"/>\
-            <input class="pop-up__input" type="text" placeholder="tags" id="tags"/>\
-        </form>'
-    );
-};
 function uploadFile(){
     // AJAX takes control of subby form
     event.preventDefault();
+
+    const jobList = document.querySelector(".upload-jobs");
 
     // Check for empty upload
     if ($("#file").val() === "") {
@@ -35,32 +24,58 @@ function uploadFile(){
             contentType: false,
             processData: false,
             beforeSend: function() {
-                console.log("Uploading...");
+                jobContainer = document.createElement("div");
+                jobContainer.classList.add("job");
+
+                jobStatus = document.createElement("span");
+                jobStatus.classList.add("job__status");
+                jobStatus.innerHTML = "Uploading...";
+                
+                jobProgress = document.createElement("span");
+                jobProgress.classList.add("progress");
+
+                jobImg = document.createElement("img");
+                jobImg.src = URL.createObjectURL($("#file").prop("files")[0]);
+
+                jobImgFilter = document.createElement("span");
+                jobImgFilter.classList.add("img-filter");
+
+                jobContainer.appendChild(jobStatus);
+                jobContainer.appendChild(jobProgress);
+                jobContainer.appendChild(jobImg);
+                jobContainer.appendChild(jobImgFilter);
+                jobList.appendChild(jobContainer);
             },
             success: function (response) {
-                addNotification("File uploaded successfully!", 1);
-                console.log('File processed successfully');
+                jobContainer.classList.add("success");
+                jobStatus.innerHTML = "Uploaded!";
+                if (!document.querySelector(".upload-panel").classList.contains("open")) {
+                    addNotification("Image uploaded successfully", 1);
+                }
             },
             error: function (response) {
+                jobContainer.classList.add("critical");
                 switch (response.status) {
                     case 500:
-                        addNotification('Server exploded, F\'s in chat', 2);
+                        jobStatus.innerHTML = "Server exploded, F's in chat";
                         break;
                     case 400:
                     case 404:
-                        addNotification('Error uploading. Blame yourself', 2);
+                        jobStatus.innerHTML = "Error uploading. Blame yourself";
                         break;
                     case 403:
-                        addNotification('None but devils play past here...', 2);
+                        jobStatus.innerHTML = "None but devils play past here...";
                         break;
                     case 413:
-                        addNotification('File too large!!!!!!', 3);
+                        jobStatus.innerHTML = "File too large!!!!!!";
                         break;
                     default:
-                        addNotification('Error uploading file, blame someone', 2);
+                        jobStatus.innerHTML = "Error uploading file, blame someone";
                         break;
                 }
-                console.log('Error uploading file');
+                if (!document.querySelector(".upload-panel").classList.contains("open")) {
+                    addNotification("Error uploading file", 2);
+                }
             },
         });
 
@@ -71,3 +86,22 @@ function uploadFile(){
         $("#tags").val("");
     }
 };
+
+function openUploadTab() {
+    // Open upload tab
+    const uploadTab = document.querySelector(".upload-panel");
+    uploadTab.style.display = "block";
+
+    setTimeout( function() {
+        uploadTab.classList.add("open");
+    }, 10);
+}
+
+function closeUploadTab() {
+    // Close upload tab
+    const uploadTab = document.querySelector(".upload-panel");
+    uploadTab.classList.remove("open");
+    setTimeout( function() {
+        uploadTab.style.display = "none";
+    }, 250);
+}
