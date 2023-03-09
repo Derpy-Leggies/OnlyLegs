@@ -4,8 +4,8 @@
 
 {% block content %}
     <div class="background">
-        <img src="/api/uploads/{{ image['file_name'] }}?w=1000&h=1000" onload="imgFade(this)" style="opacity:0;"/>
-        <span style="background-image: linear-gradient(to top, rgba({{ image['image_colours'][0][0] }}, {{ image['image_colours'][0][1] }}, {{ image['image_colours'][0][2] }}, 1), transparent);"></span>
+        <img src="/api/uploads/{{ image.file_name }}?w=1000&h=1000" onload="imgFade(this)" style="opacity:0;"/>
+        <span style="background-image: linear-gradient(to top, rgba({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }}, 1), transparent);"></span>
     </div>
 
     <div class="image-fullscreen">
@@ -15,18 +15,18 @@
     <div class="image-grid">
         <div class="image-container" id="image-container">
             <img
-                src="/api/uploads/{{ image['file_name'] }}?w=1000&h=1000"
+                src="/api/uploads/{{ image.file_name }}?w=1000&h=1000"
                 onload="imgFade(this)" style="opacity:0;"
                 onerror="this.src='/static/images/error.png'"
-                width="{{ exif['File']['Width']['raw'] }}"
-                height="{{ exif['File']['Height']['raw'] }}"
+                width="{{ image.image_exif.File.Width.raw }}"
+                height="{{ image.image_exif.File.Height.raw }}"
             />
         </div>
 
         <div class="pill-row" id="image-tools">
-            {% if next_id %}
+            {% if next_url %}
                 <div>
-                    <a class="pill-item" href="{{ url_for('gallery.image', image_id=next_id) }}">
+                    <a class="pill-item" href="{{ next_url }}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
                             <path d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z"></path>
                         </svg>
@@ -52,7 +52,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg>
                     </span>
                 </button>
-                <a class="pill-item" id="img-download" href="/api/uploads/{{ image['file_name'] }}" download>
+                <a class="pill-item" id="img-download" href="/api/uploads/{{ image.file_name }}" download>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M232,136v64a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V136a8,8,0,0,1,8-8H224A8,8,0,0,1,232,136Z" opacity="0.2"></path><path d="M240,136v64a16,16,0,0,1-16,16H32a16,16,0,0,1-16-16V136a16,16,0,0,1,16-16H72a8,8,0,0,1,0,16H32v64H224V136H184a8,8,0,0,1,0-16h40A16,16,0,0,1,240,136Zm-117.66-2.34a8,8,0,0,0,11.32,0l48-48a8,8,0,0,0-11.32-11.32L136,108.69V24a8,8,0,0,0-16,0v84.69L85.66,74.34A8,8,0,0,0,74.34,85.66ZM200,168a12,12,0,1,0-12,12A12,12,0,0,0,200,168Z"></path></svg>
                     <span class="tool-tip">
                         Download
@@ -60,7 +60,7 @@
                     </span>
                 </a>
             </div>
-            {% if g.user['id'] == image['author_id'] %}
+            {% if image.author_id == g.user.id %}
                 <div>
                     <button class="pill-item pill__critical" id="img-delete">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M200,56V208a8,8,0,0,1-8,8H64a8,8,0,0,1-8-8V56Z" opacity="0.2"></path><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
@@ -78,9 +78,9 @@
                     </button>
                 </div>
             {% endif %}
-            {% if prev_id %}
+            {% if prev_url %}
                 <div>
-                    <a class="pill-item" href="{{ url_for('gallery.image', image_id=prev_id) }}">
+                    <a class="pill-item" href="{{ prev_url }}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
                             <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
                         </svg>
@@ -94,23 +94,23 @@
         </div>
     
         <div class="info-container" id="image-info">
-            {% if image['post_description'] %}
+            {% if image.post_description %}
                 <div class="info-tab">
                     <div class="info-header">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#e8e3e3" viewBox="0 0 256 256"><path d="M224,56V200a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8H216A8,8,0,0,1,224,56Z" opacity="0.2"></path><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H40V56H216V200ZM184,96a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,96Zm0,32a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,128Zm0,32a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,160Z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,56V200a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8H216A8,8,0,0,1,224,56Z" opacity="0.2"></path><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H40V56H216V200ZM184,96a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,96Zm0,32a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,128Zm0,32a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,160Z"></path></svg>
                         <h2>Description</h2>
                         <svg class="collapse-indicator" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" fill="currentColor">
                             <path d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z"></path>
                         </svg>
                     </div>
                     <div class="info-table">
-                        <p>{{ image['post_description'] }}</p>
+                        <p>{{ image.post_description }}</p>
                     </div>
                 </div>
             {% endif %}
             <div class="info-tab">
                 <div class="info-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#e8e3e3" viewBox="0 0 256 256"><path d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z" opacity="0.2"></path><path d="M144,176a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176Zm88-48A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128ZM124,96a12,12,0,1,0-12-12A12,12,0,0,0,124,96Z"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z" opacity="0.2"></path><path d="M144,176a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176Zm88-48A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128ZM124,96a12,12,0,1,0-12-12A12,12,0,0,0,124,96Z"></path></svg>
                     <h2>Info</h2>
                     <svg class="collapse-indicator" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" fill="currentColor">
                         <path d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z"></path>
@@ -124,21 +124,35 @@
                         </tr>
                         <tr>
                             <td>Author</td>
-                            <td>{{ image['author_username'] }}</td>
+                            <td>{{ image.author_username }}</td>
                         </tr>
                         <tr>
                             <td>Upload date</td>
-                            <td><span class="time">{{ image['created_at'] }}</span></td>
+                            <td><span class="time">{{ image.created_at }}</span></td>
                         </tr>
                     </table>
                     <div class="img-colours">
                         {% for col in image.image_colours %}
-                            <span style="background-color: rgb({{col[0]}}, {{col[1]}}, {{col[2]}})"></span>
+                            <span style="background-color: rgb({{col.0}}, {{col.1}}, {{col.2}})"></span>
                         {% endfor %}
+                    </div>
+                    <div class="img-groups">
+                        {% for group in image.groups %}
+                            <a href="/group/{{ group.id }}" class="tag-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,88V200.89a7.11,7.11,0,0,1-7.11,7.11H40a8,8,0,0,1-8-8V64a8,8,0,0,1,8-8H93.33a8,8,0,0,1,4.8,1.6l27.74,20.8a8,8,0,0,0,4.8,1.6H216A8,8,0,0,1,224,88Z" opacity="0.2"></path><path d="M216,72H130.67L102.93,51.2a16.12,16.12,0,0,0-9.6-3.2H40A16,16,0,0,0,24,64V200a16,16,0,0,0,16,16H216.89A15.13,15.13,0,0,0,232,200.89V88A16,16,0,0,0,216,72Zm0,128H40V64H93.33l27.74,20.8a16.12,16.12,0,0,0,9.6,3.2H216Z"></path></svg>
+                                {{ group['name'] }}
+                            </a>
+                        {% endfor %}
+                        {% if image.author_id == g.user.id %}
+                            <button class="tag-icon" id="#img-group">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
+                                Add
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>       
-            {% for tag in exif %}
+            {% for tag in image.image_exif %}
                 <div class="info-tab">
                     <div class="info-header">
                         {% if tag == 'Photographer' %}
@@ -155,7 +169,7 @@
                             <h2>File</h2>
                         {% else %}
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M104,152l48,72H24l36-56,16.36,25.45ZM152,32V88h56Z" opacity="0.2"></path><path d="M110.66,147.56a8,8,0,0,0-13.32,0L76.49,178.85l-9.76-15.18a8,8,0,0,0-13.46,0l-36,56A8,8,0,0,0,24,232H152a8,8,0,0,0,6.66-12.44ZM38.65,216,60,182.79l9.63,15a8,8,0,0,0,6.67,3.67A7.91,7.91,0,0,0,83,197.89l21-31.47L137.05,216Zm175-133.66-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40v96a8,8,0,0,0,16,0V40h88V88a8,8,0,0,0,8,8h48V216h-8a8,8,0,0,0,0,16h8a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160Z"></path></svg>
-                            <h2>{{tag}}</h2>
+                            <h2>{{ tag }}</h2>
                         {% endif %}
                         <svg class="collapse-indicator" xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" fill="currentColor">
                             <path d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z"></path>
@@ -163,17 +177,17 @@
                     </div>
                     <div class="info-table">
                         <table>
-                            {% for subtag in exif[tag] %}
+                            {% for subtag in image.image_exif[tag] %}
                                 <tr>
-                                    <td>{{subtag}}</td>
-                                    {% if exif[tag][subtag]['formatted'] %}
-                                        {% if exif[tag][subtag]['type'] == 'date' %}
-                                            <td><span class="time">{{exif[tag][subtag]['formatted']}}</span></td>
+                                    <td>{{ subtag }}</td>
+                                    {% if image.image_exif[tag][subtag]['formatted'] %}
+                                        {% if image.image_exif[tag][subtag]['type'] == 'date' %}
+                                            <td><span class="time">{{ image.image_exif[tag][subtag]['formatted'] }}</span></td>
                                         {% else %}
-                                            <td>{{exif[tag][subtag]['formatted']}}</td>
+                                            <td>{{ image.image_exif[tag][subtag]['formatted'] }}</td>
                                         {% endif %}
-                                    {% elif exif[tag][subtag]['raw'] %}
-                                        <td>{{exif[tag][subtag]['raw']}}</td>
+                                    {% elif image.image_exif[tag][subtag]['raw'] %}
+                                        <td>{{ image.image_exif[tag][subtag]['raw'] }}</td>
                                     {% else %}
                                         <td class="empty-table">Oops, an error</td>
                                     {% endif %}
@@ -213,7 +227,7 @@
             $('.image-fullscreen').addClass('image-fullscreen__active');
             
             if ($('.image-fullscreen img').attr('src') == '') {
-                $('.image-fullscreen img').attr('src', '/api/uploads/{{ image['file_name'] }}');
+                $('.image-fullscreen img').attr('src', '/api/uploads/{{ image.file_name }}');
             }
         });
 
@@ -235,18 +249,14 @@
                     'DESTRUCTION!!!!!!',
                     'This will delete the image and all of its data!!! This action is irreversible!!!!! Are you sure you want to do this?????',
                     '<button class="pop-up__btn pop-up__btn-critical-fill" onclick="deleteImage()">Dewww eeeet!</button>',
-                    '<img src="/api/uploads/{{ image['file_name'] }}?w=1000&h=1000" />'
+                    '<img src="/api/uploads/{{ image.file_name }}?w=1000&h=1000" />'
                     );
             });
-            $('#img-edit').click(function() {
-                window.location.href = '/image/{{ image['id'] }}/edit';
-            });
-
             function deleteImage() {
                 popupDissmiss();
 
                 $.ajax({
-                    url: '/api/remove/{{ image['id'] }}',
+                    url: '{{ url_for('api.delete_image', image_id=image['id']) }}',
                     type: 'post',
                     data: {
                         action: 'delete'
@@ -259,6 +269,10 @@
                     }
                 });
             }
+
+            $('#img-edit').click(function() {
+                window.location.href = '/image/{{ image.id }}/edit';
+            });
         {% endif %}
     </script>
 {% endblock %}

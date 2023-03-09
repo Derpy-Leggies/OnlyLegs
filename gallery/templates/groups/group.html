@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block nav_groups %}navigation-item__selected{% endblock %}
+
+{% block content %}
+    <div class="banner">
+        {% if images %}
+            <img
+                src="/api/uploads/{{ images.0.file_name }}?w=1920&h=1080"
+                onload="imgFade(this)"
+                style="opacity:0; background-color:rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})"
+            />
+            <span
+                style="background-image: linear-gradient(to right, rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}), transparent)"
+            ></span>
+        {% else %}
+            <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
+            <span></span>
+        {% endif %}
+        <div class="banner-content">
+            <p>{{ group.description }}</p>
+            <h1>{{ group.name }}</h1>
+            <p>{{ images|length }} Images</p>
+        </div>
+    </div>
+
+    <form action="/api/group/modify" method="post" enctype="multipart/form-data">
+        <input type="text" name="group_id" placeholder="group id" value="{{ group.id }}">
+        <input type="text" name="images" placeholder="image id">
+        <input type="text" name="action" placeholder="add/remove" value="add">
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if images %}
+        <div class="gallery-grid">
+            {% for image in images %}
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('group.group_post', group_id=group.id, image_id=image.id) }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
+                    <span>
+                        <p></p>
+                        <h2><span class="time">{{ image.created_at }}</span></h2>
+                    </span>
+                    <img data-src="{{ image.file_name }}" onload="imgFade(this)" style="opacity:0;"/>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="big-text">
+            <h1>No image!</h1>
+            {% if g.user %}
+                <p>You can get started by uploading an image!</p>
+            {% else %}
+                <p>Login to start uploading images!</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script></script>
+{% endblock %}

@@ -3,7 +3,6 @@ OnlyLegs - Database
 Database models and functions for SQLAlchemy
 """
 import os
-from datetime import datetime
 import platformdirs
 
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, PickleType
@@ -83,6 +82,7 @@ class GroupJunction (base): # pylint: disable=too-few-public-methods, C0103
     __tablename__ = 'group_junction'
 
     id = Column(Integer, primary_key=True)
+    date_added = Column(DateTime, nullable=False)
     group_id = Column(Integer, ForeignKey('groups.id'))
     post_id = Column(Integer, ForeignKey('posts.id'))
 

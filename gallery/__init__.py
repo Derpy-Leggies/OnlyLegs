@@ -84,6 +84,8 @@ def create_app(test_config=None):
         ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
         MAX_CONTENT_LENGTH=1024 * 1024 * conf['upload']['max-size'],
         WEBSITE=conf['website'],
+        ADMIN=conf['admin'],
+        APP_VERSION='23.03.09',
     )
 
     if test_config is None:
@@ -138,6 +140,10 @@ def create_app(test_config=None):
     from . import routing
     app.register_blueprint(routing.blueprint)
     app.add_url_rule('/', endpoint='index')
+    
+    # Load routes for groups
+    from . import groups
+    app.register_blueprint(groups.blueprint)
 
     # Load routes for settings
     from . import settings

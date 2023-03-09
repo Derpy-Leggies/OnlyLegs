@@ -6,10 +6,11 @@ from uuid import uuid4
 import os
 import io
 import logging
+import json
 from datetime import datetime as dt
 
 from flask import (
-    Blueprint, current_app, send_from_directory, send_file, request, g, abort, flash, jsonify)
+    Blueprint, send_from_directory, send_file, abort, flash, jsonify, request, g, current_app)
 from werkzeug.utils import secure_filename
 
 from colorthief import ColorThief
@@ -128,7 +129,6 @@ def upload():
     if os.path.isdir(current_app.config['UPLOAD_FOLDER']) is False:
         os.mkdir(current_app.config['UPLOAD_FOLDER'])
 
-
     # Save file
     try:
         form_file.save(img_path)
@@ -159,14 +159,13 @@ def upload():
 
     return 'Gwa Gwa'
 
-
-@blueprint.route('/remove/<int:img_id>', methods=['POST'])
+@blueprint.route('/delete/<int:image_id>', methods=['POST'])
 @login_required
-def remove(img_id):
+def delete_image(image_id):
     """
     Deletes an image from the server and database
     """
-    img = db_session.query(db.Posts).filter_by(id=img_id).first()
+    img = db_session.query(db.Posts).filter_by(id=image_id).first()
 
     if img is None:
         abort(404)
@@ -183,15 +182,63 @@ def remove(img_id):
         abort(500)
 
     try:
-        db_session.query(db.Posts).filter_by(id=img_id).delete()
+        db_session.query(db.Posts).filter_by(id=image_id).delete()
+        
+        groups = db_session.query(db.GroupJunction).filter_by(post_id=image_id).all()
+        for group in groups:
+            db_session.delete(group)
+        
         db_session.commit()
     except Exception as err:
         logging.error('Could not remove from database: %s', err)
         abort(500)
 
-    logging.info('Removed image (%s) %s', img_id, img.file_name)
+    logging.info('Removed image (%s) %s', image_id, img.file_name)
     flash(['Image was all in Le Head!', 1])
     return 'Gwa Gwa'
+
+
+@blueprint.route('/group/create', methods=['POST'])
+@login_required
+def create_group():
+    """
+    Creates a group
+    """
+    group_name = request.form['name']
+    group_description = request.form['description']
+    group_author = g.user.id
+    
+    new_group = db.Groups(name=group_name,
+                          description=group_description,
+                          author_id=group_author,
+                          created_at=dt.utcnow())
+    
+    db_session.add(new_group)
+    db_session.commit()
+    
+    return ':3'
+
+
+@blueprint.route('/group/modify', methods=['POST'])
+@login_required
+def modify_group():
+    """
+    Changes the images in a group
+    """
+    group_id = request.form['group_id']
+    image_id = request.form['images']
+    action = request.form['action']
+    
+    if action == 'add':
+        # Check if image is already in group
+        if db_session.query(db.GroupJunction).filter_by(group_id=group_id, post_id=image_id).first() is None:
+            db_session.add(db.GroupJunction(group_id=group_id, post_id=image_id, date_added=dt.utcnow()))
+            db_session.commit()
+    elif action == 'remove':
+        db_session.query(db.GroupJunction).filter_by(group_id=group_id, post_id=image_id).delete()
+        db_session.commit()
+        
+    return ':3'
 
 
 @blueprint.route('/metadata/<int:img_id>', methods=['GET'])

@@ -1,18 +1,3 @@
-let navToggle = true;
-
-document.onscroll = function() {
-    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
-        document.querySelector('.jumpUp').classList = 'jumpUp jumpUp--show';
-    } else {
-        document.querySelector('.jumpUp').classList = 'jumpUp';
-    }
-}
-
-document.querySelector('.jumpUp').onclick = function() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-
 function imgFade(obj) {
     $(obj).animate({opacity: 1}, 250);
 }
@@ -35,6 +20,43 @@ for (let i = 0; i < times.length; i++) {
     // Convert to local time
     times[i].innerHTML = dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
 }
+
+let images = document.querySelectorAll('.gallery-item img');
+function loadOnView() {
+    for (let i = 0; i < images.length; i++) {
+        let image = images[i];
+        if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
+            if (!image.src) {
+                image.src = `/api/uploads/${image.getAttribute('data-src')}?w=500&h=500`
+            }
+        }
+    }
+}
+if (images.length > 0) {
+    window.onload = function() {
+        loadOnView();
+    };
+    window.onscroll = function() {
+        loadOnView();
+    };
+    window.onresize = function() {
+        loadOnView();
+    };
+}
+
+
+document.onscroll = function() {
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+        document.querySelector('.jumpUp').classList = 'jumpUp jumpUp--show';
+    } else {
+        document.querySelector('.jumpUp').classList = 'jumpUp';
+    }
+}
+document.querySelector('.jumpUp').onclick = function() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
 
 function uploadFile(){
     // AJAX takes control of subby form

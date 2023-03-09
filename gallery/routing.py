@@ -3,7 +3,7 @@ Onlylegs Gallery - Routing
 """
 from datetime import datetime as dt
 
-from flask import Blueprint, render_template, current_app, request, g
+from flask import Blueprint, render_template, url_for
 from werkzeug.exceptions import abort
 
 from sqlalchemy.orm import sessionmaker
@@ -24,15 +24,10 @@ def index():
     """
     images = db_session.query(db.Posts.file_name,
                               db.Posts.image_colours,
-                              db.Posts.author_id,
                               db.Posts.created_at,
                               db.Posts.id).order_by(db.Posts.id.desc()).all()
  
-    return render_template('index.html',
-                           images=images,
-                           image_count=len(images),
-                           name=current_app.config['WEBSITE']['name'],
-                           motto=current_app.config['WEBSITE']['motto'])
+    return render_template('index.html', images=images)
 
 @blueprint.route('/image/<int:image_id>')
 def image(image_id):
@@ -42,53 +37,25 @@ def image(image_id):
     img = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
 
     if img is None:
-        abort(404, 'Image not found')
+        abort(404, 'Image not found :<')
 
-    author = db_session.query(db.Users.username).filter(db.Users.id == img.author_id).first()[0]
-    img.author_username = author
+    img.author_username = db_session.query(db.Users.username).filter(db.Users.id == img.author_id).first()[0]
     
-    next = db_session.query(db.Posts.id).filter(db.Posts.id > image_id).order_by(db.Posts.id.asc()).first()    
+    groups = db_session.query(db.GroupJunction.group_id).filter(db.GroupJunction.post_id == image_id).all()
+    img.groups = []
+    for group in groups:
+        group = db_session.query(db.Groups).filter(db.Groups.id == group[0]).first()
+        img.groups.append(group)
+    
+    next = db_session.query(db.Posts.id).filter(db.Posts.id > image_id).order_by(db.Posts.id.asc()).first()
     prev = db_session.query(db.Posts.id).filter(db.Posts.id < image_id).order_by(db.Posts.id.desc()).first()
     
     if next is not None:
-        next = next[0]
+        next = url_for('gallery.image', image_id=next[0])
     if prev is not None:
-        prev = prev[0]
+        prev = url_for('gallery.image', image_id=prev[0])
 
-    return render_template('image.html',
-                           image=img,
-                           exif=img.image_exif,
-                           next=next,
-                           prev=prev,
-                           next_id=next,
-                           prev_id=prev)
-
-@blueprint.route('/group', methods=['GET', 'POST'])
-def groups():
-    """
-    Group overview, shows all image groups
-    """
-    if request.method == 'GET':
-        groups = db_session.query(db.Groups.name, db.Groups.author_id).all()
-        
-        return render_template('group.html', groups=groups)
-    elif request.method == 'POST':
-        group_name = request.form['name']
-        group_description = request.form['description']
-        group_author = g.user.id
-        
-        new_group = db.Groups(name=group_name, description=group_description, author_id=group_author, created_at=dt.now())
-        
-        db_session.add(new_group)
-        
-        return ':3'
-
-@blueprint.route('/group/<int:group_id>')
-def group(group_id):
-    """
-    Group view, shows all images in a group
-    """
-    return render_template('group.html', group_id=group_id)
+    return render_template('image.html', image=img, next_url=next, prev_url=prev)
 
 @blueprint.route('/profile')
 def profile():
