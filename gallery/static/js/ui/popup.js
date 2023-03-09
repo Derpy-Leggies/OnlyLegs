@@ -1,4 +1,7 @@
 function popUpShow(title, body, actions, content) {
+    // Stop scrolling
+    document.querySelector("html").style.overflow = "hidden";
+
     var popup = document.querySelector('.pop-up');
     var popupContent = document.querySelector('.pop-up-content');
     var popupActions = document.querySelector('.pop-up-controlls');
@@ -30,6 +33,9 @@ function popUpShow(title, body, actions, content) {
 }
 
 function popupDissmiss() {
+    // un-Stop scrolling
+    document.querySelector("html").style.overflow = "auto";
+
     var popup = document.querySelector('.pop-up');
 
     popup.classList.add('pop-up__hide');

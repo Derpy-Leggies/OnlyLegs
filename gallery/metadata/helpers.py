@@ -215,13 +215,6 @@ def scene_capture_type(value):
         return None
 
 
-def scene_type(value): # pylint: disable=W0613 # Itss fiiiineeee
-    """
-    Maps the value of the scene type to a human readable format
-    """
-    return 'Directly photographed image'
-
-
 def white_balance(value):
     """
     Maps the value of the white balance to a human readable format

@@ -52,7 +52,7 @@
 
     text-decoration: none
 
-    svg
+    > svg
         margin: 0
         font-size: 1.5rem
         color: $white
@@ -81,26 +81,42 @@
 
         pointer-events: none
 
+        svg
+            margin: 0
+            font-size: 1rem
+
+            width: 0.75rem
+            height: 0.75rem
+
+            display: block
+
+            position: absolute
+            top: 50%
+            left: -0.45rem
+            transform: translateY(-50%)
+
+            color: $black2
+
     &:hover
         background-color: $black2
 
-        svg
+        > svg
             color: $primary
 
         span
             opacity: 1
-            left: 3.8rem
+            left: 3.9rem
 
 .navigation-item__selected
     background: $primary
 
-    svg
+    > svg
         color: $black
 
     &:hover
         background: $primary
 
-        svg
+        > svg
             color: $white
 
 

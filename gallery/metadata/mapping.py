@@ -40,7 +40,6 @@ CAMERA_MAPPING = {
     'MeteringMode':             ['Metering Mode', 'metering_mode'],
     'LightSource':              ['Light Source', 'light_source'],
     'SceneCaptureType':         ['Scene Capture Type', 'scene_capture_type'],
-    'SceneType':                ['Scene Type', 'scene_type'],
 }
 SOFTWARE_MAPPING = {
     'Software':     ['Software'],

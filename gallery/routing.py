@@ -46,8 +46,22 @@ def image(image_id):
 
     author = db_session.query(db.Users.username).filter(db.Users.id == img.author_id).first()[0]
     img.author_username = author
+    
+    next = db_session.query(db.Posts.id).filter(db.Posts.id > image_id).order_by(db.Posts.id.asc()).first()    
+    prev = db_session.query(db.Posts.id).filter(db.Posts.id < image_id).order_by(db.Posts.id.desc()).first()
+    
+    if next is not None:
+        next = next[0]
+    if prev is not None:
+        prev = prev[0]
 
-    return render_template('image.html', image=img, exif=img.image_exif)
+    return render_template('image.html',
+                           image=img,
+                           exif=img.image_exif,
+                           next=next,
+                           prev=prev,
+                           next_id=next,
+                           prev_id=prev)
 
 @blueprint.route('/group', methods=['GET', 'POST'])
 def groups():
