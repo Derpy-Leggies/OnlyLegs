@@ -21,130 +21,135 @@
     height: 100vh
 
     position: fixed
-    top: 100%
+    top: 0
     left: 3.5rem
 
+    display: none
+
     background-color: rgba($black, 0.8)
-
     opacity: 0
-    z-index: 101
 
+    z-index: 101
     transition: opacity 0.2s ease
 
-.pop-up__click-off
-    width: 100vw
-    height: 100vh
-    height: 100dvh
+    .pop-up__click-off
+        width: 100vw
+        height: 100vh
 
-    position: absolute
-    top: 0
-    left: 0
-
-    z-index: +1
-
-.pop-up-wrapper
-    margin: 0
-    padding: 0
-
-    width: 621px
-    height: auto
-
-    position: absolute
-    bottom: 50%
-    left: 50%
-    transform: translate(-50%, 50%) scale(0.8)
-
-    display: flex
-    flex-direction: column
-
-    background-color: $white
-    border-radius: $rad
-
-    overflow: hidden
-
-    transition: transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)
-    z-index: +2
-
-.pop-up-content
-    margin: 0
-    padding: 0.5rem 0.5rem 0
-
-    width: 100%
-    height: auto
-    max-height: 50vh
-
-    display: flex
-    flex-direction: column
-    gap: 0.5rem
-
-    overflow-y: auto
-    overflow-x: hidden
-    text-size-adjust: auto;
-    text-overflow: ellipsis
-
-    h3
-        margin: 0
-
-        width: 100%
-
-        position: sticky
+        position: absolute
         top: 0
+        left: 0
 
-        font-size: 2.5rem
-        font-weight: 600
-        text-align: center
-        line-height: 1
+        z-index: +1
 
-        color: $black
+    .pop-up-wrapper
+        margin: 0
+        padding: 0
+
+        width: 621px
+        height: auto
+
+        position: absolute
+        bottom: 50%
+        left: 50%
+        transform: translate(-50%, 50%) scale(0.8)
+
+        display: flex
+        flex-direction: column
+
         background-color: $white
-    
-    p
+        border-radius: $rad
+        overflow: hidden
+
+        z-index: +2
+        transition: transform 0.2s $animation-smooth
+
+    .pop-up-content
         margin: 0
-
-        width: 100%
-
-        font-size: 1rem
-        font-weight: 500
-        text-align: center
-        line-height: 1
-
-        color: $black
-
-    img
-        margin: auto
-        padding: 0
-
-        width: auto
-        height: auto
-        max-width: 100%
-        max-height: 40vh
-
-        border-radius: $rad-inner
-
-    form
-        margin: 0
-        padding: 0
+        padding: 0.5rem 0.5rem 0
 
         width: 100%
         height: auto
+        max-height: 50vh
 
         display: flex
         flex-direction: column
         gap: 0.5rem
 
-        justify-content: center
+        overflow-y: auto
+        overflow-x: hidden
+        text-size-adjust: auto;
+        text-overflow: ellipsis
 
-.pop-up-controlls
-    margin: 0
-    padding: 0.5rem
+        h3
+            margin: 0
 
-    width: 100%
-    height: auto
+            width: 100%
 
-    display: flex
-    flex-direction: row
-    justify-content: flex-end
-    gap: 0.5rem
+            position: sticky
+            top: 0
+
+            font-size: 2.5rem
+            font-weight: 600
+            text-align: center
+            line-height: 1
+
+            color: $black
+            background-color: $white
+        
+        p
+            margin: 0
+
+            width: 100%
+
+            font-size: 1rem
+            font-weight: 500
+            text-align: center
+            line-height: 1
+
+            color: $black
+
+        img
+            margin: auto
+            padding: 0
+
+            width: auto
+            height: auto
+            max-width: 100%
+            max-height: 40vh
+
+            border-radius: $rad-inner
+
+        form
+            margin: 0
+            padding: 0
+
+            width: 100%
+            height: auto
+
+            display: flex
+            flex-direction: column
+            gap: 0.5rem
+
+            justify-content: center
+
+    .pop-up-controlls
+        margin: 0
+        padding: 0.5rem
+
+        width: 100%
+        height: auto
+
+        display: flex
+        flex-direction: row
+        justify-content: flex-end
+        gap: 0.5rem
+
+    &.active
+        opacity: 1
+
+        .pop-up-wrapper
+            transform: translate(-50%, 50%) scale(1)
 
 .pop-up__btn
     margin: 0
@@ -209,21 +214,6 @@
         text-decoration: underline
         cursor: pointer
 
-.pop-up__active
-    opacity: 1
-    top: 0
-
-    .pop-up-wrapper
-        transform: translate(-50%, 50%) scale(1)
-
-.pop-up__hide
-    opacity: 0
-    transition: opacity 0.2s ease
-
-    .pop-up-wrapper
-        transform: translate(-50%, 50%) scaleY(0)
-        transition: transform 0.2s ease
-
 @media (max-width: $breakpoint)
     .pop-up
         width: 100%
@@ -236,41 +226,32 @@
 
         backdrop-filter: blur(0.5rem)
 
-    .pop-up-wrapper
-        width: calc(100vw - 1rem)
-        max-height: calc(100vh - 1rem)
-        max-height: calc(100dvh - 1rem)
+        .pop-up-wrapper
+            width: calc(100vw - 1rem)
+            max-height: calc(100vh - 1rem)
+            max-height: calc(100dvh - 1rem)
 
-        left: 0.5rem
-        bottom: 0.5rem
+            left: 0.5rem
+            bottom: 0.5rem
 
-        border-radius: $rad
-        transform: translateY(5rem)
+            border-radius: $rad
+            transform: translateY(5rem)
 
-    .pop-up-content
-        max-height: 100%
+        .pop-up-content
+            max-height: 100%
 
-        img 
-            max-height: 50vh
+            img 
+                max-height: 50vh
 
-    .pop-up-controlls
-        flex-direction: column
-        justify-content: center
+        .pop-up-controlls
+            flex-direction: column
+            justify-content: center
+    
+        &.active
+            opacity: 1
+
+            .pop-up-wrapper
+                transform: translateY(0)
 
     .pop-up__btn
         width: 100%
-    
-    .pop-up__active
-        opacity: 1
-        top: unset
-
-        .pop-up-wrapper
-            transform: translateY(0)
-
-    .pop-up__hide
-        opacity: 0
-        transition: opacity 0.2s ease
-
-        .pop-up-wrapper
-            transform: translateY(5rem)
-            transition: transform 0.2s ease

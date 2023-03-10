@@ -18,8 +18,10 @@
                 src="/api/uploads/{{ image.file_name }}?w=1000&h=1000"
                 onload="imgFade(this)" style="opacity:0;"
                 onerror="this.src='/static/images/error.png'"
-                width="{{ image.image_exif.File.Width.raw }}"
-                height="{{ image.image_exif.File.Height.raw }}"
+                {% if "File" in image.image_exif %}
+                    width="{{ image.image_exif.File.Width.raw }}"
+                    height="{{ image.image_exif.File.Height.raw }}"
+                {% endif %}
             />
         </div>
 
