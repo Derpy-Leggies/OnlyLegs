@@ -18,9 +18,9 @@
         <div class="gallery-grid">
             {% for image in images %}
                 <a id="image-{{ image.id }}" class="gallery-item" href="/image/{{ image.id }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
-                    <span>
+                    <span class="image-filter" style="background: linear-gradient(to top, rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }}), transparent)">
                         <p></p>
-                        <h2><span class="time">{{ image.created_at }}</span></h2>
+                        <h2><span id="contrast-check" data-color="rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})"><span class="time">{{ image.created_at }}</span></span></h2>
                     </span>
                     <img data-src="{{ image.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
                 </a>

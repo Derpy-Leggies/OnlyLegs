@@ -24,7 +24,8 @@
         <div class="gallery-grid">
             {% for group in groups %}
                 <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}">
-                    <span>
+                    <span class="image-filter">
+                        <p></p>
                         <h2>{{ group.name }}</h2>
                     </span>
                     {% if group.thumbnail %}

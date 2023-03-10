@@ -225,19 +225,24 @@ def modify_group():
     """
     Changes the images in a group
     """
-    group_id = request.form['group_id']
-    image_id = request.form['images']
-    action = request.form['action']
+    group_id = request.form['group']
+    image_id = request.form['image']
     
-    if action == 'add':
-        # Check if image is already in group
+    group = db_session.query(db.Groups).filter_by(id=group_id).first()
+
+    if group is None:
+        abort(404)
+    elif group.author_id != g.user.id:
+        abort(403)
+
+    if request.form['action'] == 'add':
         if db_session.query(db.GroupJunction).filter_by(group_id=group_id, post_id=image_id).first() is None:
             db_session.add(db.GroupJunction(group_id=group_id, post_id=image_id, date_added=dt.utcnow()))
-            db_session.commit()
-    elif action == 'remove':
+    elif request.form['action'] == 'remove':
         db_session.query(db.GroupJunction).filter_by(group_id=group_id, post_id=image_id).delete()
-        db_session.commit()
         
+    db_session.commit()
+    
     return ':3'
 
 

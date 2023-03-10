@@ -4,10 +4,19 @@ function imgFade(obj, time = 250) {
 }
 // https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
 function colourContrast(bgColor, lightColor, darkColor, threshold = 0.179) {
-    var color = (bgColor.charAt(0) === '#') ? bgColor.substring(1, 7) : bgColor;
-    var r = parseInt(color.substring(0, 2), 16); // hexToR
-    var g = parseInt(color.substring(2, 4), 16); // hexToG
-    var b = parseInt(color.substring(4, 6), 16); // hexToB
+    // if color is in hex format then convert to rgb else parese rgb
+    if (bgColor.charAt(0) === '#') {
+        var color = (bgColor.charAt(0) === '#') ? bgColor.substring(1, 7) : bgColor;
+        var r = parseInt(color.substring(0, 2), 16); // hexToR
+        var g = parseInt(color.substring(2, 4), 16); // hexToG
+        var b = parseInt(color.substring(4, 6), 16); // hexToB
+    } else {
+        var color = bgColor.replace('rgb(', '').replace(')', '').split(',');
+        var r = color[0];
+        var g = color[1];
+        var b = color[2];
+    }
+    
     var uicolors = [r / 255, g / 255, b / 255];
     var c = uicolors.map((col) => {
         if (col <= 0.03928) {
@@ -285,8 +294,9 @@ window.onload = function () {
     const lightColor = '#E8E3E3';
     let contrastCheck = document.querySelectorAll('#contrast-check');
     for (let i = 0; i < contrastCheck.length; i++) {
+        console.log(contrastCheck[i].getAttribute('data-color'));
         bgColor = contrastCheck[i].getAttribute('data-color');
-        contrastCheck[i].style.color = colourContrast(bgColor, lightColor, darkColor, 0.9);
+        contrastCheck[i].style.color = colourContrast(bgColor, lightColor, darkColor);
     }
 
     let times = document.querySelectorAll('.time');
