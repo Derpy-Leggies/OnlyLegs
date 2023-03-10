@@ -1,9 +1,6 @@
-# Remove all development files
-gallery/user/logs/*
-gallery/user/uploads/*
-gallery/user/conf.yml
-gallery/user/conf.json
-gallery/static/theme/*
+gallery/static/theme
+gallery/static/.webassets-cache
+gallery/static/gen
 
 .idea
 .vscode

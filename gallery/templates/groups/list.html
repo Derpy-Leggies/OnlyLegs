@@ -5,7 +5,7 @@
 {% block content %}
     <div class="banner">
         <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
-        <span></span>
+        <span class="banner-filter"></span>
 
         <div class="banner-content">
             <p>{{ config.WEBSITE.motto }}</p>
@@ -28,7 +28,7 @@
                         <h2>{{ group.name }}</h2>
                     </span>
                     {% if group.thumbnail %}
-                        <img data-src="{{ group.thumbnail }}" onload="imgFade(this)" style="opacity:0;"/>
+                        <img data-src="{{ group.thumbnail }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
                     {% else %}
                         <img src="{{ url_for('static', filename='images/error.png') }}" onload="imgFade(this)" style="opacity:0;"/>
                     {% endif %}

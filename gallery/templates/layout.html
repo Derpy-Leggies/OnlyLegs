@@ -7,15 +7,9 @@
     <link rel="icon" href="{{url_for('static', filename='images/icon.png')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='theme/style.css')}}" defer>
 
-    <!-- Jquery for AJAX -->
-    <script src="{{url_for('static', filename='js/jquery-3.6.3.min.js')}}"></script>
-
-    <!-- Main Script -->
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
-
-    <!-- UI -->
-    <script src="{{ url_for('static', filename='js/ui/popup.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/ui/notifications.js') }}"></script>
+    {% assets "js_all" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 </head>
 <body>
     <div class="notifications"></div>

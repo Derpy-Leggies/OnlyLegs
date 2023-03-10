@@ -205,6 +205,22 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-assets"
+version = "2.0"
+description = "Asset management for Flask, to compress and merge CSS and Javascript files."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "Flask-Assets-2.0.tar.gz", hash = "sha256:1dfdea35e40744d46aada72831f7613d67bf38e8b20ccaaa9e91fdc37aa3b8c2"},
+    {file = "Flask_Assets-2.0-py3-none-any.whl", hash = "sha256:2845bd3b479be9db8556801e7ebc2746ce2d9edb4e7b64a1c786ecbfc1e5867b"},
+]
+
+[package.dependencies]
+Flask = ">=0.8"
+webassets = ">=2.0"
+
+[[package]]
 name = "flask-caching"
 version = "2.0.2"
 description = "Adds caching support to Flask applications."
@@ -641,18 +657,18 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.2.2)", "pytest (>=7.2.1)", "pytes
 
 [[package]]
 name = "pylint"
-version = "2.16.4"
+version = "2.17.0"
 description = "python code static checker"
 category = "main"
 optional = false
 python-versions = ">=3.7.2"
 files = [
-    {file = "pylint-2.16.4-py3-none-any.whl", hash = "sha256:4a770bb74fde0550fa0ab4248a2ad04e7887462f9f425baa0cd8d3c1d098eaee"},
-    {file = "pylint-2.16.4.tar.gz", hash = "sha256:8841f26a0dbc3503631b6a20ee368b3f5e0e5461a1d95cf15d103dab748a0db3"},
+    {file = "pylint-2.17.0-py3-none-any.whl", hash = "sha256:e097d8325f8c88e14ad12844e3fe2d963d3de871ea9a8f8ad25ab1c109889ddc"},
+    {file = "pylint-2.17.0.tar.gz", hash = "sha256:1460829b6397cb5eb0cdb0b4fc4b556348e515cdca32115f74a1eb7c20b896b4"},
 ]
 
 [package.dependencies]
-astroid = ">=2.14.2,<=2.16.0-dev0"
+astroid = ">=2.15.0,<=2.17.0-dev0"
 colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
 dill = [
     {version = ">=0.2", markers = "python_version < \"3.11\""},
@@ -736,14 +752,14 @@ files = [
 
 [[package]]
 name = "setuptools"
-version = "67.5.1"
+version = "67.6.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "setuptools-67.5.1-py3-none-any.whl", hash = "sha256:1c39d42bda4cb89f7fdcad52b6762e3c309ec8f8715b27c684176b7d71283242"},
-    {file = "setuptools-67.5.1.tar.gz", hash = "sha256:15136a251127da2d2e77ac7a1bc231eb504654f7e3346d93613a13f2e2787535"},
+    {file = "setuptools-67.6.0-py3-none-any.whl", hash = "sha256:b78aaa36f6b90a074c1fa651168723acbf45d14cb1196b6f02c0fd07f17623b2"},
+    {file = "setuptools-67.6.0.tar.gz", hash = "sha256:2ee892cd5f29f3373097f5a814697e397cf3ce313616df0af11231e2ad118077"},
 ]
 
 [package.extras]
@@ -863,6 +879,18 @@ python-versions = ">=3.7"
 files = [
     {file = "typing_extensions-4.5.0-py3-none-any.whl", hash = "sha256:fb33085c39dd998ac16d1431ebc293a8b3eedd00fd4a32de0ff79002c19511b4"},
     {file = "typing_extensions-4.5.0.tar.gz", hash = "sha256:5cb5f4a79139d699607b3ef622a1dedafa84e115ab0024e0d9c044a9479ca7cb"},
+]
+
+[[package]]
+name = "webassets"
+version = "2.0"
+description = "Media asset management for Python, with glue code for various web frameworks"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "webassets-2.0-py3-none-any.whl", hash = "sha256:a31a55147752ba1b3dc07dee0ad8c8efff274464e08bbdb88c1fd59ffd552724"},
+    {file = "webassets-2.0.tar.gz", hash = "sha256:167132337677c8cedc9705090f6d48da3fb262c8e0b2773b29f3352f050181cd"},
 ]
 
 [[package]]
@@ -987,4 +1015,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "0c2a7c41e8974f82e33d09ddcdf4a97f54fdbf1be71c0d7c7e4be1daa05fe661"
+content-hash = "28f7d599f912b9385b4a497f89da59cf2b087ac1ec12c3582e603f47f8e11492"

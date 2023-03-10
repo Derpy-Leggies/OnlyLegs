@@ -1,64 +1,38 @@
-function imgFade(obj) {
-    $(obj).animate({opacity: 1}, 250);
+// fade in images
+function imgFade(obj, time = 250) {
+    $(obj).animate({ opacity: 1 }, time);
 }
-
-let times = document.getElementsByClassName('time');
-for (let i = 0; i < times.length; i++) {
-    // Remove milliseconds
-    const raw = times[i].innerHTML.split('.')[0];
-
-    // Parse YYYY-MM-DD HH:MM:SS to Date object
-    const time = raw.split(' ')[1]
-    const date = raw.split(' ')[0].split('-');
-
-    // Format to YYYY/MM/DD HH:MM:SS
-    let formatted = date[0] + '/' + date[1] + '/' + date[2] + ' ' + time + ' UTC';
-
-    // Convert to UTC Date object
-    let dateTime = new Date(formatted);
-
-    // Convert to local time
-    times[i].innerHTML = dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
+// https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
+function colourContrast(bgColor, lightColor, darkColor, threshold = 0.179) {
+    var color = (bgColor.charAt(0) === '#') ? bgColor.substring(1, 7) : bgColor;
+    var r = parseInt(color.substring(0, 2), 16); // hexToR
+    var g = parseInt(color.substring(2, 4), 16); // hexToG
+    var b = parseInt(color.substring(4, 6), 16); // hexToB
+    var uicolors = [r / 255, g / 255, b / 255];
+    var c = uicolors.map((col) => {
+        if (col <= 0.03928) {
+            return col / 12.92;
+        }
+        return Math.pow((col + 0.055) / 1.055, 2.4);
+    });
+    var L = (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]);
+    return (L > threshold) ? darkColor : lightColor;
 }
-
-let images = document.querySelectorAll('.gallery-item img');
+// Lazy load images when they are in view
 function loadOnView() {
-    for (let i = 0; i < images.length; i++) {
-        let image = images[i];
+    let lazyLoad = document.querySelectorAll('#lazy-load');
+
+    for (let i = 0; i < lazyLoad.length; i++) {
+        let image = lazyLoad[i];
         if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
             if (!image.src) {
-                image.src = `/api/uploads/${image.getAttribute('data-src')}?w=500&h=500`
+                image.src = `/api/uploads/${image.getAttribute('data-src')}?w=400&h=400`
             }
         }
     }
 }
-if (images.length > 0) {
-    window.onload = function() {
-        loadOnView();
-    };
-    window.onscroll = function() {
-        loadOnView();
-    };
-    window.onresize = function() {
-        loadOnView();
-    };
-}
-
-
-document.onscroll = function() {
-    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
-        document.querySelector('.jumpUp').classList = 'jumpUp jumpUp--show';
-    } else {
-        document.querySelector('.jumpUp').classList = 'jumpUp';
-    }
-}
-document.querySelector('.jumpUp').onclick = function() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-
-
-function uploadFile(){
+// Function to upload images
+function uploadFile() {
     // AJAX takes control of subby form
     event.preventDefault();
 
@@ -75,7 +49,7 @@ function uploadFile(){
         formData.append("description", $("#description").val());
         formData.append("tags", $("#tags").val());
         formData.append("submit", $("#submit").val());
-    
+
         // Upload the information
         $.ajax({
             url: '/api/upload',
@@ -83,14 +57,14 @@ function uploadFile(){
             data: formData,
             contentType: false,
             processData: false,
-            beforeSend: function() {
+            beforeSend: function () {
                 jobContainer = document.createElement("div");
                 jobContainer.classList.add("job");
 
                 jobStatus = document.createElement("span");
                 jobStatus.classList.add("job__status");
                 jobStatus.innerHTML = "Uploading...";
-                
+
                 jobProgress = document.createElement("span");
                 jobProgress.classList.add("progress");
 
@@ -146,7 +120,7 @@ function uploadFile(){
         $("#tags").val("");
     }
 };
-
+// open upload tab
 function openUploadTab() {
     // Stop scrolling
     document.querySelector("html").style.overflow = "hidden";
@@ -155,11 +129,11 @@ function openUploadTab() {
     const uploadTab = document.querySelector(".upload-panel");
     uploadTab.style.display = "block";
 
-    setTimeout( function() {
+    setTimeout(function () {
         uploadTab.classList.add("open");
     }, 10);
 }
-
+// close upload tab
 function closeUploadTab() {
     // un-Stop scrolling
     document.querySelector("html").style.overflow = "auto";
@@ -168,11 +142,11 @@ function closeUploadTab() {
     const uploadTab = document.querySelector(".upload-panel");
     uploadTab.classList.remove("open");
 
-    setTimeout( function() {
+    setTimeout(function () {
         uploadTab.style.display = "none";
     }, 250);
 }
-
+// toggle upload tab
 function toggleUploadTab() {
     if (document.querySelector(".upload-panel").classList.contains("open")) {
         closeUploadTab();
@@ -180,7 +154,7 @@ function toggleUploadTab() {
         openUploadTab();
     }
 }
-
+// Function to show login
 function showLogin() {
     popUpShow(
         'idk what to put here, just login please',
@@ -192,6 +166,49 @@ function showLogin() {
         </form>'
     );
 };
+// Function to login
+function login(event) {
+    // AJAX takes control of subby form :3
+    event.preventDefault();
+
+    let formUsername = document.querySelector("#username").value;
+    let formPassword = document.querySelector("#password").value;
+
+    if (formUsername === "" || formPassword === "") {
+        addNotification("Please fill in all fields!!!!", 3);
+        return;
+    }
+
+    // Make form
+    var formData = new FormData();
+    formData.append("username", formUsername);
+    formData.append("password", formPassword);
+
+    $.ajax({
+        url: '/auth/login',
+        type: 'post',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            location.reload();
+        },
+        error: function (response) {
+            switch (response.status) {
+                case 500:
+                    addNotification('Server exploded, F\'s in chat', 2);
+                    break;
+                case 403:
+                    addNotification('None but devils play past here... Wrong information', 2);
+                    break;
+                default:
+                    addNotification('Error logging in, blame someone', 2);
+                    break;
+            }
+        }
+    });
+}
+// Function to show register
 function showRegister() {
     popUpShow(
         'Who are you?',
@@ -205,87 +222,104 @@ function showRegister() {
         </form>'
     );
 };
-
-function login(event) {
-    // AJAX takes control of subby form
-    event.preventDefault();
-
-    if ($("#username").val() === "" || $("#password").val() === "") {
-        addNotification("Please fill in all fields", 3);
-    } else {
-        // Make form
-        var formData = new FormData();
-        formData.append("username", $("#username").val());
-        formData.append("password", $("#password").val());
-
-        $.ajax({
-            url: '/auth/login',
-            type: 'post',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                location.reload();
-            },
-            error: function (response) {
-                switch (response.status) {
-                    case 500:
-                        addNotification('Server exploded, F\'s in chat', 2);
-                        break;
-                    case 403:
-                        addNotification('None but devils play past here... Wrong information', 2);
-                        break;
-                    default:
-                        addNotification('Error logging in, blame someone', 2);
-                        break;
-                }
-            }
-        });
-    }
-}
+// Function to register
 function register(obj) {
     // AJAX takes control of subby form
     event.preventDefault();
 
-    if ($("#username").val() === "" || $("#email").val() === "" || $("#password").val() === "" || $("#password-repeat").val() === "") {
-        addNotification("Please fill in all fields", 3);
-    } else {
-        // Make form
-        var formData = new FormData();
-        formData.append("username", $("#username").val());
-        formData.append("email", $("#email").val());
-        formData.append("password", $("#password").val());
-        formData.append("password-repeat", $("#password-repeat").val());
+    let formUsername = document.querySelector("#username").value;
+    let formEmail = document.querySelector("#email").value;
+    let formPassword = document.querySelector("#password").value;
+    let formPasswordRepeat = document.querySelector("#password-repeat").value;
 
-        $.ajax({
-            url: '/auth/register',
-            type: 'post',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                if (response === "gwa gwa") {
-                    addNotification('Registered successfully! Now please login to continue', 1);
-                    showLogin();
-                } else {
-                    for (var i = 0; i < response.length; i++) {
-                        addNotification(response[i], 2);
-                    }
-                }
-            },
-            error: function (response) {
-                switch (response.status) {
-                    case 500:
-                        addNotification('Server exploded, F\'s in chat', 2);
-                        break;
-                    case 403:
-                        addNotification('None but devils play past here...', 2);
-                        break;
-                    default:
-                        addNotification('Error logging in, blame someone', 2);
-                        break;
+    if (formUsername === "" || formEmail === "" || formPassword === "" || formPasswordRepeat === "") {
+        addNotification("Please fill in all fields!!!!", 3);
+        return;
+    }
+
+    // Make form
+    var formData = new FormData();
+    formData.append("username", formUsername);
+    formData.append("email", formEmail);
+    formData.append("password", formPassword);
+    formData.append("password-repeat", formPasswordRepeat);
+
+    $.ajax({
+        url: '/auth/register',
+        type: 'post',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response === "gwa gwa") {
+                addNotification('Registered successfully! Now please login to continue', 1);
+                showLogin();
+            } else {
+                for (var i = 0; i < response.length; i++) {
+                    addNotification(response[i], 2);
                 }
             }
-        });
-    }
+        },
+        error: function (response) {
+            switch (response.status) {
+                case 500:
+                    addNotification('Server exploded, F\'s in chat', 2);
+                    break;
+                case 403:
+                    addNotification('None but devils play past here...', 2);
+                    break;
+                default:
+                    addNotification('Error logging in, blame someone', 2);
+                    break;
+            }
+        }
+    });
 }
+
+window.onload = function () {
+    loadOnView();
+
+    const darkColor = '#151515';
+    const lightColor = '#E8E3E3';
+    let contrastCheck = document.querySelectorAll('#contrast-check');
+    for (let i = 0; i < contrastCheck.length; i++) {
+        bgColor = contrastCheck[i].getAttribute('data-color');
+        contrastCheck[i].style.color = colourContrast(bgColor, lightColor, darkColor, 0.9);
+    }
+
+    let times = document.querySelectorAll('.time');
+    for (let i = 0; i < times.length; i++) {
+        // Remove milliseconds
+        const raw = times[i].innerHTML.split('.')[0];
+
+        // Parse YYYY-MM-DD HH:MM:SS to Date object
+        const time = raw.split(' ')[1]
+        const date = raw.split(' ')[0].split('-');
+
+        // Format to YYYY/MM/DD HH:MM:SS
+        let formatted = date[0] + '/' + date[1] + '/' + date[2] + ' ' + time + ' UTC';
+
+        // Convert to UTC Date object
+        let dateTime = new Date(formatted);
+
+        // Convert to local time
+        times[i].innerHTML = dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
+    }
+};
+window.onscroll = function () {
+    loadOnView();
+
+    // Jump to top button
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+        document.querySelector('.jumpUp').classList = 'jumpUp jumpUp--show';
+    } else {
+        document.querySelector('.jumpUp').classList = 'jumpUp';
+    }
+    document.querySelector('.jumpUp').onclick = function () {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+};
+window.onresize = function () {
+    loadOnView();
+};

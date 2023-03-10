@@ -10,12 +10,12 @@ Created by Fluffy Bean - Version 23.03.09
 
 # Import system modules
 import os
-import sys
 import logging
 
 # Flask
 from flask_compress import Compress
 from flask_caching import Cache
+from flask_assets import Environment, Bundle
 from flask import Flask, render_template
 
 # Configuration
@@ -24,57 +24,32 @@ import platformdirs
 import yaml
 
 from . import theme_manager
+from . import setup
 
+
+# Run setup checks
+setup.SetupApp()
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
-INSTANCE_PATH = os.path.join(USER_DIR, 'instance')
-
-
-# Check if any of the required files are missing
-if not os.path.exists(platformdirs.user_config_dir('onlylegs')):
-    from . import setup
-    setup.SetupApp()
 
 # Get environment variables
-if os.path.exists(os.path.join(USER_DIR, '.env')):
-    load_dotenv(os.path.join(USER_DIR, '.env'))
-    print("Loaded environment variables")
-else:
-    print("No environment variables found!")
-    sys.exit(1)
-
+load_dotenv(os.path.join(USER_DIR, '.env'))
+print("Loaded environment variables")
 
 # Get config file
-if os.path.exists(os.path.join(USER_DIR, 'conf.yml')):
-    with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as f:
-        conf = yaml.load(f, Loader=yaml.FullLoader)
-        print("Loaded gallery config")
-else:
-    print("No config file found!")
-    sys.exit(1)
-
-# Setup the logging config
-LOGS_PATH = os.path.join(platformdirs.user_config_dir('onlylegs'), 'logs')
-
-if not os.path.isdir(LOGS_PATH):
-    os.mkdir(LOGS_PATH)
-
-logging.getLogger('werkzeug').disabled = True
-logging.basicConfig(
-    filename=os.path.join(LOGS_PATH, 'only.log'),
-    level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S',
-    format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s',
-    encoding='utf-8')
+with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as f:
+    conf = yaml.load(f, Loader=yaml.FullLoader)
+    print("Loaded gallery config")
 
 
 def create_app(test_config=None):
     """
     Create and configure the main app
     """
-    app = Flask(__name__,instance_path=INSTANCE_PATH)
-    compress = Compress()
+    app = Flask(__name__,instance_path=os.path.join(USER_DIR, 'instance'))
+    assets = Environment()
     cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 69})
+    compress = Compress()
 
     # App configuration
     app.config.from_mapping(
@@ -100,7 +75,12 @@ def create_app(test_config=None):
 
 
     theme_manager.CompileTheme('default', app.root_path)
-
+    
+    
+    # Bundle JS files
+    js = Bundle('js/*.js', output='gen/packed.js')
+    assets.register('js_all', js)
+    
 
     @app.errorhandler(405)
     def method_not_allowed(err):
@@ -152,7 +132,11 @@ def create_app(test_config=None):
     # Load APIs
     from . import api
     app.register_blueprint(api.blueprint)
+    
+    
+    logging.info('Gallery started successfully!')
 
-    compress.init_app(app)
+    assets.init_app(app)
     cache.init_app(app)
+    compress.init_app(app)
     return app
