@@ -5,7 +5,7 @@
 | |_| | | | | | |_| | |__|  __/ (_| \__ \ 
  \___/|_| |_|_|\__, |_____\___|\__, |___/
                |___/           |___/
-Created by Fluffy Bean - Version 23.03.09
+Created by Fluffy Bean - Version 23.03.10
 """
 
 # Import system modules
@@ -48,7 +48,7 @@ def create_app(test_config=None):
     """
     app = Flask(__name__,instance_path=os.path.join(USER_DIR, 'instance'))
     assets = Environment()
-    cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 69})
+    cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 300})
     compress = Compress()
 
     # App configuration
@@ -59,8 +59,6 @@ def create_app(test_config=None):
         ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
         MAX_CONTENT_LENGTH=1024 * 1024 * conf['upload']['max-size'],
         WEBSITE=conf['website'],
-        ADMIN=conf['admin'],
-        APP_VERSION='23.03.09',
     )
 
     if test_config is None:
@@ -74,43 +72,23 @@ def create_app(test_config=None):
         pass
 
 
+    # Load theme
     theme_manager.CompileTheme('default', app.root_path)
-    
-    
     # Bundle JS files
     js = Bundle('js/*.js', output='gen/packed.js')
     assets.register('js_all', js)
     
 
-    @app.errorhandler(405)
-    def method_not_allowed(err):
-        error = '405'
-        msg = err.description
-        return render_template('error.html', error=error, msg=msg), 404
-
-    @app.errorhandler(404)
-    def page_not_found(err):
-        error = '404'
-        msg = err.description
-        return render_template('error.html', error=error, msg=msg), 404
-
     @app.errorhandler(403)
-    def forbidden(err):
-        error = '403'
-        msg = err.description
-        return render_template('error.html', error=error, msg=msg), 403
-
+    @app.errorhandler(404)
+    @app.errorhandler(405)
     @app.errorhandler(410)
-    def gone(err):
-        error = '410'
-        msg = err.description
-        return render_template('error.html', error=error, msg=msg), 410
-
     @app.errorhandler(500)
-    def internal_server_error(err):
-        error = '500'
+    def error_page(err):
+        error = err.code
         msg = err.description
-        return render_template('error.html', error=error, msg=msg), 500
+        return render_template('error.html', error=error, msg=msg), err.code
+
 
     # Load login, registration and logout manager
     from . import auth
@@ -135,6 +113,7 @@ def create_app(test_config=None):
     
     
     logging.info('Gallery started successfully!')
+
 
     assets.init_app(app)
     cache.init_app(app)

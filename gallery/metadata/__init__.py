@@ -63,48 +63,19 @@ class Metadata:
             'Software': {},
             'File': {},
         }
-
-        for data in encoded_exif:
-            if data in PHOTOGRAHER_MAPPING:
-                exif['Photographer'][PHOTOGRAHER_MAPPING[data][0]] = {
-                        'raw': encoded_exif[data],
-                    }
-                continue
-            elif data in CAMERA_MAPPING:
-                if len(CAMERA_MAPPING[data]) == 2:
-                    # Camera - Exif Tag name
-                    exif['Camera'][CAMERA_MAPPING[data][0]] = {
-                            'raw': encoded_exif[data],
-                            'formatted':
-                                getattr(helpers, CAMERA_MAPPING[data][1])(encoded_exif[data]), # pylint: disable=E0602
+        
+        # Thanks chatGPT xP
+        for key, value in encoded_exif.items():            
+            for mapping_name, mapping in EXIF_MAPPING:
+                if key in mapping:
+                    if len(mapping[key]) == 2:
+                        exif[mapping_name][mapping[key][0]] = {
+                            'raw': value,
+                            'formatted': getattr(helpers, mapping[key][1])(value),
                         }
-                else:
-                    exif['Camera'][CAMERA_MAPPING[data][0]] = {
-                            'raw': encoded_exif[data],
-                        }
-                continue
-            elif data in SOFTWARE_MAPPING:
-                if len(SOFTWARE_MAPPING[data]) == 2:
-                    exif['Software'][SOFTWARE_MAPPING[data][0]] = {
-                            'raw': encoded_exif[data],
-                            'formatted':
-                                getattr(helpers, SOFTWARE_MAPPING[data][1])(encoded_exif[data]), # pylint: disable=E0602
-                        }
-                else:
-                    exif['Software'][SOFTWARE_MAPPING[data][0]] = {
-                            'raw': encoded_exif[data],
-                        }
-                continue
-            elif data in FILE_MAPPING:
-                if len(FILE_MAPPING[data]) == 2:
-                    exif['File'][FILE_MAPPING[data][0]] = {
-                            'raw': encoded_exif[data],
-                            'formatted':
-                                getattr(helpers, FILE_MAPPING[data][1])(encoded_exif[data]), # pylint: disable=E0602
-                        }
-                else:
-                    exif['File'][FILE_MAPPING[data][0]] = {
-                            'raw': encoded_exif[data]
+                    else:
+                        exif[mapping_name][mapping[key][0]] = {
+                            'raw': value,
                         }
 
         # Remove empty keys

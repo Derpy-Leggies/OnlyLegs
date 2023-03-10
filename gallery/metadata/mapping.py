@@ -2,6 +2,7 @@
 OnlyLegs - Metatada Parser
 Mapping for metadata
 """
+
 PHOTOGRAHER_MAPPING = {
     'Artist':           ['Artist'],
     'UserComment':      ['Comment'],
@@ -59,3 +60,5 @@ FILE_MAPPING = {
     'Rating':           ['Rating', 'rating'],
     'RatingPercent':    ['Rating Percent', 'rating_percent'],
 }
+
+EXIF_MAPPING = [('Photographer', PHOTOGRAHER_MAPPING),('Camera', CAMERA_MAPPING),('Software', SOFTWARE_MAPPING),('File', FILE_MAPPING)]

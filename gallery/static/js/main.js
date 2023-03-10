@@ -124,6 +124,7 @@ function uploadFile() {
 function openUploadTab() {
     // Stop scrolling
     document.querySelector("html").style.overflow = "hidden";
+    document.querySelector(".content").tabIndex = "-1";
 
     // Open upload tab
     const uploadTab = document.querySelector(".upload-panel");
@@ -137,6 +138,7 @@ function openUploadTab() {
 function closeUploadTab() {
     // un-Stop scrolling
     document.querySelector("html").style.overflow = "auto";
+    document.querySelector(".content").tabIndex = "";
 
     // Close upload tab
     const uploadTab = document.querySelector(".upload-panel");
