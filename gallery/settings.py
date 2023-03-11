@@ -17,6 +17,7 @@ def general():
     """
     return render_template('settings/general.html')
 
+
 @blueprint.route('/server')
 @login_required
 def server():
@@ -25,6 +26,7 @@ def server():
     """
     return render_template('settings/server.html')
 
+
 @blueprint.route('/account')
 @login_required
 def account():
@@ -32,6 +34,7 @@ def account():
     Account settings page
     """
     return render_template('settings/account.html')
+
 
 @blueprint.route('/logs')
 @login_required

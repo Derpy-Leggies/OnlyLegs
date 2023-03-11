@@ -1,6 +1,5 @@
 """
-OnlyLegs - Database
-Database models and functions for SQLAlchemy
+OnlyLegs - Database models and functions for SQLAlchemy
 """
 import os
 import platformdirs
@@ -11,12 +10,12 @@ from sqlalchemy.orm import declarative_base, relationship, backref, mapped_colum
 
 path_to_db = os.path.join(platformdirs.user_config_dir('onlylegs'), 'gallery.sqlite')
 engine = create_engine(f'sqlite:///{path_to_db}', echo=False)
-# engine = create_engine(f'postgresql://username:password@host:port/database_name', echo=False)
-# engine = create_engine(f'mysql://username:password@host:port/database_name', echo=False)
+# engine = create_engine('postgresql://username:password@host:port/database_name', echo=False)
+# engine = create_engine('mysql://username:password@host:port/database_name', echo=False)
 base = declarative_base()
 
 
-class Users (base): # pylint: disable=too-few-public-methods, C0103
+class Users (base):  # pylint: disable=too-few-public-methods, C0103
     """
     User table
     Joins with post, groups, session and log
@@ -35,7 +34,7 @@ class Users (base): # pylint: disable=too-few-public-methods, C0103
     log = relationship('Logs', backref='users')
 
 
-class Posts (base): # pylint: disable=too-few-public-methods, C0103
+class Posts (base):  # pylint: disable=too-few-public-methods, C0103
     """
     Post table
     Joins with group_junction
@@ -58,7 +57,7 @@ class Posts (base): # pylint: disable=too-few-public-methods, C0103
     junction = relationship('GroupJunction', backref='posts')
 
 
-class Groups (base): # pylint: disable=too-few-public-methods, C0103
+class Groups (base):  # pylint: disable=too-few-public-methods, C0103
     """
     Group table
     Joins with group_junction
@@ -74,7 +73,7 @@ class Groups (base): # pylint: disable=too-few-public-methods, C0103
     junction = relationship('GroupJunction', backref='groups')
 
 
-class GroupJunction (base): # pylint: disable=too-few-public-methods, C0103
+class GroupJunction (base):  # pylint: disable=too-few-public-methods, C0103
     """
     Junction table for posts and groups
     Joins with posts and groups
@@ -87,7 +86,7 @@ class GroupJunction (base): # pylint: disable=too-few-public-methods, C0103
     post_id = Column(Integer, ForeignKey('posts.id'))
 
 
-class Sessions (base): # pylint: disable=too-few-public-methods, C0103
+class Sessions (base):  # pylint: disable=too-few-public-methods, C0103
     """
     Session table
     Joins with user
@@ -103,7 +102,7 @@ class Sessions (base): # pylint: disable=too-few-public-methods, C0103
     created_at = Column(DateTime, nullable=False)
 
 
-class Logs (base): # pylint: disable=too-few-public-methods, C0103
+class Logs (base):  # pylint: disable=too-few-public-methods, C0103
     """
     Log table
     Joins with user
@@ -118,7 +117,7 @@ class Logs (base): # pylint: disable=too-few-public-methods, C0103
     created_at = Column(DateTime, nullable=False)
 
 
-class Bans (base): # pylint: disable=too-few-public-methods, C0103
+class Bans (base):  # pylint: disable=too-few-public-methods, C0103
     """
     Bans table
     """

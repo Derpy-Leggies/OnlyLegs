@@ -61,4 +61,9 @@ FILE_MAPPING = {
     'RatingPercent':    ['Rating Percent', 'rating_percent'],
 }
 
-EXIF_MAPPING = [('Photographer', PHOTOGRAHER_MAPPING),('Camera', CAMERA_MAPPING),('Software', SOFTWARE_MAPPING),('File', FILE_MAPPING)]
+EXIF_MAPPING = [
+    ('Photographer', PHOTOGRAHER_MAPPING),
+    ('Camera', CAMERA_MAPPING),
+    ('Software', SOFTWARE_MAPPING),
+    ('File', FILE_MAPPING)
+]

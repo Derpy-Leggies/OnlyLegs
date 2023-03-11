@@ -1,5 +1,5 @@
 """
-OnlyLegs - Metatada Parser
+OnlyLegs - Metadata Parser
 Parse metadata from images if available
 otherwise get some basic information from the file
 """
@@ -10,6 +10,7 @@ from PIL.ExifTags import TAGS
 
 from .helpers import *
 from .mapping import *
+
 
 class Metadata:
     """
@@ -53,7 +54,8 @@ class Metadata:
             return None
         return self.format_data(self.encoded)
 
-    def format_data(self, encoded_exif): # pylint: disable=R0912 # For now, this is fine
+    @staticmethod
+    def format_data(encoded_exif):
         """
         Formats the data into a dictionary
         """
@@ -66,15 +68,15 @@ class Metadata:
         
         # Thanks chatGPT xP
         for key, value in encoded_exif.items():            
-            for mapping_name, mapping in EXIF_MAPPING:
-                if key in mapping:
-                    if len(mapping[key]) == 2:
-                        exif[mapping_name][mapping[key][0]] = {
+            for mapping_name, mapping_val in EXIF_MAPPING:
+                if key in mapping_val:
+                    if len(mapping_val[key]) == 2:
+                        exif[mapping_name][mapping_val[key][0]] = {
                             'raw': value,
-                            'formatted': getattr(helpers, mapping[key][1])(value),
+                            'formatted': getattr(helpers, mapping_val[key][1])(value),
                         }
                     else:
-                        exif[mapping_name][mapping[key][0]] = {
+                        exif[mapping_name][mapping_val[key][0]] = {
                             'raw': value,
                         }
 

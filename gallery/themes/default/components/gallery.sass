@@ -44,35 +44,33 @@
         transform: scale(1.05) // scale up
         transition: all 0.3s cubic-bezier(.79, .14, .15, .86)
 
-        > h2
-            margin: 0
-            padding: 0
+    .image-title
+        margin: 0
 
-            font-size: 1rem
-            font-weight: 600
+        font-size: 1rem
+        font-weight: 600
 
-            color: $primary
+        color: $primary
 
-            text-overflow: ellipsis
-            overflow: hidden
+        text-overflow: ellipsis
+        overflow: hidden
 
-            opacity: 0 // hide
-            transition: all 0.2s ease-in-out
+        opacity: 0 // hide
+        transition: all 0.2s ease-in-out
 
-        > p
-            margin: 0
-            padding: 0
+    .image-subtitle
+        margin: 0
 
-            font-size: 0.8rem
-            font-weight: 500
+        font-size: 0.8rem
+        font-weight: 500
 
-            color: $white
+        color: $white
 
-            text-overflow: ellipsis
-            overflow: hidden
+        text-overflow: ellipsis
+        overflow: hidden
 
-            opacity: 0 // hide
-            transition: all 0.2s ease-in-out
+        opacity: 0 // hide
+        transition: all 0.2s ease-in-out
 
     img
         width: 100%
@@ -95,13 +93,14 @@
         padding-bottom: 100%
 
     &:hover
-        span
+        .image-filter
             bottom: 0
             opacity: 1
             transform: scale(1)
 
-            > h2, > p
-                opacity: 1
+        .image-title,
+        .image-subtitle
+            opacity: 1
 
         img
             transform: scale(1)

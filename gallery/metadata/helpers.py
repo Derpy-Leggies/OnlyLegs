@@ -4,6 +4,7 @@ Metadata formatting helpers
 """
 from datetime import datetime
 
+
 def human_size(value):
     """
     Formats the size of a file in a human readable format
@@ -276,7 +277,10 @@ def lens_specification(value):
     """
     Maps the value of the lens specification to a human readable format
     """
-    return str(value[0] / value[1]) + 'mm - ' + str(value[2] / value[3]) + 'mm'
+    try:
+        return str(value[0] / value[1]) + 'mm - ' + str(value[2] / value[3]) + 'mm'
+    except Exception as err:
+        return None
 
 
 def compression_type(value):

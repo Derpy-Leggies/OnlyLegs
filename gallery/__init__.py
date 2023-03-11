@@ -5,7 +5,7 @@
 | |_| | | | | | |_| | |__|  __/ (_| \__ \ 
  \___/|_| |_|_|\__, |_____\___|\__, |___/
                |___/           |___/
-Created by Fluffy Bean - Version 23.03.10
+Created by Fluffy Bean - Version 23.03.11
 """
 
 # Import system modules
@@ -46,7 +46,7 @@ def create_app(test_config=None):
     """
     Create and configure the main app
     """
-    app = Flask(__name__,instance_path=os.path.join(USER_DIR, 'instance'))
+    app = Flask(__name__, instance_path=os.path.join(USER_DIR, 'instance'))
     assets = Environment()
     cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 300})
     compress = Compress()
@@ -71,13 +71,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-
     # Load theme
     theme_manager.CompileTheme('default', app.root_path)
     # Bundle JS files
     js = Bundle('js/*.js', output='gen/packed.js')
     assets.register('js_all', js)
-    
 
     @app.errorhandler(403)
     @app.errorhandler(404)
@@ -88,7 +86,6 @@ def create_app(test_config=None):
         error = err.code
         msg = err.description
         return render_template('error.html', error=error, msg=msg), err.code
-
 
     # Load login, registration and logout manager
     from . import auth
@@ -110,10 +107,8 @@ def create_app(test_config=None):
     # Load APIs
     from . import api
     app.register_blueprint(api.blueprint)
-    
-    
-    logging.info('Gallery started successfully!')
 
+    logging.info('Gallery started successfully!')
 
     assets.init_app(app)
     cache.init_app(app)

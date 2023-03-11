@@ -19,7 +19,7 @@ from sqlalchemy.orm import sessionmaker
 
 from gallery.auth import login_required
 
-from . import db # Import db to create a session
+from . import db
 from . import metadata as mt
 
 
@@ -39,15 +39,15 @@ def uploads(file):
     # Get args
     width = request.args.get('w', default=0, type=int)  # Width of image
     height = request.args.get('h', default=0, type=int)  # Height of image
-    filtered = request.args.get('f', default=False, type=bool) # Whether to apply filters
-    blur = request.args.get('b', default=False, type=bool) # Whether to force blur
+    filtered = request.args.get('f', default=False, type=bool)  # Whether to apply filters
+    blur = request.args.get('b', default=False, type=bool)  # Whether to force blur
 
     # if no args are passed, return the raw file
     if width == 0 and height == 0 and not filtered:
         if not os.path.exists(os.path.join(current_app.config['UPLOAD_FOLDER'],
                                            secure_filename(file))):
             abort(404)
-        return send_from_directory(current_app.config['UPLOAD_FOLDER'], file ,as_attachment=True)
+        return send_from_directory(current_app.config['UPLOAD_FOLDER'], file, as_attachment=True)
 
     # Of either width or height is 0, set it to the other value to keep aspect ratio
     if width > 0 and height == 0:
@@ -60,7 +60,7 @@ def uploads(file):
 
     # Open image and set extension
     try:
-        img = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'],file))
+        img = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], file))
     except FileNotFoundError:
         logging.error('File not found: %s, possibly broken upload', file)
         abort(404)
@@ -79,7 +79,7 @@ def uploads(file):
 
     # If has NSFW tag, blur image, etc.
     if filtered:
-        #img = img.filter(ImageFilter.GaussianBlur(20))
+        # img = img.filter(ImageFilter.GaussianBlur(20))
         pass
     
     # If forced to blur, blur image
@@ -122,7 +122,7 @@ def upload():
     img_name = "GWAGWA_"+str(uuid4())
     img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img_name+'.'+img_ext)
 
-    if not img_ext in current_app.config['ALLOWED_EXTENSIONS'].keys():
+    if img_ext not in current_app.config['ALLOWED_EXTENSIONS'].keys():
         logging.info('File extension not allowed: %s', img_ext)
         abort(403)
 
@@ -142,14 +142,14 @@ def upload():
     
     # Save to database
     try:        
-        query = db.Posts(author_id = g.user.id,
-                              created_at = dt.utcnow(),
-                              file_name = img_name+'.'+img_ext,
-                              file_type = img_ext,
-                              image_exif = img_exif,
-                              image_colours = img_colors,
-                              post_description = form_description,
-                              post_alt = form_alt)
+        query = db.Posts(author_id=g.user.id,
+                         created_at=dt.utcnow(),
+                         file_name=img_name+'.'+img_ext,
+                         file_type=img_ext,
+                         image_exif=img_exif,
+                         image_colours=img_colors,
+                         post_description=form_description,
+                         post_alt=form_alt)
         
         db_session.add(query)
         db_session.commit()
@@ -158,6 +158,7 @@ def upload():
         abort(500)
 
     return 'Gwa Gwa'
+
 
 @blueprint.route('/delete/<int:image_id>', methods=['POST'])
 @login_required
@@ -194,7 +195,7 @@ def delete_image(image_id):
         abort(500)
 
     logging.info('Removed image (%s) %s', image_id, img.file_name)
-    flash(['Image was all in Le Head!', 1])
+    flash(['Image was all in Le Head!', 0])
     return 'Gwa Gwa'
 
 
@@ -268,7 +269,7 @@ def logfile():
     """
     Gets the log file and returns it as a JSON object
     """
-    filename = logging.getLoggerClass().root.handlers[0].baseFilename
+    filename = 'only.log'
     log_dict = {}
     i = 0
 

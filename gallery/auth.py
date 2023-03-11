@@ -1,5 +1,5 @@
 """
-OnlyLegs - Authentification
+OnlyLegs - Authentication
 User registration, login and logout and locking access to pages behind a login
 """
 import re
@@ -29,7 +29,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None or session.get('uuid') is None:
-            logging.error('Authentification failed')
+            logging.error('Authentication failed')
             session.clear()
             return redirect(url_for('gallery.index'))
 
@@ -75,7 +75,6 @@ def register():
     email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
     username_regex = re.compile(r'\b[A-Za-z0-9._%+-]+\b')
 
-
     if not username or not username_regex.match(username):
         error.append('Username is invalid!')
 
@@ -94,7 +93,6 @@ def register():
 
     if error:
         return jsonify(error)
-
 
     try:
         register_user = db.Users(username=username,
@@ -124,7 +122,6 @@ def login():
     user = db_session.query(db.Users).filter_by(username=username).first()
     error = []
 
-
     if user is None:
         logging.error('User %s does not exist. Login attempt from %s',
                       username, request.remote_addr)
@@ -137,18 +134,17 @@ def login():
     if error:
         abort(403)
 
-
     try:
         session.clear()
         session['user_id'] = user.id
         session['uuid'] = str(uuid.uuid4())
 
         session_query = db.Sessions(user_id=user.id,
-                                   session_uuid=session.get('uuid'),
-                                   ip_address=request.remote_addr,
-                                   user_agent=request.user_agent.string,
-                                   active=True,
-                                   created_at=dt.utcnow())
+                                    session_uuid=session.get('uuid'),
+                                    ip_address=request.remote_addr,
+                                    user_agent=request.user_agent.string,
+                                    active=True,
+                                    created_at=dt.utcnow())
 
         db_session.add(session_query)
         db_session.commit()

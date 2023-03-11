@@ -4,18 +4,19 @@
 
 {% block content %}
     <div class="background">
-        <img src="/api/uploads/{{ image.file_name }}?w=1000&h=1000" onload="imgFade(this)" style="opacity:0;"/>
+        <img src="/api/uploads/{{ image.file_name }}?w=1920&h=1080" alt="{{ image.post_alt }}" onload="imgFade(this)" style="opacity:0;"/>
         <span style="background-image: linear-gradient(to top, rgba({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }}, 1), transparent);"></span>
     </div>
 
     <div class="image-fullscreen">
-        <img src="" onload="imgFade(this);" style="opacity:0;" />
+        <img src="" alt="{{ image.post_alt }}" onload="imgFade(this);" style="opacity:0;" />
     </div>
 
     <div class="image-grid">
         <div class="image-container" id="image-container">
             <img
-                src="/api/uploads/{{ image.file_name }}?w=1000&h=1000"
+                src="/api/uploads/{{ image.file_name }}?w=1920&h=1080"
+                alt="{{ image.post_alt }}"
                 onload="imgFade(this)" style="opacity:0;"
                 onerror="this.src='/static/images/error.png'"
                 {% if "File" in image.image_exif %}
@@ -119,6 +120,11 @@
                     </svg>
                 </div>
                 <div class="info-table">
+                    <div class="img-colours">
+                        {% for col in image.image_colours %}
+                            <span style="background-color: rgb({{col.0}}, {{col.1}}, {{col.2}})"></span>
+                        {% endfor %}
+                    </div>
                     <table>
                         <tr>
                             <td>Image ID</td>
@@ -133,11 +139,6 @@
                             <td><span class="time">{{ image.created_at }}</span></td>
                         </tr>
                     </table>
-                    <div class="img-colours">
-                        {% for col in image.image_colours %}
-                            <span style="background-color: rgb({{col.0}}, {{col.1}}, {{col.2}})"></span>
-                        {% endfor %}
-                    </div>
                     <div class="img-groups">
                         {% for group in image.groups %}
                             <a href="/group/{{ group.id }}" class="tag-icon">
@@ -251,7 +252,7 @@
                     'DESTRUCTION!!!!!!',
                     'This will delete the image and all of its data!!! This action is irreversible!!!!! Are you sure you want to do this?????',
                     '<button class="pop-up__btn pop-up__btn-critical-fill" onclick="deleteImage()">Dewww eeeet!</button>',
-                    '<img src="/api/uploads/{{ image.file_name }}?w=1000&h=1000" />'
+                    '<img src="/api/uploads/{{ image.file_name }}?w=1920&h=1080" />'
                     );
             });
             function deleteImage() {

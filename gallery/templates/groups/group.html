@@ -17,7 +17,7 @@
             <div class="banner-content">
                 <p><span id="contrast-check" data-color="rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})">{{ group.description }}</span></p>
                 <h1><span id="contrast-check" data-color="rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})">{{ group.name }}</span></h1>
-                <p><span id="contrast-check" data-color="rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})">{{ images|length }} Images</span></p>
+                <p><span id="contrast-check" data-color="rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})">By {{ group.author_username }} - {{ images|length }} Images</span></p>
             </div>
         {% else %}
             <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
@@ -25,7 +25,7 @@
             <div class="banner-content">
                 <p>{{ group.description }}</p>
                 <h1>{{ group.name }}</h1>
-                <p>{{ images|length }} Images</p>
+                <p>By {{ group.author_username }} - {{ images|length }} Images</p>
             </div>
         {% endif %}
     </div>
@@ -41,11 +41,11 @@
         <div class="gallery-grid">
             {% for image in images %}
                 <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('group.group_post', group_id=group.id, image_id=image.id) }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
-                    <span class="image-filter" style="background: linear-gradient(to top, rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }}), transparent)">
-                        <p></p>
-                        <h2><span id="contrast-check" data-color="rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})"><span class="time">{{ image.created_at }}</span></span></h2>
-                    </span>
-                    <img data-src="{{ image.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
+                    <div class="image-filter">
+                        <p class="image-subtitle"></p>
+                        <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
+                    </div>
+                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>

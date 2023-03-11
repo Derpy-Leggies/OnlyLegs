@@ -20,14 +20,16 @@ db_session = db_session()
 @blueprint.route('/')
 def index():
     """
-    Home page of the website, shows the feed of latest images
+    Home page of the website, shows the feed of the latest images
     """
     images = db_session.query(db.Posts.file_name,
+                              db.Posts.post_alt,
                               db.Posts.image_colours,
                               db.Posts.created_at,
                               db.Posts.id).order_by(db.Posts.id.desc()).all()
  
     return render_template('index.html', images=images)
+
 
 @blueprint.route('/image/<int:image_id>')
 def image(image_id):
@@ -47,15 +49,16 @@ def image(image_id):
         group = db_session.query(db.Groups).filter(db.Groups.id == group[0]).first()
         img.groups.append(group)
     
-    next = db_session.query(db.Posts.id).filter(db.Posts.id > image_id).order_by(db.Posts.id.asc()).first()
-    prev = db_session.query(db.Posts.id).filter(db.Posts.id < image_id).order_by(db.Posts.id.desc()).first()
+    next_url = db_session.query(db.Posts.id).filter(db.Posts.id > image_id).order_by(db.Posts.id.asc()).first()
+    prev_url = db_session.query(db.Posts.id).filter(db.Posts.id < image_id).order_by(db.Posts.id.desc()).first()
     
-    if next is not None:
-        next = url_for('gallery.image', image_id=next[0])
-    if prev is not None:
-        prev = url_for('gallery.image', image_id=prev[0])
+    if next_url is not None:
+        next_url = url_for('gallery.image', image_id=next_url[0])
+    if prev_url is not None:
+        prev_url = url_for('gallery.image', image_id=prev_url[0])
 
-    return render_template('image.html', image=img, next_url=next, prev_url=prev)
+    return render_template('image.html', image=img, next_url=next_url, prev_url=prev_url)
+
 
 @blueprint.route('/profile')
 def profile():
@@ -63,6 +66,7 @@ def profile():
     Profile overview, shows all profiles on the onlylegs gallery
     """
     return render_template('profile.html', user_id='gwa gwa')
+
 
 @blueprint.route('/profile/<int:user_id>')
 def profile_id(user_id):

@@ -8,7 +8,9 @@ import platformdirs
 import logging
 import yaml
 
+
 USER_DIR = platformdirs.user_config_dir('onlylegs')
+
 
 class SetupApp:
     """
@@ -36,7 +38,8 @@ class SetupApp:
             print("You can find the config files at:", USER_DIR)
             sys.exit()
 
-    def make_dir(self):
+    @staticmethod
+    def make_dir():
         """
         Create the user directory
         """
@@ -49,7 +52,8 @@ class SetupApp:
             print("Error creating user directory:", err)
             sys.exit(1)
 
-    def make_env(self):
+    @staticmethod
+    def make_env():
         """
         Create the .env file with default values
         """
@@ -67,7 +71,8 @@ class SetupApp:
 
         print("Generated default .env file, please edit!")
 
-    def make_yaml(self):
+    @staticmethod
+    def make_yaml():
         """
         Create the YAML config file with default values
         """
@@ -107,16 +112,17 @@ class SetupApp:
 
         print("Generated default YAML config, please edit!")
 
-    def logging_config(self):
-        LOGS_PATH = os.path.join(platformdirs.user_config_dir('onlylegs'), 'logs')
+    @staticmethod
+    def logging_config():
+        logs_path = os.path.join(platformdirs.user_config_dir('onlylegs'), 'logs')
 
-        if not os.path.isdir(LOGS_PATH):
-            os.mkdir(LOGS_PATH)
-            print("Created logs directory at:", LOGS_PATH)
+        if not os.path.isdir(logs_path):
+            os.mkdir(logs_path)
+            print("Created logs directory at:", logs_path)
 
         logging.getLogger('werkzeug').disabled = True
         logging.basicConfig(
-            filename=os.path.join(LOGS_PATH, 'only.log'),
+            filename=os.path.join(logs_path, 'only.log'),
             level=logging.INFO,
             datefmt='%Y-%m-%d %H:%M:%S',
             format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s',

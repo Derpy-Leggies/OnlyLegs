@@ -23,17 +23,23 @@
     {% if groups %}
         <div class="gallery-grid">
             {% for group in groups %}
-                <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}">
-                    <span class="image-filter">
-                        <p></p>
-                        <h2>{{ group.name }}</h2>
-                    </span>
-                    {% if group.thumbnail %}
-                        <img data-src="{{ group.thumbnail }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
-                    {% else %}
+                {% if group.thumbnail %}
+                    <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}" style="background-color: rgb({{ group.thumbnail.image_colours.0.0 }}, {{ group.thumbnail.image_colours.0.1 }}, {{ group.thumbnail.image_colours.0.2 }})">
+                        <div class="image-filter">
+                            <p class="image-subtitle"></p>
+                            <p class="image-title">{{ group.name }}</p>
+                        </div>
+                        <img data-src="{{ group.thumbnail.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
+                    </a>
+                {% else %}
+                    <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}">
+                        <div class="image-filter">
+                            <p class="image-subtitle"></p>
+                            <p class="image-title">{{ group.name }}</p>
+                        </div>
                         <img src="{{ url_for('static', filename='images/error.png') }}" onload="imgFade(this)" style="opacity:0;"/>
-                    {% endif %}
-                </a>
+                    </a>
+                {% endif %}
             {% endfor %}
         </div>
     {% else %}

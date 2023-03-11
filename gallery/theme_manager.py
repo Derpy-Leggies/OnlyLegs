@@ -8,7 +8,7 @@ from datetime import datetime
 import sass
 
 
-class CompileTheme():
+class CompileTheme:
     """
     Compiles the theme into the static folder
     """
@@ -33,7 +33,8 @@ class CompileTheme():
         now = datetime.now()
         print(f"{now.hour}:{now.minute}:{now.second} - Done!\n")
 
-    def load_sass(self, source_path, css_dest):
+    @staticmethod
+    def load_sass(source_path, css_dest):
         """
         Compile the sass (or scss) file into css and save it to the static folder
         """
@@ -54,7 +55,8 @@ class CompileTheme():
 
             print("Compiled successfully!")
 
-    def load_fonts(self, source_path, font_dest):
+    @staticmethod
+    def load_fonts(source_path, font_dest):
         """
         Copy the fonts folder to the static folder
         """

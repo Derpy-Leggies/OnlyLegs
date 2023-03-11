@@ -1,6 +1,6 @@
 """
-Onlylegs - API endpoints
-Used intermally by the frontend and possibly by other applications
+Onlylegs - Image Groups
+Why groups? Because I don't like calling these albums, sounds more limiting that it actually is
 """
 import logging
 import json
@@ -31,8 +31,10 @@ def groups():
         thumbnail = db_session.query(db.GroupJunction.post_id).filter(db.GroupJunction.group_id == group.id).order_by(db.GroupJunction.date_added.desc()).first()
         
         if thumbnail is not None:
-            thumbnail_filename = db_session.query(db.Posts.file_name).filter(db.Posts.id == thumbnail[0]).first()
-            group.thumbnail = thumbnail_filename[0]
+            group.thumbnail = db_session.query(db.Posts.file_name,
+                                               db.Posts.post_alt,
+                                               db.Posts.image_colours,
+                                               db.Posts.id).filter(db.Posts.id == thumbnail[0]).first()
         else:
             group.thumbnail = None
     
@@ -47,6 +49,8 @@ def group(group_id):
     
     if group is None:
         abort(404, 'Group not found')
+        
+    group.author_username = db_session.query(db.Users.username).filter(db.Users.id == group.author_id).first()[0]
     
     group_images = db_session.query(db.GroupJunction.post_id).filter(db.GroupJunction.group_id == group_id).order_by(db.GroupJunction.date_added.desc()).all()
     
@@ -75,15 +79,12 @@ def group_post(group_id, image_id):
         group = db_session.query(db.Groups).filter(db.Groups.id == group[0]).first()
         img.groups.append(group)
     
-    next = db_session.query(db.GroupJunction.post_id).filter(db.GroupJunction.group_id == group_id).filter(db.GroupJunction.post_id > image_id).order_by(db.GroupJunction.date_added.asc()).first()    
-    prev = db_session.query(db.GroupJunction.post_id).filter(db.GroupJunction.group_id == group_id).filter(db.GroupJunction.post_id < image_id).order_by(db.GroupJunction.date_added.desc()).first()
+    next_url = db_session.query(db.GroupJunction.post_id).filter(db.GroupJunction.group_id == group_id).filter(db.GroupJunction.post_id > image_id).order_by(db.GroupJunction.date_added.asc()).first()    
+    prev_url = db_session.query(db.GroupJunction.post_id).filter(db.GroupJunction.group_id == group_id).filter(db.GroupJunction.post_id < image_id).order_by(db.GroupJunction.date_added.desc()).first()
     
-    if next is not None:
-        next = url_for('group.group_post', group_id=group_id, image_id=next[0])
-    if prev is not None:
-        prev = url_for('group.group_post', group_id=group_id, image_id=prev[0])
+    if next_url is not None:
+        next_url = url_for('group.group_post', group_id=group_id, image_id=next_url[0])
+    if prev_url is not None:
+        prev_url = url_for('group.group_post', group_id=group_id, image_id=prev_url[0])
 
-    return render_template('image.html',
-                           image=img,
-                           next_url=next,
-                           prev_url=prev)
+    return render_template('image.html', image=img, next_url=next_url, prev_url=prev_url)
