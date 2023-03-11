@@ -42,8 +42,10 @@ Image view
 ![screenshot](.github/images/imageview.png)
 
 ## Running
-Currently only for reference
+By default, the app runs on port 5000 with 4 workers, you can pass in arguments to change that, use `-h` or `--help` to see all the options.
 
-    poetry install
-    poetry run python3 -m flask --app gallery --debug run --host 0.0.0.0
-    poetry run python3 -m gunicorn -w 4 -b 0.0.0.0:5000 'gallery:create_app()'
+Once you clone the repo to your desired location and have installed python `poetry`, install the requirements with `poetry install`. From there you can run the app with Gunicorn using `poetry run python3 run.py`!
+
+You can also run the app in debug mode using `-d` or `--debug`, but its best to look into the logs file located under `~/.config/onlylegs/only.log`
+
+Enjoy using OnlyLegs!

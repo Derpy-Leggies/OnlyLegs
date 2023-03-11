@@ -1,11 +1,6 @@
 """
-  ___        _       _
- / _ \ _ __ | |_   _| |    ___  __ _ ___
-| | | | '_ \| | | | | |   / _ \/ _` / __|
-| |_| | | | | | |_| | |__|  __/ (_| \__ \ 
- \___/|_| |_|_|\__, |_____\___|\__, |___/
-               |___/           |___/
-Created by Fluffy Bean - Version 23.03.11
+Onlylegs Gallery
+This is the main app file, it loads all the other files and sets up the app
 """
 
 # Import system modules
