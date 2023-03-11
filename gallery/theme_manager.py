@@ -45,8 +45,11 @@ class CompileTheme:
         else:
             print("No sass file found!")
             sys.exit(1)
+            
+        if not os.path.exists(css_dest):
+            os.makedirs(css_dest)
 
-        with open(os.path.join(css_dest, 'style.css'), 'w', encoding='utf-8') as file:
+        with open(os.path.join(css_dest, 'style.css'), encoding='utf-8', mode='w+') as file:
             try:
                 file.write(sass.compile(filename=sass_path,output_style='compressed'))
             except sass.CompileError as err:

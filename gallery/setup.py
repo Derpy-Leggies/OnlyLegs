@@ -61,7 +61,7 @@ class SetupApp:
             'FLASK_SECRETE': 'dev',
         }
         try:
-            with open(os.path.join(USER_DIR, '.env'), encoding='utf-8') as file:
+            with open(os.path.join(USER_DIR, '.env'), encoding='utf-8', mode='w+') as file:
                 for key, value in env_conf.items():
                     file.write(f"{key}={value}\n")
                 print("Created environment variables")
@@ -103,7 +103,7 @@ class SetupApp:
             },
         }
         try:
-            with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as file:
+            with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8', mode='w+') as file:
                 yaml.dump(yaml_conf, file, default_flow_style=False)
                 print("Created default gallery config")
         except Exception as err:

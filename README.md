@@ -25,10 +25,10 @@
 ### Currently implemented
 - Easy uploading and managing of a gallery of images
 - Multi user support, helping you manage a whole group of photographers
+- Image groups, helping you sort your favorite memories
 - Custom CSS support
 
 ### Coming soon tm
-- Image groups, helping you sort your favorite memories
 - Password locked images/image groups, helping you share photos only to those who you want to
 - Logging and automatic login attempt warnings and timeouts
 - Searching through tags, file names, users (and metadata maybe, no promises)
@@ -44,8 +44,18 @@ Image view
 ## Running
 By default, the app runs on port 5000 with 4 workers, you can pass in arguments to change that, use `-h` or `--help` to see all the options.
 
-Once you clone the repo to your desired location and have installed python `poetry`, install the requirements with `poetry install`. From there you can run the app with Gunicorn using `poetry run python3 run.py`!
+Once you clone the repo to your desired location and have installed python `poetry`, install the requirements with the following command:
 
-You can also run the app in debug mode using `-d` or `--debug`, but its best to look into the logs file located under `~/.config/onlylegs/only.log`
+    poetry install
+    
+From there you can run the app with Gunicorn using:
+
+    poetry run python3 run.py
+
+You can also run the app in debug mode using `-d` or `--debug`, but its best to look into the logs file located under `~/.config/onlylegs/only.log` if you're facing issues of any sorts!
+
+On some systems, especially containers, you may need to set an XDG path for configuration files, you can do this with
+
+    export XDG_CONFIG_HOME="$HOME/.config"
 
 Enjoy using OnlyLegs!
