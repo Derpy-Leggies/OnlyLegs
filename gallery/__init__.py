@@ -79,25 +79,15 @@ def create_app(test_config=None):
         return render_template('error.html', error=error, msg=msg), err.code
 
     # Load login, registration and logout manager
-    from . import auth
+    from gallery import auth
     app.register_blueprint(auth.blueprint)
 
-    # Load routes for home and images
-    from . import routing
-    app.register_blueprint(routing.blueprint)
-    app.add_url_rule('/', endpoint='index')
-    
-    # Load routes for groups
-    from . import groups
-    app.register_blueprint(groups.blueprint)
-
-    # Load routes for settings
-    from . import settings
-    app.register_blueprint(settings.blueprint)
-
-    # Load APIs
-    from . import api
+    # Load the different routes
+    from .routes import api, groups, routing, settings
     app.register_blueprint(api.blueprint)
+    app.register_blueprint(groups.blueprint)
+    app.register_blueprint(routing.blueprint)
+    app.register_blueprint(settings.blueprint)
 
     logging.info('Gallery started successfully!')
 

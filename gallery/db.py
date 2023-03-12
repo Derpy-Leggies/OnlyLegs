@@ -136,3 +136,4 @@ class Bans (base):  # pylint: disable=too-few-public-methods, C0103
 # check if database file exists, if not create it
 if not os.path.isfile(DB_PATH):
     base.metadata.create_all(engine)
+    print('Database created')

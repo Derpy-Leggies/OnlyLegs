@@ -9,10 +9,7 @@ from datetime import datetime as dt
 from flask import Blueprint, abort, jsonify, render_template, url_for, request, g
 
 from sqlalchemy.orm import sessionmaker
-
-from gallery.auth import login_required
-
-from . import db # Import db to create a session
+from gallery import db
 
 
 blueprint = Blueprint('group', __name__, url_prefix='/group')
@@ -31,14 +28,10 @@ def groups():
         thumbnail = db_session.query(db.GroupJunction.post_id).filter(db.GroupJunction.group_id == group.id).order_by(db.GroupJunction.date_added.desc()).first()
         
         if thumbnail is not None:
-            group.thumbnail = db_session.query(db.Posts.file_name,
-                                               db.Posts.post_alt,
-                                               db.Posts.image_colours,
-                                               db.Posts.id).filter(db.Posts.id == thumbnail[0]).first()
-        else:
-            group.thumbnail = None
+            group.thumbnail = db_session.query(db.Posts.file_name, db.Posts.post_alt, db.Posts.image_colours, db.Posts.id).filter(db.Posts.id == thumbnail[0]).first()
     
     return render_template('groups/list.html', groups=groups)
+
 
 @blueprint.route('/<int:group_id>')
 def group(group_id):
@@ -48,7 +41,7 @@ def group(group_id):
     group = db_session.query(db.Groups).filter(db.Groups.id == group_id).first()
     
     if group is None:
-        abort(404, 'Group not found')
+        abort(404, 'Group not found! D:')
         
     group.author_username = db_session.query(db.Users.username).filter(db.Users.id == group.author_id).first()[0]
     
@@ -60,6 +53,7 @@ def group(group_id):
         images.append(image)
     
     return render_template('groups/group.html', group=group, images=images)
+
 
 @blueprint.route('/<int:group_id>/<int:image_id>')
 def group_post(group_id, image_id):

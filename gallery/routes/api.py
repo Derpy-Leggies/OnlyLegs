@@ -18,8 +18,8 @@ from PIL import Image, ImageOps, ImageFilter
 from sqlalchemy.orm import sessionmaker
 from gallery.auth import login_required
 
-from . import db
-from . import metadata as mt
+from gallery import db
+from gallery import metadata as mt
 
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')

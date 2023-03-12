@@ -7,9 +7,7 @@ from flask import Blueprint, render_template, url_for
 from werkzeug.exceptions import abort
 
 from sqlalchemy.orm import sessionmaker
-
-from . import db
-from . import metadata as mt
+from gallery import db
 
 
 blueprint = Blueprint('gallery', __name__)
