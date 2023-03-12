@@ -13,36 +13,15 @@ from setup.args import PORT, ADDRESS, WORKERS, DEBUG
 from setup.configuration import Configuration
 
 
-# Run prechecks
-Configuration()
+Configuration()  # Run prechecks
 
 
 if DEBUG:
     from gallery import create_app
+    
     create_app().run(host=ADDRESS, port=PORT, debug=True, threaded=True)
 else:
-    from gunicorn.app.base import Application
-    from gunicorn import util
-
-    class OnlyLegs(Application):
-        def __init__(self, options={}):
-            self.usage = None
-            self.callable = None
-            self.options = options
-            self.do_load_config()
-        
-        def init(self, *args):
-            cfg = {}
-            for k, v in self.options.items():
-                if k.lower() in self.cfg.settings and v is not None:
-                    cfg[k.lower()] = v
-            return cfg
-        
-        def prog(self):
-            return 'OnlyLegs'
-        
-        def load(self):
-            return util.import_app('gallery:create_app()')
+    from setup.runner import OnlyLegs
     
     options = {
         'bind': f'{ADDRESS}:{PORT}',

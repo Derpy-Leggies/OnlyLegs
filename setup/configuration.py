@@ -109,16 +109,14 @@ class Configuration:
                 continue
             
             # Check if user is happy with the values
-            _ = input("Is this correct? (y/n): ")
-            
-            if _ == 'y' or _ == 'Y':
+            if input("Is this correct? (y/n): ").lower() == 'y':
                 is_correct = True
         
         yaml_conf = {
             'admin': {
-                'name': '%s' % name,
-                'username': '%s' % username,
-                'email': '%s' % email,
+                'name': name,
+                'username': username,
+                'email': email,
             },
             'upload': {
                 'allowed-extensions': {
