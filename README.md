@@ -22,16 +22,15 @@
 </div>
 
 ## Features
-### Currently implemented
-- Easy uploading and managing of a gallery of images
-- Multi user support, helping you manage a whole group of photographers
-- Image groups, helping you sort your favorite memories
-- Custom CSS support
+ - [x] Easy uploading and managing of a gallery of images
+ - [x] Multi user support, helping you manage a whole group of photographers
+ - [x] Image groups, helping you sort your favorite memories
+ - [x] Custom CSS support
+ - [ ] Password locked images/image groups, helping you share photos only to those who you want to
+ - [ ] Logging and automatic login attempt warnings and timeouts
+ - [ ] Searching through tags, file names and users
 
-### Coming soon tm
-- Password locked images/image groups, helping you share photos only to those who you want to
-- Logging and automatic login attempt warnings and timeouts
-- Searching through tags, file names, users (and metadata maybe, no promises)
+And many more planned things!
 
 ## screenshots
 
@@ -42,20 +41,35 @@ Image view
 ![screenshot](.github/images/imageview.png)
 
 ## Running
-By default, the app runs on port 5000 with 4 workers, you can pass in arguments to change that, use `-h` or `--help` to see all the options.
 
-Once you clone the repo to your desired location and have installed python `poetry`, install the requirements with the following command:
+You first need to install `python poetry`, its best to follow their getting started guide you can find on the official website.
+
+Next we need to install the required packages for the gallery to function correctly, make sure you're in the directory of the project when you run this command:
 
     poetry install
-    
-From there you can run the app with Gunicorn using:
+
+By default, the app runs on **port 5000**, **4 workers** on `gunicorn` ready for you to use it. You can find more information on this using the `-h` flag. But to run the gallery, use this command.
 
     poetry run python3 run.py
 
-You can also run the app in debug mode using `-d` or `--debug`, but its best to look into the logs file located under `~/.config/onlylegs/only.log` if you're facing issues of any sorts!
+Now follow the provided prompts to fill in the information for the Admin account and you're ready to go!
 
-On some systems, especially containers, you may need to set an XDG path for configuration files, you can do this with
+### Common issues
+#### App failing to create a user config folder
+
+Try checking if you have `XDG_CONFIG_HOME` setup. If you dont, you can set that with this command:
 
     export XDG_CONFIG_HOME="$HOME/.config"
+
+## Finall notes
+
+Thank you to everyone who helped me test the previous and current versions of the gallery, especially critters:
+
+ - Carty
+ - Jeetix
+ - CRT (Mika)
+ - mrHDash
+ - Verg
+ - Fennec
 
 Enjoy using OnlyLegs!
