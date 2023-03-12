@@ -17,12 +17,11 @@ class Configuration:
     """
     Setup the application on first run
     """
-    def __init__(self, verbose=False):
+    def __init__(self):
         """
         Main setup function
         """
-        if verbose:
-            print("Running startup checks...")
+        print("Running startup checks...")
         
         # Check if the user directory exists
         if not os.path.exists(USER_DIR):
@@ -71,11 +70,11 @@ class Configuration:
             sys.exit(1)
         
         print("""
-              ####################################################
-              # PLEASE NOTE DOWN THE FLASK_SECRET KEY LOCARED IN #
-              # YOUR .config/onlylegs/.env FILE! A NEW KEY WAS   #
-              # GENERATED FOR YOU!                               #
-              ####################################################
+####################################################
+# PLEASE NOTE DOWN THE FLASK_SECRET KEY LOCARED IN #
+# YOUR .config/onlylegs/.env FILE! A NEW KEY WAS   #
+# GENERATED FOR YOU!                               #
+####################################################
               """)
 
     @staticmethod

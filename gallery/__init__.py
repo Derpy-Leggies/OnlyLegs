@@ -22,7 +22,7 @@ from yaml import FullLoader, load
 USER_DIR = platformdirs.user_config_dir('onlylegs')
 
 
-def create_app(test_config=None, verbose=False):
+def create_app(test_config=None):
     """
     Create and configure the main app
     """
@@ -33,14 +33,12 @@ def create_app(test_config=None, verbose=False):
     
     # Get environment variables
     load_dotenv(os.path.join(USER_DIR, '.env'))
-    if verbose:
-        print("Loaded environment variables")
+    print("Loaded environment variables")
 
     # Get config file
     with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as f:
         conf = load(f, Loader=FullLoader)
-        if verbose:
-            print("Loaded gallery config")
+        print("Loaded gallery config")
 
     # App configuration
     app.config.from_mapping(
@@ -64,7 +62,7 @@ def create_app(test_config=None, verbose=False):
 
     # Load theme
     from . import theme_manager
-    theme_manager.CompileTheme('default', app.root_path, verbose)
+    theme_manager.CompileTheme('default', app.root_path)
     
     # Bundle JS files
     js = Bundle('js/*.js', output='gen/packed.js')

@@ -8,17 +8,18 @@ print("""
 Created by Fluffy Bean - Version 23.03.12
 """)
 
-from setup.args import PORT, ADDRESS, WORKERS, DEBUG, VERBOSE
+
+from setup.args import PORT, ADDRESS, WORKERS, DEBUG
 from setup.configuration import Configuration
 
 
 # Run prechecks
-Configuration(verbose=VERBOSE)
+Configuration()
 
 
 if DEBUG:
     from gallery import create_app
-    create_app(verbose=VERBOSE).run(host=ADDRESS, port=PORT, debug=True, threaded=True)
+    create_app().run(host=ADDRESS, port=PORT, debug=True, threaded=True)
 else:
     from gunicorn.app.base import Application
     from gunicorn import util
@@ -41,7 +42,7 @@ else:
             return 'OnlyLegs'
         
         def load(self):
-            return util.import_app(f'gallery:create_app(verbose={VERBOSE})')
+            return util.import_app('gallery:create_app()')
     
     options = {
         'bind': f'{ADDRESS}:{PORT}',

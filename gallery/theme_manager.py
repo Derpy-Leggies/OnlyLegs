@@ -12,14 +12,13 @@ class CompileTheme:
     """
     Compiles the theme into the static folder
     """
-    def __init__(self, theme_name, app_path, verbose=False):
+    def __init__(self, theme_name, app_path):
         """
         Initialize the theme manager
         Compiles the theme into the static folder and loads the fonts
         """
 
-        if verbose:
-            print(f"Loading '{theme_name}' theme...")
+        print(f"Loading '{theme_name}' theme...")
 
         theme_path = os.path.join(app_path, 'themes', theme_name)
         theme_dest = os.path.join(app_path, 'static', 'theme')
@@ -27,15 +26,17 @@ class CompileTheme:
         if not os.path.exists(theme_path):
             print("Theme does not exist!")
             sys.exit(1)
+            
+        if not os.path.exists(theme_dest):
+            os.makedirs(theme_dest)
 
         self.load_sass(theme_path, theme_dest)
         self.load_fonts(theme_path, theme_dest)
 
-        if verbose:
-            print(f"{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second} - Done!\n")
+        print(f"{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second} - Done!\n")
 
     @staticmethod
-    def load_sass(source_path, css_dest, verbose=False):
+    def load_sass(source_path, css_dest):
         """
         Compile the sass (or scss) file into css and save it to the static folder
         """
@@ -46,9 +47,6 @@ class CompileTheme:
         else:
             print("No sass file found!")
             sys.exit(1)
-            
-        if not os.path.exists(css_dest):
-            os.makedirs(css_dest)
 
         with open(os.path.join(css_dest, 'style.css'), encoding='utf-8', mode='w+') as file:
             try:
@@ -57,11 +55,10 @@ class CompileTheme:
                 print("Failed to compile!\n", err)
                 sys.exit(1)
 
-            if verbose:
-                print("Compiled successfully!")
+            print("Compiled successfully!")
 
     @staticmethod
-    def load_fonts(source_path, font_dest, verbose=False):
+    def load_fonts(source_path, font_dest):
         """
         Copy the fonts folder to the static folder
         """
@@ -82,5 +79,4 @@ class CompileTheme:
             print("Failed to copy fonts!\n", err)
             sys.exit(1)
             
-        if verbose:
-            print("Fonts copied successfully!")
+        print("Fonts copied successfully!")
