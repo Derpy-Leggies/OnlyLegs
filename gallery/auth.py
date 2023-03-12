@@ -164,4 +164,4 @@ def logout():
     """
     logging.info('User (%s) %s logged out', session.get('user_id'), g.user.username)
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('gallery.index'))

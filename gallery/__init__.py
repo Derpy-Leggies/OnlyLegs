@@ -68,6 +68,7 @@ def create_app(test_config=None):
     js = Bundle('js/*.js', output='gen/packed.js')
     assets.register('js_all', js)
 
+    # Error handlers
     @app.errorhandler(403)
     @app.errorhandler(404)
     @app.errorhandler(405)
@@ -89,8 +90,10 @@ def create_app(test_config=None):
     app.register_blueprint(routing.blueprint)
     app.register_blueprint(settings.blueprint)
 
+    # Log to file that the app has started
     logging.info('Gallery started successfully!')
 
+    # Initialize extensions and return app
     assets.init_app(app)
     cache.init_app(app)
     compress.init_app(app)

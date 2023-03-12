@@ -76,12 +76,13 @@ window.onscroll = function () {
     loadOnView();
 
     // Jump to top button
+    let topOfPage = document.querySelector('.top-of-page');
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
-        document.querySelector('.jumpUp').classList = 'jumpUp jumpUp--show';
+        topOfPage.classList.add('show');
     } else {
-        document.querySelector('.jumpUp').classList = 'jumpUp';
+        topOfPage.classList.remove('show');
     }
-    document.querySelector('.jumpUp').onclick = function () {
+    topOfPage.onclick = function () {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
     }

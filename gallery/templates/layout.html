@@ -14,7 +14,7 @@
 <body>
     <div class="notifications"></div>
 
-    <svg class="jumpUp"  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,120H176v88a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8V120H32l96-96Z" opacity="0.2"></path><path d="M229.66,114.34l-96-96a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,32,128H72v80a16,16,0,0,0,16,16h80a16,16,0,0,0,16-16V128h40a8,8,0,0,0,5.66-13.66ZM176,112a8,8,0,0,0-8,8v88H88V120a8,8,0,0,0-8-8H51.31L128,35.31,204.69,112Z"></path></svg>
+    <svg class="top-of-page"  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,120H176v88a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8V120H32l96-96Z" opacity="0.2"></path><path d="M229.66,114.34l-96-96a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,32,128H72v80a16,16,0,0,0,16,16h80a16,16,0,0,0,16-16V128h40a8,8,0,0,0,5.66-13.66ZM176,112a8,8,0,0,0-8,8v88H88V120a8,8,0,0,0-8-8H51.31L128,35.31,204.69,112Z"></path></svg>
 
     <div class="pop-up">
         <span class="pop-up__click-off" onclick="popupDissmiss()"></span>
@@ -96,11 +96,11 @@
                     <h3>Upload stuffs</h3>
                     <p>May the world see your stuff 👀</p>
                     <form id="uploadForm" onsubmit="return uploadFile(event)">
-                        <input type="file" id="file"/>
-                        <input type="text" placeholder="alt" id="alt"/>
-                        <input type="text" placeholder="description" id="description"/>
-                        <input type="text" placeholder="tags" id="tags"/>
-                        <button type="submit">Upload</button>
+                        <input class="input-block file" type="file" id="file"/>
+                        <input class="input-block" type="text" placeholder="alt" id="alt"/>
+                        <input class="input-block" type="text" placeholder="description" id="description"/>
+                        <input class="input-block" type="text" placeholder="tags" id="tags"/>
+                        <button class="btn-block primary" type="submit">Upload</button>
                     </form>
                     <div class="upload-jobs"></div>
                 </div>
