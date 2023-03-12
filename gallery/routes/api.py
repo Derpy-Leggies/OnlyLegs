@@ -191,7 +191,7 @@ def delete_image(image_id):
         abort(500)
 
     logging.info('Removed image (%s) %s', image_id, img.file_name)
-    flash(['Image was all in Le Head!', 0])
+    flash(['Image was all in Le Head!', 1])
     return 'Gwa Gwa'
 
 

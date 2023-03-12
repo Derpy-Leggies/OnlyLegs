@@ -71,9 +71,10 @@ class Configuration:
         
         print("""
 ####################################################
-# PLEASE NOTE DOWN THE FLASK_SECRET KEY LOCARED IN #
-# YOUR .config/onlylegs/.env FILE! A NEW KEY WAS   #
-# GENERATED FOR YOU!                               #
+# A NEW KEY WAS GENERATED FOR YOU! PLEASE NOTE     #
+# DOWN THE FLASK_SECRET KEY LOCATED IN YOUR        #
+# .config/onlylegs/.env FOLDER! LOOSING THIS KEY   #
+# WILL RESULT IN YOU BEING UNABLE TO LOG IN!       #
 ####################################################
               """)
 
@@ -86,14 +87,11 @@ class Configuration:
         email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
         username_regex = re.compile(r'\b[A-Za-z0-9._%+-]+\b')
         
-        print("No config file found, please enter the following information:")
-        while not is_correct:            
-            try:
-                username = input("Admin username: ")
-                name = input("Admin name: ")
-                email = input("Admin email: ")
-            except ValueError:
-                print("Please enter valid values!")
+        print("\nNo config file found, please enter the following information:")
+        while not is_correct:
+            username = input("Admin username: ")
+            name = input("Admin name: ")
+            email = input("Admin email: ")
 
             # Check if the values are valid
             if not username or not username_regex.match(username):
@@ -130,7 +128,7 @@ class Configuration:
             },
             'website': {
                 'name': 'OnlyLegs',
-                'motto': 'A gallery built for fast and simple image management. You can change this in the settings',
+                'motto': 'A gallery built for fast and simple image management!',
                 'language': 'en',
             }
         }

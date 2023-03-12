@@ -23,7 +23,7 @@
 
 ## Features
  - [x] Easy uploading and managing of a gallery of images
- - [x] Multi user support, helping you manage a whole group of photographers
+ - [x] Multi-user support, helping you manage a whole group of photographers
  - [x] Image groups, helping you sort your favourite memories
  - [x] Custom CSS support
  - [ ] Password locked images/image groups, helping you share photos only to those who you want to
@@ -34,7 +34,7 @@ And many more planned things!
 
 ## screenshots
 
-Homescreen
+Home-screen
 ![screenshot](.github/images/homepage.png)
 
 Image view
@@ -52,7 +52,7 @@ By default, the app runs on port 5000, 4 workers on `gunicorn` ready for you to 
 
     poetry run python3 run.py
 
-Now follow the provided prompts to fill in the information for the Admin account and you're ready to go!
+Now follow the provided prompts to fill in the information for the Admin account, and you're ready to go!
 
 ### Common issues
 #### App failing to create a user config folder
@@ -61,7 +61,7 @@ Try checking if you have `XDG_CONFIG_HOME` setup. If you don't, you can set that
 
     export XDG_CONFIG_HOME="$HOME/.config"
 
-## Finall notes
+## Finally notes
 
 Thank you to everyone who helped me test the previous and current versions of the gallery, especially critters:
 

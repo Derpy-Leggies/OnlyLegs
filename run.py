@@ -13,7 +13,7 @@ from setup.args import PORT, ADDRESS, WORKERS, DEBUG
 from setup.configuration import Configuration
 
 
-Configuration()  # Run prechecks
+Configuration()  # Run pre-checks
 
 
 if DEBUG:

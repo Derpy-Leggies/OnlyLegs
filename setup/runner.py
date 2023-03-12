@@ -1,6 +1,7 @@
 from gunicorn.app.base import Application
 from gunicorn import util
 
+
 class OnlyLegs(Application):
     def __init__(self, options={}):
         self.usage = None
