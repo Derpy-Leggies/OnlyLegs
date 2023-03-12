@@ -58,7 +58,7 @@ class SetupApp:
         Create the .env file with default values
         """
         env_conf = {
-            'FLASK_SECRETE': 'dev',
+            'FLASK_SECRET': 'dev',
         }
         try:
             with open(os.path.join(USER_DIR, '.env'), encoding='utf-8', mode='w+') as file:
@@ -96,11 +96,7 @@ class SetupApp:
                 'name': 'OnlyLegs',
                 'motto': 'Gwa Gwa',
                 'language': 'english'
-            },
-            'server': {
-                'host': '0.0.0.0',
-                'port': 5000
-            },
+            }
         }
         try:
             with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8', mode='w+') as file:
