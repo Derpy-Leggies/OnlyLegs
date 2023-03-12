@@ -6,17 +6,16 @@ from uuid import uuid4
 import os
 import io
 import logging
-import json
 from datetime import datetime as dt
 
-from flask import (
-    Blueprint, send_from_directory, send_file, abort, flash, jsonify, request, g, current_app)
+from flask import (Blueprint, send_from_directory, send_file,
+                   abort, flash, jsonify, request, g, current_app)
 from werkzeug.utils import secure_filename
 
 from colorthief import ColorThief
 from PIL import Image, ImageOps, ImageFilter
-from sqlalchemy.orm import sessionmaker
 
+from sqlalchemy.orm import sessionmaker
 from gallery.auth import login_required
 
 from . import db
@@ -55,7 +54,6 @@ def uploads(file):
     elif width == 0 and height > 0:
         width = height
 
-    set_ext = current_app.config['ALLOWED_EXTENSIONS']
     buff = io.BytesIO()
 
     # Open image and set extension
@@ -69,9 +67,8 @@ def uploads(file):
         abort(500)
 
     img_ext = os.path.splitext(file)[-1].lower().replace('.', '')
-    img_ext = set_ext[img_ext]
-    # Get ICC profile as it alters colours when saving
-    img_icc = img.info.get("icc_profile")
+    img_ext = current_app.config['ALLOWED_EXTENSIONS'][img_ext]
+    img_icc = img.info.get("icc_profile")  # Get ICC profile as it alters colours when saving
 
     # Resize image and orientate correctly
     img.thumbnail((width, height), Image.LANCZOS)
@@ -89,8 +86,8 @@ def uploads(file):
     try:
         img.save(buff, img_ext, icc_profile=img_icc)
     except OSError:
-        # This usually happens when saving a JPEG with an ICC profile
-        # Convert to RGB and try again
+        # This usually happens when saving a JPEG with an ICC profile,
+        # so we convert to RGB and try again
         img = img.convert('RGB')
         img.save(buff, img_ext, icc_profile=img_icc)
     except Exception as err:
@@ -98,9 +95,8 @@ def uploads(file):
         abort(500)
 
     img.close()
-
-    # Seek to beginning of buffer and return
-    buff.seek(0)
+    buff.seek(0)  # Reset buffer to start
+    
     return send_file(buff, mimetype='image/' + img_ext)
 
 
@@ -205,13 +201,9 @@ def create_group():
     """
     Creates a group
     """
-    group_name = request.form['name']
-    group_description = request.form['description']
-    group_author = g.user.id
-    
-    new_group = db.Groups(name=group_name,
-                          description=group_description,
-                          author_id=group_author,
+    new_group = db.Groups(name=request.form['name'],
+                          description=request.form['description'],
+                          author_id=g.user.id,
                           created_at=dt.utcnow())
     
     db_session.add(new_group)
@@ -269,11 +261,10 @@ def logfile():
     """
     Gets the log file and returns it as a JSON object
     """
-    filename = 'only.log'
     log_dict = {}
     i = 0
 
-    with open(filename, encoding='utf-8') as file:
+    with open('only.log', encoding='utf-8') as file:
         for line in file:
             line = line.split(' : ')
 
