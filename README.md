@@ -24,7 +24,7 @@
 ## Features
  - [x] Easy uploading and managing of a gallery of images
  - [x] Multi user support, helping you manage a whole group of photographers
- - [x] Image groups, helping you sort your favorite memories
+ - [x] Image groups, helping you sort your favourite memories
  - [x] Custom CSS support
  - [ ] Password locked images/image groups, helping you share photos only to those who you want to
  - [ ] Logging and automatic login attempt warnings and timeouts
@@ -42,13 +42,13 @@ Image view
 
 ## Running
 
-You first need to install `python poetry`, its best to follow their getting started guide you can find on the official website.
+You first need to install `python poetry`, it's best to follow their getting started guide you can find on the official website.
 
 Next we need to install the required packages for the gallery to function correctly, make sure you're in the directory of the project when you run this command:
 
     poetry install
 
-By default, the app runs on **port 5000**, **4 workers** on `gunicorn` ready for you to use it. You can find more information on this using the `-h` flag. But to run the gallery, use this command.
+By default, the app runs on port 5000, 4 workers on `gunicorn` ready for you to use it. You can find more information on this using the `-h` flag. But to run the gallery, use this command.
 
     poetry run python3 run.py
 
@@ -57,7 +57,7 @@ Now follow the provided prompts to fill in the information for the Admin account
 ### Common issues
 #### App failing to create a user config folder
 
-Try checking if you have `XDG_CONFIG_HOME` setup. If you dont, you can set that with this command:
+Try checking if you have `XDG_CONFIG_HOME` setup. If you don't, you can set that with this command:
 
     export XDG_CONFIG_HOME="$HOME/.config"
 
@@ -67,9 +67,9 @@ Thank you to everyone who helped me test the previous and current versions of th
 
  - Carty
  - Jeetix
- - CRT (Mika)
+ - CRT
  - mrHDash
  - Verg
- - Fennec
+ - FennecBitch
 
 Enjoy using OnlyLegs!
