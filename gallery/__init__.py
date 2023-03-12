@@ -16,28 +16,13 @@ from flask import Flask, render_template
 # Configuration
 from dotenv import load_dotenv
 import platformdirs
-import yaml
+from yaml import FullLoader, load
 
-from . import theme_manager
-from . import setup
-
-
-# Run setup checks
-setup.SetupApp()
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
 
-# Get environment variables
-load_dotenv(os.path.join(USER_DIR, '.env'))
-print("Loaded environment variables")
 
-# Get config file
-with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as f:
-    conf = yaml.load(f, Loader=yaml.FullLoader)
-    print("Loaded gallery config")
-
-
-def create_app(test_config=None):
+def create_app(test_config=None, verbose=False):
     """
     Create and configure the main app
     """
@@ -45,6 +30,17 @@ def create_app(test_config=None):
     assets = Environment()
     cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 300})
     compress = Compress()
+    
+    # Get environment variables
+    load_dotenv(os.path.join(USER_DIR, '.env'))
+    if verbose:
+        print("Loaded environment variables")
+
+    # Get config file
+    with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as f:
+        conf = load(f, Loader=FullLoader)
+        if verbose:
+            print("Loaded gallery config")
 
     # App configuration
     app.config.from_mapping(
@@ -67,7 +63,9 @@ def create_app(test_config=None):
         pass
 
     # Load theme
-    theme_manager.CompileTheme('default', app.root_path)
+    from . import theme_manager
+    theme_manager.CompileTheme('default', app.root_path, verbose)
+    
     # Bundle JS files
     js = Bundle('js/*.js', output='gen/packed.js')
     assets.register('js_all', js)

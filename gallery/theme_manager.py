@@ -12,13 +12,14 @@ class CompileTheme:
     """
     Compiles the theme into the static folder
     """
-    def __init__(self, theme_name, app_path):
+    def __init__(self, theme_name, app_path, verbose=False):
         """
         Initialize the theme manager
         Compiles the theme into the static folder and loads the fonts
         """
 
-        print(f"Loading '{theme_name}' theme...")
+        if verbose:
+            print(f"Loading '{theme_name}' theme...")
 
         theme_path = os.path.join(app_path, 'themes', theme_name)
         theme_dest = os.path.join(app_path, 'static', 'theme')
@@ -30,11 +31,11 @@ class CompileTheme:
         self.load_sass(theme_path, theme_dest)
         self.load_fonts(theme_path, theme_dest)
 
-        now = datetime.now()
-        print(f"{now.hour}:{now.minute}:{now.second} - Done!\n")
+        if verbose:
+            print(f"{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second} - Done!\n")
 
     @staticmethod
-    def load_sass(source_path, css_dest):
+    def load_sass(source_path, css_dest, verbose=False):
         """
         Compile the sass (or scss) file into css and save it to the static folder
         """
@@ -56,10 +57,11 @@ class CompileTheme:
                 print("Failed to compile!\n", err)
                 sys.exit(1)
 
-            print("Compiled successfully!")
+            if verbose:
+                print("Compiled successfully!")
 
     @staticmethod
-    def load_fonts(source_path, font_dest):
+    def load_fonts(source_path, font_dest, verbose=False):
         """
         Copy the fonts folder to the static folder
         """
@@ -68,7 +70,6 @@ class CompileTheme:
         font_dest = os.path.join(font_dest, 'fonts')
 
         if os.path.exists(font_dest):
-            print("Updating fonts...")
             try:
                 shutil.rmtree(font_dest)
             except Exception as err:
@@ -77,7 +78,9 @@ class CompileTheme:
 
         try:
             shutil.copytree(source_path, font_dest)
-            print("Copied new fonts!")
         except Exception as err:
             print("Failed to copy fonts!\n", err)
             sys.exit(1)
+            
+        if verbose:
+            print("Fonts copied successfully!")

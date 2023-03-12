@@ -5,13 +5,16 @@ import os
 import platformdirs
 
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, PickleType
-from sqlalchemy.orm import declarative_base, relationship, backref, mapped_column
+from sqlalchemy.orm import declarative_base, relationship
 
 
-path_to_db = os.path.join(platformdirs.user_config_dir('onlylegs'), 'gallery.sqlite')
-engine = create_engine(f'sqlite:///{path_to_db}', echo=False)
+USER_DIR = platformdirs.user_config_dir('onlylegs')
+DB_PATH = os.path.join(USER_DIR, 'gallery.sqlite')
+
+
 # engine = create_engine('postgresql://username:password@host:port/database_name', echo=False)
 # engine = create_engine('mysql://username:password@host:port/database_name', echo=False)
+engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 base = declarative_base()
 
 
@@ -130,4 +133,6 @@ class Bans (base):  # pylint: disable=too-few-public-methods, C0103
     created_at = Column(DateTime, nullable=False)
 
 
-base.metadata.create_all(engine)
+# check if database file exists, if not create it
+if not os.path.isfile(DB_PATH):
+    base.metadata.create_all(engine)

@@ -5,28 +5,20 @@ print("""
 | |_| | | | | | |_| | |__|  __/ (_| \__ \ 
  \___/|_| |_|_|\__, |_____\___|\__, |___/
                |___/           |___/
-Created by Fluffy Bean - Version 23.03.11
+Created by Fluffy Bean - Version 23.03.12
 """)
 
-
-import argparse
-
-
-parser = argparse.ArgumentParser(description='Run the OnlyLegs gallery')
-parser.add_argument('-p', '--port', type=int, default=5000, help='Port to run on')
-parser.add_argument('-a', '--address', type=str, default='0.0.0.0', help='Address to run on')
-parser.add_argument('-w', '--workers', type=int, default=4, help='Number of workers to run')
-parser.add_argument('-d', '--debug', type=bool, default=False, help='Run as Flask app in debug mode')
-args = parser.parse_args()
-
-PORT = args.port
-ADDRESS = args.address
-WORKERS = args.workers
+from setup.args import PORT, ADDRESS, WORKERS, DEBUG, VERBOSE
+from setup.configuration import Configuration
 
 
-if args.debug:
+# Run prechecks
+Configuration(verbose=VERBOSE)
+
+
+if DEBUG:
     from gallery import create_app
-    create_app().run(host=ADDRESS, port=PORT, debug=True)
+    create_app(verbose=VERBOSE).run(host=ADDRESS, port=PORT, debug=True, threaded=True)
 else:
     from gunicorn.app.base import Application
     from gunicorn import util
@@ -49,8 +41,12 @@ else:
             return 'OnlyLegs'
         
         def load(self):
-            return util.import_app('gallery:create_app()')
+            return util.import_app(f'gallery:create_app(verbose={VERBOSE})')
+    
+    options = {
+        'bind': f'{ADDRESS}:{PORT}',
+        'workers': WORKERS,
+    }
+    
+    OnlyLegs(options).run()
 
-    OnlyLegs({'bind': f'{ADDRESS}:{PORT}', 'workers': WORKERS}).run()
-
-# uwu
