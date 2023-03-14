@@ -61,7 +61,7 @@ Try checking if you have `XDG_CONFIG_HOME` setup. If you don't, you can set that
 
     export XDG_CONFIG_HOME="$HOME/.config"
 
-## Finally notes
+## Final notes
 
 Thank you to everyone who helped me test the previous and current versions of the gallery, especially critters:
 

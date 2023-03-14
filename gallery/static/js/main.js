@@ -35,7 +35,7 @@ function loadOnView() {
         let image = lazyLoad[i];
         if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
             if (!image.src) {
-                image.src = `/api/uploads/${image.getAttribute('data-src')}?w=400&h=400`
+                image.src = `/api/file/${image.getAttribute('data-src')}?w=400&h=400`
             }
         }
     }

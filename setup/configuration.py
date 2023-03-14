@@ -46,6 +46,7 @@ class Configuration:
         try:
             os.makedirs(USER_DIR)
             os.makedirs(os.path.join(USER_DIR, 'instance'))
+            os.makedirs(os.path.join(USER_DIR, 'uploads'))
         except Exception as err:
             print("Error creating user directory:", err)
             sys.exit(1)

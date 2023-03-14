@@ -13,6 +13,8 @@ from flask_caching import Cache
 from flask_assets import Environment, Bundle
 from flask import Flask, render_template
 
+from gallery.utils import theme_manager
+
 # Configuration
 from dotenv import load_dotenv
 import platformdirs
@@ -61,7 +63,6 @@ def create_app(test_config=None):
         pass
 
     # Load theme
-    from . import theme_manager
     theme_manager.CompileTheme('default', app.root_path)
     
     # Bundle JS files

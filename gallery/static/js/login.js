@@ -5,8 +5,8 @@ function showLogin() {
         'Need an account? <span class="pop-up__link" onclick="showRegister()">Register!</span>',
         '<button class="btn-block primary" form="loginForm" type="submit">Login</button>',
         '<form id="loginForm"  onsubmit="return login(event)">\
-            <input class="pop-up__input" type="text" placeholder="Namey" id="username"/>\
-            <input class="pop-up__input" type="password" placeholder="Passywassy" id="password"/>\
+            <input class="input-block" type="text" placeholder="Namey" id="username"/>\
+            <input class="input-block" type="password" placeholder="Passywassy" id="password"/>\
         </form>'
     );
 };
@@ -59,10 +59,10 @@ function showRegister() {
         'Already have an account? <span class="pop-up__link" onclick="showLogin()">Login!</span>',
         '<button class="btn-block primary" form="registerForm" type="submit">Register</button>',
         '<form id="registerForm" onsubmit="return register(event)">\
-            <input class="pop-up__input" type="text" placeholder="Namey" id="username"/>\
-            <input class="pop-up__input" type="text" placeholder="E mail!" id="email"/>\
-            <input class="pop-up__input" type="password" placeholder="Passywassy" id="password"/>\
-            <input class="pop-up__input" type="password" placeholder="Passywassy again!" id="password-repeat"/>\
+            <input class="input-block" type="text" placeholder="Namey" id="username"/>\
+            <input class="input-block" type="text" placeholder="E mail!" id="email"/>\
+            <input class="input-block" type="password" placeholder="Passywassy" id="password"/>\
+            <input class="input-block" type="password" placeholder="Passywassy again!" id="password-repeat"/>\
         </form>'
     );
 };
