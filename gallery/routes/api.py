@@ -1,6 +1,6 @@
 """
 Onlylegs - API endpoints
-Used intermally by the frontend and possibly by other applications
+Used internally by the frontend and possibly by other applications
 """
 from uuid import uuid4
 import os
@@ -32,7 +32,7 @@ db_session = db_session()
 def get_file(file_name):
     """
     Returns a file from the uploads folder
-    t is the type of file (thumb, etc)
+    t is the type of file (thumb, etc.)
     w and h are the width and height of the image for resizing
     f is whether to apply filters to the image, such as blurring NSFW images
     b is whether to force blur the image, even if it's not NSFW
@@ -43,6 +43,15 @@ def get_file(file_name):
     height = request.args.get('h', default=0, type=int)  # Height of image
     filtered = request.args.get('f', default=False, type=bool)  # Whether to apply filters
     blur = request.args.get('b', default=False, type=bool)  # Whether to force blur
+    
+    # Idea: instead if specifying the height and width, pass in a string like "200x200" or "200x" or "x200"
+    # This would remove the need for the if statements below and would be possible to pass in a string 
+    # like 'thumb' to get the thumbnail size instead of having to specify the width and height
+    # This would also allow for more flexibility in the future if I wanted to add more sizes
+    # Another idea is to pass in a list of filters to apply to the image
+    # such as "blur,grayscale" or "blur,grayscale,sepia". But this would require a lot more work to implement
+    # and would be a lot more complicated to use, would also implement the risk of the server being overloaded
+    # with requests to apply a lot of filters to a lot of images at once
 
     file_name = secure_filename(file_name)  # Sanitize file name
 

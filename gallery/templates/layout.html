@@ -3,13 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery</title>
-    <link rel="icon" href="{{url_for('static', filename='images/icon.png')}}">
+
+    <title>{{ config.WEBSITE.name }}</title>
+    <meta name="description" content="{{ config.WEBSITE.motto }}"/>
+    <meta name="author" content="{{ config.WEBSITE.author }}"/>
+
+    <meta property="og:title" content="{{ config.WEBSITE.name }}"/>
+    <meta property="og:description" content="{{ config.WEBSITE.motto }}"/>
+    <meta property="og:type" content="website"/>
+
+    <meta name="twitter:title" content="{{ config.WEBSITE.name }}"/>
+    <meta name="twitter:description" content="{{ config.WEBSITE.motto }}"/>
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <link
+        href="{{url_for('static', filename='images/logo-black.svg')}}"
+        rel="icon"
+        type="image/svg+xml"
+        media="(prefers-color-scheme: light)"/>
+    <link
+        href="{{url_for('static', filename='images/logo-white.svg')}}"
+        rel="icon"
+        type="image/svg+xml"
+        media="(prefers-color-scheme: dark)"/>
+
     <link rel="stylesheet" href="{{url_for('static', filename='theme/style.css')}}" defer>
 
     {% assets "js_all" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    
+    {% block head %}{% endblock %}
 </head>
 <body>
     <div class="notifications"></div>

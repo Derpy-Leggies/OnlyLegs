@@ -1,5 +1,10 @@
 {% extends 'layout.html' %}
 
+{% block head %}
+    <meta property="og:image" content="/api/file/{{ image.file_name }}"/>
+    <meta name="theme-color" content="#{{ image.image_colours.0.0 }}{{ image.image_colours.0.1 }}{{ image.image_colours.0.2 }}"/>
+{% endblock %}
+
 {% block wrapper_class %}image-wrapper{% endblock %}
 
 {% block content %}
