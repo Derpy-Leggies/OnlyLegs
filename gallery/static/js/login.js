@@ -1,9 +1,10 @@
 // Function to show login
 function showLogin() {
     popUpShow(
-        'idk what to put here, just login please',
+        'Login!',
         'Need an account? <span class="pop-up__link" onclick="showRegister()">Register!</span>',
-        '<button class="btn-block primary" form="loginForm" type="submit">Login</button>',
+        '<button class="btn-block" onclick="popupDissmiss()">Cancelee</button>\
+        <button class="btn-block primary" form="loginForm" type="submit">Login</button>',
         '<form id="loginForm"  onsubmit="return login(event)">\
             <input class="input-block" type="text" placeholder="Namey" id="username"/>\
             <input class="input-block" type="password" placeholder="Passywassy" id="password"/>\
@@ -57,7 +58,8 @@ function showRegister() {
     popUpShow(
         'Who are you?',
         'Already have an account? <span class="pop-up__link" onclick="showLogin()">Login!</span>',
-        '<button class="btn-block primary" form="registerForm" type="submit">Register</button>',
+        '<button class="btn-block" onclick="popupDissmiss()">Canceleee</button>\
+        <button class="btn-block primary" form="registerForm" type="submit">Register</button>',
         '<form id="registerForm" onsubmit="return register(event)">\
             <input class="input-block" type="text" placeholder="Namey" id="username"/>\
             <input class="input-block" type="text" placeholder="E mail!" id="email"/>\

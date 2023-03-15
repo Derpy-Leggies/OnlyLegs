@@ -264,8 +264,9 @@
                 popUpShow(
                     'DESTRUCTION!!!!!!',
                     'This will delete the image and all of its data!!! This action is irreversible!!!!! Are you sure you want to do this?????',
-                    '<button class="btn-block critical" onclick="deleteImage()">Dewww eeeet!</button>',
-                    '<img src="/api/file/{{ image.file_name }}?w=1920&h=1080" />'
+                    '<button class="btn-block" onclick="popupDissmiss()">Nooooooo</button>\
+                    <button class="btn-block critical" onclick="deleteImage()">Dewww eeeet!</button>',
+                    '<img src="/api/file/{{ image.file_name }}?w=1920&h=1080"/>'
                     );
             });
             function deleteImage() {

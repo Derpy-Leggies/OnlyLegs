@@ -12,7 +12,6 @@ function popUpShow(title, body, actions, content) {
 
     // Set buttons that will be displayed
     popupActions.innerHTML = actions;
-    popupActions.innerHTML += '<button class="btn-block" onclick="popupDissmiss()">Nooooooo</button>';
 
     // Show popup
     popup.style.display = 'block';
