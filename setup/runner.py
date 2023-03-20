@@ -1,23 +1,32 @@
+"""
+Gunicorn configuration file
+"""
 from gunicorn.app.base import Application
 from gunicorn import util
 
 
 class OnlyLegs(Application):
-    def __init__(self, options={}):
+    """
+    Gunicorn application
+    """
+    def __init__(self, options={}):  # pylint: disable=W0102, W0231
         self.usage = None
         self.callable = None
         self.options = options
         self.do_load_config()
-    
+
     def init(self, *args):
+        """
+        Initialize the application
+        """
         cfg = {}
-        for k, v in self.options.items():
-            if k.lower() in self.cfg.settings and v is not None:
-                cfg[k.lower()] = v
+        for setting, value in self.options.items():
+            if setting.lower() in self.cfg.settings and value is not None:
+                cfg[setting.lower()] = value
         return cfg
-    
-    def prog(self):
+
+    def prog(self):  # pylint: disable=C0116, E0202
         return 'OnlyLegs'
-    
+
     def load(self):
         return util.import_app('gallery:create_app()')

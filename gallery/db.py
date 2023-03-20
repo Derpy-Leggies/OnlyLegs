@@ -4,7 +4,8 @@ OnlyLegs - Database models and functions for SQLAlchemy
 import os
 import platformdirs
 
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, PickleType
+from sqlalchemy import (
+    create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, PickleType)
 from sqlalchemy.orm import declarative_base, relationship
 
 
@@ -47,18 +48,18 @@ class Posts (base):  # pylint: disable=too-few-public-methods, C0103
     id = Column(Integer, primary_key=True)
     author_id = Column(Integer, ForeignKey('users.id'))
     created_at = Column(DateTime, nullable=False)
-    
+
     file_name = Column(String, unique=True, nullable=False)
     file_type = Column(String, nullable=False)
-    
+
     image_exif = Column(PickleType, nullable=False)
     image_colours = Column(PickleType, nullable=False)
-    
+
     post_description = Column(String, nullable=False)
     post_alt = Column(String, nullable=False)
 
     junction = relationship('GroupJunction', backref='posts')
-    
+
 
 class Thumbnails (base):  # pylint: disable=too-few-public-methods, C0103
     """

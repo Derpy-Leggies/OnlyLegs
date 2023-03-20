@@ -13,12 +13,13 @@ from flask_caching import Cache
 from flask_assets import Environment, Bundle
 from flask import Flask, render_template
 
-from gallery.utils import theme_manager
-
 # Configuration
-from dotenv import load_dotenv
 import platformdirs
-from yaml import FullLoader, load
+from dotenv import load_dotenv
+from yaml import FullLoader, safe_load
+
+# Utils
+from gallery.utils import theme_manager
 
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
@@ -32,14 +33,14 @@ def create_app(test_config=None):
     assets = Environment()
     cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 300})
     compress = Compress()
-    
+
     # Get environment variables
     load_dotenv(os.path.join(USER_DIR, '.env'))
     print("Loaded environment variables")
 
     # Get config file
-    with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as f:
-        conf = load(f, Loader=FullLoader)
+    with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as file:
+        conf = safe_load(file, loader=FullLoader)
         print("Loaded gallery config")
 
     # App configuration
@@ -64,10 +65,10 @@ def create_app(test_config=None):
 
     # Load theme
     theme_manager.CompileTheme('default', app.root_path)
-    
+
     # Bundle JS files
-    js = Bundle('js/*.js', output='gen/packed.js')
-    assets.register('js_all', js)
+    js_scripts = Bundle('js/*.js', output='gen/packed.js')
+    assets.register('js_all', js_scripts)
 
     # Error handlers
     @app.errorhandler(403)

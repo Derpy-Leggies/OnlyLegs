@@ -65,7 +65,7 @@ class Metadata:
             'Software': {},
             'File': {},
         }
-        
+
         # Thanks chatGPT xP
         for key, value in encoded_exif.items():            
             for mapping_name, mapping_val in EXIF_MAPPING:

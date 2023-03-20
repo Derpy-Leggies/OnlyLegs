@@ -26,7 +26,7 @@ class CompileTheme:
         if not os.path.exists(theme_path):
             print("Theme does not exist!")
             sys.exit(1)
-            
+
         if not os.path.exists(theme_dest):
             os.makedirs(theme_dest)
 
