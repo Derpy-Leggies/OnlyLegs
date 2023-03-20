@@ -1,10 +1,11 @@
 """
-OnlyLegs - Authentification
+OnlyLegs - Authentication
 User registration, login and logout and locking access to pages behind a login
 """
 import re
 import uuid
 import logging
+from datetime import datetime as dt
 
 import functools
 from flask import Blueprint, flash, g, redirect, request, session, url_for, abort, jsonify
@@ -28,7 +29,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None or session.get('uuid') is None:
-            logging.error('Authentification failed')
+            logging.error('Authentication failed')
             session.clear()
             return redirect(url_for('gallery.index'))
 
@@ -49,14 +50,14 @@ def load_logged_in_user():
         g.user = None
         session.clear()
     else:
-        is_alive = db_session.query(db.sessions).filter_by(session_uuid=user_uuid).first()
+        is_alive = db_session.query(db.Sessions).filter_by(session_uuid=user_uuid).first()
 
         if is_alive is None:
             logging.info('Session expired')
             flash(['Session expired!', '3'])
             session.clear()
         else:
-            g.user = db_session.query(db.users).filter_by(id=user_id).first()
+            g.user = db_session.query(db.Users).filter_by(id=user_id).first()
 
 
 @blueprint.route('/register', methods=['POST'])
@@ -73,7 +74,6 @@ def register():
 
     email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
     username_regex = re.compile(r'\b[A-Za-z0-9._%+-]+\b')
-
 
     if not username or not username_regex.match(username):
         error.append('Username is invalid!')
@@ -94,9 +94,12 @@ def register():
     if error:
         return jsonify(error)
 
-
     try:
-        db_session.add(db.users(username, email, generate_password_hash(password)))
+        register_user = db.Users(username=username,
+                                 email=email,
+                                 password=generate_password_hash(password),
+                                 created_at=dt.utcnow())
+        db_session.add(register_user)
         db_session.commit()
     except exc.IntegrityError:
         return f'User {username} is already registered!'
@@ -116,9 +119,8 @@ def login():
     username = request.form['username']
     password = request.form['password']
 
-    user = db_session.query(db.users).filter_by(username=username).first()
+    user = db_session.query(db.Users).filter_by(username=username).first()
     error = []
-
 
     if user is None:
         logging.error('User %s does not exist. Login attempt from %s',
@@ -132,17 +134,19 @@ def login():
     if error:
         abort(403)
 
-
     try:
         session.clear()
         session['user_id'] = user.id
         session['uuid'] = str(uuid.uuid4())
 
-        db_session.add(db.sessions(user.id,
-                                   session.get('uuid'),
-                                   request.remote_addr,
-                                   request.user_agent.string,
-                                   1))
+        session_query = db.Sessions(user_id=user.id,
+                                    session_uuid=session.get('uuid'),
+                                    ip_address=request.remote_addr,
+                                    user_agent=request.user_agent.string,
+                                    active=True,
+                                    created_at=dt.utcnow())
+
+        db_session.add(session_query)
         db_session.commit()
     except Exception as err:
         logging.error('User %s could not be logged in: %s', username, err)
@@ -160,4 +164,4 @@ def logout():
     """
     logging.info('User (%s) %s logged out', session.get('user_id'), g.user.username)
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('gallery.index'))

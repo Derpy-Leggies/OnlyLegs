@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block nav_groups %}navigation-item__selected{% endblock %}
+
+{% block content %}
+    <div class="banner">
+        <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
+        <span class="banner-filter"></span>
+
+        <div class="banner-content">
+            <p>{{ config.WEBSITE.motto }}</p>
+            <h1>Groups</h1>
+            <p>{{ groups|length }} Groups</p>
+        </div>
+    </div>
+
+    <form action="/api/group/create" method="post" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="name">
+        <input type="text" name="description" placeholder="description">
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if groups %}
+        <div class="gallery-grid">
+            {% for group in groups %}
+                {% if group.thumbnail %}
+                    <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}" style="background-color: rgb({{ group.thumbnail.image_colours.0.0 }}, {{ group.thumbnail.image_colours.0.1 }}, {{ group.thumbnail.image_colours.0.2 }})">
+                        <div class="image-filter">
+                            <p class="image-subtitle"></p>
+                            <p class="image-title">{{ group.name }}</p>
+                        </div>
+                        <img data-src="{{ group.thumbnail.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
+                    </a>
+                {% else %}
+                    <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}">
+                        <div class="image-filter">
+                            <p class="image-subtitle"></p>
+                            <p class="image-title">{{ group.name }}</p>
+                        </div>
+                        <img src="{{ url_for('static', filename='images/error.png') }}" onload="imgFade(this)" style="opacity:0;"/>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="big-text">
+            <h1>No image groups!</h1>
+            {% if g.user %}
+                <p>You can get started by creating a new image group!</p>
+            {% else %}
+                <p>Login to get started!</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script></script>
+{% endblock %}

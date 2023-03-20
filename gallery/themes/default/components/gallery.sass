@@ -1,0 +1,110 @@
+.gallery-grid
+    margin: 0
+    padding: 0.5rem
+
+    width: 100%
+
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
+    gap: 0.5rem
+
+.gallery-item
+    margin: 0
+    padding: 0
+
+    height: auto
+
+    position: relative
+
+    border-radius: $rad
+
+    box-sizing: border-box
+    overflow: hidden
+
+    .image-filter
+        margin: 0
+        padding: 0.5rem
+
+        width: 100%
+        height: 100%
+
+        position: absolute
+        left: 0
+        bottom: -1rem
+
+        display: flex
+        flex-direction: column
+        justify-content: flex-end
+
+        background-image: linear-gradient(to bottom, rgba($black, 0), rgba($black, 0.8))
+
+        z-index: +1
+
+        opacity: 0 // hide
+        transform: scale(1.05) // scale up
+        transition: all 0.3s cubic-bezier(.79, .14, .15, .86)
+
+    .image-title
+        margin: 0
+
+        font-size: 1rem
+        font-weight: 600
+
+        color: $white
+
+        text-overflow: ellipsis
+        overflow: hidden
+
+        opacity: 0 // hide
+        transition: all 0.2s ease-in-out
+
+    .image-subtitle
+        margin: 0
+
+        font-size: 0.8rem
+        font-weight: 500
+
+        color: $white
+
+        text-overflow: ellipsis
+        overflow: hidden
+
+        opacity: 0 // hide
+        transition: all 0.2s ease-in-out
+
+    img
+        width: 100%
+        height: 100%
+
+        position: absolute
+        inset: 0
+
+        object-fit: cover
+        object-position: center
+
+        background-color: $white
+        transform: scale(1.05)
+
+        transition: all 0.3s cubic-bezier(.79, .14, .15, .86)
+
+    &:after
+        content: ""
+        display: block
+        padding-bottom: 100%
+
+    &:hover
+        .image-filter
+            bottom: 0
+            opacity: 1
+            transform: scale(1)
+
+        .image-title,
+        .image-subtitle
+            opacity: 1
+
+        img
+            transform: scale(1)
+            
+@media (max-width: 800px)
+    .gallery-grid
+        grid-template-columns: auto auto auto

@@ -1,73 +1,59 @@
 {% extends 'layout.html' %}
 
-{% block header %}
-    <div class="banner">
-        <img src="{{ url_for('static', filename='images/leaves.jpg') }}" onload="imgFade(this)" style="opacity:0;"/>
-        <span></span>
-
-        <div class="banner__content">
-            {% block banner_subtitle%}{% endblock %}
-            <p>{{ motto }}</p>
-            <h1>{{ name }}</h1>
-            <p>Serving {{ image_count }} images</p>
-        </div>
-    </div>
-{% endblock %}
 {% block nav_home %}navigation-item__selected{% endblock %}
-{% block wrapper_class %}index-wrapper{% endblock %}
 
 {% block content %}
-    <div class="gallery">
-        {% for image in images %}
-            <a id="image-{{ image['id'] }}" class="gallery__item" href="/image/{{ image['id'] }}">
-                <span class="gallery__item-info">
-                    <p>{{ image['id'] }}</p>
-                    <h2><span class="time">{{ image['created_at'] }}</span></h2>
-                </span>
-                <img
-                    class="gallery__item-image"
-                    data-src="{{ image['file_name'] }}"
-                    onload="imgFade(this)"
-                    style="opacity:0;"
-                />
-            </a>
-        {% endfor %}
+    <div class="banner">
+        <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
+        <span class="banner-filter"></span>
+
+        <div class="banner-content">
+            <p>{{ config.WEBSITE.motto }}</p>
+            <h1>{{ config.WEBSITE.name }}</h1>
+            <p>Serving {{ images|length }} images</p>
+        </div>
     </div>
+
+    {% if images %}
+        <div class="gallery-grid">
+            {% for image in images %}
+                <a id="image-{{ image.id }}" class="gallery-item" href="/image/{{ image.id }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
+                    <div class="image-filter">
+                        <p class="image-subtitle"></p>
+                        <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
+                    </div>
+                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="big-text">
+            <h1>No images</h1>
+            {% if g.user %}
+                <p>You can get started by uploading an image!</p>
+            {% else %}
+                <p>Login to start uploading images!</p>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block script %}
     <script>
-        function loadOnView() {
-            var images = document.querySelectorAll('.gallery__item-image');
-            for (var i = 0; i < images.length; i++) {
-                var image = images[i];
-                if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
-                    if (!image.src) {
-                        image.src = `/api/uploads/${image.getAttribute('data-src')}?w=500&h=500`
-                    }
-                }
-            }
-        }
-        window.onload = function() {
-            loadOnView();
-        };
-        window.onscroll = function() {
-            loadOnView();
-        };
-        window.onresize = function() {
-            loadOnView();
-        };
-
         if (document.referrer.includes('image')) {
-            var referrerId = document.referrer.split('/').pop();
-
-            var imgOffset = document.getElementById('image-' + referrerId).offsetTop;
-            var imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
-            var windowHeight = window.innerHeight;
-
-            document.querySelector('html').style.scrollBehavior = 'auto';
-            window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));
-            document.querySelector('html').style.scrollBehavior = 'smooth';
+            try {
+                var referrerId = document.referrer.split('/').pop();
+    
+                var imgOffset = document.getElementById('image-' + referrerId).offsetTop;
+                var imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
+                var windowHeight = window.innerHeight;
+    
+                document.querySelector('html').style.scrollBehavior = 'auto';
+                window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));
+                document.querySelector('html').style.scrollBehavior = 'smooth';
+            } catch (e) {
+                console.log(e);
+            }
         }
     </script>
 {% endblock %}

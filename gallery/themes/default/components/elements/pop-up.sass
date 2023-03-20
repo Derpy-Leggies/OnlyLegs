@@ -1,0 +1,179 @@
+.pop-up
+    width: calc(100% - 3.5rem)
+    height: 100vh
+
+    position: fixed
+    top: 0
+    left: 3.5rem
+
+    display: none
+
+    background-color: rgba($black, 0.8)
+    opacity: 0
+
+    z-index: 101
+    transition: opacity 0.2s ease
+
+    .pop-up__click-off
+        width: 100%
+        height: 100vh
+
+        position: absolute
+        top: 0
+        left: 0
+
+        z-index: +1
+
+    .pop-up-wrapper
+        margin: 0
+        padding: 0
+
+        width: 621px
+        height: auto
+
+        position: absolute
+        bottom: 50%
+        left: 50%
+        transform: translate(-50%, 50%) scale(0.8)
+
+        display: flex
+        flex-direction: column
+
+        background-color: $black
+        border-radius: $rad
+        overflow: hidden
+
+        z-index: +2
+        transition: transform 0.2s $animation-smooth
+
+    .pop-up-content
+        margin: 0
+        padding: 1rem
+
+        width: 100%
+        height: auto
+
+        display: flex
+        flex-direction: column
+        gap: 1rem
+
+        overflow-y: auto
+        overflow-x: hidden
+        text-size-adjust: auto;
+        text-overflow: ellipsis
+
+        h3
+            margin: 0
+
+            width: 100%
+
+            position: sticky
+            top: 0
+
+            font-size: 2.25rem
+            font-weight: 600
+            text-align: center
+            line-height: 1
+
+            color: $white
+            background-color: $black
+        
+        p
+            margin: 0
+
+            width: 100%
+
+            font-size: 1rem
+            font-weight: 500
+            text-align: center
+            line-height: 1
+
+            color: $white
+
+        img
+            margin: auto
+            padding: 0
+
+            width: auto
+            height: auto
+            max-width: 100%
+            max-height: 40vh
+
+            border-radius: $rad-inner
+
+        form
+            margin: 0
+            padding: 0
+
+            width: 100%
+            height: auto
+
+            display: flex
+            flex-direction: column
+            gap: 0.5rem
+
+            justify-content: center
+
+    .pop-up-controlls
+        margin: 0
+        padding: 0.5rem
+
+        width: 100%
+        height: auto
+
+        display: flex
+        flex-direction: row
+        justify-content: flex-end
+        gap: 0.5rem
+
+        background-color: $black2
+
+    &.active
+        opacity: 1
+
+        .pop-up-wrapper
+            transform: translate(-50%, 50%) scale(1)
+
+.pop-up__link
+    color: $primary
+    text-decoration: none
+
+    &:hover
+        text-decoration: underline
+        cursor: pointer
+
+@media (max-width: $breakpoint)
+    .pop-up
+        width: 100%
+        height: 100vh
+        height: 100dvh
+
+        position: fixed
+        left: 0
+        bottom: 0
+
+        .pop-up-wrapper
+            width: calc(100vw - 1rem)
+            max-height: 99vh
+
+            left: 0.5rem
+            bottom: 0.5rem
+
+            border-radius: $rad
+            transform: translateY(5rem)
+
+        .pop-up-content
+            max-height: 100%
+
+            img 
+                max-height: 50vh
+
+        .pop-up-controlls
+            flex-direction: column
+            justify-content: center
+    
+        &.active
+            opacity: 1
+
+            .pop-up-wrapper
+                transform: translateY(0)

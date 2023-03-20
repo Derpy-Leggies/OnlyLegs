@@ -1,0 +1,159 @@
+.navigation
+    margin: 0
+    padding: 0
+
+    width: 3.5rem
+    height: 100%
+    height: 100dvh
+
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+
+    position: fixed
+    top: 0
+    left: 0
+
+    background-color: $black2
+    color: $white
+
+    z-index: 69
+
+    // Spacer
+    > span
+        height: 100%
+
+    .logo
+        margin: 0
+        padding: 0
+
+        width: 3.5rem
+        height: 3.5rem
+        min-height: 3.5rem
+
+        display: flex
+        flex-direction: row
+        align-items: center
+
+.navigation-item
+    margin: 0
+    padding: 1rem
+
+    width: 3.5rem
+    height: 3.5rem
+
+    display: flex
+    flex-direction: row
+    align-items: center
+
+    position: relative
+
+    background-color: $black2
+    border: none
+
+    text-decoration: none
+
+    > svg
+        margin: 0
+        font-size: 1.5rem
+        color: $white
+        transition: color 0.2s ease-out
+
+    span
+        margin: 0
+        padding: 0.5rem 0.75rem
+
+        display: block
+
+        position: absolute
+        top: 50%
+        left: 3rem
+        transform: translateY(-50%)
+
+        font-size: 1rem
+        font-weight: 600
+
+        background-color: #000000
+        color: $white
+        opacity: 0
+        border-radius: $rad-inner
+
+        transition: opacity 0.2s cubic-bezier(.76,0,.17,1), left 0.2s cubic-bezier(.76,0,.17,1)
+
+        pointer-events: none
+
+        svg
+            margin: 0
+            font-size: 1rem
+
+            width: 0.75rem
+            height: 0.75rem
+
+            display: block
+
+            position: absolute
+            top: 50%
+            left: -0.45rem
+            transform: translateY(-50%)
+
+            color: #000000
+
+    &:hover
+        background-color: $black2
+
+        > svg
+            color: $primary
+
+        span
+            opacity: 1
+            left: 3.9rem
+
+.navigation-item__selected
+    background: $primary
+
+    > svg
+        color: $black
+
+    &:hover
+        background: $primary
+
+        > svg
+            color: $white
+
+
+@media (max-width: $breakpoint)
+    .navigation
+        width: 100vw
+        height: 3.5rem
+    
+        flex-direction: row
+        justify-content: space-around
+    
+        position: fixed
+        top: unset
+        bottom: 0
+        left: 0
+
+        > span
+            display: none
+
+        .logo
+            display: none
+
+    .navigation-item
+        margin: 0.25rem
+        padding: 0
+
+        width: 3rem
+        height: 3rem
+
+        border-radius: $rad-inner
+
+        svg
+            margin: auto
+
+            width: 1.5rem
+            height: 1.5rem
+
+        span
+            display: none
