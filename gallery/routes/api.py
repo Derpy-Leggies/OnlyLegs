@@ -38,17 +38,8 @@ def get_file(file_name):
     """
     # Get args
     res = request.args.get('r', default=None, type=str)  # Type of file (thumb, etc)
-    filtered = request.args.get('f', default=False, type=bool)  # Whether to apply filters
+    filtered = request.args.get('f', default=False, type=bool)  # Whether to apply filters  # pylint: disable=W0612
     blur = request.args.get('b', default=False, type=bool)  # Whether to force blur
-    
-    # Idea: instead if specifying the height and width, pass in a string like "200x200" or "200x" or "x200"
-    # This would remove the need for the if statements below and would be possible to pass in a string 
-    # like 'thumb' to get the thumbnail size instead of having to specify the width and height
-    # This would also allow for more flexibility in the future if I wanted to add more sizes
-    # Another idea is to pass in a list of filters to apply to the image
-    # such as "blur,grayscale" or "blur,grayscale,sepia". But this would require a lot more work to implement
-    # and would be a lot more complicated to use, would also implement the risk of the server being overloaded
-    # with requests to apply a lot of filters to a lot of images at once
 
     file_name = secure_filename(file_name)  # Sanitize file name
 
@@ -77,12 +68,12 @@ def get_file(file_name):
 
     img = ImageOps.exif_transpose(img)  # Rotate image based on EXIF data
 
-    # Todo: If type is thumb(nail), return from database instead of file system
+    # Todo: If type is thumb(nail), return from database instead of file system  pylint: disable=W0511
     #  as it's faster than generating a new thumbnail on every request
     if res:
-        if res == 'thumb' or res == 'thumbnail':
+        if res in ['thumb', 'thumbnail']:
             width, height = 400, 400
-        elif res == 'prev' or res == 'preview':
+        elif res in ['prev', 'preview']:
             width, height = 1920, 1080
         else:
             try:
@@ -94,7 +85,7 @@ def get_file(file_name):
 
         img.thumbnail((width, height), Image.LANCZOS)
 
-    # Todo: If the image has a NSFW tag, blur image for example
+    # Todo: If the image has a NSFW tag, blur image for example  pylint: disable=W0511
     # if filtered:
     #     pass
 
@@ -245,10 +236,16 @@ def modify_group():
         abort(403)
 
     if request.form['action'] == 'add':
-        if db_session.query(db.GroupJunction).filter_by(group_id=group_id, post_id=image_id).first() is None:
-            db_session.add(db.GroupJunction(group_id=group_id, post_id=image_id, date_added=dt.utcnow()))
+        if not db_session.query(db.GroupJunction)\
+                         .filter_by(group_id=group_id, post_id=image_id)\
+                         .first():
+            db_session.add(db.GroupJunction(group_id=group_id,
+                                            post_id=image_id,
+                                            date_added=dt.utcnow()))
     elif request.form['action'] == 'remove':
-        db_session.query(db.GroupJunction).filter_by(group_id=group_id, post_id=image_id).delete()
+        db_session.query(db.GroupJunction)\
+                  .filter_by(group_id=group_id, post_id=image_id)\
+                  .delete()
 
     db_session.commit()
 
@@ -262,7 +259,7 @@ def metadata(img_id):
     """
     img = db_session.query(db.Posts).filter_by(id=img_id).first()
 
-    if img is None:
+    if not img:
         abort(404)
 
     img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name)
@@ -279,7 +276,7 @@ def logfile():
     """
     log_dict = {}
 
-    with open('only.log', encoding='utf-8') as file:
+    with open('only.log', encoding='utf-8', mode='r') as file:
         for i, line in enumerate(file):
             line = line.split(' : ')
 

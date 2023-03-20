@@ -78,5 +78,5 @@ class CompileTheme:
         except Exception as err:
             print("Failed to copy fonts!\n", err)
             sys.exit(1)
-            
+
         print("Fonts copied successfully!")

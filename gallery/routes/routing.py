@@ -1,8 +1,6 @@
 """
 Onlylegs Gallery - Routing
 """
-from datetime import datetime as dt
-
 from flask import Blueprint, render_template, url_for
 from werkzeug.exceptions import abort
 
@@ -25,7 +23,7 @@ def index():
                               db.Posts.image_colours,
                               db.Posts.created_at,
                               db.Posts.id).order_by(db.Posts.id.desc()).all()
- 
+
     return render_template('index.html', images=images)
 
 
@@ -36,23 +34,32 @@ def image(image_id):
     """
     img = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
 
-    if img is None:
+    if not img:
         abort(404, 'Image not found :<')
 
-    img.author_username = db_session.query(db.Users.username).filter(db.Users.id == img.author_id).first()[0]
-    
-    groups = db_session.query(db.GroupJunction.group_id).filter(db.GroupJunction.post_id == image_id).all()
+    img.author_username = db_session.query(db.Users.username)\
+                                    .filter(db.Users.id == img.author_id).first()[0]
+
+    groups = db_session.query(db.GroupJunction.group_id)\
+                       .filter(db.GroupJunction.post_id == image_id).all()
+
     img.groups = []
     for group in groups:
         group = db_session.query(db.Groups).filter(db.Groups.id == group[0]).first()
         img.groups.append(group)
-    
-    next_url = db_session.query(db.Posts.id).filter(db.Posts.id > image_id).order_by(db.Posts.id.asc()).first()
-    prev_url = db_session.query(db.Posts.id).filter(db.Posts.id < image_id).order_by(db.Posts.id.desc()).first()
-    
-    if next_url is not None:
+
+    next_url = db_session.query(db.Posts.id)\
+                         .filter(db.Posts.id > image_id)\
+                         .order_by(db.Posts.id.asc())\
+                         .first()
+    prev_url = db_session.query(db.Posts.id)\
+                         .filter(db.Posts.id < image_id)\
+                         .order_by(db.Posts.id.desc())\
+                         .first()
+
+    if next_url:
         next_url = url_for('gallery.image', image_id=next_url[0])
-    if prev_url is not None:
+    if prev_url:
         prev_url = url_for('gallery.image', image_id=prev_url[0])
 
     return render_template('image.html', image=img, next_url=next_url, prev_url=prev_url)

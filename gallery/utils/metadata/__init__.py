@@ -67,13 +67,13 @@ class Metadata:
         }
 
         # Thanks chatGPT xP
-        for key, value in encoded_exif.items():            
+        for key, value in encoded_exif.items():
             for mapping_name, mapping_val in EXIF_MAPPING:
                 if key in mapping_val:
                     if len(mapping_val[key]) == 2:
                         exif[mapping_name][mapping_val[key][0]] = {
                             'raw': value,
-                            'formatted': getattr(helpers, mapping_val[key][1])(value),
+                            'formatted': getattr(helpers, mapping_val[key][1])(value),  # pylint: disable=E0602
                         }
                     else:
                         exif[mapping_name][mapping_val[key][0]] = {

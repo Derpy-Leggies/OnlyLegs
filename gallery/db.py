@@ -66,7 +66,7 @@ class Thumbnails (base):  # pylint: disable=too-few-public-methods, C0103
     Thumbnail table
     """
     __tablename__ = 'thumbnails'
-    
+
     id = Column(Integer, primary_key=True)
     file_name = Column(String, unique=True, nullable=False)
     file_ext = Column(String, nullable=False)

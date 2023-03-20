@@ -40,7 +40,7 @@ def create_app(test_config=None):
 
     # Get config file
     with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as file:
-        conf = safe_load(file, loader=FullLoader)
+        conf = safe_load(file)
         print("Loaded gallery config")
 
     # App configuration
