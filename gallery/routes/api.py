@@ -32,15 +32,12 @@ db_session = db_session()
 def get_file(file_name):
     """
     Returns a file from the uploads folder
-    t is the type of file (thumb, etc.)
-    w and h are the width and height of the image for resizing
+    r for resolution, 400x400 or thumb for thumbnail
     f is whether to apply filters to the image, such as blurring NSFW images
     b is whether to force blur the image, even if it's not NSFW
     """
     # Get args
-    type = request.args.get('t', default=None, type=str)  # Type of file (thumb, etc)
-    width = request.args.get('w', default=0, type=int)  # Width of image
-    height = request.args.get('h', default=0, type=int)  # Height of image
+    res = request.args.get('r', default=None, type=str)  # Type of file (thumb, etc)
     filtered = request.args.get('f', default=False, type=bool)  # Whether to apply filters
     blur = request.args.get('b', default=False, type=bool)  # Whether to force blur
     
@@ -55,17 +52,6 @@ def get_file(file_name):
 
     file_name = secure_filename(file_name)  # Sanitize file name
 
-    # If type is thumb(nail), return from database instead of file system
-    # as it's faster than generating a new thumbnail on every request
-    if type == 'thumb':
-        thumb = db_session.query(db.Thumbnails).filter_by(file_name=file_name).first()
-
-        # If no thumbnail exists, return 404
-        if not thumb:
-            abort(404)
-
-        return send_file(thumb.data, mimetype='image/' + thumb.file_ext)
-
     # if no args are passed, return the raw file
     if not request.args:
         if not os.path.exists(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name)):
@@ -73,27 +59,15 @@ def get_file(file_name):
 
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], file_name)
 
-    # If only width is passed, set height to width
-    if width and not height:
-        height = width
-    # If only height is passed, set width to height
-    elif not width and height:
-        width = height
-    # If neither are passed, return 400 as one is required for resizing
-    elif not width and not height:
-        abort(400)
+    buff = io.BytesIO()
+    img = None  # Image object to be set
 
-    buff = io.BytesIO()  # Image Buffer
-
-    # Open image and set extension
-    try:
+    try:  # Open image and set extension
         img = Image.open(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name))
-    # FileNotFound is raised if the file doesn't exist
-    except FileNotFoundError:
+    except FileNotFoundError:  # FileNotFound is raised if the file doesn't exist
         logging.error('File not found: %s', file_name)
         abort(404)
-    # OSError is raised if the file is broken or corrupted
-    except OSError as err:
+    except OSError as err:  # OSError is raised if the file is broken or corrupted
         logging.error('Possibly broken image %s, error: %s', file_name, err)
         abort(500)
 
@@ -101,12 +75,28 @@ def get_file(file_name):
     img_ext = current_app.config['ALLOWED_EXTENSIONS'][img_ext]  # Convert to MIME type
     img_icc = img.info.get("icc_profile")  # Get ICC profile
 
-    img.thumbnail((width, height), Image.LANCZOS)  # Resize image
     img = ImageOps.exif_transpose(img)  # Rotate image based on EXIF data
 
-    # If has NSFW tag, blur image, etc.
-    if filtered:
-        pass
+    # Todo: If type is thumb(nail), return from database instead of file system
+    #  as it's faster than generating a new thumbnail on every request
+    if res:
+        if res == 'thumb' or res == 'thumbnail':
+            width, height = 400, 400
+        elif res == 'prev' or res == 'preview':
+            width, height = 1920, 1080
+        else:
+            try:
+                width, height = res.split('x')
+                width = int(width)
+                height = int(height)
+            except ValueError:
+                abort(400)
+
+        img.thumbnail((width, height), Image.LANCZOS)
+
+    # Todo: If the image has a NSFW tag, blur image for example
+    # if filtered:
+    #     pass
 
     # If forced to blur, blur image
     if blur:

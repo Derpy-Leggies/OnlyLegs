@@ -9,7 +9,7 @@
 
 {% block content %}
     <div class="background">
-        <img src="/api/file/{{ image.file_name }}?w=1920&h=1080" alt="{{ image.post_alt }}" onload="imgFade(this)" style="opacity:0;"/>
+        <img src="/api/file/{{ image.file_name }}?r=prev" alt="{{ image.post_alt }}" onload="imgFade(this)" style="opacity:0;"/>
         <span style="background-image: linear-gradient(to top, rgba({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }}, 1), transparent);"></span>
     </div>
 
@@ -20,7 +20,7 @@
     <div class="image-grid">
         <div class="image-container" id="image-container">
             <img
-                src="/api/file/{{ image.file_name }}?w=1920&h=1080"
+                src="/api/file/{{ image.file_name }}?r=prev"
                 alt="{{ image.post_alt }}"
                 onload="imgFade(this)" style="opacity:0;"
                 onerror="this.src='/static/images/error.png'"

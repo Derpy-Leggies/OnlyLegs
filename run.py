@@ -5,7 +5,7 @@ print("""
 | |_| | | | | | |_| | |__|  __/ (_| \__ \ 
  \___/|_| |_|_|\__, |_____\___|\__, |___/
                |___/           |___/
-Created by Fluffy Bean - Version 23.03.14
+Created by Fluffy Bean - Version 23.03.20
 """)
 
 
@@ -18,10 +18,18 @@ Configuration()  # Run pre-checks
 
 if DEBUG:
     from gallery import create_app
-    
+
+    # If no address is specified, use localhost
+    if not ADDRESS:
+        ADDRESS = 'localhost'
+
     create_app().run(host=ADDRESS, port=PORT, debug=True, threaded=True)
 else:
     from setup.runner import OnlyLegs
+
+    # If no address is specified, bind the server to all interfaces
+    if not ADDRESS:
+        ADDRESS = '0.0.0.0'
     
     options = {
         'bind': f'{ADDRESS}:{PORT}',
@@ -29,4 +37,3 @@ else:
     }
     
     OnlyLegs(options).run()
-
