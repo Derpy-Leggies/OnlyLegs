@@ -16,7 +16,7 @@ from flask import Flask, render_template
 # Configuration
 import platformdirs
 from dotenv import load_dotenv
-from yaml import FullLoader, safe_load
+from yaml import safe_load
 
 # Utils
 from gallery.utils import theme_manager
@@ -58,11 +58,6 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
-
     # Load theme
     theme_manager.CompileTheme('default', app.root_path)
 
@@ -71,11 +66,7 @@ def create_app(test_config=None):
     assets.register('js_all', js_scripts)
 
     # Error handlers
-    @app.errorhandler(403)
-    @app.errorhandler(404)
-    @app.errorhandler(405)
-    @app.errorhandler(410)
-    @app.errorhandler(500)
+    @app.errorhandler(Exception)
     def error_page(err):
         error = err.code
         msg = err.description

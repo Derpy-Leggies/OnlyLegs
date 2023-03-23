@@ -1,7 +1,7 @@
 """
 Onlylegs Gallery - Routing
 """
-from flask import Blueprint, render_template, url_for
+from flask import Blueprint, render_template, url_for, request
 from werkzeug.exceptions import abort
 
 from sqlalchemy.orm import sessionmaker
@@ -23,6 +23,9 @@ def index():
                               db.Posts.image_colours,
                               db.Posts.created_at,
                               db.Posts.id).order_by(db.Posts.id.desc()).all()
+    
+    if request.args.get('coffee') == 'please':
+        abort(418)
 
     return render_template('index.html', images=images)
 

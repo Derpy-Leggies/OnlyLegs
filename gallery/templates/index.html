@@ -42,11 +42,11 @@
     <script>
         if (document.referrer.includes('image')) {
             try {
-                var referrerId = document.referrer.split('/').pop();
+                let referrerId = document.referrer.split('/').pop();
     
-                var imgOffset = document.getElementById('image-' + referrerId).offsetTop;
-                var imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
-                var windowHeight = window.innerHeight;
+                let imgOffset = document.getElementById('image-' + referrerId).offsetTop;
+                let imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
+                let windowHeight = window.innerHeight;
     
                 document.querySelector('html').style.scrollBehavior = 'auto';
                 window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));

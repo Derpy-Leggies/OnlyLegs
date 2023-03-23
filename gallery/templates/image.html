@@ -35,9 +35,7 @@
             {% if next_url %}
                 <div>
                     <a class="pill-item" href="{{ next_url }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
-                            <path d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z"></path>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M112,56V200L40,128Z" opacity="0.2"></path><path d="M216,120H120V56a8,8,0,0,0-13.66-5.66l-72,72a8,8,0,0,0,0,11.32l72,72A8,8,0,0,0,120,200V136h96a8,8,0,0,0,0-16ZM104,180.69,51.31,128,104,75.31Z"></path></svg>
                         <span class="tool-tip">
                             Previous
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg>
@@ -47,14 +45,14 @@
             {% endif %}
             <div>
                 <button class="pill-item" id="img-fullscreen">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M208,48V96L160,48ZM48,208H96L48,160Zm160,0V160l-48,48ZM48,96,96,48H48Z" opacity="0.2"></path><path d="M98.34,146.34,72,172.69,53.66,154.34A8,8,0,0,0,40,160v48a8,8,0,0,0,8,8H96a8,8,0,0,0,5.66-13.66L83.31,184l26.35-26.34a8,8,0,0,0-11.32-11.32ZM56,200V179.31L76.69,200ZM83.31,72l18.35-18.34A8,8,0,0,0,96,40H48a8,8,0,0,0-8,8V96a8,8,0,0,0,13.66,5.66L72,83.31l26.34,26.35a8,8,0,0,0,11.32-11.32ZM56,76.69V56H76.69ZM208,40H160a8,8,0,0,0-5.66,13.66L172.69,72,146.34,98.34a8,8,0,0,0,11.32,11.32L184,83.31l18.34,18.35A8,8,0,0,0,216,96V48A8,8,0,0,0,208,40Zm-8,36.69L179.31,56H200Zm11.06,75.92a8,8,0,0,0-8.72,1.73L184,172.69l-26.34-26.35a8,8,0,0,0-11.32,11.32L172.69,184l-18.35,18.34A8,8,0,0,0,160,216h48a8,8,0,0,0,8-8V160A8,8,0,0,0,211.06,152.61ZM200,200H179.31L200,179.31Z"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,56V200a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8H216A8,8,0,0,1,224,56Z" opacity="0.2"></path><path d="M200,80v32a8,8,0,0,1-16,0V88H160a8,8,0,0,1,0-16h32A8,8,0,0,1,200,80ZM96,168H72V144a8,8,0,0,0-16,0v32a8,8,0,0,0,8,8H96a8,8,0,0,0,0-16ZM232,56V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Z"></path></svg>
                     <span class="tool-tip">
                         Fullscreen
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg>
                     </span>
                 </button>
                 <button class="pill-item" id="img-share">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M209.94,113.94l-28,28a47.76,47.76,0,0,1-26.52,13.48,47.76,47.76,0,0,1-13.48,26.52l-28,28a48,48,0,0,1-67.88-67.88l28-28a47.76,47.76,0,0,1,26.52-13.48,47.76,47.76,0,0,1,13.48-26.52l28-28a48,48,0,0,1,67.88,67.88Z" opacity="0.2"></path><path d="M137.54,186.36a8,8,0,0,1,0,11.31l-17.94,18A56,56,0,0,1,40.38,136.4L68.5,108.29A56,56,0,0,1,145.31,106a8,8,0,1,1-10.64,12,40,40,0,0,0-54.85,1.63L51.7,147.72a40,40,0,1,0,56.58,56.58l17.94-17.94A8,8,0,0,1,137.54,186.36Zm78.08-146a56.08,56.08,0,0,0-79.22,0L118.46,58.33a8,8,0,0,0,11.32,11.31L147.72,51.7a40,40,0,0,1,56.58,56.58L176.18,136.4A40,40,0,0,1,121.33,138,8,8,0,1,0,110.69,150a56,56,0,0,0,76.81-2.27l28.12-28.11A56.08,56.08,0,0,0,215.62,40.38Z"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M208,104V216H48V104Z" opacity="0.2"></path><path d="M216,112v96a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V112A16,16,0,0,1,56,96H80a8,8,0,0,1,0,16H56v96H200V112H176a8,8,0,0,1,0-16h24A16,16,0,0,1,216,112ZM93.66,69.66,120,43.31V136a8,8,0,0,0,16,0V43.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,69.66Z"></path></svg>
                     <span class="tool-tip">
                         Share
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg>
@@ -89,9 +87,7 @@
             {% if prev_url %}
                 <div>
                     <a class="pill-item" href="{{ prev_url }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="24" fill="currentColor">
-                            <path d="M10.586 5.657l-3.95-3.95A1 1 0 0 1 8.05.293l5.657 5.657a.997.997 0 0 1 0 1.414L8.05 13.021a1 1 0 1 1-1.414-1.414l3.95-3.95H1a1 1 0 1 1 0-2h9.586z"></path>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M216,128l-72,72V56Z" opacity="0.2"></path><path d="M221.66,122.34l-72-72A8,8,0,0,0,136,56v64H40a8,8,0,0,0,0,16h96v64a8,8,0,0,0,13.66,5.66l72-72A8,8,0,0,0,221.66,122.34ZM152,180.69V75.31L204.69,128Z"></path></svg>
                         <span class="tool-tip">
                             Next
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg>
@@ -263,10 +259,9 @@
             $('#img-delete').click(function() {
                 popUpShow(
                     'DESTRUCTION!!!!!!',
-                    'This will delete the image and all of its data!!! This action is irreversible!!!!! Are you sure you want to do this?????',
-                    '<button class="btn-block" onclick="popupDissmiss()">Nooooooo</button>\
-                    <button class="btn-block critical" onclick="deleteImage()">Dewww eeeet!</button>',
-                    '<img src="/api/file/{{ image.file_name }}?w=1920&h=1080"/>'
+                    'Do you want to delete this image along with all of its data??? This action is irreversible!',
+                    '<button class="btn-block" onclick="popupDissmiss()">Nuuu</button>' +
+                    '<button class="btn-block critical" onclick="deleteImage()">Dewww eeeet!</button>'
                     );
             });
             function deleteImage() {

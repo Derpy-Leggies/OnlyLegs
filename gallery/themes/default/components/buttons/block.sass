@@ -1,10 +1,10 @@
 @mixin btn-block($color)
-    background-color: transparent
+    background-color: rgba($color, 0.1)
     color: $color
 
     &:hover
-        background-color: $color
-        color: $black
+        background-color: rgba($color, 0.3)
+        color: $color
 
     &:focus-visible
         outline: 2px solid rgba($color, 0.5)
@@ -73,7 +73,7 @@
     font-weight: 600
     text-align: left
 
-    background-color: transparent
+    background-color: rgba($white, 0.1)
     color: $white
 
     border: none
@@ -96,7 +96,7 @@
     &.file
         padding: 0 1rem 0 0
         border: none
-        background-color: $black2
+        background-color: rgba($white, 0.1)
 
         &:focus-visible
             outline: 2px solid rgba($white, 0.5)
@@ -118,3 +118,51 @@
 
             &:not([value=""])
                 display: none
+
+.fileDrop-block
+    padding: 1rem 1.25rem
+
+    width: 100%
+    min-height: 2.5rem
+
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    gap: 0.5rem
+
+    position: relative
+
+    font-size: 1rem
+    font-weight: 600
+    text-align: center
+
+    background-color: rgba($white, 0.1)
+    color: $white
+
+    border: none
+    border-radius: $rad-inner
+
+    cursor: pointer
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
+
+    input
+        position: absolute
+        inset: 0
+        opacity: 0
+        cursor: pointer
+
+    &.active
+        background-color: rgba($primary, 0.2)
+        color:  $primary
+
+    &.edging
+        background-color: rgba($white, 0.2)
+        color:  $white
+
+        input
+            display: none // So it doesnt get in the way of the drop as that breaks things
+
+    &.error
+        background-color: rgba($critical, 0.2)
+        color:  $critical

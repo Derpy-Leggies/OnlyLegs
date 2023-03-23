@@ -1,10 +1,9 @@
 .pop-up
-    width: calc(100% - 3.5rem)
+    width: 100%
     height: 100vh
 
     position: fixed
-    top: 0
-    left: 3.5rem
+    inset: 0
 
     display: none
 
@@ -59,7 +58,7 @@
 
         overflow-y: auto
         overflow-x: hidden
-        text-size-adjust: auto;
+        text-size-adjust: auto
         text-overflow: ellipsis
 
         h3
@@ -144,23 +143,9 @@
 
 @media (max-width: $breakpoint)
     .pop-up
-        width: 100%
-        height: 100vh
-        height: 100dvh
-
-        position: fixed
-        left: 0
-        bottom: 0
-
         .pop-up-wrapper
-            width: calc(100vw - 1rem)
-            max-height: 99vh
-
-            left: 0.5rem
-            bottom: 0.5rem
-
-            border-radius: $rad
-            transform: translateY(5rem)
+            width: calc(100% - 1rem)
+            max-height: 95vh
 
         .pop-up-content
             max-height: 100%
@@ -168,12 +153,8 @@
             img 
                 max-height: 50vh
 
-        .pop-up-controlls
-            flex-direction: column
-            justify-content: center
+        .pop-up-controlls button
+            width: 100%
     
         &.active
             opacity: 1
-
-            .pop-up-wrapper
-                transform: translateY(0)
