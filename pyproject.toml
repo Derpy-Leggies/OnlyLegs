@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "onlylegs"
-version = "23.03.20"
+version = "23.03.23"
 description = "Gallery built for fast and simple image management"
 authors = ["Fluffy-Bean <michal-gdula@protonmail.com>"]
 license = "MIT"
@@ -28,6 +28,5 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pylint.messages_control]
 # C0415: Flask uses it to register blueprints
-# W1401: Anomalous backslash in string used in __init__
 # W0718: Exception are logged so we don't need to raise them
-disable = "C0415, W1401, W0718"
+disable = "C0415, W0718"

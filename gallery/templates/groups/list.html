@@ -1,23 +1,24 @@
 {% extends 'layout.html' %}
-
 {% block nav_groups %}navigation-item__selected{% endblock %}
-
 {% block content %}
     <div class="banner">
-        <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
-        <span class="banner-filter"></span>
-
         <div class="banner-content">
             <p>{{ config.WEBSITE.motto }}</p>
             <h1>Groups</h1>
-            <p>{{ groups|length }} Groups</p>
+            {% if groups|length == 0 %}
+                <p>0 photo groups :<</p>
+            {% elif groups|length == 69 %}
+                <p>{{ groups|length }} photo groups, uwu</p>
+            {% else %}
+                <p>{{ groups|length }} photo groups</p>
+            {% endif %}
         </div>
     </div>
 
     <form action="/api/group/create" method="post" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="name">
-        <input type="text" name="description" placeholder="description">
-        <button type="submit">Submit</button>
+        <input class="input-block black" type="text" name="name" placeholder="name">
+        <input class="input-block black" type="text" name="description" placeholder="description">
+        <button class="btn-block black" type="submit">Submit</button>
     </form>
 
     {% if groups %}

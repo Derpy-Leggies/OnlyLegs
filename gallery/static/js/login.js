@@ -2,15 +2,15 @@
 function showLogin() {
     popUpShow(
         'Login!',
-        'Need an account? <span class="pop-up__link" onclick="showRegister()">Register!</span>',
-        '<button class="btn-block" onclick="popupDissmiss()">Cancelee</button>\
-        <button class="btn-block primary" form="loginForm" type="submit">Login</button>',
-        '<form id="loginForm"  onsubmit="return login(event)">\
-            <input class="input-block" type="text" placeholder="Namey" id="username"/>\
-            <input class="input-block" type="password" placeholder="Passywassy" id="password"/>\
-        </form>'
+        'Need an account? <span class="link" onclick="showRegister()">Register!</span>',
+        '<button class="btn-block" onclick="popupDissmiss()">Cancelee</button>' +
+        '<button class="btn-block primary" form="loginForm" type="submit">Login</button>',
+        '<form id="loginForm"  onsubmit="return login(event)">' +
+            '<input class="input-block" type="text" placeholder="Namey" id="username"/>' +
+            '<input class="input-block" type="password" placeholder="Passywassy" id="password"/>' +
+        '</form>'
     );
-};
+}
 // Function to login
 function login(event) {
     // AJAX takes control of subby form :3
@@ -57,7 +57,7 @@ function login(event) {
 function showRegister() {
     popUpShow(
         'Who are you?',
-        'Already have an account? <span class="pop-up__link" onclick="showLogin()">Login!</span>',
+        'Already have an account? <span class="link" onclick="showLogin()">Login!</span>',
         '<button class="btn-block" onclick="popupDissmiss()">Canceleee</button>\
         <button class="btn-block primary" form="registerForm" type="submit">Register</button>',
         '<form id="registerForm" onsubmit="return register(event)">\
@@ -67,7 +67,7 @@ function showRegister() {
             <input class="input-block" type="password" placeholder="Passywassy again!" id="password-repeat"/>\
         </form>'
     );
-};
+}
 // Function to register
 function register(obj) {
     // AJAX takes control of subby form
@@ -101,7 +101,7 @@ function register(obj) {
                 addNotification('Registered successfully! Now please login to continue', 1);
                 showLogin();
             } else {
-                for (var i = 0; i < response.length; i++) {
+                for (let i = 0; i < response.length; i++) {
                     addNotification(response[i], 2);
                 }
             }
