@@ -94,8 +94,10 @@ window.onload = function () {
         infoButton.classList.add('show');
     }
     infoButton.onclick = function () {
-        popUpShow('OnlyLegs Gallery', 'Made by Fluffy with ❤️ <br>' +
-        '<a href="https://github.com/Fluffy-Bean/onlylegs">Version: 23.03.23</a>');
+        popUpShow('OnlyLegs Gallery',
+                  'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and <a href="https://www.gent.media/manrope">Manrope</a> <br>' +
+                  'Made by Fluffy and others with ❤️ <br>' +
+                  '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.03.23</a>');
     }
 };
 window.onscroll = function () {
@@ -108,10 +110,6 @@ window.onscroll = function () {
     } else {
         topOfPage.classList.remove('show');
     }
-    topOfPage.onclick = function () {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
 
     // Info button
     let infoButton = document.querySelector('.info-button');
@@ -119,10 +117,6 @@ window.onscroll = function () {
         infoButton.classList.remove('show');
     } else {
         infoButton.classList.add('show');
-    }
-    infoButton.onclick = function () {
-        popUpShow('OnlyLegs Gallery', 'Made by Fluffy with ❤️ <br>' +
-        '<a href="https://github.com/Fluffy-Bean/onlylegs">Version: 23.03.23</a>');
     }
 };
 window.onresize = function () {

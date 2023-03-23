@@ -23,7 +23,7 @@ def index():
                               db.Posts.image_colours,
                               db.Posts.created_at,
                               db.Posts.id).order_by(db.Posts.id.desc()).all()
-    
+
     if request.args.get('coffee') == 'please':
         abort(418)
 

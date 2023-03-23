@@ -1,4 +1,4 @@
-function popUpShow(title, body, actions = '<button class="btn-block" onclick="popupDissmiss()">Close</button>', content = '') {
+function popUpShow(title, body, actions='<button class="btn-block" onclick="popupDissmiss()">Close</button>', content='') {
     // Stop scrolling
     document.querySelector("html").style.overflow = "hidden";
 

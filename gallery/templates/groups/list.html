@@ -1,12 +1,10 @@
 {% extends 'layout.html' %}
-
 {% block nav_groups %}navigation-item__selected{% endblock %}
-
 {% block content %}
     <div class="banner">
         <div class="banner-content">
             <p>{{ config.WEBSITE.motto }}</p>
-            <h1>Photo Groups</h1>
+            <h1>Groups</h1>
             {% if groups|length == 0 %}
                 <p>0 photo groups :<</p>
             {% elif groups|length == 69 %}
@@ -18,9 +16,9 @@
     </div>
 
     <form action="/api/group/create" method="post" enctype="multipart/form-data">
-        <input type="text" name="name" placeholder="name">
-        <input type="text" name="description" placeholder="description">
-        <button type="submit">Submit</button>
+        <input class="input-block black" type="text" name="name" placeholder="name">
+        <input class="input-block black" type="text" name="description" placeholder="description">
+        <button class="btn-block black" type="submit">Submit</button>
     </form>
 
     {% if groups %}
