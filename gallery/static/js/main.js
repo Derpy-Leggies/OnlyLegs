@@ -73,11 +73,8 @@ window.onload = function () {
         // Convert to local time
         times[i].innerHTML = dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
     }
-};
-window.onscroll = function () {
-    loadOnView();
 
-    // Jump to top button
+    // Top Of Page button
     let topOfPage = document.querySelector('.top-of-page');
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
         topOfPage.classList.add('show');
@@ -87,6 +84,45 @@ window.onscroll = function () {
     topOfPage.onclick = function () {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
+    }
+
+    // Info button
+    let infoButton = document.querySelector('.info-button');
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+        infoButton.classList.remove('show');
+    } else {
+        infoButton.classList.add('show');
+    }
+    infoButton.onclick = function () {
+        popUpShow('OnlyLegs Gallery', 'Made by Fluffy with ❤️ <br>' +
+        '<a href="https://github.com/Fluffy-Bean/onlylegs">Version: 23.03.23</a>');
+    }
+};
+window.onscroll = function () {
+    loadOnView();
+
+    // Top Of Page button
+    let topOfPage = document.querySelector('.top-of-page');
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+        topOfPage.classList.add('show');
+    } else {
+        topOfPage.classList.remove('show');
+    }
+    topOfPage.onclick = function () {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
+    // Info button
+    let infoButton = document.querySelector('.info-button');
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+        infoButton.classList.remove('show');
+    } else {
+        infoButton.classList.add('show');
+    }
+    infoButton.onclick = function () {
+        popUpShow('OnlyLegs Gallery', 'Made by Fluffy with ❤️ <br>' +
+        '<a href="https://github.com/Fluffy-Bean/onlylegs">Version: 23.03.23</a>');
     }
 };
 window.onresize = function () {

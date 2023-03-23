@@ -26,7 +26,7 @@
     font-weight: 600
     text-align: center
 
-    background-color: transparent
+    background-color: rgba($white, 0.1)
     color: $white
     border: none
     border-radius: $rad-inner
@@ -36,10 +36,10 @@
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
 
     &:hover
-        background-color: $black
+        background-color: rgba($white, 0.3)
     
     &:focus-visible
-        outline: 2px solid rgba($black, 0.5)
+        outline: 2px solid rgba($white, 0.5)
 
     &.primary
         @include btn-block($primary)
@@ -151,6 +151,10 @@
         inset: 0
         opacity: 0
         cursor: pointer
+
+    &:hover
+        background-color: rgba($white, 0.2)
+        color:  $white
 
     &.active
         background-color: rgba($primary, 0.2)

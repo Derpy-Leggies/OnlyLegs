@@ -4,13 +4,16 @@
 
 {% block content %}
     <div class="banner">
-        <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
-        <span class="banner-filter"></span>
-
         <div class="banner-content">
             <p>{{ config.WEBSITE.motto }}</p>
             <h1>{{ config.WEBSITE.name }}</h1>
-            <p>Serving {{ images|length }} images</p>
+            {% if images|length == 0 %}
+                <p>Serving 0 images :<</p>
+            {% elif images|length == 69 %}
+                <p>Serving {{ images|length }} images, nice</p>
+            {% else %}
+                <p>Serving {{ images|length }} images</p>
+            {% endif %}
         </div>
     </div>
 
@@ -28,12 +31,7 @@
         </div>
     {% else %}
         <div class="big-text">
-            <h1>No images</h1>
-            {% if g.user %}
-                <p>You can get started by uploading an image!</p>
-            {% else %}
-                <p>Login to start uploading images!</p>
-            {% endif %}
+            <h1>*crickets chirping*</h1>
         </div>
     {% endif %}
 {% endblock %}

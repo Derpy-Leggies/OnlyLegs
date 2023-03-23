@@ -4,13 +4,16 @@
 
 {% block content %}
     <div class="banner">
-        <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
-        <span class="banner-filter"></span>
-
         <div class="banner-content">
             <p>{{ config.WEBSITE.motto }}</p>
-            <h1>Groups</h1>
-            <p>{{ groups|length }} Groups</p>
+            <h1>Photo Groups</h1>
+            {% if groups|length == 0 %}
+                <p>0 photo groups :<</p>
+            {% elif groups|length == 69 %}
+                <p>{{ groups|length }} photo groups, uwu</p>
+            {% else %}
+                <p>{{ groups|length }} photo groups</p>
+            {% endif %}
         </div>
     </div>
 

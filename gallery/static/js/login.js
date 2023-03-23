@@ -2,7 +2,7 @@
 function showLogin() {
     popUpShow(
         'Login!',
-        'Need an account? <span class="pop-up__link" onclick="showRegister()">Register!</span>',
+        'Need an account? <span class="link" onclick="showRegister()">Register!</span>',
         '<button class="btn-block" onclick="popupDissmiss()">Cancelee</button>' +
         '<button class="btn-block primary" form="loginForm" type="submit">Login</button>',
         '<form id="loginForm"  onsubmit="return login(event)">' +
@@ -57,7 +57,7 @@ function login(event) {
 function showRegister() {
     popUpShow(
         'Who are you?',
-        'Already have an account? <span class="pop-up__link" onclick="showLogin()">Login!</span>',
+        'Already have an account? <span class="link" onclick="showLogin()">Login!</span>',
         '<button class="btn-block" onclick="popupDissmiss()">Canceleee</button>\
         <button class="btn-block primary" form="registerForm" type="submit">Register</button>',
         '<form id="registerForm" onsubmit="return register(event)">\

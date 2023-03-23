@@ -70,9 +70,8 @@
             top: 0
 
             font-size: 2.25rem
-            font-weight: 600
+            font-weight: 700
             text-align: center
-            line-height: 1
 
             color: $white
             background-color: $black
@@ -85,9 +84,29 @@
             font-size: 1rem
             font-weight: 500
             text-align: center
-            line-height: 1
 
             color: $white
+
+            svg
+                width: 1rem
+                height: 1rem
+
+                display: inline-block
+                vertical-align: middle
+
+        a, .link
+            font-size: 1rem
+            font-weight: 500
+            text-align: center
+            line-height: 1
+
+            color: $primary
+
+            cursor: pointer
+            text-decoration: none
+
+            &:hover
+                text-decoration: underline
 
         img
             margin: auto
@@ -133,18 +152,10 @@
         .pop-up-wrapper
             transform: translate(-50%, 50%) scale(1)
 
-.pop-up__link
-    color: $primary
-    text-decoration: none
-
-    &:hover
-        text-decoration: underline
-        cursor: pointer
-
 @media (max-width: $breakpoint)
     .pop-up
         .pop-up-wrapper
-            width: calc(100% - 1rem)
+            width: calc(100% - 0.75rem)
             max-height: 95vh
 
         .pop-up-content
