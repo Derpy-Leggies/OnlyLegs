@@ -66,7 +66,13 @@ def create_app(test_config=None):
     assets.register('js_all', js_scripts)
 
     # Error handlers
-    @app.errorhandler(Exception)
+    @app.errorhandler(400)
+    @app.errorhandler(401)
+    @app.errorhandler(403)
+    @app.errorhandler(404)
+    @app.errorhandler(405)
+    @app.errorhandler(418)
+    @app.errorhandler(500)
     def error_page(err):
         error = err.code
         msg = err.description
