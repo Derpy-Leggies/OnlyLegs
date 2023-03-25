@@ -32,8 +32,9 @@
     {% assets "js_all" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    
-    {% block head %}{% endblock %}
+
+    <style>
+    </style>
 </head>
 <body>
     <div class="notifications"></div>
@@ -89,7 +90,7 @@
                 </button>
             {% endif %}
 
-            <span></span>
+            <span class="navigation-spacer"></span>
 
             {% if g.user %}
                 <a href="{{url_for('gallery.profile')}}" class="navigation-item {% block nav_profile %}{% endblock %}">

@@ -36,12 +36,11 @@
         flex-direction: column
         justify-content: flex-end
 
-        background-image: linear-gradient(to bottom, rgba($black, 0), rgba($black, 0.8))
+        background-image: linear-gradient(to top, $bg-transparent, transparent)
 
         z-index: +1
 
         opacity: 0 // hide
-        transform: scale(1.05) // scale up
         transition: all 0.3s cubic-bezier(.79, .14, .15, .86)
 
     .image-title
@@ -50,7 +49,7 @@
         font-size: 1rem
         font-weight: 600
 
-        color: $white
+        color: RGB($fg-white)
 
         text-overflow: ellipsis
         overflow: hidden
@@ -64,7 +63,7 @@
         font-size: 0.8rem
         font-weight: 500
 
-        color: $white
+        color: RGB($fg-white)
 
         text-overflow: ellipsis
         overflow: hidden
@@ -82,7 +81,7 @@
         object-fit: cover
         object-position: center
 
-        background-color: $white
+        background-color: RGB($fg-white)
         transform: scale(1.05)
 
         transition: all 0.3s cubic-bezier(.79, .14, .15, .86)
@@ -96,7 +95,6 @@
         .image-filter
             bottom: 0
             opacity: 1
-            transform: scale(1)
 
         .image-title,
         .image-subtitle

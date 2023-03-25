@@ -1,13 +1,12 @@
 @mixin btn-block($color)
-    background-color: rgba($color, 0)
-    color: $color
+    color: RGB($color)
 
     &:hover
-        background-color: rgba($color, 0.2)
-        color: $color
+        background-color: RGBA($color, 0.1)
+        color: RGB($color)
 
     &:focus-visible
-        outline: 2px solid rgba($color, 0.5)
+        outline: 2px solid RGBA($color, 0.3)
     
 .btn-block
     padding: 0.5rem 1rem
@@ -26,20 +25,19 @@
     font-weight: 600
     text-align: center
 
-    background-color: rgba($white, 0)
-    color: $white
+    background-color: transparent
+    color: RGB($white)
     border: none
     border-radius: $rad-inner
 
     cursor: pointer
-
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
 
     &:hover
-        background-color: rgba($white, 0.2)
+        background-color: RGBA($white, 0.1)
     
     &:focus-visible
-        outline: 2px solid rgba($white, 0.5)
+        outline: 2px solid RGBA($white, 0.3)
 
     &.primary
         @include btn-block($primary)
@@ -76,24 +74,24 @@
     font-weight: 600
     text-align: left
 
-    background-color: rgba($white, 0.1)
-    color: $white
+    background-color: RGBA($white, 0.1)
+    color: RGB($white)
 
     border: none
-    border-bottom: 3px solid rgba($white, 0.1)
+    border-bottom: 3px solid RGBA($white, 0.1)
     border-radius: $rad-inner
 
     cursor: pointer
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
 
     &:not(:focus):not([value=""]):not(:placeholder-shown)
-        border-color: rgba($white, 0.3)
+        border-color: RGBA($white, 0.3)
 
     &:hover
-        border-color: rgba($white, 0.3)
+        border-color: RGBA($white, 0.3)
 
     &:focus
-        border-color: $primary
+        border-color: RGBA($primary, 0.3)
         outline: none
 
     &.black
@@ -117,8 +115,8 @@
     font-weight: 600
     text-align: center
 
-    background-color: rgba($white, 0.1)
-    color: $white
+    background-color: RGBA($white, 0.1)
+    color: RGB($white)
 
     border: none
     border-radius: $rad-inner
@@ -133,20 +131,20 @@
         cursor: pointer
 
     &:hover
-        background-color: rgba($white, 0.2)
-        color:  $white
+        background-color: RGBA($white, 0.2)
+        color: RGB($white)
 
     &.active
-        background-color: rgba($primary, 0.2)
-        color:  $primary
+        background-color: RGBA($primary, 0.2)
+        color: RGB($primary)
 
     &.edging
-        background-color: rgba($white, 0.2)
-        color:  $white
+        background-color: RGBA($white, 0.2)
+        color: RGB($white)
 
         input
             display: none // So it doesnt get in the way of the drop as that breaks things
 
     &.error
-        background-color: rgba($critical, 0.2)
-        color:  $critical
+        background-color: RGBA($critical, 0.2)
+        color: RGB($critical)

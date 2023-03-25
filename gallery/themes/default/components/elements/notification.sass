@@ -1,8 +1,8 @@
 @mixin notification($color)
-    color: $color
+    color: RGB($color)
 
     .sniffle__notification-time
-        background-color: $color
+        background-color: RGB($color)
     
 .notifications
     margin: 0
@@ -33,9 +33,9 @@
 
     position: relative
 
-    background-color: $black
+    background-color: RGB($bg-100)
     border-radius: $rad-inner
-    color: $white
+    color: RGB($fg-white)
     opacity: 0
     transform: scale(0.8)
 
@@ -55,7 +55,7 @@
     justify-content: center
     align-items: center
 
-    background-color: $black2
+    background-color: RGB($bg-200)
 
     svg
         width: 1.25rem
@@ -89,7 +89,7 @@
     bottom: 0px
     left: 0px
 
-    background-color: $white
+    background-color: RGB($fg-white)
 
     animation: notificationTimeout 5.1s linear
 

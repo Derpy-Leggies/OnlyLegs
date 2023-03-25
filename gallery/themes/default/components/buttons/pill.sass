@@ -16,7 +16,7 @@
 
         display: flex
 
-        background-color: $black
+        background-color: RGB($bg-100)
         border-radius: $rad
 
 .pill-item
@@ -34,7 +34,7 @@
 
     border: none
     background-color: transparent
-    color: $white
+    color: RGB($fg-white)
 
     svg
         width: 1.25rem
@@ -43,7 +43,7 @@
     &:hover
         cursor: pointer
 
-        color: $primary
+        color: RGB($primary)
 
         .tool-tip
             opacity: 1
@@ -51,22 +51,22 @@
             transform: translateX(calc(-50% + 1.25rem ))
 
 .pill__critical
-    color: $critical
+    color: RGB($critical)
 
     span
-        color: $critical
+        color: RGB($critical)
 
     &:hover
-        color: $white
+        color: RGB($fg-white)
 
 .pill__info
-    color: $info
+    color: RGB($info)
 
     span
-        color: $info
+        color: RGB($info)
 
     &:hover
-        color: $white
+        color: RGB($fg-white)
 
 .tool-tip
     margin: 0
@@ -85,7 +85,7 @@
     font-weight: 600
 
     background-color: #000000
-    color: $white
+    color: RGB($fg-white)
     opacity: 0
     border-radius: $rad-inner
 

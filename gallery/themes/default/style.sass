@@ -8,6 +8,7 @@
 @import "components/elements/pop-up"
 @import "components/elements/upload-panel"
 @import "components/elements/tags"
+@import "components/elements/labels"
 
 @import "components/navigation"
 @import "components/banner"
@@ -32,7 +33,7 @@ html, body
     min-height: 100vh
     max-width: 100vw
 
-    background-color: $white
+    background-color: RGB($fg-white)
 
     scroll-behavior: smooth
     overflow-x: hidden
@@ -46,8 +47,8 @@ html, body
     display: flex
     flex-direction: column
 
-    background-color: $white
-    color: $black
+    background-color: RGB($bg-bright)
+    color: RGB($bg-100)
 
 .big-text
     height: 20rem
@@ -57,7 +58,7 @@ html, body
     justify-content: center
     align-items: center
 
-    color: $black
+    color: RGB($bg-100)
 
     h1
         margin: 0 2rem
@@ -83,7 +84,7 @@ html, body
     justify-content: center
     align-items: center
 
-    background-color: $black
+    background-color: RGB($bg-bright)
 
     h1
         margin: 0 2rem
@@ -102,10 +103,7 @@ html, body
         font-weight: 400
         text-align: center
 
-        color: $white
-
-#contrast-check
-    transition: color 0.15s ease-in-out
+        color: $fg-black
 
 
 @media (max-width: $breakpoint)

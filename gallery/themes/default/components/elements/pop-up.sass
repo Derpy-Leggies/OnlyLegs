@@ -7,7 +7,7 @@
 
     display: none
 
-    background-color: rgba($black, 0.8)
+    background-color: $bg-transparent
     opacity: 0
 
     z-index: 101
@@ -38,7 +38,7 @@
         display: flex
         flex-direction: column
 
-        background-color: $black
+        background-color: RGB($bg-100)
         border-radius: $rad
         overflow: hidden
 
@@ -73,7 +73,7 @@
             font-weight: 800
             text-align: center
 
-            color: $white
+            color: RGB($fg-white)
         
         p
             margin: 0
@@ -84,7 +84,7 @@
             font-weight: 500
             text-align: center
 
-            color: $white
+            color: RGB($fg-white)
 
             svg
                 width: 1rem
@@ -99,7 +99,7 @@
             text-align: center
             line-height: 1
 
-            color: $primary
+            color: RGB($primary)
 
             cursor: pointer
             text-decoration: none
@@ -133,7 +133,7 @@
 
     .pop-up-controlls
         margin: 0
-        padding: 0.5rem
+        padding: 0.25rem
 
         width: 100%
         height: auto
@@ -141,9 +141,9 @@
         display: flex
         flex-direction: row
         justify-content: flex-end
-        gap: 0.5rem
+        gap: 0.25rem
 
-        background-color: $black2
+        background-color: RGB($bg-200)
 
     &.active
         opacity: 1

@@ -1,0 +1,33 @@
+.label
+    padding: 0.4rem 0.7rem
+
+    display: block
+    position: absolute
+
+    font-size: 0.9rem
+    font-weight: 600
+
+    background-color: RGB($bg-dim)
+    color: RGB($fg-white)
+    border-radius: $rad-inner
+    opacity: 0
+
+    transition: opacity 0.2s cubic-bezier(.76,0,.17,1), left 0.2s cubic-bezier(.76,0,.17,1)
+    pointer-events: none
+    z-index: 999
+
+    svg
+        margin: 0
+        font-size: 1rem
+
+        width: 0.75rem
+        height: 0.75rem
+
+        display: block
+
+        position: absolute
+        top: 50%
+        left: -0.45rem
+        transform: translateY(-50%)
+
+        color: RGB($bg-dim)
