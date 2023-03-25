@@ -1,16 +1,15 @@
 {% extends 'layout.html' %}
 {% block nav_groups %}selected{% endblock %}
 {% block content %}
-    <div class="banner">
+    <div class="banner small">
         <div class="banner-content">
-            <p>{{ config.WEBSITE.motto }}</p>
-            <h1>Groups</h1>
+            <h1>{{ config.WEBSITE.name }}</h1>
             {% if groups|length == 0 %}
-                <p>0 photo groups :<</p>
+                <p>0 groups :<</p>
             {% elif groups|length == 69 %}
-                <p>{{ groups|length }} photo groups, uwu</p>
+                <p>{{ groups|length }} groups, uwu</p>
             {% else %}
-                <p>{{ groups|length }} photo groups</p>
+                <p>{{ groups|length }} groups</p>
             {% endif %}
         </div>
     </div>

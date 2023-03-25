@@ -26,6 +26,15 @@
     box-sizing: border-box
     font-family: $font
 
+    ::-webkit-scrollbar
+        width: 0.5rem
+    ::-webkit-scrollbar-track
+        background: RGB($bg-200)
+    ::-webkit-scrollbar-thumb
+        background: RGB($primary)
+    ::-webkit-scrollbar-thumb:hover
+        background: RGB($fg-white)
+
 html, body
     margin: 0
     padding: 0

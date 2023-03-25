@@ -91,7 +91,7 @@
         border-color: RGBA($white, 0.3)
 
     &:focus
-        border-color: RGBA($primary, 0.3)
+        border-color: RGB($primary)
         outline: none
 
     &.black
@@ -133,6 +133,9 @@
     &:hover
         background-color: RGBA($white, 0.2)
         color: RGB($white)
+
+    &:focus-visible
+        outline: 2px solid RGBA($white, 0.3)
 
     &.active
         background-color: RGBA($primary, 0.2)

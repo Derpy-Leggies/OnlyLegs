@@ -47,14 +47,18 @@
 
         .tool-tip
             opacity: 1
-            top: -2.7rem
+            top: -2.3rem
             transform: translateX(calc(-50% + 1.25rem ))
 
 .pill__critical
     color: RGB($critical)
 
     span
-        color: RGB($critical)
+        background: RGB($critical)
+        color: RGB($fg-white)
+
+        svg
+            color: RGB($critical)
 
     &:hover
         color: RGB($fg-white)
@@ -70,7 +74,7 @@
 
 .tool-tip
     margin: 0
-    padding: 0.5rem 0.75rem
+    padding: 0.35rem 0.7rem
 
     width: auto
 
@@ -81,8 +85,8 @@
     left: 0
     transform: translateX(calc(-50% + 1.25rem ))
 
-    font-size: 1rem
-    font-weight: 600
+    font-size: 0.9rem
+    font-weight: 700
 
     background-color: #000000
     color: RGB($fg-white)
@@ -108,3 +112,7 @@
         transform: translateX(-50%)
 
         color: #000000
+
+@media (max-width: $breakpoint)
+    .tool-tip
+        display: none

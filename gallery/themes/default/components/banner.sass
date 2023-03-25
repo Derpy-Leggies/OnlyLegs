@@ -68,6 +68,28 @@
             line-height: 1
             text-align: left
 
+    &.small
+        height: 3.5rem
+
+        background-color: RGB($bg-100)
+
+        .banner-content
+            padding: 0.5rem
+
+            flex-direction: row
+            justify-content: flex-start
+            align-items: center
+            gap: 1rem
+
+            h1
+                padding-bottom: 0.25rem
+                font-size: 1.5rem
+                text-align: left
+
+            p
+                font-size: 0.9rem
+                text-align: left
+
 @media (max-width: $breakpoint)
     .banner
         width: 100vw
@@ -87,3 +109,12 @@
             p
                 font-size: 1.1rem
                 text-align: center
+        
+        &.small .banner-content
+            justify-content: center
+
+            h1
+                text-align: center
+
+            p
+                display: none

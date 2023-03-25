@@ -11,7 +11,8 @@ import logging
 from flask_compress import Compress
 from flask_caching import Cache
 from flask_assets import Environment, Bundle
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
+from werkzeug.exceptions import HTTPException
 
 # Configuration
 import platformdirs
@@ -66,17 +67,17 @@ def create_app(test_config=None):
     assets.register('js_all', js_scripts)
 
     # Error handlers
-    @app.errorhandler(400)
-    @app.errorhandler(401)
-    @app.errorhandler(403)
-    @app.errorhandler(404)
-    @app.errorhandler(405)
-    @app.errorhandler(418)
-    @app.errorhandler(500)
+    
+    @app.errorhandler(Exception)
     def error_page(err):
-        error = err.code
-        msg = err.description
-        return render_template('error.html', error=error, msg=msg), err.code
+        # If the error is a HTTP error, return the error page
+        if isinstance(err, HTTPException):
+            error = err.code
+            msg = err.description
+            return render_template('error.html', error=error, msg=msg), err.code
+
+        # Otherwise this an internal error
+        abort(500)
 
     # Load login, registration and logout manager
     from gallery import auth

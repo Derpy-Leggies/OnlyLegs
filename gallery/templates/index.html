@@ -3,16 +3,15 @@
 {% block nav_home %}selected{% endblock %}
 
 {% block content %}
-    <div class="banner">
+    <div class="banner small">
         <div class="banner-content">
-            <p>{{ config.WEBSITE.motto }}</p>
             <h1>{{ config.WEBSITE.name }}</h1>
             {% if images|length == 0 %}
-                <p>Serving 0 images :<</p>
+                <p>0 images :<</p>
             {% elif images|length == 69 %}
-                <p>Serving {{ images|length }} images, nice</p>
+                <p>{{ images|length }} images, nice</p>
             {% else %}
-                <p>Serving {{ images|length }} images</p>
+                <p>{{ images|length }} images</p>
             {% endif %}
         </div>
     </div>
