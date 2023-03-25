@@ -97,7 +97,7 @@ window.onload = function () {
         popUpShow('OnlyLegs Gallery',
                   'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and <a href="https://www.gent.media/manrope">Manrope</a> <br>' +
                   'Made by Fluffy and others with ❤️ <br>' +
-                  '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.03.23</a>');
+                  '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.03.25</a>');
     }
 };
 window.onscroll = function () {
