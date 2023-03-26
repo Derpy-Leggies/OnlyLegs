@@ -60,20 +60,6 @@ class Posts (base):  # pylint: disable=too-few-public-methods, C0103
     post_alt = Column(String, nullable=False)
 
     junction = relationship('GroupJunction', backref='posts')
-    thumbnail = relationship('Thumbnails', backref='posts')
-
-
-class Thumbnails (base):  # pylint: disable=too-few-public-methods, C0103
-    """
-    Thumbnail table
-    """
-    __tablename__ = 'thumbnails'
-
-    id = Column(Integer, primary_key=True)
-    file_name = Column(String, unique=True, nullable=False)
-    file_ext = Column(String, nullable=False)
-    resolution = Column(PickleType, nullable=False)
-    post_id = Column(Integer, ForeignKey('posts.id'))
 
 
 class Groups (base):  # pylint: disable=too-few-public-methods, C0103

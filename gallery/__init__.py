@@ -69,14 +69,13 @@ def create_app(test_config=None):
     # Error handlers
     @app.errorhandler(Exception)
     def error_page(err):
-        # If the error is a HTTP error, return the error page
-        if isinstance(err, HTTPException):
-            error = err.code
-            msg = err.description
-            return render_template('error.html', error=error, msg=msg), err.code
+        # If the error is not an HTTPException, return a 500 error
+        if not isinstance(err, HTTPException):
+            abort(500)
 
-        # Otherwise this an internal error
-        abort(500)
+        error = err.code
+        msg = err.description
+        return render_template('error.html', error=error, msg=msg), err.code
 
     # Load login, registration and logout manager
     from gallery import auth

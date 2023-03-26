@@ -4,9 +4,9 @@ Onlylegs - API endpoints
 from uuid import uuid4
 import os
 import pathlib
-import platformdirs
 import logging
 from datetime import datetime as dt
+import platformdirs
 
 from flask import Blueprint, send_from_directory, abort, flash, jsonify, request, g, current_app
 from werkzeug.utils import secure_filename
@@ -18,7 +18,7 @@ from gallery.auth import login_required
 
 from gallery import db
 from gallery.utils import metadata as mt
-from gallery.utils.generate_image import ImageGenerator
+from gallery.utils.generate_image import generate_thumbnail
 
 
 blueprint = Blueprint('api', __name__, url_prefix='/api')
@@ -41,12 +41,12 @@ def file(file_name):
             abort(404)
 
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], file_name)
-    
-    thumb = ImageGenerator.thumbnail(file_name, res)
-    
+
+    thumb = generate_thumbnail(file_name, res)
+
     if not thumb:
         abort(404)
-        
+
     return send_from_directory(os.path.dirname(thumb), os.path.basename(thumb))
 
 
@@ -126,8 +126,8 @@ def delete_image(image_id):
     # Delete cached files
     cache_path = os.path.join(platformdirs.user_config_dir('onlylegs'), 'cache')
     cache_name = img.file_name.rsplit('.')[0]
-    for file in pathlib.Path(cache_path).glob(cache_name + '*'):
-        os.remove(file)
+    for cache_file in pathlib.Path(cache_path).glob(cache_name + '*'):
+        os.remove(cache_file)
 
     # Delete from database
     db_session.query(db.Posts).filter_by(id=image_id).delete()
@@ -209,40 +209,3 @@ def metadata(img_id):
     exif = mt.Metadata(img_path).yoink()
 
     return jsonify(exif)
-
-
-@blueprint.route('/logfile')
-@login_required
-def logfile():
-    """
-    Gets the log file and returns it as a JSON object
-    """
-    log_dict = {}
-
-    with open('only.log', encoding='utf-8', mode='r') as file:
-        for i, line in enumerate(file):
-            line = line.split(' : ')
-
-            event = line[0].strip().split(' ')
-            event_data = {
-                'date': event[0],
-                'time': event[1],
-                'severity': event[2],
-                'owner': event[3]
-            }
-
-            message = line[1].strip()
-            try:
-                message_data = {
-                    'code': int(message[1:4]),
-                    'message': message[5:].strip()
-                }
-            except ValueError:
-                message_data = {'code': 0, 'message': message}
-            except Exception as err:
-                logging.error('Could not parse log file: %s', err)
-                abort(500)
-
-            log_dict[i] = {'event': event_data, 'message': message_data}
-
-    return jsonify(log_dict)
