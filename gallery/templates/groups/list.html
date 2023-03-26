@@ -29,7 +29,7 @@
                             <p class="image-subtitle"></p>
                             <p class="image-title">{{ group.name }}</p>
                         </div>
-                        <img data-src="{{ group.thumbnail.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
+                        <img data-src="{{ group.thumbnail.file_name }}" onload="this.classList.add('loaded');" id="lazy-load"/>
                     </a>
                 {% else %}
                     <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}">
@@ -37,7 +37,7 @@
                             <p class="image-subtitle"></p>
                             <p class="image-title">{{ group.name }}</p>
                         </div>
-                        <img src="{{ url_for('static', filename='error.png') }}" onload="imgFade(this)" style="opacity:0;"/>
+                        <img src="{{ url_for('static', filename='error.png') }}" onload="this.classList.add('loaded');"/>
                     </a>
                 {% endif %}
             {% endfor %}

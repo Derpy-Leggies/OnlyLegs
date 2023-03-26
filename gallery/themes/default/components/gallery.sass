@@ -80,11 +80,17 @@
 
         object-fit: cover
         object-position: center
-
-        background-color: RGB($fg-white)
         transform: scale(1.05)
 
-        transition: all 0.3s cubic-bezier(.79, .14, .15, .86)
+        background-color: RGB($fg-white)
+        filter: blur(0.5rem)
+        opacity: 0
+
+        transition: all 0.2s cubic-bezier(.79, .14, .15, .86)
+
+        &.loaded
+            filter: blur(0)
+            opacity: 1
 
     &:after
         content: ""

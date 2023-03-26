@@ -30,7 +30,7 @@
             </div>
         {% else %}
             <img
-                src="/api/file/{{ images.0.file_name }}?r=1920x1080"
+                src="/api/file/{{ images.0.file_name }}?r=prev"
                 onload="imgFade(this)"
                 style="opacity:0;"
             />
@@ -58,7 +58,7 @@
                         <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
+                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>

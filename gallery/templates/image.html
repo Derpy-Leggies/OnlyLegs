@@ -91,6 +91,10 @@
                 alt="{{ image.post_alt }}"
                 onload="imgFade(this)" style="opacity:0;"
                 onerror="this.src='{{ url_for('static', filename='error.png')}}'"
+                {% if "File" in image.image_exif %}
+                    width="{{ image.image_exif.File.Width.raw }}"
+                    height="{{ image.image_exif.File.Height.raw }}"
+                {% endif %}
             />
         </div>
 
