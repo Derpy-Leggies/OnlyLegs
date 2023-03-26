@@ -67,7 +67,6 @@ def create_app(test_config=None):
     assets.register('js_all', js_scripts)
 
     # Error handlers
-    
     @app.errorhandler(Exception)
     def error_page(err):
         # If the error is a HTTP error, return the error page

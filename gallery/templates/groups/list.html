@@ -37,23 +37,19 @@
                             <p class="image-subtitle"></p>
                             <p class="image-title">{{ group.name }}</p>
                         </div>
-                        <img src="{{ url_for('static', filename='images/error.png') }}" onload="imgFade(this)" style="opacity:0;"/>
+                        <img src="{{ url_for('static', filename='error.png') }}" onload="imgFade(this)" style="opacity:0;"/>
                     </a>
                 {% endif %}
             {% endfor %}
         </div>
     {% else %}
         <div class="big-text">
-            <h1>No image groups!</h1>
+            <h1>*crickets chirping*</h1>
             {% if g.user %}
                 <p>You can get started by creating a new image group!</p>
             {% else %}
-                <p>Login to get started!</p>
+                <p>Login to start seeing anything here!</p>
             {% endif %}
         </div>
     {% endif %}
-{% endblock %}
-
-{% block script %}
-    <script></script>
 {% endblock %}

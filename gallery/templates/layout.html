@@ -17,12 +17,12 @@
     <meta name="twitter:card" content="summary_large_image">
     
     <link
-        href="{{url_for('static', filename='images/logo-black.svg')}}"
+        href="{{url_for('static', filename='logo-black.svg')}}"
         rel="icon"
         type="image/svg+xml"
         media="(prefers-color-scheme: light)"/>
     <link
-        href="{{url_for('static', filename='images/logo-white.svg')}}"
+        href="{{url_for('static', filename='logo-white.svg')}}"
         rel="icon"
         type="image/svg+xml"
         media="(prefers-color-scheme: dark)"/>
@@ -33,8 +33,7 @@
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 
-    <style>
-    </style>
+    {% block head %}{% endblock %}
 </head>
 <body>
     <div class="notifications"></div>
@@ -62,7 +61,7 @@
     <div class="wrapper">
 
         <div class="navigation">
-            <img src="{{url_for('static', filename='images/icon.png')}}" alt="Logo" class="logo" onload="imgFade(this)" style="opacity:0;">
+            <img src="{{url_for('static', filename='icon.png')}}" alt="Logo" class="logo" onload="imgFade(this)" style="opacity:0;">
 
             <a href="{{url_for('gallery.index')}}" class="navigation-item {% block nav_home %}{% endblock %}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M208,32H80A16,16,0,0,0,64,48V64H48A16,16,0,0,0,32,80V208a16,16,0,0,0,16,16H176a16,16,0,0,0,16-16V192h16a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM80,48H208v69.38l-16.7-16.7a16,16,0,0,0-22.62,0L93.37,176H80Zm96,160H48V80H64v96a16,16,0,0,0,16,16h96ZM104,88a16,16,0,1,1,16,16A16,16,0,0,1,104,88Z"></path></svg>

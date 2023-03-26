@@ -7,6 +7,7 @@ from flask import Blueprint, abort, render_template, url_for
 
 from sqlalchemy.orm import sessionmaker
 from gallery import db
+from gallery.utils import contrast
 
 
 blueprint = Blueprint('group', __name__, url_prefix='/group')
@@ -59,8 +60,13 @@ def group(group_id):
     for image in group_images:
         image = db_session.query(db.Posts).filter(db.Posts.id == image[0]).first()
         images.append(image)
+    
+    if images:
+        text_colour = contrast.contrast(images[0].image_colours[0], 'rgb(var(--fg-black))', 'rgb(var(--fg-white))')
+    else:
+        text_colour = 'rgb(var(--fg-black))'
 
-    return render_template('groups/group.html', group=group_item, images=images)
+    return render_template('groups/group.html', group=group_item, images=images, text_colour=text_colour)
 
 
 @blueprint.route('/<int:group_id>/<int:image_id>')

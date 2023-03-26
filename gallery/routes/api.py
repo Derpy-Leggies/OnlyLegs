@@ -29,7 +29,7 @@ db_session = db_session()
 
 
 @blueprint.route('/file/<file_name>', methods=['GET'])
-def get_file(file_name):
+def file(file_name):
     """
     Returns a file from the uploads folder
     r for resolution, 400x400 or thumb for thumbnail

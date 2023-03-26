@@ -47,8 +47,8 @@ function loadOnView() {
 window.onload = function () {
     loadOnView();
 
-    const darkColor = '#151515';
-    const lightColor = '#E8E3E3';
+    const darkColor = 'rgb(var(--black))';
+    const lightColor = 'rgb(var(--white))';
     let contrastCheck = document.querySelectorAll('#contrast-check');
     for (let i = 0; i < contrastCheck.length; i++) {
         let bgColor = contrastCheck[i].getAttribute('data-color');
@@ -94,7 +94,7 @@ window.onload = function () {
         infoButton.classList.add('show');
     }
     infoButton.onclick = function () {
-        popUpShow('OnlyLegs Gallery',
+        popUpShow('OnlyLegs on Flask',
                   'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and <a href="https://www.gent.media/manrope">Manrope</a> <br>' +
                   'Made by Fluffy and others with ❤️ <br>' +
                   '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.03.25</a>');
