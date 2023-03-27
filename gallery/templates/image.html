@@ -4,7 +4,7 @@
     <meta property="og:image" content="{{ url_for('api.file', file_name=image.file_name) }}"/>
     <meta name="theme-color" content="#{{ image.image_colours.0.0 }}{{ image.image_colours.0.1 }}{{ image.image_colours.0.2 }}"/>
 
-    <script>
+    <script type="text/javascript">
         function imageFullscreenOff() {
             document.querySelector("html").style.overflow = "auto";
             let fullscreen = document.querySelector('.image-fullscreen')
@@ -281,7 +281,7 @@
 {% endblock %}
 
 {% block script %}
-    <script>
+    <script type="text/javascript">
         let infoTab = document.querySelectorAll('.info-tab');
         for (let i = 0; i < infoTab.length; i++) {
             infoTab[i].querySelector('.info-header').addEventListener('click', function() {
