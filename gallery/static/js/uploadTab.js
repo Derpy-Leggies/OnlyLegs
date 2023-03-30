@@ -20,11 +20,17 @@ function openUploadTab() {
 // close upload tab
 function closeUploadTab() {
     let uploadTab = document.querySelector(".upload-panel");
+    let uploadTabContainer = document.querySelector(".upload-panel .container");
 
     // un-Stop scrolling and close upload tab
     document.querySelector("html").style.overflow = "auto";
     uploadTab.classList.remove("open");
-    setTimeout(function () { uploadTab.style.display = "none"; }, 250);
+    setTimeout(function () {
+        uploadTab.style.display = "none";
+
+        uploadTabContainer.style.transform = "";
+        uploadTab.dataset.lastY = 0;
+    }, 250);
 }
 
 // toggle upload tab
@@ -37,6 +43,43 @@ function toggleUploadTab() {
         openUploadTab();
     }
 }
+
+function tabDragStart(event) {
+    event.preventDefault();
+
+    let uploadTab = document.querySelector(".upload-panel .container");
+    let offset = uploadTab.getBoundingClientRect().y;
+
+    uploadTab.classList.add("dragging");
+
+    document.addEventListener('touchmove', event => {
+        if (uploadTab.classList.contains("dragging")) {
+            if (event.touches[0].clientY - offset >= 0) {
+                uploadTab.dataset.lastY = event.touches[0].clientY;
+            } else {
+                uploadTab.dataset.lastY = offset;
+            }
+
+            uploadTab.style.transform = `translateY(${uploadTab.dataset.lastY - offset}px)`;
+        }
+    });
+}
+function tabDragStopped(event) {
+    event.preventDefault();
+    
+    let uploadTab = document.querySelector(".upload-panel .container");
+
+    uploadTab.classList.remove("dragging");
+
+    if (uploadTab.dataset.lastY > (screen.height * 0.3)) {
+        closeUploadTab();
+    } else {
+        uploadTab.style.transition = "transform 0.25s cubic-bezier(0.76, 0, 0.17, 1)";
+        uploadTab.style.transform = "translateY(0px)";
+        setTimeout(function () { uploadTab.style.transition = ""; }, 250);
+    }
+}
+
 
 // Edging the file plunge :3
 function fileActivate(event) {
@@ -97,7 +140,7 @@ function clearUpload() {
 }
 
 
-function createJon(file) {
+function createJob(file) {
     jobContainer = document.createElement("div");
     jobContainer.classList.add("job");
 
@@ -124,13 +167,16 @@ function createJon(file) {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-   // Function to upload images
-    let uploadForm = document.querySelector('#uploadForm');
-    let fileDrop = document.querySelector('.fileDrop-block');
-    let fileDropTitle = fileDrop.querySelector('.status');
+    // Function to upload images
+    let uploadTab = document.querySelector(".upload-panel");
+    let uploadTabDrag = uploadTab.querySelector("#dragIndicator");
+    let uploadForm = uploadTab.querySelector('#uploadForm');
     let jobList = document.querySelector(".upload-jobs");
     
-    let fileUpload = uploadForm.querySelector('#file');
+    let fileDrop = uploadForm.querySelector('.fileDrop-block');
+    let fileDropTitle = fileDrop.querySelector('.status');
+    let fileUpload = fileDrop.querySelector('#file');
+
     let fileAlt = uploadForm.querySelector('#alt');
     let fileDescription = uploadForm.querySelector('#description');
     let fileTags = uploadForm.querySelector('#tags');
@@ -139,6 +185,10 @@ document.addEventListener('DOMContentLoaded', function() {
     clearUpload();
     fileDefault();
 
+    
+    // Tab is dragged
+    uploadTabDrag.addEventListener('touchstart', tabDragStart, false);
+    uploadTabDrag.addEventListener('touchend', tabDragStopped, false);
 
     // Drag over/enter event
     fileDrop.addEventListener('dragover', fileActivate, false);
@@ -171,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append("description", fileDescription.value);
         formData.append("tags", fileTags.value);
 
-        jobItem = createJon(fileUpload.files[0]);
+        jobItem = createJob(fileUpload.files[0]);
         jobStatus = jobItem.querySelector(".job__status");
 
         // Upload the information
