@@ -2,34 +2,6 @@
 function imgFade(obj, time = 250) {
     $(obj).animate({ opacity: 1 }, time);
 }
-// https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
-function colourContrast(bgColor, lightColor, darkColor, threshold = 0.179) {
-    // if color is in hex format then convert to rgb else parese rgb
-    let r = 0
-    let g = 0
-    let b = 0
-    if (bgColor.charAt(0) === '#') {
-        const color = (bgColor.charAt(0) === '#') ? bgColor.substring(1, 7) : bgColor;
-        r = parseInt(color.substring(0, 2), 16); // hexToR
-        g = parseInt(color.substring(2, 4), 16); // hexToG
-        b = parseInt(color.substring(4, 6), 16); // hexToB
-    } else {
-        const color = bgColor.replace('rgb(', '').replace(')', '').split(',');
-        r = color[0];
-        g = color[1];
-        b = color[2];
-    }
-    
-    const uicolors = [r / 255, g / 255, b / 255];
-    const c = uicolors.map((col) => {
-        if (col <= 0.03928) {
-            return col / 12.92;
-        }
-        return Math.pow((col + 0.055) / 1.055, 2.4);
-    });
-    const L = (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]);
-    return (L > threshold) ? darkColor : lightColor;
-}
 // Lazy load images when they are in view
 function loadOnView() {
     let lazyLoad = document.querySelectorAll('#lazy-load');
@@ -46,14 +18,6 @@ function loadOnView() {
 
 window.onload = function () {
     loadOnView();
-
-    const darkColor = 'rgb(var(--black))';
-    const lightColor = 'rgb(var(--white))';
-    let contrastCheck = document.querySelectorAll('#contrast-check');
-    for (let i = 0; i < contrastCheck.length; i++) {
-        let bgColor = contrastCheck[i].getAttribute('data-color');
-        contrastCheck[i].style.color = colourContrast(bgColor, lightColor, darkColor);
-    }
 
     let times = document.querySelectorAll('.time');
     for (let i = 0; i < times.length; i++) {
@@ -97,9 +61,10 @@ window.onload = function () {
         }
         infoButton.onclick = function () {
             popUpShow('OnlyLegs on Flask',
-                      'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and <a href="https://www.gent.media/manrope">Manrope</a> <br>' +
+                      'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and ' +
+                      '<a href="https://www.gent.media/manrope">Manrope</a> <br>' +
                       'Made by Fluffy and others with ❤️ <br>' +
-                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.03.26</a>');
+                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.03.30</a>');
         }
     }
 };
