@@ -23,23 +23,21 @@
     {% if groups %}
         <div class="gallery-grid">
             {% for group in groups %}
-                {% if group.thumbnail %}
-                    <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}" style="background-color: rgb({{ group.thumbnail.image_colours.0.0 }}, {{ group.thumbnail.image_colours.0.1 }}, {{ group.thumbnail.image_colours.0.2 }})">
-                        <div class="image-filter">
-                            <p class="image-subtitle"></p>
-                            <p class="image-title">{{ group.name }}</p>
-                        </div>
-                        <img data-src="{{ group.thumbnail.file_name }}" onload="this.classList.add('loaded');" id="lazy-load"/>
-                    </a>
-                {% else %}
-                    <a id="group-{{ group.id }}" class="gallery-item" href="{{ url_for('group.group', group_id=group.id) }}">
-                        <div class="image-filter">
-                            <p class="image-subtitle"></p>
-                            <p class="image-title">{{ group.name }}</p>
-                        </div>
-                        <img src="{{ url_for('static', filename='error.png') }}" onload="this.classList.add('loaded');"/>
-                    </a>
-                {% endif %}
+                <a id="group-{{ group.id }}" class="group-item" href="{{ url_for('group.group', group_id=group.id) }}">
+                    <div class="image-filter">
+                        <p class="image-subtitle">By {{ group.author_username }}</p>
+                        <p class="image-title">{{ group.name }}</p>
+                    </div>
+                    <div class="images size-{{ group.images|length }}">
+                        {% if group.images|length > 0 %}
+                            {% for image in group.images %}
+                                <img data-src="{{ image.file_name }}" onload="this.classList.add('loaded');" id="lazy-load" class="data-{{ loop.index }}"/>
+                            {% endfor %}
+                        {% else %}
+                            <img src="{{ url_for('static', filename='error.png') }}" class="loaded"/>
+                        {% endif %}
+                    </div>
+                </a>
             {% endfor %}
         </div>
     {% else %}

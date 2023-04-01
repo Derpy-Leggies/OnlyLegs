@@ -20,19 +20,31 @@ def groups():
     """
     Group overview, shows all image groups
     """
+    # Get all groups
     group_list = db_session.query(db.Groups).all()
 
+    # For each group, get the 3 most recent images
     for group_item in group_list:
-        thumbnail = db_session.query(db.GroupJunction.post_id)\
+        group_item.author_username = db_session.query(db.Users.username)\
+                                           .filter(db.Users.id == group_item.author_id)\
+                                           .first()[0]
+        
+        # Get the 3 most recent images
+        group_images = db_session.query(db.GroupJunction.post_id)\
                               .filter(db.GroupJunction.group_id == group_item.id)\
                               .order_by(db.GroupJunction.date_added.desc())\
-                              .first()
+                              .limit(3)
 
-        if thumbnail:
-            group_item.thumbnail = db_session.query(db.Posts.file_name, db.Posts.post_alt,
-                                               db.Posts.image_colours, db.Posts.id)\
-                                        .filter(db.Posts.id == thumbnail[0])\
-                                        .first()
+        # Add an empty list to the group item
+        group_item.images = []
+        # For each image, get the image data and add it to the group item
+        for image in group_images:
+            group_item.images.append(db_session.query(db.Posts.file_name,
+                                                      db.Posts.post_alt,
+                                                      db.Posts.image_colours,
+                                                      db.Posts.id)\
+                                                .filter(db.Posts.id == image[0])\
+                                                .first())
 
     return render_template('groups/list.html', groups=group_list)
 
@@ -88,14 +100,15 @@ def group_post(group_id, image_id):
                                     .filter(db.Users.id == img.author_id)\
                                     .first()[0]
 
-    group_list = db_session.query(db.GroupJunction.group_id)\
+    groups = db_session.query(db.GroupJunction.group_id)\
                        .filter(db.GroupJunction.post_id == image_id)\
                        .all()
 
-    img.group_list = []
-    for group_item in group_list:
-        group_item = db_session.query(db.Groups).filter(db.Groups.id == group_item[0]).first()
-        img.group_list.append(group_item)
+    img.groups = []
+    for group in groups:
+        group = db_session.query(db.Groups).filter(db.Groups.id == group[0]).first()
+        img.groups.append(group)
+
 
     next_url = db_session.query(db.GroupJunction.post_id)\
                          .filter(db.GroupJunction.group_id == group_id)\

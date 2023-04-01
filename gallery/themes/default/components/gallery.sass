@@ -26,50 +26,40 @@
         padding: 0.5rem
 
         width: 100%
-        height: 100%
+        height: 30%
 
         position: absolute
         left: 0
-        bottom: -1rem
+        bottom: 0
 
         display: flex
         flex-direction: column
         justify-content: flex-end
 
-        background-image: linear-gradient(to top, $bg-transparent, transparent)
-
-        z-index: +1
-
+        background-image: linear-gradient(to top, rgba($bg-100, 0.5), transparent)
         opacity: 0 // hide
-        transition: all 0.3s cubic-bezier(.79, .14, .15, .86)
 
-    .image-title
-        margin: 0
+        z-index: +4
+        transition: background-image 0.3s cubic-bezier(.79, .14, .15, .86), opacity 0.3s cubic-bezier(.79, .14, .15, .86)
 
-        font-size: 1rem
-        font-weight: 600
+        .image-title,
+        .image-subtitle
+            margin: 0
+            padding: 0
 
-        color: RGB($fg-white)
+            white-space: nowrap
+            text-overflow: ellipsis
+            overflow: hidden
 
-        text-overflow: ellipsis
-        overflow: hidden
+            color: RGB($fg-white)
 
-        opacity: 0 // hide
-        transition: all 0.2s ease-in-out
+        .image-title
+            font-size: 0.9rem
+            font-weight: 800
 
-    .image-subtitle
-        margin: 0
-
-        font-size: 0.8rem
-        font-weight: 500
-
-        color: RGB($fg-white)
-
-        text-overflow: ellipsis
-        overflow: hidden
-
-        opacity: 0 // hide
-        transition: all 0.2s ease-in-out
+        .image-subtitle
+            font-size: 0.8rem
+            font-weight: 600
 
     img
         width: 100%
@@ -99,15 +89,155 @@
 
     &:hover
         .image-filter
-            bottom: 0
-            opacity: 1
-
-        .image-title,
-        .image-subtitle
+            background-image: linear-gradient(to top, rgba($bg-100, 0.69), transparent)
             opacity: 1
 
         img
             transform: scale(1)
+
+.group-item
+    margin: 0
+    padding: 0
+
+    height: auto
+
+    position: relative
+
+    border-radius: $rad
+
+    box-sizing: border-box
+    overflow: hidden
+
+    .image-filter
+        margin: 0
+        padding: 0.5rem
+
+        width: 100%
+        height: 30%
+
+        position: absolute
+        left: 0
+        bottom: 0
+
+        display: flex
+        flex-direction: column
+        justify-content: flex-end
+
+        background-image: linear-gradient(to top, rgba($bg-100, 0.8), transparent)
+
+        z-index: +4
+
+        .image-title,
+        .image-subtitle
+            margin: 0
+            padding: 0
+
+            white-space: nowrap
+            text-overflow: ellipsis
+            overflow: hidden
+
+            color: RGB($fg-white)
+
+        .image-title
+            font-size: 0.9rem
+            font-weight: 800
+
+        .image-subtitle
+            font-size: 0.8rem
+            font-weight: 600
+
+    .images
+        margin: 0
+        padding: 0
+
+        width: 100%
+        height: 100%
+
+        position: absolute
+        inset: 0
+
+        display: block
+
+        background-color: RGB($fg-white)
+
+        img
+            width: 100%
+            height: 100%
+
+            position: absolute
+            top: 0
+            left: 0
+
+            object-fit: cover
+            object-position: center
+
+            background-color: RGB($fg-white)
+            border-radius: $rad-inner
+            box-shadow: 0 0 0.4rem 0.25rem RGBA($bg-100, 0.25)
+            filter: blur(0.5rem)
+            opacity: 0
+
+            transition: all 0.2s cubic-bezier(.79, .14, .15, .86)
+
+            &.loaded
+                filter: blur(0)
+                opacity: 1
+
+        &.size-1
+            .data-1
+                transform: scale(0.8) rotate(3deg)
+
+        &.size-2
+            .data-1
+                transform: scale(0.7) rotate(-3deg) translate(10%, 10%)
+                z-index: +2
+            .data-2
+                transform: scale(0.7) rotate(3deg) translate(-10%, -10%)
+                z-index: +1
+
+        &.size-3
+            .data-1
+                transform: scale(0.6) rotate(3deg) translate(-25%, 25%)
+                z-index: +3
+            .data-2
+                transform: scale(0.6) rotate(-5deg) translate(25%, 10%)
+                z-index: +2
+            .data-3
+                transform: scale(0.6) rotate(-1deg) translate(-15%, -25%)
+                z-index: +1
+
+    &:after
+        content: ""
+        display: block
+        padding-bottom: 100%
+
+    &:hover
+        .images
+            img
+                box-shadow: 0 0 0.4rem 0.25rem RGBA($bg-100, 0.1)
+
+            &.size-1
+                .data-1
+                    transform: scale(0.9) rotate(0deg)
+
+            &.size-2
+                .data-1
+                    transform: scale(0.75) rotate(-1deg) translate(12%, 14%)
+                    z-index: +2
+                .data-2
+                    transform: scale(0.75) rotate(1deg) translate(-12%, -10%)
+                    z-index: +1
+
+            &.size-3
+                .data-1
+                    transform: scale(0.65) rotate(1deg) translate(-24%, 24%)
+                    z-index: +3
+                .data-2
+                    transform: scale(0.65) rotate(-2deg) translate(24%, 10%)
+                    z-index: +2
+                .data-3
+                    transform: scale(0.65) rotate(0deg) translate(-15%, -25%)
+                    z-index: +1
             
 @media (max-width: 800px)
     .gallery-grid

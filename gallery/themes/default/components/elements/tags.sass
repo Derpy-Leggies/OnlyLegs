@@ -2,23 +2,26 @@
     margin: 0
     padding: 0.25rem 0.5rem
 
-
     display: flex
     align-items: center
     justify-content: center
     gap: 0.25rem
 
-    font-size: 1rem
+    font-size: 0.9rem
     font-weight: 500
     text-decoration: none
 
     border-radius: $rad-inner
-    background-color: RGB($primary)
-    color: RGB($bg-100)
     border: none
+    background-color: RGBA($primary, 0.1)
+    color: RGB($primary)
 
     cursor: pointer
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
 
     svg
         width: 1.15rem
         height: 1.15rem
+
+    &:hover
+        background-color: RGBA($primary, 0.3)

@@ -11,11 +11,11 @@
             }
 
             .banner-filter {
-                background: linear-gradient(to right, rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}), transparent) !important;
+                background: linear-gradient(90deg, rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.3)) !important;
             }
             @media (max-width: 800px) {
                 .banner-filter {
-                    background: linear-gradient(to bottom, rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}), transparent) !important;
+                    background: linear-gradient(180deg, rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.8), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.5)) !important;
                 }
             }
         {% endif %}
@@ -29,12 +29,8 @@
                 <p>By {{ group.author_username }}</p>
             </div>
         {% else %}
-            <img
-                src="/api/file/{{ images.0.file_name }}?r=prev"
-                onload="imgFade(this)"
-                style="opacity:0;"
-            />
-            <span class="banner-filter" ></span>
+            <img src="{{ url_for('api.file', file_name=images.0.file_name ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
+            <span class="banner-filter"></span>
             <div class="banner-content">
                 <p>By {{ group.author_username }} - {{ images|length }} Images</p>
                 <h1>{{ group.name }}</h1>
