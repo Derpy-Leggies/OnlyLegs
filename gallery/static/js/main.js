@@ -10,7 +10,7 @@ function loadOnView() {
         let image = lazyLoad[i];
         if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
             if (!image.src) {
-                image.src = `/api/file/${image.getAttribute('data-src')}?r=thumb`
+                image.src = `/api/file/${image.getAttribute('data-src')}?r=thumb` // e=webp
             }
         }
     }

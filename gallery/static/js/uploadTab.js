@@ -109,6 +109,7 @@ function fileDropHandle(event) {
 
     fileUpload.files = event.dataTransfer.files;
     
+    fileDefault();
     fileChanged();
 }
 
@@ -197,8 +198,11 @@ document.addEventListener('DOMContentLoaded', function() {
     fileDrop.addEventListener('dragleave', fileDefault, false);
     // Drop file into box
     fileDrop.addEventListener('drop', fileDropHandle, false);
+
     // File upload change
     fileUpload.addEventListener('change', fileChanged, false);
+    // File upload clicked
+    fileUpload.addEventListener('click', fileDefault, false);    
 
 
     // Submit form
