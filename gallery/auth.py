@@ -65,15 +65,16 @@ def register():
     """
     Register a new user
     """
-    username = request.form['username']
-    email = request.form['email']
-    password = request.form['password']
-    password_repeat = request.form['password-repeat']
+    # Thanks Fennec for reminding me to strip out the whitespace lol
+    username = request.form['username'].strip()
+    email = request.form['email'].strip()
+    password = request.form['password'].strip()
+    password_repeat = request.form['password-repeat'].strip()
 
     error = []
 
     email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
-    username_regex = re.compile(r'\b[A-Za-z0-9._%+-]+\b')
+    username_regex = re.compile(r'\b[A-Za-z0-9._-]+\b')
 
     if not username or not username_regex.match(username):
         error.append('Username is invalid!')
@@ -116,8 +117,8 @@ def login():
     """
     Log in a registered user by adding the user id to the session
     """
-    username = request.form['username']
-    password = request.form['password']
+    username = request.form['username'].strip()
+    password = request.form['password'].strip()
 
     user = db_session.query(db.Users).filter_by(username=username).first()
     error = []

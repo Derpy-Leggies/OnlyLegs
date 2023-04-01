@@ -60,7 +60,7 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     # Load theme
-    theme_manager.CompileTheme('default', app.root_path)
+    theme_manager.compile_theme('default', app.root_path)
 
     # Bundle JS files
     js_scripts = Bundle('js/*.js', output='gen/packed.js')
@@ -82,7 +82,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth.blueprint)
 
     # Load the different routes
-    from .routes import api, groups, routing, settings
+    from gallery.routes import api, groups, routing, settings
     app.register_blueprint(api.blueprint)
     app.register_blueprint(groups.blueprint)
     app.register_blueprint(routing.blueprint)

@@ -33,6 +33,7 @@ def file(file_name):
     r for resolution, 400x400 or thumb for thumbnail
     """
     res = request.args.get('r', default=None, type=str)  # Type of file (thumb, etc)
+    ext = request.args.get('e', default=None, type=str)  # File extension
     file_name = secure_filename(file_name)  # Sanitize file name
 
     # if no args are passed, return the raw file
@@ -42,7 +43,7 @@ def file(file_name):
 
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], file_name)
 
-    thumb = generate_thumbnail(file_name, res)
+    thumb = generate_thumbnail(file_name, res, ext)
 
     if not thumb:
         abort(404)
