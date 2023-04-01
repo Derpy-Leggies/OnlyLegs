@@ -29,4 +29,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.pylint.messages_control]
 # C0415: Flask uses it to register blueprints
 # W0718: Exception are logged so we don't need to raise them
-disable = "C0415, W0718"
+# W0621: Flask deals with this fine, so I dont care about it lol
+# R0801: Duplicate code will be dealt with later
+disable = "C0415, W0718, W0621, R0801"

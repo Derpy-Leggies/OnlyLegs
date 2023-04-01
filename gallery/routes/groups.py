@@ -20,33 +20,29 @@ def groups():
     """
     Group overview, shows all image groups
     """
-    # Get all groups
-    group_list = db_session.query(db.Groups).all()
+    groups = db_session.query(db.Groups).all()
 
     # For each group, get the 3 most recent images
-    for group_item in group_list:
-        group_item.author_username = db_session.query(db.Users.username)\
-                                           .filter(db.Users.id == group_item.author_id)\
+    for group in groups:
+        group.author_username = db_session.query(db.Users.username)\
+                                           .filter(db.Users.id == group.author_id)\
                                            .first()[0]
-        
+
         # Get the 3 most recent images
-        group_images = db_session.query(db.GroupJunction.post_id)\
-                              .filter(db.GroupJunction.group_id == group_item.id)\
+        images = db_session.query(db.GroupJunction.post_id)\
+                              .filter(db.GroupJunction.group_id == group.id)\
                               .order_by(db.GroupJunction.date_added.desc())\
                               .limit(3)
 
-        # Add an empty list to the group item
-        group_item.images = []
         # For each image, get the image data and add it to the group item
-        for image in group_images:
-            group_item.images.append(db_session.query(db.Posts.file_name,
-                                                      db.Posts.post_alt,
-                                                      db.Posts.image_colours,
-                                                      db.Posts.id)\
-                                                .filter(db.Posts.id == image[0])\
-                                                .first())
+        group.images = []
+        for image in images:
+            group.images.append(db_session.query(db.Posts.file_name, db.Posts.post_alt,
+                                                 db.Posts.image_colours, db.Posts.id)\
+                                          .filter(db.Posts.id == image[0])\
+                                          .first())
 
-    return render_template('groups/list.html', groups=group_list)
+    return render_template('groups/list.html', groups=groups)
 
 
 @blueprint.route('/<int:group_id>')
@@ -54,34 +50,37 @@ def group(group_id):
     """
     Group view, shows all images in a group
     """
-    group_item = db_session.query(db.Groups).filter(db.Groups.id == group_id).first()
-
-    if group_item is None:
+    # Get the group, if it doesn't exist, 404
+    group = db_session.query(db.Groups).filter(db.Groups.id == group_id).first()
+    if group is None:
         abort(404, 'Group not found! D:')
 
-    group_item.author_username = db_session.query(db.Users.username)\
-                                           .filter(db.Users.id == group_item.author_id)\
+    # Get the group's author username
+    group.author_username = db_session.query(db.Users.username)\
+                                           .filter(db.Users.id == group.author_id)\
                                            .first()[0]
 
-    group_images = db_session.query(db.GroupJunction.post_id)\
+    # Get all images in the group from the junction table
+    junction = db_session.query(db.GroupJunction.post_id)\
                              .filter(db.GroupJunction.group_id == group_id)\
                              .order_by(db.GroupJunction.date_added.desc())\
                              .all()
 
+    # Get the image data for each image in the group
     images = []
-    for image in group_images:
+    for image in junction:
         image = db_session.query(db.Posts).filter(db.Posts.id == image[0]).first()
         images.append(image)
 
-    if images:
+    # Check contrast for the first image in the group for the banner
+    text_colour = 'rgb(var(--fg-black))'
+    if images[0]:
         text_colour = contrast.contrast(images[0].image_colours[0],
                                         'rgb(var(--fg-black))',
                                         'rgb(var(--fg-white))')
-    else:
-        text_colour = 'rgb(var(--fg-black))'
 
     return render_template('groups/group.html',
-                           group=group_item,
+                           group=group,
                            images=images,
                            text_colour=text_colour)
 
@@ -91,40 +90,45 @@ def group_post(group_id, image_id):
     """
     Image view, shows the image and its metadata from a specific group
     """
-    img = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
-
-    if img is None:
+    # Get the image, if it doesn't exist, 404
+    image = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
+    if image is None:
         abort(404, 'Image not found')
 
-    img.author_username = db_session.query(db.Users.username)\
-                                    .filter(db.Users.id == img.author_id)\
+    # Get the image's author username
+    image.author_username = db_session.query(db.Users.username)\
+                                    .filter(db.Users.id == image.author_id)\
                                     .first()[0]
 
+    # Get all groups the image is in
     groups = db_session.query(db.GroupJunction.group_id)\
                        .filter(db.GroupJunction.post_id == image_id)\
                        .all()
 
-    img.groups = []
+    # Get the group data for each group the image is in
+    image.groups = []
     for group in groups:
-        group = db_session.query(db.Groups).filter(db.Groups.id == group[0]).first()
-        img.groups.append(group)
+        group = db_session.query(db.Groups.id, db.Groups.name)\
+                          .filter(db.Groups.id == group[0])\
+                          .first()
+        image.groups.append(group)
 
-
+    # Get the next and previous images in the group
     next_url = db_session.query(db.GroupJunction.post_id)\
                          .filter(db.GroupJunction.group_id == group_id)\
                          .filter(db.GroupJunction.post_id > image_id)\
                          .order_by(db.GroupJunction.date_added.asc())\
                          .first()
-
     prev_url = db_session.query(db.GroupJunction.post_id)\
                          .filter(db.GroupJunction.group_id == group_id)\
                          .filter(db.GroupJunction.post_id < image_id)\
                          .order_by(db.GroupJunction.date_added.desc())\
                          .first()
 
+    # If there is a next or previous image, get the URL for it
     if next_url is not None:
         next_url = url_for('group.group_post', group_id=group_id, image_id=next_url[0])
     if prev_url is not None:
         prev_url = url_for('group.group_post', group_id=group_id, image_id=prev_url[0])
 
-    return render_template('image.html', image=img, next_url=next_url, prev_url=prev_url)
+    return render_template('image.html', image=image, next_url=next_url, prev_url=prev_url)
