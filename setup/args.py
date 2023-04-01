@@ -4,7 +4,7 @@ Startup arguments for the OnlyLegs gallery
     -p, --port: Port to run on (default: 5000)
     -a, --address: Address to run on (default: For Debug: localhost, For Production: 0.0.0.0)
     -w, --workers: Number of workers to run (default: 4)
-    
+
     -d, --debug: Run as Flask app in debug mode (default: False)
     -S, --scream: Show verbose output (default: False)
     -h, --help: Show a help message
