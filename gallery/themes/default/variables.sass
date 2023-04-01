@@ -1,29 +1,79 @@
-$black: #151515
-$black2: #101010
-$gray: #666
-$white: #E8E3E3
+$bg-transparent: rgba(var(--bg-dim), 0.8)
+$bg-dim: var(--bg-dim)
+$bg-bright: var(--bg-bright)
+$bg-100: var(--bg-100)
+$bg-200: var(--bg-200)
+$bg-300: var(--bg-300)
+$bg-400: var(--bg-400)
+$bg-500: var(--bg-500)
+$bg-600: var(--bg-600)
 
-$red: #B66467
-$orange: #D98C5F
-$yellow: #D9BC8C
-$green: #8C977D
-$blue: #8DA3B9
-$purple: #A988B0
+$fg-dim: var(--fg-dim)
+$fg-white: var(--fg-white)
+$fg-black: var(--fg-black)
 
-$primary: $green
-$warning: $orange
-$critical: $red
-$success: $green
-$info: $blue
+$black: var(--black)
+$white: var(--white)
+$red: var(--red)
+$orange: var(--orange)
+$yellow: var(--yellow)
+$green: var(--green)
+$blue: var(--blue)
+$purple: var(--purple)
 
-$rad: 6px
-$rad-inner: 3px
+$primary: var(--primary)
+$warning: var(--warning)
+$critical: var(--critical)
+$success: var(--success)
+$info: var(--info)
 
-$animation-smooth: cubic-bezier(0.76, 0, 0.17, 1)
-$animation-bounce: cubic-bezier(.68,-0.55,.27,1.55)
+$rad: var(--rad)
+$rad-inner: var(--rad-inner)
 
-$font: "Manrope", sans-serif
+$animation-smooth: var(--animation-smooth)
+$animation-bounce: var(--animation-bounce)
+
+$font: 'Manrope', sans-serif
 $breakpoint: 800px
+
+
+\:root
+    --bg-dim: 16, 16, 16
+    --bg-bright: 232, 227, 227
+    --bg-100: 21, 21, 21
+    --bg-200: #{red(adjust-color(rgb(21, 21, 21), $lightness: 2%)), green(adjust-color(rgb(21, 21, 21), $lightness: 2%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 2%))}
+    --bg-300: #{red(adjust-color(rgb(21, 21, 21), $lightness: 4%)), green(adjust-color(rgb(21, 21, 21), $lightness: 4%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 4%))}
+    --bg-400: #{red(adjust-color(rgb(21, 21, 21), $lightness: 6%)), green(adjust-color(rgb(21, 21, 21), $lightness: 6%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 6%))}
+    --bg-500: #{red(adjust-color(rgb(21, 21, 21), $lightness: 8%)), green(adjust-color(rgb(21, 21, 21), $lightness: 8%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 8%))}
+    --bg-600: #{red(adjust-color(rgb(21, 21, 21), $lightness: 10%)), green(adjust-color(rgb(21, 21, 21), $lightness: 10%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 10%))}
+
+    --fg-dim: 102, 102, 102
+    --fg-white: 232, 227, 227
+    --fg-black: 16, 16, 16
+
+    --black: 21, 21, 21
+    --white: 232, 227, 227
+    --red: 182, 100, 103
+    --orange: 217, 140, 95
+    --yellow: 217, 188, 140
+    --green: 140, 151, 125
+    --blue: 141, 163, 185
+    --purple: 169, 136, 176
+
+    --primary: var(--green)  // 183, 169, 151
+    --warning: var(--orange)
+    --critical: var(--red)
+    --success: var(--green)
+    --info: var(--blue)
+
+    --rad: 6px
+    --rad-inner: calc(var(--rad) / 2)
+
+    --animation-smooth: cubic-bezier(0.76, 0, 0.17, 1)
+    --animation-bounce: cubic-bezier(.68,-0.55,.27,1.55)
+
+    --breakpoint: 800px
+
 
 @font-face
     font-family: 'Work Sans'
@@ -43,5 +93,5 @@ $breakpoint: 800px
 @font-face
     font-family: 'Manrope'
     src: url('fonts/Manrope[wght].woff2') format('woff2')
-    font-style: normal;
-    font-display: swap;
+    font-style: normal
+    font-display: swap

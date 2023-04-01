@@ -11,7 +11,8 @@ import logging
 from flask_compress import Compress
 from flask_caching import Cache
 from flask_assets import Environment, Bundle
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
+from werkzeug.exceptions import HTTPException
 
 # Configuration
 import platformdirs
@@ -59,7 +60,7 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     # Load theme
-    theme_manager.CompileTheme('default', app.root_path)
+    theme_manager.compile_theme('default', app.root_path)
 
     # Bundle JS files
     js_scripts = Bundle('js/*.js', output='gen/packed.js')
@@ -68,6 +69,10 @@ def create_app(test_config=None):
     # Error handlers
     @app.errorhandler(Exception)
     def error_page(err):
+        # If the error is not an HTTPException, return a 500 error
+        if not isinstance(err, HTTPException):
+            abort(500)
+
         error = err.code
         msg = err.description
         return render_template('error.html', error=error, msg=msg), err.code
@@ -77,7 +82,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth.blueprint)
 
     # Load the different routes
-    from .routes import api, groups, routing, settings
+    from gallery.routes import api, groups, routing, settings
     app.register_blueprint(api.blueprint)
     app.register_blueprint(groups.blueprint)
     app.register_blueprint(routing.blueprint)

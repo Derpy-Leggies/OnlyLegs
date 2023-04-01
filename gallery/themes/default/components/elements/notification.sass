@@ -1,8 +1,8 @@
 @mixin notification($color)
-    color: $color
+    color: RGB($color)
 
     .sniffle__notification-time
-        background-color: $color
+        background-color: RGB($color)
     
 .notifications
     margin: 0
@@ -33,9 +33,9 @@
 
     position: relative
 
-    background-color: $black
+    background-color: RGB($bg-300)
     border-radius: $rad-inner
-    color: $white
+    color: RGB($fg-white)
     opacity: 0
     transform: scale(0.8)
 
@@ -43,6 +43,28 @@
     overflow: hidden
 
     transition: all 0.25s ease-in-out, opacity 0.2s ease-in-out, transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)
+
+    &.success
+        @include notification($success)
+    &.warning
+        @include notification($warning)
+    &.critical
+        @include notification($critical)
+    &.info
+        @include notification($info)
+
+    &.show
+        opacity: 1
+        transform: scale(1)
+
+    &.hide
+        margin: 0
+        max-height: 0
+
+        opacity: 0
+        transform: translateX(100%)
+
+        transition: all 0.4s ease-in-out, max-height 0.2s ease-in-out
 
 .sniffle__notification-icon
     margin: 0
@@ -55,7 +77,7 @@
     justify-content: center
     align-items: center
 
-    background-color: $black2
+    background-color: RGB($bg-200)
 
     svg
         width: 1.25rem
@@ -89,26 +111,9 @@
     bottom: 0px
     left: 0px
 
-    background-color: $white
+    background-color: RGB($fg-white)
 
     animation: notificationTimeout 5.1s linear
-
-@each $name, $colour in (success: $success, error: $critical, warning: $warning, info: $info)
-    .sniffle__notification--#{$name}
-        @include notification($colour)
-
-.sniffle__notification-show
-    opacity: 1
-    transform: scale(1)
-
-.sniffle__notification--hide
-    margin: 0
-    max-height: 0
-
-    opacity: 0
-    transform: translateX(100%)
-
-    transition: all 0.4s ease-in-out, max-height 0.2s ease-in-out
 
 @media (max-width: $breakpoint)
     .notifications
@@ -117,10 +122,10 @@
 
     .sniffle__notification
         width: 100%
+
+        &.hide
+            opacity: 0
+            transform: translateY(-5rem)
     
     .sniffle__notification-time
         width: 100%
-
-    .sniffle__notification--hide
-        opacity: 0
-        transform: translateY(-5rem)

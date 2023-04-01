@@ -35,22 +35,28 @@ def image(image_id):
     """
     Image view, shows the image and its metadata
     """
-    img = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
-
-    if not img:
+    # Get the image, if it doesn't exist, 404
+    image = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
+    if not image:
         abort(404, 'Image not found :<')
 
-    img.author_username = db_session.query(db.Users.username)\
-                                    .filter(db.Users.id == img.author_id).first()[0]
+    # Get the image's author username
+    image.author_username = db_session.query(db.Users.username)\
+                                    .filter(db.Users.id == image.author_id).first()[0]
 
+    # Get the image's groups
     groups = db_session.query(db.GroupJunction.group_id)\
                        .filter(db.GroupJunction.post_id == image_id).all()
 
-    img.groups = []
+    # For each group, get the group data and add it to the image item
+    image.groups = []
     for group in groups:
-        group = db_session.query(db.Groups).filter(db.Groups.id == group[0]).first()
-        img.groups.append(group)
+        group = db_session.query(db.Groups.id, db.Groups.name)\
+                          .filter(db.Groups.id == group[0])\
+                          .first()
+        image.groups.append(group)
 
+    # Get the next and previous images
     next_url = db_session.query(db.Posts.id)\
                          .filter(db.Posts.id > image_id)\
                          .order_by(db.Posts.id.asc())\
@@ -60,12 +66,13 @@ def image(image_id):
                          .order_by(db.Posts.id.desc())\
                          .first()
 
+    # If there is a next or previous image, get the url
     if next_url:
         next_url = url_for('gallery.image', image_id=next_url[0])
     if prev_url:
         prev_url = url_for('gallery.image', image_id=prev_url[0])
 
-    return render_template('image.html', image=img, next_url=next_url, prev_url=prev_url)
+    return render_template('image.html', image=image, next_url=next_url, prev_url=prev_url)
 
 
 @blueprint.route('/profile')

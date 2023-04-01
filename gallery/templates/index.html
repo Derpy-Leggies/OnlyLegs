@@ -1,51 +1,47 @@
 {% extends 'layout.html' %}
-
-{% block nav_home %}navigation-item__selected{% endblock %}
-
+{% block nav_home %}selected{% endblock %}
 {% block content %}
-    <div class="banner">
+    <div class="banner small">
         <div class="banner-content">
-            <p>{{ config.WEBSITE.motto }}</p>
             <h1>{{ config.WEBSITE.name }}</h1>
             {% if images|length == 0 %}
-                <p>Serving 0 images :<</p>
+                <p>0 images :<</p>
             {% elif images|length == 69 %}
-                <p>Serving {{ images|length }} images, nice</p>
+                <p>{{ images|length }} images, nice</p>
             {% else %}
-                <p>Serving {{ images|length }} images</p>
+                <p>{{ images|length }} images</p>
             {% endif %}
         </div>
     </div>
-
     {% if images %}
         <div class="gallery-grid">
             {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="/image/{{ image.id }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('gallery.image', image_id=image.id) }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
                     <div class="image-filter">
                         <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
+                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>
     {% else %}
         <div class="big-text">
             <h1>*crickets chirping*</h1>
+            <p>There are no images here yet, upload some!</p>
         </div>
     {% endif %}
 {% endblock %}
-
 {% block script %}
-    <script>
+    <script type="text/javascript">
         if (document.referrer.includes('image')) {
             try {
                 let referrerId = document.referrer.split('/').pop();
-    
+        
                 let imgOffset = document.getElementById('image-' + referrerId).offsetTop;
                 let imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
                 let windowHeight = window.innerHeight;
-    
+        
                 document.querySelector('html').style.scrollBehavior = 'auto';
                 window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));
                 document.querySelector('html').style.scrollBehavior = 'smooth';

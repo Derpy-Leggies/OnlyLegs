@@ -8,75 +8,56 @@ from datetime import datetime
 import sass
 
 
-class CompileTheme:
+def compile_theme(theme_name, app_path):
     """
     Compiles the theme into the static folder
     """
-    def __init__(self, theme_name, app_path):
-        """
-        Initialize the theme manager
-        Compiles the theme into the static folder and loads the fonts
-        """
+    print(f"Loading '{theme_name}' theme...")
 
-        print(f"Loading '{theme_name}' theme...")
+    # Set Paths
+    theme_source = os.path.join(app_path, 'themes', theme_name)
+    theme_destination = os.path.join(app_path, 'static', 'theme')
 
-        theme_path = os.path.join(app_path, 'themes', theme_name)
-        theme_dest = os.path.join(app_path, 'static', 'theme')
+    # If the theme doesn't exist, exit
+    if not os.path.exists(theme_source):
+        print("Theme does not exist!")
+        sys.exit(1)
 
-        if not os.path.exists(theme_path):
-            print("Theme does not exist!")
-            sys.exit(1)
+    # If the destination folder doesn't exist, create it
+    if not os.path.exists(theme_destination):
+        os.makedirs(theme_destination)
 
-        if not os.path.exists(theme_dest):
-            os.makedirs(theme_dest)
+    # Theme source file doesn't exist, exit
+    if not os.path.join(theme_source, 'style.sass'):
+        print("No sass file found!")
+        sys.exit(1)
 
-        self.load_sass(theme_path, theme_dest)
-        self.load_fonts(theme_path, theme_dest)
-
-        print(f"{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second} - Done!\n")
-
-    @staticmethod
-    def load_sass(source_path, css_dest):
-        """
-        Compile the sass (or scss) file into css and save it to the static folder
-        """
-        if os.path.join(source_path, 'style.sass'):
-            sass_path = os.path.join(source_path, 'style.sass')
-        elif os.path.join(source_path, 'style.scss'):
-            sass_path = os.path.join(source_path, 'style.scss')
-        else:
-            print("No sass file found!")
-            sys.exit(1)
-
-        with open(os.path.join(css_dest, 'style.css'), encoding='utf-8', mode='w+') as file:
-            try:
-                file.write(sass.compile(filename=sass_path,output_style='compressed'))
-            except sass.CompileError as err:
-                print("Failed to compile!\n", err)
-                sys.exit(1)
-
-            print("Compiled successfully!")
-
-    @staticmethod
-    def load_fonts(source_path, font_dest):
-        """
-        Copy the fonts folder to the static folder
-        """
-        # Append fonts to the destination path
-        source_path = os.path.join(source_path, 'fonts')
-        font_dest = os.path.join(font_dest, 'fonts')
-
-        if os.path.exists(font_dest):
-            try:
-                shutil.rmtree(font_dest)
-            except Exception as err:
-                print("Failed to remove old fonts!\n", err)
-                sys.exit(1)
-
+    # Compile the theme
+    with open(os.path.join(theme_destination, 'style.css'),
+              encoding='utf-8', mode='w+') as file:
         try:
-            shutil.copytree(source_path, font_dest)
+            file.write(sass.compile(filename=os.path.join(theme_source, 'style.sass'),
+                                    output_style='compressed'))
+        except sass.CompileError as err:
+            print("Failed to compile!\n", err)
+            sys.exit(1)
+        print("Compiled successfully!")
+
+    # If the destination folder exists, remove it
+    if os.path.exists(os.path.join(theme_destination, 'fonts')):
+        try:
+            shutil.rmtree(os.path.join(theme_destination, 'fonts'))
         except Exception as err:
-            print("Failed to copy fonts!\n", err)
+            print("Failed to remove old fonts!\n", err)
             sys.exit(1)
 
+    # Copy the fonts
+    try:
+        shutil.copytree(os.path.join(theme_source, 'fonts'),
+                        os.path.join(theme_destination, 'fonts'))
         print("Fonts copied successfully!")
+    except Exception as err:
+        print("Failed to copy fonts!\n", err)
+        sys.exit(1)
+
+    print(f"{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second} - Done!\n")

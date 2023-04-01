@@ -14,14 +14,10 @@
     top: 0
     left: 0
 
-    background-color: $black2
-    color: $white
+    background-color: RGB($bg-100)
+    color: RGB($fg-white)
 
     z-index: 69
-
-    // Spacer
-    > span
-        height: 100%
 
     .logo
         margin: 0
@@ -35,33 +31,44 @@
         flex-direction: row
         align-items: center
 
+.navigation-spacer
+    height: 100%
+
 .navigation-item
     margin: 0
-    padding: 1rem
+    padding: 0
 
     width: 3.5rem
     height: 3.5rem
-
-    display: flex
-    flex-direction: row
-    align-items: center
+    min-height: 3.5rem
 
     position: relative
 
-    background-color: $black2
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+
+    background-color: transparent
     border: none
 
     text-decoration: none
 
     > svg
         margin: 0
-        font-size: 1.5rem
-        color: $white
-        transition: color 0.2s ease-out
+        padding: 0.5rem
+        
+        width: 2.5rem
+        height: 2.5rem
+
+        color: RGB($fg-white)
+        border-radius: $rad-inner
+        
+        transition: color 0.2s ease-out, transform 0.2s ease-out
 
     span
         margin: 0
-        padding: 0.5rem 0.75rem
+        padding: 0.35rem 0.7rem
 
         display: block
 
@@ -70,11 +77,11 @@
         left: 3rem
         transform: translateY(-50%)
 
-        font-size: 1rem
-        font-weight: 600
+        font-size: 0.9rem
+        font-weight: 700
 
         background-color: #000000
-        color: $white
+        color: RGB($fg-white)
         opacity: 0
         border-radius: $rad-inner
 
@@ -99,27 +106,30 @@
             color: #000000
 
     &:hover
-        background-color: $black2
-
         > svg
-            color: $primary
+            background: RGB($bg-300)
 
         span
             opacity: 1
             left: 3.9rem
 
-.navigation-item__selected
-    background: $primary
-
-    > svg
-        color: $black
-
-    &:hover
-        background: $primary
-
+    &.selected
         > svg
-            color: $white
+            color: RGB($primary)
 
+        &::before
+            content: ''
+            display: block
+
+            position: absolute
+            top: 3px
+            left: 0
+
+            width: 3px
+            height: calc(100% - 6px)
+
+            background-color: RGB($primary)
+            border-radius: 0 $rad-inner $rad-inner 0
 
 @media (max-width: $breakpoint)
     .navigation
@@ -146,14 +156,17 @@
 
         width: 3rem
         height: 3rem
-
-        border-radius: $rad-inner
-
-        svg
-            margin: auto
-
-            width: 1.5rem
-            height: 1.5rem
+        min-height: 3rem
 
         span
             display: none
+
+        &.selected::before
+            top: unset
+            bottom: 0
+            left: 0
+
+            width: 100%
+            height: 3px
+
+            border-radius: $rad-inner

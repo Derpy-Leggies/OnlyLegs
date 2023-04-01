@@ -1,29 +1,40 @@
 {% extends 'layout.html' %}
-{% block nav_groups %}navigation-item__selected{% endblock %}
-{% block content %}
-    <div class="banner">
+{% block nav_groups %}selected{% endblock %}
+{% block head %}
+    <style>
         {% if images %}
-            <img
-                src="/api/file/{{ images.0.file_name }}?w=1920&h=1080"
-                onload="imgFade(this)"
-                style="opacity:0; background-color:rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})"
-            />
-            <span
-                class="banner-filter"
-                style="background: linear-gradient(to right, rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}), transparent)"
-            ></span>
+            .banner-content p {
+                color: {{ text_colour }} !important;
+            }
+            .banner-content h1 {
+                color: {{ text_colour }} !important;
+            }
+
+            .banner-filter {
+                background: linear-gradient(90deg, rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.3)) !important;
+            }
+            @media (max-width: 800px) {
+                .banner-filter {
+                    background: linear-gradient(180deg, rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.8), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.5)) !important;
+                }
+            }
+        {% endif %}
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="banner {% if not images %}small{% endif %}">
+        {% if not images %}
             <div class="banner-content">
-                <p><span id="contrast-check" data-color="rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})">{{ group.description }}</span></p>
-                <h1><span id="contrast-check" data-color="rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})">{{ group.name }}</span></h1>
-                <p><span id="contrast-check" data-color="rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }})">By {{ group.author_username }} - {{ images|length }} Images</span></p>
+                <h1>{{ group.name }}</h1>
+                <p>By {{ group.author_username }}</p>
             </div>
         {% else %}
-            <img src="{{ url_for('static', filename='images/bg.svg') }}" onload="imgFade(this)" style="opacity:0;"/>
-            <span></span>
+            <img src="{{ url_for('api.file', file_name=images.0.file_name ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
+            <span class="banner-filter"></span>
             <div class="banner-content">
-                <p>{{ group.description }}</p>
-                <h1>{{ group.name }}</h1>
                 <p>By {{ group.author_username }} - {{ images|length }} Images</p>
+                <h1>{{ group.name }}</h1>
+                <p>{{ group.description }}</p>
             </div>
         {% endif %}
     </div>
@@ -43,17 +54,17 @@
                         <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="imgFade(this)" style="opacity:0;" id="lazy-load"/>
+                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>
     {% else %}
         <div class="big-text">
-            <h1>No image!</h1>
+            <h1>*crickets chirping*</h1>
             {% if g.user %}
-                <p>You can get started by uploading an image!</p>
+                <p>Add some images to the group!</p>
             {% else %}
-                <p>Login to start uploading images!</p>
+                <p>Login to start managing this image group!</p>
             {% endif %}
         </div>
     {% endif %}
