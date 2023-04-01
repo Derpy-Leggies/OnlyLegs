@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             setTimeout(function() {
                 label.style.opacity = 1;
-            }.bind(this), 250);
+            }, 250);
         });
 
         labels[i].addEventListener('mouseout', function() {
