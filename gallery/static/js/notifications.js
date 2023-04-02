@@ -25,13 +25,13 @@ function addNotification(notificationText, notificationLevel) {
     iconElement.classList.add('sniffle__notification-icon');
     notification.appendChild(iconElement);
     // Set the icon based on the notification level, not pretty but it works :3
-    if (notificationLevel == 1) {
+    if (notificationLevel === 1) {
         notification.classList.add('success');
         iconElement.innerHTML = successIcon;
-    } else if (notificationLevel == 2) {
+    } else if (notificationLevel === 2) {
         notification.classList.add('critical');
         iconElement.innerHTML = criticalIcon;
-    } else if (notificationLevel == 3) {
+    } else if (notificationLevel === 3) {
         notification.classList.add('warning');
         iconElement.innerHTML = warningIcon;
     } else {

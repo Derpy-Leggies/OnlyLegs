@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let uploadTabDrag = uploadTab.querySelector("#dragIndicator");
     let uploadForm = uploadTab.querySelector('#uploadForm');
-    let jobList = document.querySelector(".upload-jobs");
+    // let jobList = document.querySelector(".upload-jobs");
     
     let fileDrop = uploadForm.querySelector('.fileDrop-block');
     let fileDropTitle = fileDrop.querySelector('.status');
