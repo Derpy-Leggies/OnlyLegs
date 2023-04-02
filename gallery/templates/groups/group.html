@@ -3,6 +3,9 @@
 {% block head %}
     <style>
         {% if images %}
+            .banner::after {
+                box-shadow: 0 calc(var(--rad) * -1) 0 0 rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }});
+            }
             .banner-content p {
                 color: {{ text_colour }} !important;
             }
@@ -17,6 +20,17 @@
                 .banner-filter {
                     background: linear-gradient(180deg, rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.8), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.5)) !important;
                 }
+            }
+
+            .navigation {
+                background-color: rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}) !important;
+            }
+            .navigation-item > svg {
+                fill: {{ text_colour }} !important;
+                color: {{ text_colour }} !important;
+            }
+            .navigation-item.selected::before {
+                background-color: {{ text_colour }} !important;
             }
         {% endif %}
     </style>
