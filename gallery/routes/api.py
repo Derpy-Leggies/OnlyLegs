@@ -114,7 +114,7 @@ def delete_image(image_id):
 
     # Delete file
     try:
-        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'],img.file_name))
+        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name))
     except FileNotFoundError:
         logging.warning('File not found: %s, already deleted or never existed', img.file_name)
 

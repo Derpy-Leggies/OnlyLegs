@@ -9,7 +9,7 @@ class OnlyLegs(Application):
     """
     Gunicorn application
     """
-    def __init__(self, options={}):  # pylint: disable=W0102, W0231 # noqa
+    def __init__(self, options={}):  # pylint: disable=W0102, W0231
         self.usage = None
         self.callable = None
         self.options = options
@@ -25,7 +25,8 @@ class OnlyLegs(Application):
                 cfg[setting.lower()] = value
         return cfg
 
-    def prog(self):  # pylint: disable=C0116, E0202 # noqa
+    @staticmethod
+    def prog(self):  # pylint: disable=C0116, E0202
         return 'OnlyLegs'
 
     def load(self):

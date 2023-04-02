@@ -104,9 +104,6 @@ def register():
         db_session.commit()
     except exc.IntegrityError:
         return f'User {username} is already registered!'
-    except Exception as err:
-        logging.error('User %s could not be registered: %s', username, err)
-        return 'Something went wrong!'
 
     logging.info('User %s registered', username)
     return 'gwa gwa'
