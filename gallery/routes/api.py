@@ -40,11 +40,9 @@ def file(file_name):
     if not request.args:
         if not os.path.exists(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name)):
             abort(404)
-
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], file_name)
 
     thumb = generate_thumbnail(file_name, res, ext)
-
     if not thumb:
         abort(404)
 
@@ -180,16 +178,16 @@ def modify_group():
         abort(403)
 
     if request.form['action'] == 'add':
-        if not db_session.query(db.GroupJunction)\
-                         .filter_by(group_id=group_id, post_id=image_id)\
-                         .first():
+        if not (db_session.query(db.GroupJunction)
+                          .filter_by(group_id=group_id, post_id=image_id)
+                          .first()):
             db_session.add(db.GroupJunction(group_id=group_id,
                                             post_id=image_id,
                                             date_added=dt.utcnow()))
     elif request.form['action'] == 'remove':
-        db_session.query(db.GroupJunction)\
-                  .filter_by(group_id=group_id, post_id=image_id)\
-                  .delete()
+        (db_session.query(db.GroupJunction)
+                   .filter_by(group_id=group_id, post_id=image_id)
+                   .delete())
 
     db_session.commit()
 

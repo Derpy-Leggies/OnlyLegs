@@ -41,30 +41,31 @@ def image(image_id):
         abort(404, 'Image not found :<')
 
     # Get the image's author username
-    image.author_username = db_session.query(db.Users.username)\
-                                    .filter(db.Users.id == image.author_id).first()[0]
+    image.author_username = (db_session.query(db.Users.username)
+                                       .filter(db.Users.id == image.author_id)
+                                       .first()[0])
 
     # Get the image's groups
-    groups = db_session.query(db.GroupJunction.group_id)\
-                       .filter(db.GroupJunction.post_id == image_id).all()
+    groups = (db_session.query(db.GroupJunction.group_id)
+                        .filter(db.GroupJunction.post_id == image_id)
+                        .all())
 
     # For each group, get the group data and add it to the image item
     image.groups = []
     for group in groups:
-        group = db_session.query(db.Groups.id, db.Groups.name)\
-                          .filter(db.Groups.id == group[0])\
-                          .first()
-        image.groups.append(group)
+        image.groups.append(db_session.query(db.Groups.id, db.Groups.name)
+                                      .filter(db.Groups.id == group[0])
+                                      .first())
 
     # Get the next and previous images
-    next_url = db_session.query(db.Posts.id)\
-                         .filter(db.Posts.id > image_id)\
-                         .order_by(db.Posts.id.asc())\
-                         .first()
-    prev_url = db_session.query(db.Posts.id)\
-                         .filter(db.Posts.id < image_id)\
-                         .order_by(db.Posts.id.desc())\
-                         .first()
+    next_url = (db_session.query(db.Posts.id)
+                          .filter(db.Posts.id > image_id)
+                          .order_by(db.Posts.id.asc())
+                          .first())
+    prev_url = (db_session.query(db.Posts.id)
+                          .filter(db.Posts.id < image_id)
+                          .order_by(db.Posts.id.desc())
+                          .first())
 
     # If there is a next or previous image, get the url
     if next_url:
