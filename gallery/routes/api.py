@@ -75,31 +75,27 @@ def upload():
     # Save file
     try:
         form_file.save(img_path)
-    except Exception as err:
-        logging.error('Could not save file: %s', err)
+    except OSError as err:
+        logging.info('Error saving file %s because of %s', img_path, err)
         abort(500)
 
     img_exif = mt.Metadata(img_path).yoink()  # Get EXIF data
-    img_colors = ColorThief(img_path).get_palette(color_count=3) # Get color palette
+    img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
 
     # Save to database
-    try:
-        query = db.Posts(author_id=g.user.id,
-                         created_at=dt.utcnow(),
-                         file_name=img_name+'.'+img_ext,
-                         file_type=img_ext,
-                         image_exif=img_exif,
-                         image_colours=img_colors,
-                         post_description=form['description'],
-                         post_alt=form['alt'])
+    query = db.Posts(author_id=g.user.id,
+                     created_at=dt.utcnow(),
+                     file_name=img_name+'.'+img_ext,
+                     file_type=img_ext,
+                     image_exif=img_exif,
+                     image_colours=img_colors,
+                     post_description=form['description'],
+                     post_alt=form['alt'])
 
-        db_session.add(query)
-        db_session.commit()
-    except Exception as err:
-        logging.error('Could not save to database: %s', err)
-        abort(500)
+    db_session.add(query)
+    db_session.commit()
 
-    return 'Gwa Gwa' # Return something so the browser doesn't show an error
+    return 'Gwa Gwa'  # Return something so the browser doesn't show an error
 
 
 @blueprint.route('/delete/<int:image_id>', methods=['POST'])

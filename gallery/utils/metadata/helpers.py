@@ -279,7 +279,7 @@ def lens_specification(value):
     """
     try:
         return str(value[0] / value[1]) + 'mm - ' + str(value[2] / value[3]) + 'mm'
-    except Exception:
+    except ValueError:
         return None
 
 

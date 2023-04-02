@@ -43,13 +43,9 @@ class Configuration:
         """
         Create the user directory
         """
-        try:
-            os.makedirs(USER_DIR)
-            os.makedirs(os.path.join(USER_DIR, 'instance'))
-            os.makedirs(os.path.join(USER_DIR, 'uploads'))
-        except Exception as err:
-            print("Error creating user directory:", err)
-            sys.exit(1)
+        os.makedirs(USER_DIR)
+        os.makedirs(os.path.join(USER_DIR, 'instance'))
+        os.makedirs(os.path.join(USER_DIR, 'uploads'))
 
         print("Created user directory at:", USER_DIR)
 
@@ -62,13 +58,9 @@ class Configuration:
             'FLASK_SECRET': os.urandom(32).hex(),
         }
 
-        try:
-            with open(os.path.join(USER_DIR, '.env'), encoding='utf-8', mode='w+') as file:
-                for key, value in env_conf.items():
-                    file.write(f"{key}={value}\n")
-        except Exception as err:
-            print("Error creating environment variables:", err)
-            sys.exit(1)
+        with open(os.path.join(USER_DIR, '.env'), encoding='utf-8', mode='w+') as file:
+            for key, value in env_conf.items():
+                file.write(f"{key}={value}\n")
 
         print("""
 ####################################################
@@ -134,12 +126,8 @@ class Configuration:
             }
         }
 
-        try:
-            with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8', mode='w+') as file:
-                yaml.dump(yaml_conf, file, default_flow_style=False)
-        except Exception as err:
-            print("Error creating default gallery config:", err)
-            sys.exit(1)
+        with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8', mode='w+') as file:
+            yaml.dump(yaml_conf, file, default_flow_style=False)
 
         print("Generated config file, you can change these values in the settings of the app")
 

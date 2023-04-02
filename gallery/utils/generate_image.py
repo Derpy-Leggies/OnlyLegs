@@ -64,7 +64,7 @@ def generate_thumbnail(file_name, resolution, ext=None):
 
     # Save image to cache directory
     try:
-        image.save(os.path.join(CACHE_PATH,f'{file_name}_{res_x}x{res_y}.{ext}'),
+        image.save(os.path.join(CACHE_PATH, f'{file_name}_{res_x}x{res_y}.{ext}'),
                     icc_profile=image_icc)
     except OSError:
         # This usually happens when saving a JPEG with an ICC profile,
