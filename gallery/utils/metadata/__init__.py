@@ -67,14 +67,17 @@ class Metadata:
         }
 
         # Thanks chatGPT xP
-        # pylint: disable=E0602
         for key, value in encoded_exif.items():
             for mapping_name, mapping_val in EXIF_MAPPING:
                 if key in mapping_val:
                     if len(mapping_val[key]) == 2:
+                        # the helper function works, so not sure why it triggers pylint
                         exif[mapping_name][mapping_val[key][0]] = {
                             'raw': value,
-                            'formatted': getattr(helpers, mapping_val[key][1])(value),
+                            'formatted': (
+                                    getattr(helpers, mapping_val[key][1])  # pylint: disable=E0602
+                                    (value)
+                                ),
                         }
                     else:
                         exif[mapping_name][mapping_val[key][0]] = {
