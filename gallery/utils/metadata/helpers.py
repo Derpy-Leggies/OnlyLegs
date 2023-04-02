@@ -59,7 +59,7 @@ def exposure(value):
     """
     Formats the exposure value into a standard format
     """
-    return str(value) + 'EV' 
+    return str(value) + 'EV'
 
 
 def color_space(value):

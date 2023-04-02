@@ -3,7 +3,6 @@ OnlyLegs - Setup
 Runs when the app detects that there is no user directory
 """
 import os
-import sys
 import logging
 import re
 import platformdirs

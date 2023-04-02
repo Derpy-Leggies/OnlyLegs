@@ -54,7 +54,7 @@ def group(group_id):
     group = (db_session.query(db.Groups)
                        .filter(db.Groups.id == group_id)
                        .first())
-    
+
     if group is None:
         abort(404, 'Group not found! D:')
 
@@ -108,8 +108,8 @@ def group_post(group_id, image_id):
 
     # Get all groups the image is in
     groups = (db_session.query(db.GroupJunction.group_id)
-                       .filter(db.GroupJunction.post_id == image_id)
-                       .all())
+                        .filter(db.GroupJunction.post_id == image_id)
+                        .all())
 
     # Get the group data for each group the image is in
     image.groups = []
