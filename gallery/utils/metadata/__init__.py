@@ -79,15 +79,16 @@ class Metadata:
                         exif[mapping_name][mapping_val[key][0]] = {
                             'raw': value,
                         }
+                    continue
 
         # Remove empty keys
-        if len(exif['Photographer']) == 0:
+        if not exif['Photographer']:
             del exif['Photographer']
-        if len(exif['Camera']) == 0:
+        if not exif['Camera']:
             del exif['Camera']
-        if len(exif['Software']) == 0:
+        if not exif['Software']:
             del exif['Software']
-        if len(exif['File']) == 0:
+        if not exif['File']:
             del exif['File']
 
         return exif

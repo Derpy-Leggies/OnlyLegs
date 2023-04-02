@@ -28,7 +28,7 @@ def fnumber(value):
     """
     Formats the f-number into a standard format
     """
-    return 'f/' + str(value)
+    return 'ƒ/' + str(value)
 
 
 def iso(value):
@@ -59,7 +59,7 @@ def exposure(value):
     """
     Formats the exposure value into a standard format
     """
-    return str(value) + 'EV'
+    return str(value) + 'EV' 
 
 
 def color_space(value):
