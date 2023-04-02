@@ -45,19 +45,11 @@ def compile_theme(theme_name, app_path):
 
     # If the destination folder exists, remove it
     if os.path.exists(os.path.join(theme_destination, 'fonts')):
-        try:
-            shutil.rmtree(os.path.join(theme_destination, 'fonts'))
-        except Exception as err:
-            print("Failed to remove old fonts!\n", err)
-            sys.exit(1)
+        shutil.rmtree(os.path.join(theme_destination, 'fonts'))
 
     # Copy the fonts
-    try:
-        shutil.copytree(os.path.join(theme_source, 'fonts'),
-                        os.path.join(theme_destination, 'fonts'))
-        print("Fonts copied successfully!")
-    except Exception as err:
-        print("Failed to copy fonts!\n", err)
-        sys.exit(1)
+    shutil.copytree(os.path.join(theme_source, 'fonts'),
+                    os.path.join(theme_destination, 'fonts'))
+    print("Fonts copied successfully!")
 
     print(f"{datetime.now().hour}:{datetime.now().minute}:{datetime.now().second} - Done!\n")

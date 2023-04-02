@@ -14,8 +14,6 @@ DB_PATH = os.path.join(USER_DIR, 'gallery.sqlite')
 
 
 # In the future, I want to add support for other databases
-# engine = create_engine('postgresql://username:password@host:port/database_name', echo=False)
-# engine = create_engine('mysql://username:password@host:port/database_name', echo=False)
 engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 base = declarative_base()
 

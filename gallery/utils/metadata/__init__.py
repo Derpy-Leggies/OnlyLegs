@@ -71,23 +71,28 @@ class Metadata:
             for mapping_name, mapping_val in EXIF_MAPPING:
                 if key in mapping_val:
                     if len(mapping_val[key]) == 2:
+                        # the helper function works, so not sure why it triggers pylint
                         exif[mapping_name][mapping_val[key][0]] = {
                             'raw': value,
-                            'formatted': getattr(helpers, mapping_val[key][1])(value),  # pylint: disable=E0602
+                            'formatted': (
+                                    getattr(helpers, mapping_val[key][1])  # pylint: disable=E0602
+                                    (value)
+                                ),
                         }
                     else:
                         exif[mapping_name][mapping_val[key][0]] = {
                             'raw': value,
                         }
+                    continue
 
         # Remove empty keys
-        if len(exif['Photographer']) == 0:
+        if not exif['Photographer']:
             del exif['Photographer']
-        if len(exif['Camera']) == 0:
+        if not exif['Camera']:
             del exif['Camera']
-        if len(exif['Software']) == 0:
+        if not exif['Software']:
             del exif['Software']
-        if len(exif['File']) == 0:
+        if not exif['File']:
             del exif['File']
 
         return exif

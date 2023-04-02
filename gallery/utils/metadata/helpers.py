@@ -28,7 +28,7 @@ def fnumber(value):
     """
     Formats the f-number into a standard format
     """
-    return 'f/' + str(value)
+    return 'ƒ/' + str(value)
 
 
 def iso(value):
@@ -279,7 +279,7 @@ def lens_specification(value):
     """
     try:
         return str(value[0] / value[1]) + 'mm - ' + str(value[2] / value[3]) + 'mm'
-    except Exception:
+    except ValueError:
         return None
 
 

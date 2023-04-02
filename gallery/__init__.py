@@ -66,16 +66,14 @@ def create_app(test_config=None):
     js_scripts = Bundle('js/*.js', output='gen/packed.js')
     assets.register('js_all', js_scripts)
 
-    # Error handlers
+    # Error handlers, if the error is not a HTTP error, return 500
     @app.errorhandler(Exception)
-    def error_page(err):
-        # If the error is not an HTTPException, return a 500 error
+    def error_page(err):  # noqa
         if not isinstance(err, HTTPException):
             abort(500)
-
-        error = err.code
-        msg = err.description
-        return render_template('error.html', error=error, msg=msg), err.code
+        return render_template('error.html',
+                               error=err.code,
+                               msg=err.description), err.code
 
     # Load login, registration and logout manager
     from gallery import auth

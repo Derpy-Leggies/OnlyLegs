@@ -40,11 +40,9 @@ def file(file_name):
     if not request.args:
         if not os.path.exists(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name)):
             abort(404)
-
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], file_name)
 
     thumb = generate_thumbnail(file_name, res, ext)
-
     if not thumb:
         abort(404)
 
@@ -77,31 +75,27 @@ def upload():
     # Save file
     try:
         form_file.save(img_path)
-    except Exception as err:
-        logging.error('Could not save file: %s', err)
+    except OSError as err:
+        logging.info('Error saving file %s because of %s', img_path, err)
         abort(500)
 
     img_exif = mt.Metadata(img_path).yoink()  # Get EXIF data
-    img_colors = ColorThief(img_path).get_palette(color_count=3) # Get color palette
+    img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
 
     # Save to database
-    try:
-        query = db.Posts(author_id=g.user.id,
-                         created_at=dt.utcnow(),
-                         file_name=img_name+'.'+img_ext,
-                         file_type=img_ext,
-                         image_exif=img_exif,
-                         image_colours=img_colors,
-                         post_description=form['description'],
-                         post_alt=form['alt'])
+    query = db.Posts(author_id=g.user.id,
+                     created_at=dt.utcnow(),
+                     file_name=img_name+'.'+img_ext,
+                     file_type=img_ext,
+                     image_exif=img_exif,
+                     image_colours=img_colors,
+                     post_description=form['description'],
+                     post_alt=form['alt'])
 
-        db_session.add(query)
-        db_session.commit()
-    except Exception as err:
-        logging.error('Could not save to database: %s', err)
-        abort(500)
+    db_session.add(query)
+    db_session.commit()
 
-    return 'Gwa Gwa' # Return something so the browser doesn't show an error
+    return 'Gwa Gwa'  # Return something so the browser doesn't show an error
 
 
 @blueprint.route('/delete/<int:image_id>', methods=['POST'])
@@ -180,16 +174,16 @@ def modify_group():
         abort(403)
 
     if request.form['action'] == 'add':
-        if not db_session.query(db.GroupJunction)\
-                         .filter_by(group_id=group_id, post_id=image_id)\
-                         .first():
+        if not (db_session.query(db.GroupJunction)
+                          .filter_by(group_id=group_id, post_id=image_id)
+                          .first()):
             db_session.add(db.GroupJunction(group_id=group_id,
                                             post_id=image_id,
                                             date_added=dt.utcnow()))
     elif request.form['action'] == 'remove':
-        db_session.query(db.GroupJunction)\
-                  .filter_by(group_id=group_id, post_id=image_id)\
-                  .delete()
+        (db_session.query(db.GroupJunction)
+                   .filter_by(group_id=group_id, post_id=image_id)
+                   .delete())
 
     db_session.commit()
 
