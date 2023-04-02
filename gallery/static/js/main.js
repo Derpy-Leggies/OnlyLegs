@@ -1,6 +1,7 @@
 // fade in images
 function imgFade(obj, time = 250) {
-    $(obj).animate({ opacity: 1 }, time);
+    obj.style.transition = `opacity ${time}ms`;
+    obj.style.opacity = 1;
 }
 // Lazy load images when they are in view
 function loadOnView() {

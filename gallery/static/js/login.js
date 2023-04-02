@@ -54,7 +54,7 @@ function login(event) {
     }
 
     // Make form
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append("username", formUsername);
     formData.append("password", formPassword);
 
@@ -153,7 +153,7 @@ function register(event) {
     }
 
     // Make form
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append("username", formUsername);
     formData.append("email", formEmail);
     formData.append("password", formPassword);
