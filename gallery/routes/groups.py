@@ -78,7 +78,7 @@ def group(group_id):
 
     # Check contrast for the first image in the group for the banner
     text_colour = 'rgb(var(--fg-black))'
-    if images[0]:
+    if images:
         text_colour = contrast.contrast(images[0].image_colours[0],
                                         'rgb(var(--fg-black))',
                                         'rgb(var(--fg-white))')
