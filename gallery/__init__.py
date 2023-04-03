@@ -21,7 +21,6 @@ from yaml import safe_load
 
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
-Bundle.cache = False
 
 
 def create_app(test_config=None):
@@ -38,9 +37,9 @@ def create_app(test_config=None):
     print("Loaded environment variables")
 
     # Get config file
-    with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8') as file:
+    with open(os.path.join(USER_DIR, 'conf.yml'), encoding='utf-8', mode='r') as file:
         conf = safe_load(file)
-        print("Loaded gallery config")
+        print("Loaded config")
 
     # App configuration
     app.config.from_mapping(
@@ -58,6 +57,7 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     # Load JS assets
+    # TODO: disable caching for sass files as it makes it hard to work on when it is enabled
     assets.register('js_pre', Bundle('js/pre/*.js', output='gen/pre_packed.js'))
     assets.register('js_post', Bundle('js/post/*.js', output='gen/post_packed.js'))
     assets.register('styles', Bundle('sass/*.sass', filters='libsass', output='gen/styles.css'))
