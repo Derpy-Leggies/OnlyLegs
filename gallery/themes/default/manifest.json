@@ -1,0 +1,7 @@
+{
+    "name": "default",
+    "version": "23.04.03",
+    "author": "Michał Gdula",
+    "description": "Default theme for OnlyLegs",
+    "uses": "sass"
+}
