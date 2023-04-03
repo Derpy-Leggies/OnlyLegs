@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" href="{{url_for('static', filename='theme/style.css')}}" defer>
 
-    {% assets "js_all" %}
+    {% assets "js_pre" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 
@@ -151,6 +151,10 @@
             addNotification('{{ message[0] }}', {{ message[1] }});
         {% endfor %}
     </script>
+
+    {% assets "js_post" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 
     {% block script %}{% endblock %}
 </body>

@@ -62,9 +62,11 @@ def create_app(test_config=None):
     # Load theme
     theme_manager.compile_theme('default', app.root_path)
 
-    # Bundle JS files
-    js_scripts = Bundle('js/*.js', output='gen/packed.js')
-    assets.register('js_all', js_scripts)
+    # Load JS assets
+    js_pre = Bundle('js/pre/*.js', output='gen/pre_packed.js')
+    js_post = Bundle('js/post/*.js', output='gen/post_packed.js')
+    assets.register('js_pre', js_pre)
+    assets.register('js_post', js_post)
 
     # Error handlers, if the error is not a HTTP error, return 500
     @app.errorhandler(Exception)

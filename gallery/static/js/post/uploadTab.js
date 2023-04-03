@@ -167,7 +167,7 @@ function clearUpload() {
 // }
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     // Function to upload images
     let uploadTab = document.querySelector(".upload-panel");
 
