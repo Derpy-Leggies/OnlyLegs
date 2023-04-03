@@ -28,6 +28,10 @@
     {% assets "js_pre" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    
+    {% assets "js_post" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}" defer></script>
+    {% endassets %}
 
     {% assets "styles" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" defer>
@@ -150,11 +154,7 @@
         {% for message in get_flashed_messages() %}
             addNotification('{{ message[0] }}', {{ message[1] }});
         {% endfor %}
-    </>
-
-    {% assets "js_post" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
+    </script>
 
     {% block script %}{% endblock %}
 </body>

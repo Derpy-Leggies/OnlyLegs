@@ -53,7 +53,7 @@
         {% endif %}
     </div>
 
-    <form id="modifyGroup">
+    <form id="modifyGroup" action="/api/group/modify" method="post">
         <input type="text" name="group" placeholder="group id" value="{{ group.id }}">
         <input type="text" name="image" placeholder="image id">
         <input type="text" name="action" placeholder="add/remove" value="add">
@@ -82,33 +82,4 @@
             {% endif %}
         </div>
     {% endif %}
-{% endblock %}
-
-{% block script %}
-    <script>
-        // /api/group/modify
-
-        modForm = document.querySelector('#modifyGroup');
-
-        modForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const formData = new FormData();
-
-            formData.append('group', modForm.group.value);
-            formData.append('image', modForm.image.value);
-            formData.append('action', modForm.action.value);
-
-            $.ajax({
-                url: '/api/group/modify',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    addNotification('Image added to group', 1);
-                }
-            })
-        })
-    </script>
 {% endblock %}
