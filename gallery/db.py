@@ -8,6 +8,8 @@ from sqlalchemy import (
     create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, PickleType)
 from sqlalchemy.orm import declarative_base, relationship
 
+from flask_login import UserMixin
+
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
 DB_PATH = os.path.join(USER_DIR, 'gallery.sqlite')
@@ -18,7 +20,7 @@ engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 base = declarative_base()
 
 
-class Users (base):  # pylint: disable=too-few-public-methods, C0103
+class Users (base, UserMixin):  # pylint: disable=too-few-public-methods, C0103
     """
     User table
     Joins with post, groups, session and log

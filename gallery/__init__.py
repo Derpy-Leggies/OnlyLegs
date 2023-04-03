@@ -11,6 +11,7 @@ import logging
 from flask_compress import Compress
 from flask_caching import Cache
 from flask_assets import Environment, Bundle
+from flask_login import LoginManager
 from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
 
@@ -19,8 +20,19 @@ import platformdirs
 from dotenv import load_dotenv
 from yaml import safe_load
 
+# Import database
+from sqlalchemy.orm import sessionmaker
+from gallery import db
+
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
+
+db_session = sessionmaker(bind=db.engine)
+db_session = db_session()
+login_manager = LoginManager()
+assets = Environment()
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 300})
+compress = Compress()
 
 
 def create_app(test_config=None):
@@ -28,9 +40,6 @@ def create_app(test_config=None):
     Create and configure the main app
     """
     app = Flask(__name__, instance_path=os.path.join(USER_DIR, 'instance'))
-    assets = Environment()
-    cache = Cache(config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 300})
-    compress = Compress()
 
     # Get environment variables
     load_dotenv(os.path.join(USER_DIR, '.env'))
@@ -55,6 +64,13 @@ def create_app(test_config=None):
         app.config.from_pyfile('config.py', silent=True)
     else:
         app.config.from_mapping(test_config)
+
+    login_manager.init_app(app)
+    login_manager.login_view = 'gallery.index'
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return db_session.query(db.Users).filter_by(id=user_id).first()
 
     # Load JS assets
     # TODO: disable caching for sass files as it makes it hard to work on when it is enabled

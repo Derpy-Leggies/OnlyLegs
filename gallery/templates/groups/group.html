@@ -75,7 +75,7 @@
     {% else %}
         <div class="big-text">
             <h1>*crickets chirping*</h1>
-            {% if g.user %}
+            {% if current_user.is_authenticated %}
                 <p>Add some images to the group!</p>
             {% else %}
                 <p>Login to start managing this image group!</p>

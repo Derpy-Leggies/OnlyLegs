@@ -8,13 +8,14 @@ import logging
 from datetime import datetime as dt
 import platformdirs
 
-from flask import Blueprint, send_from_directory, abort, flash, jsonify, request, g, current_app
+from flask import Blueprint, send_from_directory, abort, flash, jsonify, request, current_app
 from werkzeug.utils import secure_filename
+
+from flask_login import login_required, current_user
 
 from colorthief import ColorThief
 
 from sqlalchemy.orm import sessionmaker
-from gallery.auth import login_required
 
 from gallery import db
 from gallery.utils import metadata as mt
@@ -83,7 +84,7 @@ def upload():
     img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
 
     # Save to database
-    query = db.Posts(author_id=g.user.id,
+    query = db.Posts(author_id=current_user.id,
                      created_at=dt.utcnow(),
                      file_name=img_name+'.'+img_ext,
                      file_type=img_ext,
@@ -109,7 +110,7 @@ def delete_image(image_id):
     # Check if image exists and if user is allowed to delete it (author)
     if img is None:
         abort(404)
-    if img.author_id != g.user.id:
+    if img.author_id != current_user.id:
         abort(403)
 
     # Delete file
@@ -148,7 +149,7 @@ def create_group():
     """
     new_group = db.Groups(name=request.form['name'],
                           description=request.form['description'],
-                          author_id=g.user.id,
+                          author_id=current_user.id,
                           created_at=dt.utcnow())
 
     db_session.add(new_group)
@@ -170,7 +171,7 @@ def modify_group():
 
     if group is None:
         abort(404)
-    elif group.author_id != g.user.id:
+    elif group.author_id != current_user.id:
         abort(403)
 
     if request.form['action'] == 'add':
