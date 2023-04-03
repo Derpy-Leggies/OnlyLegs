@@ -21,6 +21,7 @@ from yaml import safe_load
 
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
+Bundle.cache = False
 
 
 def create_app(test_config=None):
@@ -59,7 +60,7 @@ def create_app(test_config=None):
     # Load JS assets
     js_pre = Bundle('js/pre/*.js', output='gen/pre_packed.js')
     js_post = Bundle('js/post/*.js', output='gen/post_packed.js')
-    styles = Bundle('sass/style.sass', filters='libsass', output='gen/styles.css')
+    styles = Bundle('sass/*.sass', filters='libsass', output='gen/styles.css')
     assets.register('js_pre', js_pre)
     assets.register('js_post', js_post)
     assets.register('styles', styles)
@@ -78,7 +79,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth.blueprint)
 
     # Load the different routes
-    from gallery.routes import api, groups, routing, settings
+    from gallery.views import api, groups, routing, settings
     app.register_blueprint(api.blueprint)
     app.register_blueprint(groups.blueprint)
     app.register_blueprint(routing.blueprint)
