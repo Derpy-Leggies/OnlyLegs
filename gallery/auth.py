@@ -3,10 +3,11 @@ OnlyLegs - Authentication
 User registration, login and logout and locking access to pages behind a login
 """
 import re
+from uuid import uuid4
 import logging
 from datetime import datetime as dt
 
-from flask import Blueprint, flash, redirect, request, url_for, abort, jsonify
+from flask import Blueprint, flash, redirect, request, url_for, abort, jsonify, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flask_login import login_user, logout_user, login_required
@@ -87,7 +88,7 @@ def register():
     if error:
         return jsonify(error)
 
-    register_user = db.Users(username=username, email=email,
+    register_user = db.Users(alt_id=str(uuid4()), username=username, email=email,
                              password=generate_password_hash(password, method='sha256'),
                              created_at=dt.utcnow())
     db_session.add(register_user)

@@ -2,7 +2,7 @@
 OnlyLegs - Settings page
 """
 from flask import Blueprint, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 blueprint = Blueprint('settings', __name__, url_prefix='/settings')
 

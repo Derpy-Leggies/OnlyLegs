@@ -26,16 +26,22 @@
         media="(prefers-color-scheme: dark)"/>
 
     {% assets "js_pre" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
     
     {% assets "js_post" %}
-    <script type="text/javascript" src="{{ ASSET_URL }}" defer></script>
+        <script type="text/javascript" src="{{ ASSET_URL }}" defer></script>
     {% endassets %}
 
     {% assets "styles" %}
-    <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" defer>
+        <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" defer>
     {% endassets %}
+
+    <style>
+        #modifyGroup {
+            padding: 0.5rem;
+        }
+    </style>
 
     {% block head %}{% endblock %}
 </head>

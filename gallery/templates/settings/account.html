@@ -4,4 +4,10 @@
 {% block settings_content %}
     <h2>Account</h2>
     <a href="{{ url_for( 'auth.logout' ) }}">Logout</a>
+    <p>Is session fresh?</p>
+    {% if fresh %}
+        <p>Yes</p>
+    {% else %}
+        <p>No</p>
+    {% endif %}
 {% endblock %}

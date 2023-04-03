@@ -27,7 +27,9 @@ class Users (base, UserMixin):  # pylint: disable=too-few-public-methods, C0103
     """
     __tablename__ = 'users'
 
+    # Gallery used information
     id = Column(Integer, primary_key=True)
+    alt_id = Column(String, unique=True, nullable=False)
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
@@ -35,8 +37,10 @@ class Users (base, UserMixin):  # pylint: disable=too-few-public-methods, C0103
 
     posts = relationship('Posts', backref='users')
     groups = relationship('Groups', backref='users')
-    session = relationship('Sessions', backref='users')
     log = relationship('Logs', backref='users')
+
+    def get_id(self):
+        return str(self.alt_id)
 
 
 class Posts (base):  # pylint: disable=too-few-public-methods, C0103
@@ -89,22 +93,6 @@ class GroupJunction (base):  # pylint: disable=too-few-public-methods, C0103
     date_added = Column(DateTime, nullable=False)
     group_id = Column(Integer, ForeignKey('groups.id'))
     post_id = Column(Integer, ForeignKey('posts.id'))
-
-
-class Sessions (base):  # pylint: disable=too-few-public-methods, C0103
-    """
-    Session table
-    Joins with user
-    """
-    __tablename__ = 'sessions'
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    session_uuid = Column(String, nullable=False)
-    ip_address = Column(String, nullable=False)
-    user_agent = Column(String, nullable=False)
-    active = Column(Boolean, nullable=False)
-    created_at = Column(DateTime, nullable=False)
 
 
 class Logs (base):  # pylint: disable=too-few-public-methods, C0103

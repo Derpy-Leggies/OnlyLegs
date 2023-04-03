@@ -27,6 +27,7 @@ from gallery import db
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
 
+
 db_session = sessionmaker(bind=db.engine)
 db_session = db_session()
 login_manager = LoginManager()
@@ -67,10 +68,16 @@ def create_app(test_config=None):
 
     login_manager.init_app(app)
     login_manager.login_view = 'gallery.index'
+    login_manager.session_protection = 'strong'
 
     @login_manager.user_loader
     def load_user(user_id):
-        return db_session.query(db.Users).filter_by(id=user_id).first()
+        return db_session.query(db.Users).filter_by(alt_id=user_id).first()
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        return render_template('error.html', error=401,
+                               msg='You are not authorized to view this page!!!!'), 401
 
     # Load JS assets
     # TODO: disable caching for sass files as it makes it hard to work on when it is enabled
@@ -83,9 +90,7 @@ def create_app(test_config=None):
     def error_page(err):  # noqa
         if not isinstance(err, HTTPException):
             abort(500)
-        return render_template('error.html',
-                               error=err.code,
-                               msg=err.description), err.code
+        return render_template('error.html', error=err.code, msg=err.description), err.code
 
     # Load login, registration and logout manager
     from gallery import auth
