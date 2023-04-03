@@ -19,9 +19,6 @@ import platformdirs
 from dotenv import load_dotenv
 from yaml import safe_load
 
-# Utils
-from gallery.utils import theme_manager
-
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
 
@@ -59,14 +56,13 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    # Load theme
-    theme_manager.compile_theme('default', app.root_path)
-
     # Load JS assets
     js_pre = Bundle('js/pre/*.js', output='gen/pre_packed.js')
     js_post = Bundle('js/post/*.js', output='gen/post_packed.js')
+    styles = Bundle('sass/style.sass', filters='libsass', output='gen/styles.css')
     assets.register('js_pre', js_pre)
     assets.register('js_post', js_post)
+    assets.register('styles', styles)
 
     # Error handlers, if the error is not a HTTP error, return 500
     @app.errorhandler(Exception)
