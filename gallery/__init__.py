@@ -80,10 +80,9 @@ def create_app(test_config=None):
                                msg='You are not authorized to view this page!!!!'), 401
 
     # Load JS assets
-    # TODO: disable caching for sass files as it makes it hard to work on when it is enabled
-    assets.register('js_pre', Bundle('js/pre/*.js', output='gen/pre_packed.js'))
-    assets.register('js_post', Bundle('js/post/*.js', output='gen/post_packed.js'))
-    assets.register('styles', Bundle('sass/*.sass', filters='libsass', output='gen/styles.css'))
+    assets.register('js_pre', Bundle('js/pre/*.js', output='gen/pre_packed.js', depends='js/pre/*.js'))
+    assets.register('js_post', Bundle('js/post/*.js', output='gen/post_packed.js', depends='js/pre/*.js'))
+    assets.register('styles', Bundle('sass/*.sass', filters='libsass', output='gen/styles.css', depends='sass/**/*.sass'))
 
     # Error handlers, if the error is not a HTTP error, return 500
     @app.errorhandler(Exception)
