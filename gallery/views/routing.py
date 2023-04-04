@@ -89,7 +89,7 @@ def profile():
         if current_user.is_authenticated:
             user_id = current_user.id
         else:
-            abort(404)
+            abort(404, 'You must be logged in to view your own profile!')
             
     # Get the user's data
     user = db_session.query(db.Users).filter(db.Users.id == user_id).first()
