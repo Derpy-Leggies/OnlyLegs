@@ -5,14 +5,12 @@ function imgFade(obj, time = 250) {
 }
 // Lazy load images when they are in view
 function loadOnView() {
-    let lazyLoad = document.querySelectorAll('#lazy-load');
+    const lazyLoad = document.querySelectorAll('#lazy-load');
 
     for (let i = 0; i < lazyLoad.length; i++) {
         let image = lazyLoad[i];
         if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
-            if (!image.src) {
-                image.src = `/api/file/${image.getAttribute('data-src')}?r=thumb` // e=webp
-            }
+            if (!image.src) { image.src = image.getAttribute('data-src') }
         }
     }
 }

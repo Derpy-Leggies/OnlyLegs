@@ -38,7 +38,7 @@ def file(file_name):
     file_name = secure_filename(file_name)  # Sanitize file name
 
     # if no args are passed, return the raw file
-    if not request.args:
+    if not res and not ext:
         if not os.path.exists(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name)):
             abort(404)
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], file_name)
