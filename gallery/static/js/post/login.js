@@ -30,8 +30,24 @@ function showLogin() {
     passwordInput.placeholder = 'Passywassy';
     passwordInput.id = 'password';
 
+    // Container for remember me checkbox
+    rememberMeSpan = document.createElement('span');
+    rememberMeSpan.classList.add('input-checkbox');
+
+    rememberMeInput = document.createElement('input');
+    rememberMeInput.type = 'checkbox';
+    rememberMeInput.id = 'remember-me';
+
+    rememberMeLabel = document.createElement('label');
+    rememberMeLabel.innerHTML = 'No forgetty me pls';
+    rememberMeLabel.setAttribute('for', 'remember-me');
+
+    rememberMeSpan.appendChild(rememberMeInput);
+    rememberMeSpan.appendChild(rememberMeLabel);
+
     loginForm.appendChild(usernameInput);
     loginForm.appendChild(passwordInput);
+    loginForm.appendChild(rememberMeSpan);
 
     popUpShow(
         'Login!',
@@ -47,6 +63,7 @@ function login(event) {
 
     let formUsername = document.querySelector("#username").value;
     let formPassword = document.querySelector("#password").value;
+    let formRememberMe = document.querySelector("#remember-me").checked;
 
     if (formUsername === "" || formPassword === "") {
         addNotification("Please fill in all fields!!!!", 3);
@@ -57,6 +74,7 @@ function login(event) {
     const formData = new FormData();
     formData.append("username", formUsername);
     formData.append("password", formPassword);
+    formData.append("remember-me", formRememberMe);
 
     fetch('/auth/login', {
         method: 'POST',
@@ -129,7 +147,7 @@ function showRegister() {
     registerForm.appendChild(emailInput);
     registerForm.appendChild(passwordInput);
     registerForm.appendChild(passwordInputRepeat);
-
+    
     popUpShow(
         'Who are you?',
         'Already have an account? <span class="link" onclick="showLogin()">Login!</span>',

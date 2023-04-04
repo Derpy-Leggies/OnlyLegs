@@ -30,6 +30,7 @@ def login():
 
     username = request.form['username'].strip()
     password = request.form['password'].strip()
+    remember = True if request.form.get('remember') else False
 
     user = db_session.query(db.Users).filter_by(username=username).first()
 
@@ -40,7 +41,7 @@ def login():
     if error:
         abort(403)
 
-    login_user(user)
+    login_user(user, remember=remember)
 
     logging.info('User %s logged in from %s', username, request.remote_addr)
     flash(['Logged in successfully!', '4'])
