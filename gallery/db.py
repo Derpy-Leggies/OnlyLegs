@@ -4,8 +4,7 @@ OnlyLegs - Database models and functions for SQLAlchemy
 import os
 import platformdirs
 
-from sqlalchemy import (
-    create_engine, Column, Integer, String, Boolean, DateTime, ForeignKey, PickleType)
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey, PickleType
 from sqlalchemy.orm import declarative_base, relationship
 
 from flask_login import UserMixin

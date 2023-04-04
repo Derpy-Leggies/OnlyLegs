@@ -26,7 +26,7 @@ class OnlyLegs(Application):
         return cfg
 
     @staticmethod
-    def prog(self):  # pylint: disable=C0116, E0202
+    def prog():  # pylint: disable=C0116, E0202
         return 'OnlyLegs'
 
     def load(self):

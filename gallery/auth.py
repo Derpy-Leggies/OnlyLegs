@@ -7,7 +7,7 @@ from uuid import uuid4
 import logging
 from datetime import datetime as dt
 
-from flask import Blueprint, flash, redirect, request, url_for, abort, jsonify, session
+from flask import Blueprint, flash, redirect, request, url_for, abort, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flask_login import login_user, logout_user, login_required
@@ -27,14 +27,14 @@ def login():
     Log in a registered user by adding the user id to the session
     """
     error = []
-    
+
     username = request.form['username'].strip()
     password = request.form['password'].strip()
 
     user = db_session.query(db.Users).filter_by(username=username).first()
 
     if not user and not check_password_hash(user.password, password):
-        logging.error('Login attempt from %s', username, request.remote_addr)
+        logging.error('Login attempt from %s', request.remote_addr)
         error.append('Username or Password is incorrect!')
 
     if error:
@@ -53,7 +53,7 @@ def register():
     Register a new user
     """
     error = []
-    
+
     # Thanks Fennec for reminding me to strip out the whitespace lol
     username = request.form['username'].strip()
     email = request.form['email'].strip()
@@ -79,7 +79,7 @@ def register():
         error.append('Enter password again!')
     elif password_repeat != password:
         error.append('Passwords do not match!')
-        
+
     user_exists = db_session.query(db.Users).filter_by(username=username).first()
     if user_exists:
         error.append('User already exists!')

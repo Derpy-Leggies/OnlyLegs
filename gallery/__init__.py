@@ -76,13 +76,30 @@ def create_app(test_config=None):
 
     @login_manager.unauthorized_handler
     def unauthorized():
-        return render_template('error.html', error=401,
-                               msg='You are not authorized to view this page!!!!'), 401
+        error = 401
+        msg = 'You are not authorized to view this page!!!!'
+        return render_template('error.html', error=error, msg=msg), error
 
-    # Load JS assets
-    assets.register('js_pre', Bundle('js/pre/*.js', output='gen/pre_packed.js', depends='js/pre/*.js'))
-    assets.register('js_post', Bundle('js/post/*.js', output='gen/post_packed.js', depends='js/pre/*.js'))
-    assets.register('styles', Bundle('sass/*.sass', filters='libsass', output='gen/styles.css', depends='sass/**/*.sass'))
+    js_pre = Bundle(
+        'js/pre/*.js',
+        output='gen/pre_packed.js',
+        depends='js/pre/*.js'
+    )
+    js_post = Bundle(
+        'js/post/*.js',
+        output='gen/post_packed.js',
+        depends='js/post/*.js'
+    )
+    styles = Bundle(
+        'sass/*.sass',
+        filters='libsass',
+        output='gen/styles.css',
+        depends='sass/**/*.sass'
+    )
+
+    assets.register('js_pre', js_pre)
+    assets.register('js_post', js_post)
+    assets.register('styles', styles)
 
     # Error handlers, if the error is not a HTTP error, return 500
     @app.errorhandler(Exception)
