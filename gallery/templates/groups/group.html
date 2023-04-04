@@ -1,6 +1,46 @@
 {% extends 'layout.html' %}
 {% block nav_groups %}selected{% endblock %}
 {% block head %}
+    {% if images %}
+        <meta name="theme-color" content="rgb({{ images.0.image_colours.0.0 }}{{ images.0.image_colours.0.1 }}{{ images.0.image_colours.0.2 }})"/>
+    {% endif %}
+
+    <script type="text/javascript">
+        function groupShare() {
+            try {
+                navigator.clipboard.writeText(window.location.href)
+                addNotification("Copied link!", 4);
+            } catch (err) {
+                addNotification("Failed to copy link! Are you on HTTP?", 2);
+            }
+        }
+
+        {% if current_user.id == group.author_id %}
+            function groupDelete() {
+                cancelBtn = document.createElement('button');
+                cancelBtn.classList.add('btn-block');
+                cancelBtn.innerHTML = 'AAAAAAAAAA';
+                cancelBtn.onclick = popupDissmiss;
+
+                deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('btn-block');
+                deleteBtn.classList.add('critical');
+                deleteBtn.innerHTML = 'No ragrats!';
+                // deleteBtn.onclick = deleteConfirm;
+                
+                popUpShow('Yeet!',
+                          'Are you surrrre? This action is irreversible and very final.' +
+                          ' This wont delete the images, but it will remove them from this group.',
+                          null,
+                          [cancelBtn, deleteBtn]);
+            }
+
+            function groupEdit() {
+                addNotification("Are you sure you want to edit this image?", 2);
+            }
+        {% endif %}
+    </script>
+
     <style>
         {% if images %}
             .banner::after {
@@ -36,22 +76,56 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div class="banner {% if not images %}small{% endif %}">
-        {% if not images %}
-            <div class="banner-content">
-                <h1>{{ group.name }}</h1>
-                <p>By {{ group.author_username }}</p>
-            </div>
-        {% else %}
+    {% if images %}
+        <div class="banner">
             <img src="{{ url_for('api.file', file_name=images.0.file_name ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
             <span class="banner-filter"></span>
             <div class="banner-content">
-                <p>By {{ group.author_username }} - {{ images|length }} Images</p>
-                <h1>{{ group.name }}</h1>
-                <p>{{ group.description }}</p>
+                <p class="banner-info">By {{ group.author_username }} - {{ images|length }} Images</p>
+                <h1 class="banner-header">{{ group.name }}</h1>
+                <p class="banner-subtitle">{{ group.description }}</p>
+                <div class="pill-row">
+                    <div>
+                        <button class="pill-item" onclick="groupShare()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M136,96H120V43.31L93.66,69.66A8,8,0,0,1,82.34,58.34l40-40a8,8,0,0,1,11.32,0l40,40a8,8,0,0,1-11.32,11.32L136,43.31Zm64,0H136v40a8,8,0,0,1-16,0V96H56a16,16,0,0,0-16,16v96a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V112A16,16,0,0,0,200,96Z"></path></svg>
+                        </button>
+                    </div>
+                    {% if current_user.id == group.author_id %}
+                        <div>
+                            <button class="pill-item pill__critical" onclick="groupDelete()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM112,168a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm0-120H96V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8Z"></path></svg>
+                            </button>
+                            <button class="pill-item pill__critical" onclick="groupEdit()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM51.31,160l90.35-90.35,16.68,16.69L68,176.68ZM48,179.31,76.69,208H48Zm48,25.38L79.31,188l90.35-90.35h0l16.68,16.69Z"></path></svg>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-        {% endif %}
-    </div>
+        </div>
+    {% else %}
+        <div class="banner-small">
+            <div class="banner-content">
+                <h1 class="banner-header">{{ group.name }}</h1>
+                <p class="banner-info">By {{ group.author_username }}</p>
+                <div class="pill-row">
+                    {% if current_user.id == group.author_id %}
+                        <div>
+                            <button class="pill-item" onclick="groupShare()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M156,128a28,28,0,1,1-28-28A28,28,0,0,1,156,128ZM128,76a28,28,0,1,0-28-28A28,28,0,0,0,128,76Zm0,104a28,28,0,1,0,28,28A28,28,0,0,0,128,180Z"></path></svg>
+                            </button>
+                        </div>
+                    {% else %}
+                        <div>
+                            <button class="pill-item" onclick="groupShare()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M136,96H120V43.31L93.66,69.66A8,8,0,0,1,82.34,58.34l40-40a8,8,0,0,1,11.32,0l40,40a8,8,0,0,1-11.32,11.32L136,43.31Zm64,0H136v40a8,8,0,0,1-16,0V96H56a16,16,0,0,0-16,16v96a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V112A16,16,0,0,0,200,96Z"></path></svg>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     <form id="modifyGroup" action="/api/group/modify" method="post">
         <input type="text" name="group" placeholder="group id" value="{{ group.id }}">

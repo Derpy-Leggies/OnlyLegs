@@ -2,7 +2,7 @@
 {% block wrapper_class %}image-wrapper{% endblock %}
 {% block head %}
     <meta property="og:image" content="{{ url_for('api.file', file_name=image.file_name) }}"/>
-    <meta name="theme-color" content="#{{ image.image_colours.0.0 }}{{ image.image_colours.0.1 }}{{ image.image_colours.0.2 }}"/>
+    <meta name="theme-color" content="rgb({{ image.image_colours.0.0 }}{{ image.image_colours.0.1 }}{{ image.image_colours.0.2 }})"/>
 
     <script type="text/javascript">
         function imageFullscreenOff() {
@@ -34,18 +34,18 @@
         }
 
         {% if current_user.id == image.author_id %}
-            cancelBtn = document.createElement('button');
-            cancelBtn.classList.add('btn-block');
-            cancelBtn.innerHTML = 'nuuuuuuuu';
-            cancelBtn.onclick = popupDissmiss;
-
-            deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('btn-block');
-            deleteBtn.classList.add('critical');
-            deleteBtn.innerHTML = 'Dewww eeeet!';
-            deleteBtn.onclick = deleteConfirm;
-
             function imageDelete() {
+                cancelBtn = document.createElement('button');
+                cancelBtn.classList.add('btn-block');
+                cancelBtn.innerHTML = 'nuuuuuuuu';
+                cancelBtn.onclick = popupDissmiss;
+
+                deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('btn-block');
+                deleteBtn.classList.add('critical');
+                deleteBtn.innerHTML = 'Dewww eeeet!';
+                deleteBtn.onclick = deleteConfirm;
+                
                 popUpShow('DESTRUCTION!!!!!!',
                           'Do you want to delete this image along with all of its data??? ' +
                           'This action is irreversible!',
@@ -130,7 +130,7 @@
                     </span>
                 </button>
                 <button class="pill-item" onclick="imageShare()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M212,200a36,36,0,1,1-69.85-12.25l-53-34.05a36,36,0,1,1,0-51.4l53-34a36.09,36.09,0,1,1,8.67,13.45l-53,34.05a36,36,0,0,1,0,24.5l53,34.05A36,36,0,0,1,212,200Z"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M136,96H120V43.31L93.66,69.66A8,8,0,0,1,82.34,58.34l40-40a8,8,0,0,1,11.32,0l40,40a8,8,0,0,1-11.32,11.32L136,43.31Zm64,0H136v40a8,8,0,0,1-16,0V96H56a16,16,0,0,0-16,16v96a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V112A16,16,0,0,0,200,96Z"></path></svg>
                     <span class="tool-tip">
                         Share
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg>

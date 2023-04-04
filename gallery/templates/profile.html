@@ -2,10 +2,10 @@
 
 {% block nav_profile %}selected{% endblock %}
 {% block content %}
-    <div class="banner small">
+    <div class="banner-small">
         <div class="banner-content">
-            <h1>{{ user.username }}</h1>
-            <p>Member since <span class="time">{{ user.created_at }}</span></p>
+            <h1 class="banner-header">{{ user.username }}</h1>
+            <p class="banner-info">Member since <span class="time">{{ user.created_at }}</span></p>
         </div>
     </div>
     {% if images %}

@@ -1,15 +1,24 @@
 {% extends 'layout.html' %}
 {% block nav_groups %}selected{% endblock %}
 {% block content %}
-    <div class="banner small">
+    <div class="banner-small">
         <div class="banner-content">
-            <h1>{{ config.WEBSITE.name }}</h1>
+            <h1 class="banner-header">{{ config.WEBSITE.name }}</h1>
             {% if groups|length == 0 %}
-                <p>0 groups :<</p>
+                <p class="banner-info">No groups!!!!</p>
             {% elif groups|length == 69 %}
-                <p>{{ groups|length }} groups, uwu</p>
+                <p class="banner-info">{{ groups|length }} groups, uwu</p>
             {% else %}
-                <p>{{ groups|length }} groups</p>
+                <p class="banner-info">{{ groups|length }} groups</p>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+                <div class="pill-row">
+                    <div>
+                        <button class="pill-item" onclick="groupShare()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
+                        </button>
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>

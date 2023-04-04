@@ -1,15 +1,15 @@
 {% extends 'layout.html' %}
 {% block nav_home %}selected{% endblock %}
 {% block content %}
-    <div class="banner small">
+    <div class="banner-small">
         <div class="banner-content">
-            <h1>{{ config.WEBSITE.name }}</h1>
+            <h1 class="banner-header">{{ config.WEBSITE.name }}</h1>
             {% if images|length == 0 %}
-                <p>0 images :<</p>
+                <p class="banner-info">0 images D:</p>
             {% elif images|length == 69 %}
-                <p>{{ images|length }} images, nice</p>
+                <p class="banner-info">{{ images|length }} images, nice</p>
             {% else %}
-                <p>{{ images|length }} images</p>
+                <p class="banner-info">{{ images|length }} images</p>
             {% endif %}
         </div>
     </div>
