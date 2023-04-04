@@ -26,7 +26,7 @@
                 deleteBtn.classList.add('btn-block');
                 deleteBtn.classList.add('critical');
                 deleteBtn.innerHTML = 'No ragrats!';
-                // deleteBtn.onclick = deleteConfirm;
+                deleteBtn.onclick = deleteConfirm;
                 
                 popUpShow('Yeet!',
                           'Are you surrrre? This action is irreversible and very final.' +
@@ -35,8 +35,139 @@
                           [cancelBtn, deleteBtn]);
             }
 
+            function deleteConfirm(event) {
+                // AJAX takes control of subby form :3
+                event.preventDefault();
+            
+                let formID = {{ group.id }};
+            
+                if (!formID) {
+                    addNotification("Dont tamper with the JavaScript pls!", 3);
+                    return;
+                }
+            
+                // Make form
+                const formData = new FormData();
+                formData.append("group", formID);
+            
+                fetch('{{ url_for('api.delete_group') }}', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.status === 200) {
+                        // Redirect to groups page
+                        window.location.href = '{{ url_for('group.groups') }}';
+                    } else {
+                        switch (response.status) {
+                            case 500:
+                                addNotification('Server exploded, F\'s in chat', 2);
+                                break;
+                            case 403:
+                                addNotification('None but devils play past here... Bad information', 2);
+                                break;
+                            default:
+                                addNotification('Error logging in, blame someone', 2);
+                                break;
+                        }
+                    }
+                }).catch(error => {
+                    addNotification('Error yeeting group!', 2);
+                });
+            }
+
             function groupEdit() {
-                addNotification("Are you sure you want to edit this image?", 2);
+                // Create elements
+                cancelBtn = document.createElement('button');
+                cancelBtn.classList.add('btn-block');
+                cancelBtn.innerHTML = 'go baaaaack';
+                cancelBtn.onclick = popupDissmiss;
+
+                submitBtn = document.createElement('button');
+                submitBtn.classList.add('btn-block');
+                submitBtn.classList.add('primary');
+                submitBtn.innerHTML = 'Saveeee';
+                submitBtn.type = 'submit';
+                submitBtn.setAttribute('form', 'editForm');
+
+                // Create form
+                editForm = document.createElement('form');
+                editForm.id = 'editForm';
+                editForm.setAttribute('onsubmit', 'return edit(event);');
+
+                groupInput = document.createElement('input');
+                groupInput.classList.add('input-block');
+                groupInput.type = 'text';
+                groupInput.placeholder = 'Group ID';
+                groupInput.value = {{ group.id }};
+                groupInput.id = 'group';
+
+                imageInput = document.createElement('input');
+                imageInput.classList.add('input-block');
+                imageInput.type = 'text';
+                imageInput.placeholder = 'Image ID';
+                imageInput.id = 'image';
+
+                actionInput = document.createElement('input');
+                actionInput.classList.add('input-block');
+                actionInput.type = 'text';
+                actionInput.placeholder = 'add/remove';
+                actionInput.value = 'add';
+                actionInput.id = 'action';
+
+                editForm.appendChild(groupInput);
+                editForm.appendChild(imageInput);
+                editForm.appendChild(actionInput);
+
+                popUpShow(
+                    'Nothing stays the same',
+                    'Add, remove, or change, the power is in your hands...',
+                    editForm,
+                    [cancelBtn, submitBtn]
+                );
+            }
+
+            function edit(event) {
+                // AJAX takes control of subby form :3
+                event.preventDefault();
+            
+                let formGroup = document.querySelector("#group").value;
+                let formImage = document.querySelector("#image").value;
+                let formAction = document.querySelector("#action").value;
+            
+                if (!formGroup || !formImage || !formAction) {
+                    addNotification("All values must be set!", 3);
+                    return;
+                }
+            
+                // Make form
+                const formData = new FormData();
+                formData.append("group", formGroup);
+                formData.append("image", formImage);
+                formData.append("action", formAction);
+            
+                fetch('{{ url_for('api.modify_group') }}', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.status === 200) {
+                        addNotification('Group edited!!!', 1);
+                        popupDissmiss();
+                    } else {
+                        switch (response.status) {
+                            case 500:
+                                addNotification('Server exploded, F\'s in chat', 2);
+                                break;
+                            case 403:
+                                addNotification('None but devils play past here... Bad information', 2);
+                                break;
+                            default:
+                                addNotification('Error logging in, blame someone', 2);
+                                break;
+                        }
+                    }
+                }).catch(error => {
+                    addNotification('Error!!!!! Panic!!!!', 2);
+                });
             }
         {% endif %}
     </script>
@@ -126,13 +257,6 @@
             </div>
         </div>
     {% endif %}
-
-    <form id="modifyGroup" action="/api/group/modify" method="post">
-        <input type="text" name="group" placeholder="group id" value="{{ group.id }}">
-        <input type="text" name="image" placeholder="image id">
-        <input type="text" name="action" placeholder="add/remove" value="add">
-        <button type="submit">Submit</button>
-    </form>
 
     {% if images %}
         <div class="gallery-grid">

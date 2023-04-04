@@ -166,6 +166,7 @@ def modify_group():
     """
     group_id = request.form['group']
     image_id = request.form['image']
+    action = request.form['action']
 
     group = db_session.query(db.Groups).filter_by(id=group_id).first()
 
@@ -174,7 +175,7 @@ def modify_group():
     elif group.author_id != current_user.id:
         abort(403)
 
-    if request.form['action'] == 'add':
+    if action:
         if not (db_session.query(db.GroupJunction)
                           .filter_by(group_id=group_id, post_id=image_id)
                           .first()):
@@ -191,17 +192,23 @@ def modify_group():
     return ':3'
 
 
-@blueprint.route('/metadata/<int:img_id>', methods=['GET'])
-def metadata(img_id):
+@blueprint.route('/group/delete', methods=['POST'])
+def delete_group():
     """
-    Yoinks metadata from an image
+    Deletes a group
     """
-    img = db_session.query(db.Posts).filter_by(id=img_id).first()
+    group_id = request.form['group']
 
-    if not img:
+    group = db_session.query(db.Groups).filter_by(id=group_id).first()
+
+    if group is None:
         abort(404)
+    elif group.author_id != current_user.id:
+        abort(403)
 
-    img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name)
-    exif = mt.Metadata(img_path).yoink()
+    db_session.query(db.Groups).filter_by(id=group_id).delete()
+    db_session.query(db.GroupJunction).filter_by(group_id=group_id).delete()
+    db_session.commit()
 
-    return jsonify(exif)
+    flash(['Group yeeted!', '1'])
+    return ':3'
