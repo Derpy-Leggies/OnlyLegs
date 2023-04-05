@@ -137,6 +137,7 @@
     border-radius: $rad-inner
 
     cursor: pointer
+    overflow: hidden
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
 
     input
@@ -144,6 +145,13 @@
         inset: 0
         opacity: 0
         cursor: pointer
+
+    .status
+        width: 100%
+        white-space: nowrap
+        text-overflow: ellipsis
+        text-align: center
+        overflow: hidden
 
     &:hover
         background-color: RGBA($white, 0.2)
