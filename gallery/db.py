@@ -3,8 +3,8 @@ OnlyLegs - Database models and functions for SQLAlchemy
 """
 from uuid import uuid4
 import os
-import platformdirs
 from datetime import datetime as dt
+import platformdirs
 
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey, PickleType
 from sqlalchemy.orm import declarative_base, relationship

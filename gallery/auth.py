@@ -28,7 +28,7 @@ def login():
 
     username = request.form['username'].strip()
     password = request.form['password'].strip()
-    remember = True if request.form.get('remember') else False
+    remember = bool(request.form['remember'])
 
     user = db_session.query(db.Users).filter_by(username=username).first()
 
