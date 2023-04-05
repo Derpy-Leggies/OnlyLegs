@@ -40,8 +40,6 @@ def generate_thumbnail(file_name, resolution, ext=None):
         res_x, res_y = (350, 350)
     elif resolution in ['icon', 'favicon']:
         res_x, res_y = (10, 10)
-    elif len(resolution.split('x')) == 2:
-        res_x, res_y = resolution.split('x')
     else:
         return None
 
