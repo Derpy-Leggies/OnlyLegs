@@ -80,19 +80,15 @@ function login(event) {
         method: 'POST',
         body: formData
     }).then(response => {
-        if (response.status === 200) {
+        if (response.ok) {
             location.reload();
         } else {
-            switch (response.status) {
-                case 500:
-                    addNotification('Server exploded, F\'s in chat', 2);
-                    break;
-                case 403:
-                    addNotification('None but devils play past here... Wrong information', 2);
-                    break;
-                default:
-                    addNotification('Error logging in, blame someone', 2);
-                    break;
+            if (response.status === 403) {
+                addNotification('None but devils play past here... Wrong information', 2);
+            } else if (response.status === 500) {
+                addNotification('Server exploded, F\'s in chat', 2);
+            } else {
+                addNotification('Error logging in, blame someone', 2);
             }
         }
     }).catch(error => {
@@ -178,30 +174,26 @@ function register(event) {
     formData.append("password-repeat", formPasswordRepeat);
 
     // Send form to server
-    fetch('/auth/login', {
+    fetch('/auth/register', {
         method: 'POST',
         body: formData
     }).then(response => {
-        if (response.status === 200) {
-            if (response === "gwa gwa") {
-                addNotification('Registered successfully! Now please login to continue', 1);
-                showLogin();
-            } else {
-                for (let i = 0; i < response.length; i++) {
-                    addNotification(response[i], 2);
-                }
-            }
+        if (response.ok) {
+            addNotification('Registered successfully! Now please login to continue', 1);
+            showLogin();
         } else {
-            switch (response.status) {
-                case 500:
-                    addNotification('Server exploded, F\'s in chat', 2);
-                    break;
-                case 403:
-                    addNotification('None but devils play past here... Wrong information', 2);
-                    break;
-                default:
-                    addNotification('Error logging in, blame someone', 2);
-                    break;
+            if (response.status === 400) {
+                response.json().then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        addNotification(data[i], 2);
+                    }
+                });
+            } else if (response.status === 403) {
+                addNotification('None but devils play past here... Wrong information', 2);
+            } else if (response.status === 500) {
+                addNotification('Server exploded, F\'s in chat', 2);
+            } else {
+                addNotification('Error logging in, blame someone', 2);
             }
         }
     }).catch(error => {
