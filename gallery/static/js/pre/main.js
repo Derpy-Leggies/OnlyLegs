@@ -1,3 +1,11 @@
+let webpSupport = false;
+try {
+    new Image().src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
+    webpSupport = true;
+} catch (e) {
+    webpSupport = false;
+}
+
 // fade in images
 function imgFade(obj, time = 250) {
     obj.style.transition = `opacity ${time}ms`;
@@ -10,7 +18,11 @@ function loadOnView() {
     for (let i = 0; i < lazyLoad.length; i++) {
         let image = lazyLoad[i];
         if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
-            if (!image.src) { image.src = image.getAttribute('data-src') }
+            if (!image.src && webpSupport) {
+                image.src = image.getAttribute('data-src') + '&e=webp'
+            } else if (!image.src) {
+                image.src = image.getAttribute('data-src')
+            }
         }
     }
 }
