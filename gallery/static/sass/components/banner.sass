@@ -108,8 +108,9 @@
         position: absolute
         inset: 0
 
-        display: grid
-        grid-template-columns: auto 1fr auto
+        display: flex
+        flex-direction: row
+        justify-content: flex-start
         gap: 1rem
 
         z-index: +2
@@ -139,9 +140,8 @@
             font-weight: 600
 
         .pill-row
+            margin-left: auto
             width: auto
-            justify-self: flex-end
-            display: inline-flex
 
 @media (max-width: $breakpoint)
     .banner,
@@ -174,17 +174,3 @@
 
             .pill-row
                 margin-top: 1rem
-
-    .banner-small
-        .banner-content
-            display: flex
-            flex-direction: row
-            justify-content: space-between
-            gap: 0
-
-            .banner-header
-                margin: auto 1rem
-                text-align: center
-
-            .banner-info
-                display: none
