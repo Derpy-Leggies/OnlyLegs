@@ -57,6 +57,21 @@
     &.black
         @include btn-block($black)
 
+.input-checkbox
+    padding: 0
+    display: flex
+    justify-content: flex-start
+    align-items: center
+    gap: 0.5rem
+
+    position: relative
+
+    label
+        font-size: 1rem
+        font-weight: 600
+        text-align: left
+        
+        color: RGB($fg-white)
 
 .input-block
     padding: 0.5rem 1rem
@@ -122,6 +137,7 @@
     border-radius: $rad-inner
 
     cursor: pointer
+    overflow: hidden
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
 
     input
@@ -129,6 +145,13 @@
         inset: 0
         opacity: 0
         cursor: pointer
+
+    .status
+        width: 100%
+        white-space: nowrap
+        text-overflow: ellipsis
+        text-align: center
+        overflow: hidden
 
     &:hover
         background-color: RGBA($white, 0.2)

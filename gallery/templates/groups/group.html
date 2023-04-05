@@ -1,8 +1,182 @@
 {% extends 'layout.html' %}
 {% block nav_groups %}selected{% endblock %}
 {% block head %}
+    {% if images %}
+        <meta name="theme-color" content="rgb({{ images.0.colours.0.0 }}{{ images.0.colours.0.1 }}{{ images.0.colours.0.2 }})"/>
+    {% endif %}
+
+    <script type="text/javascript">
+        function groupShare() {
+            try {
+                navigator.clipboard.writeText(window.location.href)
+                addNotification("Copied link!", 4);
+            } catch (err) {
+                addNotification("Failed to copy link! Are you on HTTP?", 2);
+            }
+        }
+
+        {% if current_user.id == group.author_id %}
+            function groupDelete() {
+                cancelBtn = document.createElement('button');
+                cancelBtn.classList.add('btn-block');
+                cancelBtn.innerHTML = 'AAAAAAAAAA';
+                cancelBtn.onclick = popupDissmiss;
+
+                deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('btn-block');
+                deleteBtn.classList.add('critical');
+                deleteBtn.innerHTML = 'No ragrats!';
+                deleteBtn.onclick = deleteConfirm;
+                
+                popUpShow('Yeet!',
+                          'Are you surrrre? This action is irreversible and very final.' +
+                          ' This wont delete the images, but it will remove them from this group.',
+                          null,
+                          [cancelBtn, deleteBtn]);
+            }
+
+            function deleteConfirm(event) {
+                // AJAX takes control of subby form :3
+                event.preventDefault();
+            
+                let formID = {{ group.id }};
+            
+                if (!formID) {
+                    addNotification("Dont tamper with the JavaScript pls!", 3);
+                    return;
+                }
+            
+                // Make form
+                const formData = new FormData();
+                formData.append("group", formID);
+            
+                fetch('{{ url_for('api.delete_group') }}', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.status === 200) {
+                        // Redirect to groups page
+                        window.location.href = '{{ url_for('group.groups') }}';
+                    } else {
+                        switch (response.status) {
+                            case 500:
+                                addNotification('Server exploded, F\'s in chat', 2);
+                                break;
+                            case 403:
+                                addNotification('None but devils play past here... Bad information', 2);
+                                break;
+                            default:
+                                addNotification('Error logging in, blame someone', 2);
+                                break;
+                        }
+                    }
+                }).catch(error => {
+                    addNotification('Error yeeting group!', 2);
+                });
+            }
+
+            function groupEdit() {
+                // Create elements
+                cancelBtn = document.createElement('button');
+                cancelBtn.classList.add('btn-block');
+                cancelBtn.innerHTML = 'go baaaaack';
+                cancelBtn.onclick = popupDissmiss;
+
+                submitBtn = document.createElement('button');
+                submitBtn.classList.add('btn-block');
+                submitBtn.classList.add('primary');
+                submitBtn.innerHTML = 'Saveeee';
+                submitBtn.type = 'submit';
+                submitBtn.setAttribute('form', 'editForm');
+
+                // Create form
+                editForm = document.createElement('form');
+                editForm.id = 'editForm';
+                editForm.setAttribute('onsubmit', 'return edit(event);');
+
+                groupInput = document.createElement('input');
+                groupInput.classList.add('input-block');
+                groupInput.type = 'text';
+                groupInput.placeholder = 'Group ID';
+                groupInput.value = {{ group.id }};
+                groupInput.id = 'group';
+
+                imageInput = document.createElement('input');
+                imageInput.classList.add('input-block');
+                imageInput.type = 'text';
+                imageInput.placeholder = 'Image ID';
+                imageInput.id = 'image';
+
+                actionInput = document.createElement('input');
+                actionInput.classList.add('input-block');
+                actionInput.type = 'text';
+                actionInput.placeholder = 'add/remove';
+                actionInput.value = 'add';
+                actionInput.id = 'action';
+
+                editForm.appendChild(groupInput);
+                editForm.appendChild(imageInput);
+                editForm.appendChild(actionInput);
+
+                popUpShow(
+                    'Nothing stays the same',
+                    'Add, remove, or change, the power is in your hands...',
+                    editForm,
+                    [cancelBtn, submitBtn]
+                );
+            }
+
+            function edit(event) {
+                // AJAX takes control of subby form :3
+                event.preventDefault();
+            
+                let formGroup = document.querySelector("#group").value;
+                let formImage = document.querySelector("#image").value;
+                let formAction = document.querySelector("#action").value;
+            
+                if (!formGroup || !formImage || !formAction) {
+                    addNotification("All values must be set!", 3);
+                    return;
+                }
+            
+                // Make form
+                const formData = new FormData();
+                formData.append("group", formGroup);
+                formData.append("image", formImage);
+                formData.append("action", formAction);
+            
+                fetch('{{ url_for('api.modify_group') }}', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.status === 200) {
+                        addNotification('Group edited!!!', 1);
+                        popupDissmiss();
+                    } else {
+                        switch (response.status) {
+                            case 500:
+                                addNotification('Server exploded, F\'s in chat', 2);
+                                break;
+                            case 403:
+                                addNotification('None but devils play past here... Bad information', 2);
+                                break;
+                            default:
+                                addNotification('Error logging in, blame someone', 2);
+                                break;
+                        }
+                    }
+                }).catch(error => {
+                    addNotification('Error!!!!! Panic!!!!', 2);
+                });
+            }
+        {% endif %}
+    </script>
+
     <style>
         {% if images %}
+            .banner::after {
+                box-shadow: 0 calc(var(--rad) * -1) 0 0 rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }});
+            }
             .banner-content p {
                 color: {{ text_colour }} !important;
             }
@@ -11,90 +185,101 @@
             }
 
             .banner-filter {
-                background: linear-gradient(90deg, rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.3)) !important;
+                background: linear-gradient(90deg, rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.3)) !important;
             }
             @media (max-width: 800px) {
                 .banner-filter {
-                    background: linear-gradient(180deg, rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.8), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.5)) !important;
+                    background: linear-gradient(180deg, rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.8), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.5)) !important;
                 }
+            }
+
+            .navigation {
+                background-color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
+            }
+            .navigation-item > svg {
+                fill: {{ text_colour }} !important;
+                color: {{ text_colour }} !important;
+            }
+            .navigation-item.selected::before {
+                background-color: {{ text_colour }} !important;
             }
         {% endif %}
     </style>
 {% endblock %}
 {% block content %}
-    <div class="banner {% if not images %}small{% endif %}">
-        {% if not images %}
-            <div class="banner-content">
-                <h1>{{ group.name }}</h1>
-                <p>By {{ group.author_username }}</p>
-            </div>
-        {% else %}
-            <img src="{{ url_for('api.file', file_name=images.0.file_name ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
+    {% if images %}
+        <div class="banner">
+            <img src="{{ url_for('api.file', file_name=images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
             <span class="banner-filter"></span>
             <div class="banner-content">
-                <p>By {{ group.author_username }} - {{ images|length }} Images</p>
-                <h1>{{ group.name }}</h1>
-                <p>{{ group.description }}</p>
+                <p class="banner-info">By {{ group.author_username }} - {{ images|length }} Images</p>
+                <h1 class="banner-header">{{ group.name }}</h1>
+                <p class="banner-subtitle">{{ group.description }}</p>
+                <div class="pill-row">
+                    <div>
+                        <button class="pill-item" onclick="groupShare()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M216,112v96a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V112A16,16,0,0,1,56,96H80a8,8,0,0,1,0,16H56v96H200V112H176a8,8,0,0,1,0-16h24A16,16,0,0,1,216,112ZM93.66,69.66,120,43.31V136a8,8,0,0,0,16,0V43.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,69.66Z"></path></svg>
+                        </button>
+                    </div>
+                    {% if current_user.id == group.author_id %}
+                        <div>
+                            <button class="pill-item pill__critical" onclick="groupDelete()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
+                            </button>
+                            <button class="pill-item pill__critical" onclick="groupEdit()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"></path></svg>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-        {% endif %}
-    </div>
-
-    <form id="modifyGroup">
-        <input type="text" name="group" placeholder="group id" value="{{ group.id }}">
-        <input type="text" name="image" placeholder="image id">
-        <input type="text" name="action" placeholder="add/remove" value="add">
-        <button type="submit">Submit</button>
-    </form>
+        </div>
+    {% else %}
+        <div class="banner-small">
+            <div class="banner-content">
+                <h1 class="banner-header">{{ group.name }}</h1>
+                <p class="banner-info">By {{ group.author_username }}</p>
+                <div class="pill-row">
+                    <div>
+                        <button class="pill-item" onclick="groupShare()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M216,112v96a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V112A16,16,0,0,1,56,96H80a8,8,0,0,1,0,16H56v96H200V112H176a8,8,0,0,1,0-16h24A16,16,0,0,1,216,112ZM93.66,69.66,120,43.31V136a8,8,0,0,0,16,0V43.31l26.34,26.35a8,8,0,0,0,11.32-11.32l-40-40a8,8,0,0,0-11.32,0l-40,40A8,8,0,0,0,93.66,69.66Z"></path></svg>
+                        </button>
+                    </div>
+                    {% if current_user.id == group.author_id %}
+                        <div>
+                            <button class="pill-item pill__critical" onclick="groupDelete()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path></svg>
+                            </button>
+                            <button class="pill-item pill__critical" onclick="groupEdit()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"></path></svg>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     {% if images %}
         <div class="gallery-grid">
             {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('group.group_post', group_id=group.id, image_id=image.id) }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('group.group_post', group_id=group.id, image_id=image.id) }}" style="background-color: rgb({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }})">
                     <div class="image-filter">
                         <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img alt="{{ image.alt }}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>
     {% else %}
         <div class="big-text">
             <h1>*crickets chirping*</h1>
-            {% if g.user %}
+            {% if current_user.is_authenticated %}
                 <p>Add some images to the group!</p>
             {% else %}
                 <p>Login to start managing this image group!</p>
             {% endif %}
         </div>
     {% endif %}
-{% endblock %}
-
-{% block script %}
-    <script>
-        // /api/group/modify
-
-        modForm = document.querySelector('#modifyGroup');
-
-        modForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const formData = new FormData();
-
-            formData.append('group', modForm.group.value);
-            formData.append('image', modForm.image.value);
-            formData.append('action', modForm.action.value);
-
-            $.ajax({
-                url: '/api/group/modify',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    addNotification('Image added to group', 1);
-                }
-            })
-        })
-    </script>
 {% endblock %}

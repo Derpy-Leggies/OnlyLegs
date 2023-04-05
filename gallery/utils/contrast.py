@@ -3,7 +3,7 @@ Calculate the contrast between two colors
 """
 
 
-def contrast(background, light, dark, threshold = 0.179):
+def contrast(background, light, dark, threshold=0.179):
     """
     background: tuple of (r, g, b) values
     light: color to use if the background is light

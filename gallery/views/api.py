@@ -5,16 +5,16 @@ from uuid import uuid4
 import os
 import pathlib
 import logging
-from datetime import datetime as dt
 import platformdirs
 
-from flask import Blueprint, send_from_directory, abort, flash, jsonify, request, g, current_app
+from flask import Blueprint, send_from_directory, abort, flash, request, current_app
 from werkzeug.utils import secure_filename
+
+from flask_login import login_required, current_user
 
 from colorthief import ColorThief
 
 from sqlalchemy.orm import sessionmaker
-from gallery.auth import login_required
 
 from gallery import db
 from gallery.utils import metadata as mt
@@ -37,7 +37,7 @@ def file(file_name):
     file_name = secure_filename(file_name)  # Sanitize file name
 
     # if no args are passed, return the raw file
-    if not request.args:
+    if not res and not ext:
         if not os.path.exists(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name)):
             abort(404)
         return send_from_directory(current_app.config['UPLOAD_FOLDER'], file_name)
@@ -64,7 +64,7 @@ def upload():
 
     # Get file extension, generate random name and set file path
     img_ext = pathlib.Path(form_file.filename).suffix.replace('.', '').lower()
-    img_name = "GWAGWA_"+str(uuid4())
+    img_name = "GWAGWA_" + str(uuid4())
     img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img_name+'.'+img_ext)
 
     # Check if file extension is allowed
@@ -83,14 +83,13 @@ def upload():
     img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
 
     # Save to database
-    query = db.Posts(author_id=g.user.id,
-                     created_at=dt.utcnow(),
-                     file_name=img_name+'.'+img_ext,
-                     file_type=img_ext,
-                     image_exif=img_exif,
-                     image_colours=img_colors,
-                     post_description=form['description'],
-                     post_alt=form['alt'])
+    query = db.Posts(author_id=current_user.id,
+                     filename=img_name + '.' + img_ext,
+                     mimetype=img_ext,
+                     exif=img_exif,
+                     colours=img_colors,
+                     description=form['description'],
+                     alt=form['alt'])
 
     db_session.add(query)
     db_session.commit()
@@ -109,18 +108,18 @@ def delete_image(image_id):
     # Check if image exists and if user is allowed to delete it (author)
     if img is None:
         abort(404)
-    if img.author_id != g.user.id:
+    if img.author_id != current_user.id:
         abort(403)
 
     # Delete file
     try:
-        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'],img.file_name))
+        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], img.filename))
     except FileNotFoundError:
-        logging.warning('File not found: %s, already deleted or never existed', img.file_name)
+        logging.warning('File not found: %s, already deleted or never existed', img.filename)
 
     # Delete cached files
     cache_path = os.path.join(platformdirs.user_config_dir('onlylegs'), 'cache')
-    cache_name = img.file_name.rsplit('.')[0]
+    cache_name = img.filename.rsplit('.')[0]
     for cache_file in pathlib.Path(cache_path).glob(cache_name + '*'):
         os.remove(cache_file)
 
@@ -135,7 +134,7 @@ def delete_image(image_id):
     # Commit all changes
     db_session.commit()
 
-    logging.info('Removed image (%s) %s', image_id, img.file_name)
+    logging.info('Removed image (%s) %s', image_id, img.filename)
     flash(['Image was all in Le Head!', '1'])
     return 'Gwa Gwa'
 
@@ -148,8 +147,7 @@ def create_group():
     """
     new_group = db.Groups(name=request.form['name'],
                           description=request.form['description'],
-                          author_id=g.user.id,
-                          created_at=dt.utcnow())
+                          author_id=current_user.id)
 
     db_session.add(new_group)
     db_session.commit()
@@ -165,21 +163,21 @@ def modify_group():
     """
     group_id = request.form['group']
     image_id = request.form['image']
+    action = request.form['action']
 
     group = db_session.query(db.Groups).filter_by(id=group_id).first()
 
     if group is None:
         abort(404)
-    elif group.author_id != g.user.id:
+    elif group.author_id != current_user.id:
         abort(403)
 
-    if request.form['action'] == 'add':
+    if action == 'add':
         if not (db_session.query(db.GroupJunction)
                           .filter_by(group_id=group_id, post_id=image_id)
                           .first()):
             db_session.add(db.GroupJunction(group_id=group_id,
-                                            post_id=image_id,
-                                            date_added=dt.utcnow()))
+                                            post_id=image_id))
     elif request.form['action'] == 'remove':
         (db_session.query(db.GroupJunction)
                    .filter_by(group_id=group_id, post_id=image_id)
@@ -190,17 +188,23 @@ def modify_group():
     return ':3'
 
 
-@blueprint.route('/metadata/<int:img_id>', methods=['GET'])
-def metadata(img_id):
+@blueprint.route('/group/delete', methods=['POST'])
+def delete_group():
     """
-    Yoinks metadata from an image
+    Deletes a group
     """
-    img = db_session.query(db.Posts).filter_by(id=img_id).first()
+    group_id = request.form['group']
 
-    if not img:
+    group = db_session.query(db.Groups).filter_by(id=group_id).first()
+
+    if group is None:
         abort(404)
+    elif group.author_id != current_user.id:
+        abort(403)
 
-    img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name)
-    exif = mt.Metadata(img_path).yoink()
+    db_session.query(db.Groups).filter_by(id=group_id).delete()
+    db_session.query(db.GroupJunction).filter_by(group_id=group_id).delete()
+    db_session.commit()
 
-    return jsonify(exif)
+    flash(['Group yeeted!', '1'])
+    return ':3'

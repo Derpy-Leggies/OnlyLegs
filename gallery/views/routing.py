@@ -3,6 +3,7 @@ Onlylegs Gallery - Routing
 """
 from flask import Blueprint, render_template, url_for, request
 from werkzeug.exceptions import abort
+from flask_login import current_user
 
 from sqlalchemy.orm import sessionmaker
 from gallery import db
@@ -18,9 +19,9 @@ def index():
     """
     Home page of the website, shows the feed of the latest images
     """
-    images = db_session.query(db.Posts.file_name,
-                              db.Posts.post_alt,
-                              db.Posts.image_colours,
+    images = db_session.query(db.Posts.filename,
+                              db.Posts.alt,
+                              db.Posts.colours,
                               db.Posts.created_at,
                               db.Posts.id).order_by(db.Posts.id.desc()).all()
 
@@ -81,12 +82,21 @@ def profile():
     """
     Profile overview, shows all profiles on the onlylegs gallery
     """
-    return render_template('profile.html', user_id='gwa gwa')
+    user_id = request.args.get('id', default=None, type=int)
 
+    # If there is no userID set, check if the user is logged in and display their profile
+    if not user_id:
+        if current_user.is_authenticated:
+            user_id = current_user.id
+        else:
+            abort(404, 'You must be logged in to view your own profile!')
 
-@blueprint.route('/profile/<int:user_id>')
-def profile_id(user_id):
-    """
-    Shows user ofa given id, displays their uploads and other info
-    """
-    return render_template('profile.html', user_id=user_id)
+    # Get the user's data
+    user = db_session.query(db.Users).filter(db.Users.id == user_id).first()
+
+    if not user:
+        abort(404, 'User not found :c')
+
+    images = db_session.query(db.Posts).filter(db.Posts.author_id == user_id).all()
+
+    return render_template('profile.html', user=user, images=images)

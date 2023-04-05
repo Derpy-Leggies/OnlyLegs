@@ -14,7 +14,7 @@ print("""
 #+#    #+# #+#   #+#+# #+#        #+#    #+#        #+#       #+#    #+# #+#    #+#
  ########  ###    #### ########## ###    ########## ######### #########   ########
 
-                     Created by Fluffy Bean - Version 23.03.30
+                     Created by Fluffy Bean - Version 23.04.05
 """)
 
 
@@ -24,18 +24,13 @@ Configuration()
 
 if DEBUG:
     from gallery import create_app
-
-    # If no address is specified, use localhost
-    if not ADDRESS:
-        ADDRESS = 'localhost'
-
     create_app().run(host=ADDRESS, port=PORT, debug=True, threaded=True)
 else:
     from setup.runner import OnlyLegs  # pylint: disable=C0412
+    import sys
 
-    # If no address is specified, bind the server to all interfaces
-    if not ADDRESS:
-        ADDRESS = '0.0.0.0'
+    # Stop Gunicorn from reading the command line arguments as it causes errors
+    sys.argv = [sys.argv[0]]
 
     options = {
         'bind': f'{ADDRESS}:{PORT}',

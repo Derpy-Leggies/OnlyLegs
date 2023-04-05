@@ -30,8 +30,24 @@ function showLogin() {
     passwordInput.placeholder = 'Passywassy';
     passwordInput.id = 'password';
 
+    // Container for remember me checkbox
+    rememberMeSpan = document.createElement('span');
+    rememberMeSpan.classList.add('input-checkbox');
+
+    rememberMeInput = document.createElement('input');
+    rememberMeInput.type = 'checkbox';
+    rememberMeInput.id = 'remember-me';
+
+    rememberMeLabel = document.createElement('label');
+    rememberMeLabel.innerHTML = 'No forgetty me pls';
+    rememberMeLabel.setAttribute('for', 'remember-me');
+
+    rememberMeSpan.appendChild(rememberMeInput);
+    rememberMeSpan.appendChild(rememberMeLabel);
+
     loginForm.appendChild(usernameInput);
     loginForm.appendChild(passwordInput);
+    loginForm.appendChild(rememberMeSpan);
 
     popUpShow(
         'Login!',
@@ -47,6 +63,7 @@ function login(event) {
 
     let formUsername = document.querySelector("#username").value;
     let formPassword = document.querySelector("#password").value;
+    let formRememberMe = document.querySelector("#remember-me").checked;
 
     if (formUsername === "" || formPassword === "") {
         addNotification("Please fill in all fields!!!!", 3);
@@ -54,27 +71,24 @@ function login(event) {
     }
 
     // Make form
-    var formData = new FormData();
+    const formData = new FormData();
     formData.append("username", formUsername);
     formData.append("password", formPassword);
+    formData.append("remember-me", formRememberMe);
 
     fetch('/auth/login', {
         method: 'POST',
         body: formData
     }).then(response => {
-        if (response.status === 200) {
+        if (response.ok) {
             location.reload();
         } else {
-            switch (response.status) {
-                case 500:
-                    addNotification('Server exploded, F\'s in chat', 2);
-                    break;
-                case 403:
-                    addNotification('None but devils play past here... Wrong information', 2);
-                    break;
-                default:
-                    addNotification('Error logging in, blame someone', 2);
-                    break;
+            if (response.status === 403) {
+                addNotification('None but devils play past here... Wrong information', 2);
+            } else if (response.status === 500) {
+                addNotification('Server exploded, F\'s in chat', 2);
+            } else {
+                addNotification('Error logging in, blame someone', 2);
             }
         }
     }).catch(error => {
@@ -129,7 +143,7 @@ function showRegister() {
     registerForm.appendChild(emailInput);
     registerForm.appendChild(passwordInput);
     registerForm.appendChild(passwordInputRepeat);
-
+    
     popUpShow(
         'Who are you?',
         'Already have an account? <span class="link" onclick="showLogin()">Login!</span>',
@@ -153,37 +167,33 @@ function register(event) {
     }
 
     // Make form
-    var formData = new FormData();
+    const formData = new FormData();
     formData.append("username", formUsername);
     formData.append("email", formEmail);
     formData.append("password", formPassword);
     formData.append("password-repeat", formPasswordRepeat);
 
     // Send form to server
-    fetch('/auth/login', {
+    fetch('/auth/register', {
         method: 'POST',
         body: formData
     }).then(response => {
-        if (response.status === 200) {
-            if (response === "gwa gwa") {
-                addNotification('Registered successfully! Now please login to continue', 1);
-                showLogin();
-            } else {
-                for (let i = 0; i < response.length; i++) {
-                    addNotification(response[i], 2);
-                }
-            }
+        if (response.ok) {
+            addNotification('Registered successfully! Now please login to continue', 1);
+            showLogin();
         } else {
-            switch (response.status) {
-                case 500:
-                    addNotification('Server exploded, F\'s in chat', 2);
-                    break;
-                case 403:
-                    addNotification('None but devils play past here... Wrong information', 2);
-                    break;
-                default:
-                    addNotification('Error logging in, blame someone', 2);
-                    break;
+            if (response.status === 400) {
+                response.json().then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        addNotification(data[i], 2);
+                    }
+                });
+            } else if (response.status === 403) {
+                addNotification('None but devils play past here... Wrong information', 2);
+            } else if (response.status === 500) {
+                addNotification('Server exploded, F\'s in chat', 2);
+            } else {
+                addNotification('Error logging in, blame someone', 2);
             }
         }
     }).catch(error => {

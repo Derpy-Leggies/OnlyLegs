@@ -74,24 +74,11 @@ $breakpoint: 800px
 
     --breakpoint: 800px
 
-
-@font-face
-    font-family: 'Work Sans'
-    src: url('fonts/worksans-regular.woff2')
-    font-weight: 400
-
-@font-face
-    font-family: 'Work Sans'
-    src: url('fonts/worksans-bold.woff2')
-    font-weight: 600
-
-@font-face
-    font-family: 'Work Sans'
-    src: url('fonts/worksans-black.woff2')
-    font-weight: 900
-
+// I have no clue if its webassets or libsass thats doing this shit
+// But one of them is trying to "correct" the path, and 404-ing the
+// font, so enjoy this path fuckery
 @font-face
     font-family: 'Manrope'
-    src: url('fonts/Manrope[wght].woff2') format('woff2')
+    src: url('../../../../static/fonts/Manrope[wght].woff2') format('woff2')
     font-style: normal
     font-display: swap

@@ -32,13 +32,27 @@
 
 And many more planned things!
 
-## screenshots
+<h2>Screenshots</h2>
 
-Home-screen
+<details><summary>Home Screen</summary>
+
 ![screenshot](.github/images/homepage.png)
 
-Image view
-![screenshot](.github/images/imageview.png)
+</details>
+
+<details><summary>Photo View</summary>
+
+![screenshot](.github/images/photo.png)
+![screenshot](.github/images/photo-mobile.png)
+
+</details>
+<details><summary>Photo Group</summary>
+
+![screenshot](.github/images/group.png)
+![screenshot](.github/images/group-mobile.png)
+
+</details>
+
 
 ## Running
 

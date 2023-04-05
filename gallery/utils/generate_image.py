@@ -4,7 +4,7 @@ Tools for generating images and thumbnails
 
 import os
 import platformdirs
-from PIL import Image, ImageOps  #, ImageFilter
+from PIL import Image, ImageOps
 from werkzeug.utils import secure_filename
 
 
@@ -37,11 +37,9 @@ def generate_thumbnail(file_name, resolution, ext=None):
     if resolution in ['prev', 'preview']:
         res_x, res_y = (1920, 1080)
     elif resolution in ['thumb', 'thumbnail']:
-        res_x, res_y = (400, 400)
+        res_x, res_y = (350, 350)
     elif resolution in ['icon', 'favicon']:
         res_x, res_y = (10, 10)
-    elif len(resolution.split('x')) == 2:
-        res_x, res_y = resolution.split('x')
     else:
         return None
 
@@ -65,13 +63,13 @@ def generate_thumbnail(file_name, resolution, ext=None):
     # Save image to cache directory
     try:
         image.save(os.path.join(CACHE_PATH, f'{file_name}_{res_x}x{res_y}.{ext}'),
-                    icc_profile=image_icc)
+                   icc_profile=image_icc)
     except OSError:
         # This usually happens when saving a JPEG with an ICC profile,
         # so we convert to RGB and try again
         image = image.convert('RGB')
         image.save(os.path.join(CACHE_PATH, f'{file_name}_{res_x}x{res_y}.{ext}'),
-                    icc_profile=image_icc)
+                   icc_profile=image_icc)
 
     # No need to keep the image in memory, learned the hard way
     image.close()

@@ -1,27 +1,27 @@
 {% extends 'layout.html' %}
 {% block nav_home %}selected{% endblock %}
 {% block content %}
-    <div class="banner small">
+    <div class="banner-small">
         <div class="banner-content">
-            <h1>{{ config.WEBSITE.name }}</h1>
+            <h1 class="banner-header">{{ config.WEBSITE.name }}</h1>
             {% if images|length == 0 %}
-                <p>0 images :<</p>
+                <p class="banner-info">0 images D:</p>
             {% elif images|length == 69 %}
-                <p>{{ images|length }} images, nice</p>
+                <p class="banner-info">{{ images|length }} images, nice</p>
             {% else %}
-                <p>{{ images|length }} images</p>
+                <p class="banner-info">{{ images|length }} images</p>
             {% endif %}
         </div>
     </div>
     {% if images %}
         <div class="gallery-grid">
             {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('gallery.image', image_id=image.id) }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('gallery.image', image_id=image.id) }}" style="background-color: rgb({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }})">
                     <div class="image-filter">
                         <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{{ image.post_alt }}" data-src="{{ image.file_name }}" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img fetchpriority="low" alt="{{ image.alt }}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>
