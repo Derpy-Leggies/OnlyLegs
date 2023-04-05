@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 {% block wrapper_class %}image-wrapper{% endblock %}
 {% block head %}
-    <meta property="og:image" content="{{ url_for('api.file', file_name=image.file_name) }}"/>
-    <meta name="theme-color" content="rgb({{ image.image_colours.0.0 }}{{ image.image_colours.0.1 }}{{ image.image_colours.0.2 }})"/>
+    <meta property="og:image" content="{{ url_for('api.file', file_name=image.filename) }}"/>
+    <meta name="theme-color" content="rgb({{ image.colours.0.0 }}{{ image.colours.0.1 }}{{ image.colours.0.2 }})"/>
 
     <script type="text/javascript">
         function imageFullscreenOff() {
@@ -18,7 +18,7 @@
         function imageFullscreenOn() {
             let fullscreen = document.querySelector('.image-fullscreen')
 
-            fullscreen.querySelector('img').src = '{{ url_for('api.file', file_name=image.file_name) }}';
+            fullscreen.querySelector('img').src = '{{ url_for('api.file', file_name=image.filename) }}';
 
             document.querySelector("html").style.overflow = "hidden";
             fullscreen.style.display = 'flex';
@@ -80,31 +80,31 @@
 
     <style>
         .background span {
-            background-image: linear-gradient(to top, rgba({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }}, 1), transparent);
+            background-image: linear-gradient(to top, rgba({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }}, 1), transparent);
         }
     </style>
 {% endblock %}
 {% block content %}
     <div class="background">
-        <img src="{{ url_for('api.file', file_name=image.file_name) }}?r=prev" alt="{{ image.post_alt }}" onload="imgFade(this)" style="opacity:0;"/>
+        <img src="{{ url_for('api.file', file_name=image.filename) }}?r=prev" alt="{{ image.alt }}" onload="imgFade(this)" style="opacity:0;"/>
         <span></span>
     </div>
 
     <div class="image-fullscreen" onclick="imageFullscreenOff()">
-        <img src="" alt="{{ image.post_alt }}"/>
+        <img src="" alt="{{ image.alt }}"/>
     </div>
 
     <div class="image-grid">
         <div class="image-container" id="image-container">
             <img
-                src="{{ url_for('api.file', file_name=image.file_name) }}?r=prev"
-                alt="{{ image.post_alt }}"
+                src="{{ url_for('api.file', file_name=image.filename) }}?r=prev"
+                alt="{{ image.alt }}"
                 onload="imgFade(this)"
                 style="opacity: 0;"
                 onerror="this.src='{{ url_for('static', filename='error.png')}}'"
-                {% if "File" in image.image_exif %}
-                    width="{{ image.image_exif.File.Width.raw }}"
-                    height="{{ image.image_exif.File.Height.raw }}"
+                {% if "File" in image.exif %}
+                    width="{{ image.exif.File.Width.raw }}"
+                    height="{{ image.exif.File.Height.raw }}"
                 {% endif %}
             />
         </div>
@@ -136,7 +136,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg>
                     </span>
                 </button>
-                <a class="pill-item" href="/api/file/{{ image.file_name }}" download onclick="addNotification('Download started!', 4)">
+                <a class="pill-item" href="/api/file/{{ image.filename }}" download onclick="addNotification('Download started!', 4)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Zm-42.34-61.66a8,8,0,0,1,0,11.32l-24,24a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L120,164.69V120a8,8,0,0,1,16,0v44.69l10.34-10.35A8,8,0,0,1,157.66,154.34Z"></path></svg>
                     <span class="tool-tip">
                         Download
@@ -210,7 +210,7 @@
                         </tr>
                     </table>
                     <div class="img-colours">
-                        {% for col in image.image_colours %}
+                        {% for col in image.colours %}
                             <span style="background-color: rgb({{col.0}}, {{col.1}}, {{col.2}})"></span>
                         {% endfor %}
                     </div>
@@ -226,7 +226,7 @@
                     {% endif %}
                 </div>
             </div>       
-            {% for tag in image.image_exif %}
+            {% for tag in image.exif %}
                 <div class="info-tab">
                     <div class="info-header">
                         {% if tag == 'Photographer' %}
@@ -251,17 +251,17 @@
                     </div>
                     <div class="info-table">
                         <table>
-                            {% for subtag in image.image_exif[tag] %}
+                            {% for subtag in image.exif[tag] %}
                                 <tr>
                                     <td>{{ subtag }}</td>
-                                    {% if image.image_exif[tag][subtag]['formatted'] %}
-                                        {% if image.image_exif[tag][subtag]['type'] == 'date' %}
-                                            <td><span class="time">{{ image.image_exif[tag][subtag]['formatted'] }}</span></td>
+                                    {% if image.exif[tag][subtag]['formatted'] %}
+                                        {% if image.exif[tag][subtag]['type'] == 'date' %}
+                                            <td><span class="time">{{ image.exif[tag][subtag]['formatted'] }}</span></td>
                                         {% else %}
-                                            <td>{{ image.image_exif[tag][subtag]['formatted'] }}</td>
+                                            <td>{{ image.exif[tag][subtag]['formatted'] }}</td>
                                         {% endif %}
-                                    {% elif image.image_exif[tag][subtag]['raw'] %}
-                                        <td>{{ image.image_exif[tag][subtag]['raw'] }}</td>
+                                    {% elif image.exif[tag][subtag]['raw'] %}
+                                        <td>{{ image.exif[tag][subtag]['raw'] }}</td>
                                     {% else %}
                                         <td class="empty-table">Oops, an error</td>
                                     {% endif %}

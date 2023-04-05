@@ -16,12 +16,12 @@
     {% if images %}
         <div class="gallery-grid">
             {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('gallery.image', image_id=image.id) }}" style="background-color: rgb({{ image.image_colours.0.0 }}, {{ image.image_colours.0.1 }}, {{ image.image_colours.0.2 }})">
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('gallery.image', image_id=image.id) }}" style="background-color: rgb({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }})">
                     <div class="image-filter">
                         <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img fetchpriority="low" alt="{{ image.post_alt }}" data-src="{{ url_for('api.file', file_name=image.file_name) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img fetchpriority="low" alt="{{ image.alt }}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>

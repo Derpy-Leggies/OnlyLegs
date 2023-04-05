@@ -54,7 +54,7 @@ def create_app(test_config=None):
     # App configuration
     app.config.from_mapping(
         SECRET_KEY=os.environ.get('FLASK_SECRET'),
-        DATABASE=os.path.join(app.instance_path, 'gallery.sqlite'),
+        DATABASE=os.path.join(app.instance_path, 'gallery.sqlite3'),
         UPLOAD_FOLDER=os.path.join(USER_DIR, 'uploads'),
         ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
         MAX_CONTENT_LENGTH=1024 * 1024 * conf['upload']['max-size'],

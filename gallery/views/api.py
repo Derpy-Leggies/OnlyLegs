@@ -5,10 +5,9 @@ from uuid import uuid4
 import os
 import pathlib
 import logging
-from datetime import datetime as dt
 import platformdirs
 
-from flask import Blueprint, send_from_directory, abort, flash, jsonify, request, current_app
+from flask import Blueprint, send_from_directory, abort, flash, request, current_app
 from werkzeug.utils import secure_filename
 
 from flask_login import login_required, current_user
@@ -65,7 +64,7 @@ def upload():
 
     # Get file extension, generate random name and set file path
     img_ext = pathlib.Path(form_file.filename).suffix.replace('.', '').lower()
-    img_name = "GWAGWA_"+str(uuid4())
+    img_name = "GWAGWA_" + str(uuid4())
     img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img_name+'.'+img_ext)
 
     # Check if file extension is allowed
@@ -85,13 +84,12 @@ def upload():
 
     # Save to database
     query = db.Posts(author_id=current_user.id,
-                     created_at=dt.utcnow(),
-                     file_name=img_name+'.'+img_ext,
-                     file_type=img_ext,
-                     image_exif=img_exif,
-                     image_colours=img_colors,
-                     post_description=form['description'],
-                     post_alt=form['alt'])
+                     filename=img_name + '.' + img_ext,
+                     mimetype=img_ext,
+                     exif=img_exif,
+                     colours=img_colors,
+                     description=form['description'],
+                     alt=form['alt'])
 
     db_session.add(query)
     db_session.commit()
@@ -115,13 +113,13 @@ def delete_image(image_id):
 
     # Delete file
     try:
-        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], img.file_name))
+        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], img.filename))
     except FileNotFoundError:
-        logging.warning('File not found: %s, already deleted or never existed', img.file_name)
+        logging.warning('File not found: %s, already deleted or never existed', img.filename)
 
     # Delete cached files
     cache_path = os.path.join(platformdirs.user_config_dir('onlylegs'), 'cache')
-    cache_name = img.file_name.rsplit('.')[0]
+    cache_name = img.filename.rsplit('.')[0]
     for cache_file in pathlib.Path(cache_path).glob(cache_name + '*'):
         os.remove(cache_file)
 
@@ -136,7 +134,7 @@ def delete_image(image_id):
     # Commit all changes
     db_session.commit()
 
-    logging.info('Removed image (%s) %s', image_id, img.file_name)
+    logging.info('Removed image (%s) %s', image_id, img.filename)
     flash(['Image was all in Le Head!', '1'])
     return 'Gwa Gwa'
 
@@ -149,8 +147,7 @@ def create_group():
     """
     new_group = db.Groups(name=request.form['name'],
                           description=request.form['description'],
-                          author_id=current_user.id,
-                          created_at=dt.utcnow())
+                          author_id=current_user.id)
 
     db_session.add(new_group)
     db_session.commit()
@@ -180,8 +177,7 @@ def modify_group():
                           .filter_by(group_id=group_id, post_id=image_id)
                           .first()):
             db_session.add(db.GroupJunction(group_id=group_id,
-                                            post_id=image_id,
-                                            date_added=dt.utcnow()))
+                                            post_id=image_id))
     elif request.form['action'] == 'remove':
         (db_session.query(db.GroupJunction)
                    .filter_by(group_id=group_id, post_id=image_id)

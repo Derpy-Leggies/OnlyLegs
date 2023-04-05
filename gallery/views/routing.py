@@ -19,9 +19,9 @@ def index():
     """
     Home page of the website, shows the feed of the latest images
     """
-    images = db_session.query(db.Posts.file_name,
-                              db.Posts.post_alt,
-                              db.Posts.image_colours,
+    images = db_session.query(db.Posts.filename,
+                              db.Posts.alt,
+                              db.Posts.colours,
                               db.Posts.created_at,
                               db.Posts.id).order_by(db.Posts.id.desc()).all()
 

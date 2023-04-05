@@ -37,8 +37,8 @@ def groups():
         # For each image, get the image data and add it to the group item
         group.images = []
         for image in images:
-            group.images.append(db_session.query(db.Posts.file_name, db.Posts.post_alt,
-                                                 db.Posts.image_colours, db.Posts.id)
+            group.images.append(db_session.query(db.Posts.filename, db.Posts.alt,
+                                                 db.Posts.colours, db.Posts.id)
                                           .filter(db.Posts.id == image[0])
                                           .first())
 
@@ -79,7 +79,7 @@ def group(group_id):
     # Check contrast for the first image in the group for the banner
     text_colour = 'rgb(var(--fg-black))'
     if images:
-        text_colour = contrast.contrast(images[0].image_colours[0],
+        text_colour = contrast.contrast(images[0].colours[0],
                                         'rgb(var(--fg-black))',
                                         'rgb(var(--fg-white))')
 

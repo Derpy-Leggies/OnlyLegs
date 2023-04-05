@@ -2,7 +2,7 @@
 {% block nav_groups %}selected{% endblock %}
 {% block head %}
     {% if images %}
-        <meta name="theme-color" content="rgb({{ images.0.image_colours.0.0 }}{{ images.0.image_colours.0.1 }}{{ images.0.image_colours.0.2 }})"/>
+        <meta name="theme-color" content="rgb({{ images.0.colours.0.0 }}{{ images.0.colours.0.1 }}{{ images.0.colours.0.2 }})"/>
     {% endif %}
 
     <script type="text/javascript">
@@ -175,7 +175,7 @@
     <style>
         {% if images %}
             .banner::after {
-                box-shadow: 0 calc(var(--rad) * -1) 0 0 rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }});
+                box-shadow: 0 calc(var(--rad) * -1) 0 0 rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }});
             }
             .banner-content p {
                 color: {{ text_colour }} !important;
@@ -185,16 +185,16 @@
             }
 
             .banner-filter {
-                background: linear-gradient(90deg, rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.3)) !important;
+                background: linear-gradient(90deg, rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.3)) !important;
             }
             @media (max-width: 800px) {
                 .banner-filter {
-                    background: linear-gradient(180deg, rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.8), rgba({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}, 0.5)) !important;
+                    background: linear-gradient(180deg, rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.8), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.5)) !important;
                 }
             }
 
             .navigation {
-                background-color: rgb({{ images.0.image_colours.0.0 }}, {{ images.0.image_colours.0.1 }}, {{ images.0.image_colours.0.2 }}) !important;
+                background-color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
             }
             .navigation-item > svg {
                 fill: {{ text_colour }} !important;
@@ -209,7 +209,7 @@
 {% block content %}
     {% if images %}
         <div class="banner">
-            <img src="{{ url_for('api.file', file_name=images.0.file_name ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
+            <img src="{{ url_for('api.file', file_name=images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
             <span class="banner-filter"></span>
             <div class="banner-content">
                 <p class="banner-info">By {{ group.author_username }} - {{ images|length }} Images</p>
@@ -266,7 +266,7 @@
                         <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{{ image.post_alt }}" data-src="{{ url_for('api.file', file_name=image.file_name) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img alt="{{ image.alt }}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>

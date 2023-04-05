@@ -3,9 +3,7 @@ OnlyLegs - Authentication
 User registration, login and logout and locking access to pages behind a login
 """
 import re
-from uuid import uuid4
 import logging
-from datetime import datetime as dt
 
 from flask import Blueprint, flash, redirect, request, url_for, abort, jsonify
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -34,7 +32,7 @@ def login():
 
     user = db_session.query(db.Users).filter_by(username=username).first()
 
-    if not user and not check_password_hash(user.password, password):
+    if not user or not check_password_hash(user.password, password):
         logging.error('Login attempt from %s', request.remote_addr)
         error.append('Username or Password is incorrect!')
 
@@ -45,7 +43,7 @@ def login():
 
     logging.info('User %s logged in from %s', username, request.remote_addr)
     flash(['Logged in successfully!', '4'])
-    return 'gwa gwa'
+    return 'ok', 200
 
 
 @blueprint.route('/register', methods=['POST'])
@@ -87,16 +85,16 @@ def register():
 
     # If there are errors, return them
     if error:
-        return jsonify(error)
+        print(error)
+        return jsonify(error), 400
 
-    register_user = db.Users(alt_id=str(uuid4()), username=username, email=email,
-                             password=generate_password_hash(password, method='sha256'),
-                             created_at=dt.utcnow())
+    register_user = db.Users(username=username, email=email,
+                             password=generate_password_hash(password, method='sha256'))
     db_session.add(register_user)
     db_session.commit()
 
     logging.info('User %s registered', username)
-    return 'gwa gwa'
+    return 'ok', 200
 
 
 @blueprint.route('/logout')
@@ -106,4 +104,5 @@ def logout():
     Clear the current session, including the stored user id
     """
     logout_user()
+    flash(['Goodbye!!!', '4'])
     return redirect(url_for('gallery.index'))

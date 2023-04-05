@@ -1,8 +1,10 @@
 """
 OnlyLegs - Database models and functions for SQLAlchemy
 """
+from uuid import uuid4
 import os
 import platformdirs
+from datetime import datetime as dt
 
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey, PickleType
 from sqlalchemy.orm import declarative_base, relationship
@@ -11,7 +13,7 @@ from flask_login import UserMixin
 
 
 USER_DIR = platformdirs.user_config_dir('onlylegs')
-DB_PATH = os.path.join(USER_DIR, 'gallery.sqlite')
+DB_PATH = os.path.join(USER_DIR, 'instance', 'gallery.sqlite3')
 
 
 # In the future, I want to add support for other databases
@@ -28,11 +30,12 @@ class Users (base, UserMixin):  # pylint: disable=too-few-public-methods, C0103
 
     # Gallery used information
     id = Column(Integer, primary_key=True)
-    alt_id = Column(String, unique=True, nullable=False)
+    alt_id = Column(String, unique=True, nullable=False, default=str(uuid4()))
+    profile_picture = Column(String, nullable=True, default=None)
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    joined_at = Column(DateTime, nullable=False, default=dt.utcnow())
 
     posts = relationship('Posts', backref='users')
     groups = relationship('Groups', backref='users')
@@ -51,19 +54,15 @@ class Posts (base):  # pylint: disable=too-few-public-methods, C0103
 
     id = Column(Integer, primary_key=True)
     author_id = Column(Integer, ForeignKey('users.id'))
-    created_at = Column(DateTime, nullable=False)
-
-    file_name = Column(String, unique=True, nullable=False)
-    file_type = Column(String, nullable=False)
-
-    image_exif = Column(PickleType, nullable=False)
-    image_colours = Column(PickleType, nullable=False)
-
-    post_description = Column(String, nullable=False)
-    post_alt = Column(String, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=dt.utcnow())
+    filename = Column(String, unique=True, nullable=False)
+    mimetype = Column(String, nullable=False)
+    exif = Column(PickleType, nullable=False)
+    colours = Column(PickleType, nullable=False)
+    description = Column(String, nullable=False)
+    alt = Column(String, nullable=False)
 
     junction = relationship('GroupJunction', backref='posts')
-
 
 class Groups (base):  # pylint: disable=too-few-public-methods, C0103
     """
@@ -76,7 +75,7 @@ class Groups (base):  # pylint: disable=too-few-public-methods, C0103
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)
     author_id = Column(Integer, ForeignKey('users.id'))
-    created_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=dt.utcnow())
 
     junction = relationship('GroupJunction', backref='groups')
 
@@ -89,7 +88,7 @@ class GroupJunction (base):  # pylint: disable=too-few-public-methods, C0103
     __tablename__ = 'group_junction'
 
     id = Column(Integer, primary_key=True)
-    date_added = Column(DateTime, nullable=False)
+    date_added = Column(DateTime, nullable=False, default=dt.utcnow())
     group_id = Column(Integer, ForeignKey('groups.id'))
     post_id = Column(Integer, ForeignKey('posts.id'))
 
@@ -105,8 +104,8 @@ class Logs (base):  # pylint: disable=too-few-public-methods, C0103
     user_id = Column(Integer, ForeignKey('users.id'))
     ip_address = Column(String, nullable=False)
     code = Column(Integer, nullable=False)
-    msg = Column(String, nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    note = Column(String, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=dt.utcnow())
 
 
 class Bans (base):  # pylint: disable=too-few-public-methods, C0103
@@ -118,8 +117,8 @@ class Bans (base):  # pylint: disable=too-few-public-methods, C0103
     id = Column(Integer, primary_key=True)
     ip_address = Column(String, nullable=False)
     code = Column(Integer, nullable=False)
-    msg = Column(String, nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    note = Column(String, nullable=False)
+    banned_at = Column(DateTime, nullable=False, default=dt.utcnow())
 
 
 # check if database file exists, if not create it
