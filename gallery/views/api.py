@@ -172,7 +172,7 @@ def modify_group():
     elif group.author_id != current_user.id:
         abort(403)
 
-    if action:
+    if action == 'add':
         if not (db_session.query(db.GroupJunction)
                           .filter_by(group_id=group_id, post_id=image_id)
                           .first()):
