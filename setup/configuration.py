@@ -135,15 +135,9 @@ class Configuration:
         """
         Set the logging config
         """
-        logs_path = os.path.join(platformdirs.user_config_dir('onlylegs'), 'logs')
-
-        if not os.path.isdir(logs_path):
-            os.mkdir(logs_path)
-            print("Created logs directory at:", logs_path)
-
         logging.getLogger('werkzeug').disabled = True
         logging.basicConfig(
-            filename=os.path.join(logs_path, 'only.log'),
+            filename=os.path.join(USER_DIR, 'only.log'),
             level=logging.INFO,
             datefmt='%Y-%m-%d %H:%M:%S',
             format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s',
