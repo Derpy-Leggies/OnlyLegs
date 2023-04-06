@@ -22,6 +22,8 @@ colorthief = "^0.2.1"
 Pillow = "^9.4.0"
 platformdirs = "^3.0.0"
 pylint = "^2.16.3"
+jsmin = "^3.0.1"
+cssmin = "^0.2.0"
 
 [build-system]
 requires = ["poetry-core"]

@@ -82,19 +82,21 @@ def create_app(test_config=None):
 
     js_pre = Bundle(
         'js/pre/*.js',
+        filters='jsmin',
         output='gen/pre_packed.js',
-        depends='js/pre/*.js'
+        depends='**'
     )
     js_post = Bundle(
         'js/post/*.js',
+        filters='jsmin',
         output='gen/post_packed.js',
-        depends='js/post/*.js'
+        depends='**'
     )
     styles = Bundle(
         'sass/*.sass',
-        filters='libsass',
+        filters='libsass,cssmin',
         output='gen/styles.css',
-        depends='sass/**/*.sass'
+        depends='**'
     )
 
     assets.register('js_pre', js_pre)

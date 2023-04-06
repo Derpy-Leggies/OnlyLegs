@@ -1,12 +1,12 @@
 .gallery-grid
     margin: 0
-    padding: 0.5rem
+    padding: 0.65rem
 
     width: 100%
 
     display: grid
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
-    gap: 0.5rem
+    gap: 0.65rem
 
 .gallery-item
     margin: 0
@@ -17,9 +17,11 @@
     position: relative
 
     border-radius: $rad-inner
+    box-shadow: 0 0.15rem 0.4rem 0.1rem RGBA($bg-100, 0.4)
 
     box-sizing: border-box
     overflow: hidden
+    transition: box-shadow 0.2s cubic-bezier(.79, .14, .15, .86)
 
     .image-filter
         margin: 0
@@ -37,11 +39,11 @@
         flex-direction: column
         justify-content: flex-end
 
-        background-image: linear-gradient(to top, rgba($bg-100, 0.5), transparent)
+        background-image: linear-gradient(to top, rgba($bg-100, 0.69), transparent)
         opacity: 0 // hide
 
         z-index: +4
-        transition: background-image 0.3s cubic-bezier(.79, .14, .15, .86), opacity 0.3s cubic-bezier(.79, .14, .15, .86)
+        transition: opacity 0.2s cubic-bezier(.79, .14, .15, .86)
 
         .image-title,
         .image-subtitle
@@ -72,7 +74,6 @@
 
         object-fit: cover
         object-position: center
-        transform: scale(1.05)
 
         background-color: RGB($bg-bright)
         filter: blur(0.5rem)
@@ -90,12 +91,10 @@
         padding-bottom: 100%
 
     &:hover
-        .image-filter
-            background-image: linear-gradient(to top, rgba($bg-100, 0.69), transparent)
-            opacity: 1
+        box-shadow: 0 0.2rem 0.4rem 0.1rem RGBA($bg-100, 0.6)
 
-        img
-            transform: scale(1)
+        .image-filter
+            opacity: 1
 
 .group-item
     margin: 0

@@ -4,6 +4,15 @@
     position: relative
     color: RGB($fg-white)
 
+    .link
+        color: inherit
+
+        cursor: pointer
+        text-decoration: underline
+
+        &:hover
+            text-decoration: none
+
     &::after
         content: ''
 
@@ -73,9 +82,6 @@
         .banner-header
             grid-area: header
 
-            white-space: nowrap
-            text-overflow: ellipsis
-            overflow: hidden
             text-align: left
             font-size: 6.9rem
             font-weight: 800
@@ -164,13 +170,15 @@
             gap: 0.25rem
 
             .banner-header
-                font-size: 3rem
                 text-align: center
+                font-size: 2.5rem
 
-            .banner-info,
-            .banner-subtitle
+            .banner-info
                 font-size: 1.1rem
                 text-align: center
+
+            .banner-subtitle
+                display: none
 
             .pill-row
                 margin-top: 1rem

@@ -24,6 +24,7 @@ function addNotification(notificationText, notificationLevel) {
     let iconElement = document.createElement('span');
     iconElement.classList.add('sniffle__notification-icon');
     notification.appendChild(iconElement);
+    
     // Set the icon based on the notification level, not pretty but it works :3
     if (notificationLevel === 1) {
         notification.classList.add('success');
@@ -44,11 +45,6 @@ function addNotification(notificationText, notificationLevel) {
     description.classList.add('sniffle__notification-text');
     description.innerHTML = notificationText;
     notification.appendChild(description);
-
-    // Create span to show time remaining
-    let timer = document.createElement('span');
-    timer.classList.add('sniffle__notification-time');
-    notification.appendChild(timer);
 
     // Append notification to container
     notificationContainer.appendChild(notification);
