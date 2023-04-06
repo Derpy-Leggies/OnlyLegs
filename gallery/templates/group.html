@@ -185,11 +185,13 @@
             }
 
             .banner-filter {
-                background: linear-gradient(90deg, rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.3)) !important;
+                background: linear-gradient(90deg, rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}),
+                                                   rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
             }
             @media (max-width: 800px) {
                 .banner-filter {
-                    background: linear-gradient(180deg, rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.8), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.5)) !important;
+                    background: linear-gradient(180deg, rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.8),
+                                                        rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.5)) !important;
                 }
             }
 
@@ -212,7 +214,7 @@
             <img src="{{ url_for('api.file', file_name=images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
             <span class="banner-filter"></span>
             <div class="banner-content">
-                <p class="banner-info">By <a href="{{ url_for('gallery.profile', id=group.author_id) }}" class="link">{{ group.author_username }}</a> - {{ images|length }} Images</p>
+                <p class="banner-info">By <a href="{{ url_for('profile.profile', id=group.author_id) }}" class="link">{{ group.author_username }}</a> - {{ images|length }} Images</p>
                 <h1 class="banner-header">{{ group.name }}</h1>
                 <p class="banner-subtitle">{{ group.description }}</p>
                 <div class="pill-row">

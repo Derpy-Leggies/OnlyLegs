@@ -42,7 +42,7 @@ def groups():
                                           .filter(db.Posts.id == image[0])
                                           .first())
 
-    return render_template('groups/list.html', groups=groups)
+    return render_template('list.html', groups=groups)
 
 
 @blueprint.route('/<int:group_id>')
@@ -83,7 +83,7 @@ def group(group_id):
                                         'rgb(var(--fg-black))',
                                         'rgb(var(--fg-white))')
 
-    return render_template('groups/group.html',
+    return render_template('group.html',
                            group=group,
                            images=images,
                            text_colour=text_colour)

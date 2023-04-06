@@ -80,7 +80,8 @@
 
     <style>
         .background span {
-            background-image: linear-gradient(to top, rgba({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }}, 1), transparent);
+            background-image: linear-gradient(to top, rgba({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }}, 0.8),
+                                                      rgba({{ image.colours.1.0 }}, {{ image.colours.1.1 }}, {{ image.colours.1.2 }}, 0.2));
         }
     </style>
 {% endblock %}
@@ -202,7 +203,7 @@
                     <table>
                         <tr>
                             <td>Author</td>
-                            <td><a href="{{ url_for('gallery.profile', id=image.author_id) }}" class="link">{{ image.author_username }}</a></td>
+                            <td><a href="{{ url_for('profile.profile', id=image.author_id) }}" class="link">{{ image.author_username }}</a></td>
                         </tr>
                         <tr>
                             <td>Upload date</td>

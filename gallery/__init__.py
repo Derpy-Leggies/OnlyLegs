@@ -114,11 +114,16 @@ def create_app(test_config=None):
     from gallery import auth
     app.register_blueprint(auth.blueprint)
 
-    # Load the different routes
-    from gallery.views import api, groups, routing, settings
+    # Load the API
+    from gallery import api
     app.register_blueprint(api.blueprint)
-    app.register_blueprint(groups.blueprint)
-    app.register_blueprint(routing.blueprint)
+
+    # Load the different views
+    from gallery.views import index, image, group, settings, profile
+    app.register_blueprint(index.blueprint)
+    app.register_blueprint(image.blueprint)
+    app.register_blueprint(group.blueprint)
+    app.register_blueprint(profile.blueprint)
     app.register_blueprint(settings.blueprint)
 
     # Log to file that the app has started
