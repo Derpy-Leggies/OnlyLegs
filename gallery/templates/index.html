@@ -63,22 +63,3 @@
         </div>
     {% endif %}
 {% endblock %}
-{% block script %}
-    <script type="text/javascript">
-        /*if (document.referrer.includes('image')) {
-            try {
-                let referrerId = document.referrer.split('/').pop();
-        
-                let imgOffset = document.getElementById('image-' + referrerId).offsetTop;
-                let imgHeight = document.getElementById('image-' + referrerId).offsetHeight;
-                let windowHeight = window.innerHeight;
-        
-                document.querySelector('html').style.scrollBehavior = 'auto';
-                window.scrollTo(0, imgOffset + (imgHeight / 2) - (windowHeight / 2));
-                document.querySelector('html').style.scrollBehavior = 'smooth';
-            } catch (e) {
-                console.log(e);
-            }
-        }
-    </script>
-{% endblock %}
