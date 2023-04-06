@@ -211,7 +211,7 @@
 {% block content %}
     {% if images %}
         <div class="banner">
-            <img src="{{ url_for('api.file', file_name=images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;"/>
+            <img src="{{ url_for('api.file', file_name=images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;" alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"/>
             <span class="banner-filter"></span>
             <div class="banner-content">
                 <p class="banner-info">By <a href="{{ url_for('profile.profile', id=group.author_id) }}" class="link">{{ group.author_username }}</a> - {{ images|length }} Images</p>
@@ -270,7 +270,7 @@
                         <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{{ image.alt }}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>
