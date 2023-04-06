@@ -4,15 +4,20 @@
     <title>{{ config.WEBSITE.name }}</title>
 
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{ config.WEBSITE.motto }}"/>
     <meta name="author" content="{{ config.WEBSITE.author }}"/>
+
     <meta property="og:title" content="{{ config.WEBSITE.name }}"/>
     <meta property="og:description" content="{{ config.WEBSITE.motto }}"/>
     <meta property="og:type" content="website"/>
+
     <meta name="twitter:title" content="{{ config.WEBSITE.name }}"/>
     <meta name="twitter:description" content="{{ config.WEBSITE.motto }}"/>
     <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="manifest" href="static/manifest.json"/>
     
     <link
         href="{{url_for('static', filename='logo-black.svg')}}"
