@@ -1,6 +1,8 @@
 """
 Onlylegs - Image View
 """
+from math import ceil
+
 from flask import Blueprint, abort, render_template, url_for
 
 from sqlalchemy.orm import sessionmaker
@@ -55,5 +57,26 @@ def image(image_id):
         next_url = url_for('image.image', image_id=next_url[0])
     if prev_url:
         prev_url = url_for('image.image', image_id=prev_url[0])
+        
+    
+    # Yoink all the images in the database
+    total_images = (db_session.query(db.Posts.id)
+                              .order_by(db.Posts.id.desc())
+                              .all())
+    limit = 100
 
-    return render_template('image.html', image=image, next_url=next_url, prev_url=prev_url)
+    # If the number of items is less than the limit, no point of calculating the page
+    if len(total_images) <= limit:
+        return_page = 1
+    else:
+        # How many pages should there be
+        for i in range(ceil(len(total_images) / limit)):
+            # Slice the list of IDs into chunks of the limit
+            for j in total_images[i * limit:(i + 1) * limit]:
+                # Is our image in this chunk?
+                if image_id in j:
+                    return_page = i + 1
+                    break
+
+    return render_template('image.html', image=image, next_url=next_url,
+                           prev_url=prev_url, return_page=return_page)

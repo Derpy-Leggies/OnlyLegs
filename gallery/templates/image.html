@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
-{% block wrapper_class %}image-wrapper{% endblock %}
+{% block page_index %}
+{% if return_page > 1 %}?page={{ return_page }}{% endif %}{% endblock %}
 {% block head %}
     <meta property="og:image" content="{{ url_for('api.file', file_name=image.filename) }}"/>
     <meta name="theme-color" content="rgb({{ image.colours.0.0 }}{{ image.colours.0.1 }}{{ image.colours.0.2 }})"/>

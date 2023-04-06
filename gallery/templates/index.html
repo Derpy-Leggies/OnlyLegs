@@ -4,15 +4,46 @@
     <div class="banner-small">
         <div class="banner-content">
             <h1 class="banner-header">{{ config.WEBSITE.name }}</h1>
-            {% if images|length == 0 %}
+            {% if total_images == 0 %}
                 <p class="banner-info">0 images D:</p>
-            {% elif images|length == 69 %}
-                <p class="banner-info">{{ images|length }} images, nice</p>
+            {% elif total_images == 69 %}
+                <p class="banner-info">{{ total_images }} images, nice</p>
             {% else %}
-                <p class="banner-info">{{ images|length }} images</p>
+                <p class="banner-info">{{ total_images }} images</p>
+            {% endif %}
+
+            {% if pages > 1 %}
+                <div class="pill-row">
+                    <div>
+                        {% if pages > 4 %}
+                            <a class="pill-item" href="{{ url_for('gallery.index') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M232,128a8,8,0,0,1-8,8H91.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L91.31,120H224A8,8,0,0,1,232,128ZM40,32a8,8,0,0,0-8,8V216a8,8,0,0,0,16,0V40A8,8,0,0,0,40,32Z"></path></svg>
+                            </a>
+                        {% endif %}
+                        <a class="pill-item" href="{% if (page - 1) > 1 %} {{ url_for('gallery.index', page=page-1) }} {% else %} {{ url_for('gallery.index') }} {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path></svg>
+                        </a>
+                    </div>
+
+                    <span class="pill-text">
+                        {{ page }} / {{ pages }}
+                    </span>
+
+                    <div>
+                        <a class="pill-item" href="{% if (page + 1) < pages %} {{ url_for('gallery.index', page=page+1) }} {% else %} {{ url_for('gallery.index', page=pages) }} {% endif %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg>
+                        </a>
+                        {% if pages > 4 %}
+                            <a class="pill-item" href="{{ url_for('gallery.index', page=pages) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M189.66,122.34a8,8,0,0,1,0,11.32l-72,72a8,8,0,0,1-11.32-11.32L164.69,136H32a8,8,0,0,1,0-16H164.69L106.34,61.66a8,8,0,0,1,11.32-11.32ZM216,32a8,8,0,0,0-8,8V216a8,8,0,0,0,16,0V40A8,8,0,0,0,216,32Z"></path></svg>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>
+
     {% if images %}
         <div class="gallery-grid">
             {% for image in images %}
@@ -34,7 +65,7 @@
 {% endblock %}
 {% block script %}
     <script type="text/javascript">
-        if (document.referrer.includes('image')) {
+        /*if (document.referrer.includes('image')) {
             try {
                 let referrerId = document.referrer.split('/').pop();
         
