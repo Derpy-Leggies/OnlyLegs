@@ -13,11 +13,17 @@ Startup arguments for the OnlyLegs gallery
 import argparse
 
 
-parser = argparse.ArgumentParser(description='Run the OnlyLegs gallery')
-parser.add_argument('-p', '--port', type=int, default=5000, help='Port to run on')
-parser.add_argument('-a', '--address', type=str, default='127.0.0.0', help='Address to run on')
-parser.add_argument('-w', '--workers', type=int, default=4, help='Number of workers to run')
-parser.add_argument('-d', '--debug', action='store_true', help='Run as Flask app in debug mode')
+parser = argparse.ArgumentParser(description="Run the OnlyLegs gallery")
+parser.add_argument("-p", "--port", type=int, default=5000, help="Port to run on")
+parser.add_argument(
+    "-a", "--address", type=str, default="127.0.0.0", help="Address to run on"
+)
+parser.add_argument(
+    "-w", "--workers", type=int, default=4, help="Number of workers to run"
+)
+parser.add_argument(
+    "-d", "--debug", action="store_true", help="Run as Flask app in debug mode"
+)
 args = parser.parse_args()
 
 

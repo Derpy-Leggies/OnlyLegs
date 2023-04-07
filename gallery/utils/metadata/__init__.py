@@ -16,6 +16,7 @@ class Metadata:
     """
     Metadata parser
     """
+
     def __init__(self, file_path):
         """
         Initialize the metadata parser
@@ -32,17 +33,17 @@ class Metadata:
                 if tag in tags:
                     img_exif[value] = tags[tag]
 
-            img_exif['FileName'] = os.path.basename(file_path)
-            img_exif['FileSize'] = os.path.getsize(file_path)
-            img_exif['FileFormat'] = img_exif['FileName'].split('.')[-1]
-            img_exif['FileWidth'], img_exif['FileHeight'] = file.size
+            img_exif["FileName"] = os.path.basename(file_path)
+            img_exif["FileSize"] = os.path.getsize(file_path)
+            img_exif["FileFormat"] = img_exif["FileName"].split(".")[-1]
+            img_exif["FileWidth"], img_exif["FileHeight"] = file.size
 
             file.close()
         except TypeError:
-            img_exif['FileName'] = os.path.basename(file_path)
-            img_exif['FileSize'] = os.path.getsize(file_path)
-            img_exif['FileFormat'] = img_exif['FileName'].split('.')[-1]
-            img_exif['FileWidth'], img_exif['FileHeight'] = file.size
+            img_exif["FileName"] = os.path.basename(file_path)
+            img_exif["FileSize"] = os.path.getsize(file_path)
+            img_exif["FileFormat"] = img_exif["FileName"].split(".")[-1]
+            img_exif["FileWidth"], img_exif["FileHeight"] = file.size
 
         self.encoded = img_exif
 
@@ -60,10 +61,10 @@ class Metadata:
         Formats the data into a dictionary
         """
         exif = {
-            'Photographer': {},
-            'Camera': {},
-            'Software': {},
-            'File': {},
+            "Photographer": {},
+            "Camera": {},
+            "Software": {},
+            "File": {},
         }
 
         # Thanks chatGPT xP
@@ -73,26 +74,29 @@ class Metadata:
                     if len(mapping_val[key]) == 2:
                         # the helper function works, so not sure why it triggers pylint
                         exif[mapping_name][mapping_val[key][0]] = {
-                            'raw': value,
-                            'formatted': (
-                                    getattr(helpers, mapping_val[key][1])  # pylint: disable=E0602
-                                    (value)
-                                ),
+                            "raw": value,
+                            "formatted": (
+                                getattr(
+                                    helpers, mapping_val[key][1]
+                                )(  # pylint: disable=E0602
+                                    value
+                                )
+                            ),
                         }
                     else:
                         exif[mapping_name][mapping_val[key][0]] = {
-                            'raw': value,
+                            "raw": value,
                         }
                     continue
 
         # Remove empty keys
-        if not exif['Photographer']:
-            del exif['Photographer']
-        if not exif['Camera']:
-            del exif['Camera']
-        if not exif['Software']:
-            del exif['Software']
-        if not exif['File']:
-            del exif['File']
+        if not exif["Photographer"]:
+            del exif["Photographer"]
+        if not exif["Camera"]:
+            del exif["Camera"]
+        if not exif["Software"]:
+            del exif["Software"]
+        if not exif["File"]:
+            del exif["File"]
 
         return exif
