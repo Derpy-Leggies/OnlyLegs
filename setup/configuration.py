@@ -116,6 +116,7 @@ class Configuration:
                     'webp': 'webp',
                 },
                 'max-size': 69,
+                'max-load': 50,
                 'rename': 'GWA_{{username}}_{{time}}',
             },
             'website': {

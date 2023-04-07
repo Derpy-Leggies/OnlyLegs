@@ -136,5 +136,4 @@ def group_post(group_id, image_id):
     if prev_url:
         prev_url = url_for('group.group_post', group_id=group_id, image_id=prev_url[0])
 
-    return render_template('image.html', image=image, next_url=next_url,
-                           prev_url=prev_url, return_page=0)
+    return render_template('image.html', image=image, next_url=next_url, prev_url=prev_url)

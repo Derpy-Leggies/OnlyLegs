@@ -3,7 +3,7 @@ Onlylegs - Image View
 """
 from math import ceil
 
-from flask import Blueprint, abort, render_template, url_for
+from flask import Blueprint, abort, render_template, url_for, current_app
 
 from sqlalchemy.orm import sessionmaker
 from gallery import db
@@ -63,11 +63,11 @@ def image(image_id):
     total_images = (db_session.query(db.Posts.id)
                               .order_by(db.Posts.id.desc())
                               .all())
-    limit = 100
+    limit = current_app.config['UPLOAD_CONF']['max-load']
 
     # If the number of items is less than the limit, no point of calculating the page
     if len(total_images) <= limit:
-        return_page = 1
+        return_page = None
     else:
         # How many pages should there be
         for i in range(ceil(len(total_images) / limit)):

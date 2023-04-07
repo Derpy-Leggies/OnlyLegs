@@ -3,7 +3,7 @@ Onlylegs Gallery - Index view
 """
 from math import ceil
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, current_app
 from werkzeug.exceptions import abort
 
 from sqlalchemy.orm import sessionmaker
@@ -26,7 +26,7 @@ def index():
     
     # pagination, defaults to page 1 if no page is specified
     page = request.args.get('page', default=1, type=int)
-    limit = 100
+    limit = current_app.config['UPLOAD_CONF']['max-load']
     
     # get the total number of images in the database
     # calculate the total number of pages, and make sure the page number is valid

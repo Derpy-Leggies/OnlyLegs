@@ -58,7 +58,9 @@ def create_app(test_config=None):
         UPLOAD_FOLDER=os.path.join(USER_DIR, 'uploads'),
         ALLOWED_EXTENSIONS=conf['upload']['allowed-extensions'],
         MAX_CONTENT_LENGTH=1024 * 1024 * conf['upload']['max-size'],
-        WEBSITE=conf['website'],
+        ADMIN_CONF=conf['admin'],
+        UPLOAD_CONF=conf['upload'],
+        WEBSITE_CONF=conf['website'],
     )
 
     if test_config is None:
