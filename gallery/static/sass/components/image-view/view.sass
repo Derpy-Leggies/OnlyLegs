@@ -7,6 +7,9 @@
 .image-grid
     padding: 0
 
+    width: 100%
+    height: 100vh
+
     position: relative
 
     display: grid
@@ -15,9 +18,10 @@
     grid-template-rows: 1fr auto
     gap: 0
 
-    height: 100vh
-
     z-index: 3
+
+    &.collapse
+        grid-template-columns: 0rem 1fr
 
 #image-info
     grid-area: info

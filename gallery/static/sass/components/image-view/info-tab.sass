@@ -1,5 +1,5 @@
 .info-container
-    width: 100%
+    width: 25rem
     height: 100%
 
     display: flex
@@ -9,6 +9,10 @@
     background-color: RGB($bg-200)
 
     overflow-y: auto
+    transition: transform 0.3s cubic-bezier(.79, .14, .15, .86)
+
+    &.collapsed
+        transform: translateX(-25rem)
 
 .info-tab
     width: 100%
