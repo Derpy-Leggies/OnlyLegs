@@ -12,47 +12,63 @@
 
     position: relative
 
-    display: grid
-    grid-template-areas: 'info image' 'info tools'
-    grid-template-columns: 25rem 1fr
-    grid-template-rows: 1fr auto
-    gap: 0
-
+    display: flex
+    flex-direction: column
+    gap: 0.5rem
     z-index: 3
 
-    &.collapse
-        grid-template-columns: 0rem 1fr
+    .image-block
+        margin: 0 0 0 25rem
+        padding: 0
 
-#image-info
-    grid-area: info
-#image-tools
-    grid-area: tools
-    padding: 0 0 0.5rem 0
-#image-container
-    grid-area: image
+        width: calc(100% - 25rem)
+        height: 100vh
+
+        position: relative
+
+        display: flex
+        flex-direction: column
+        gap: 0
+
+        z-index: 3
+        transition: margin 0.3s cubic-bezier(0.76, 0, 0.17, 1), width 0.3s cubic-bezier(0.76, 0, 0.17, 1)
+
+        .pill-row
+            margin-bottom: 0.5rem
+
+    &.collapsed
+        .image-block
+            margin: 0
+            width: 100%
 
 
 @media (max-width: 1100px)
     .image-grid
         padding: 0.5rem
-
-        display: flex
-        flex-direction: column
-        gap: 0.5rem
-
         height: auto
 
-    .image-container
-        margin: 0 auto
-        padding: 0
+        .image-block
+            margin: 0
+            width: 100%
+            height: auto
 
-        max-height: 69vh
+            gap: 0.5rem
 
-        img
-            max-height: 69vh
+            transition: margin 0s, width 0s
 
-    #image-tools
-        padding: 0
+            .image-container
+                margin: 0 auto
+                padding: 0
+                max-height: 69vh
+
+                img
+                    max-height: 69vh
+
+            .pill-row
+                margin-bottom: 0
+
+                #fullscreenImage
+                    display: none
 
     .info-container
         background: transparent

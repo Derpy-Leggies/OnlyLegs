@@ -30,12 +30,12 @@
         type="image/svg+xml"
         media="(prefers-color-scheme: dark)"/>
 
-    {% assets "js_pre" %}
+    {% assets "lib" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    
-    {% assets "js_post" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}" defer></script>
+
+    {% assets "js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 
     {% assets "styles" %}
