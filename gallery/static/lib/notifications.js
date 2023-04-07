@@ -61,5 +61,3 @@ function addNotification(notificationText, notificationLevel) {
         }
     }, 5000);
 }
-
-// uwu

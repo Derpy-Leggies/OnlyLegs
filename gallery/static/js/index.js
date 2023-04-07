@@ -1,19 +1,12 @@
-let webpSupport = false;
-try {
-    new Image().src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
-    webpSupport = true;
-} catch (e) {
-    webpSupport = false;
-}
-
 // fade in images
-function imgFade(obj, time = 250) {
+async function imgFade(obj, time = 250) {
     obj.style.transition = `opacity ${time}ms`;
     obj.style.opacity = 1;
 }
 // Lazy load images when they are in view
-function loadOnView() {
+async function loadOnView() {
     const lazyLoad = document.querySelectorAll('#lazy-load');
+    const webpSupport = checkWebpSupport();
 
     for (let i = 0; i < lazyLoad.length; i++) {
         let image = lazyLoad[i];

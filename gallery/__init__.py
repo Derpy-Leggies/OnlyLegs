@@ -82,18 +82,18 @@ def create_app(test_config=None):
         msg = "You are not authorized to view this page!!!!"
         return render_template("error.html", error=error, msg=msg), error
 
-    js_pre = Bundle(
-        "js/pre/*.js", filters="jsmin", output="gen/pre_packed.js", depends="**"
+    lib = Bundle(
+        "lib/*.js", filters="jsmin", output="gen/lib.js", depends="lib/*.js"
     )
-    js_post = Bundle(
-        "js/post/*.js", filters="jsmin", output="gen/post_packed.js", depends="**"
+    js = Bundle(
+        "js/*.js", filters="jsmin", output="gen/index.js", depends="js/*.js"
     )
     styles = Bundle(
         "sass/*.sass", filters="libsass,cssmin", output="gen/styles.css", depends="**"
     )
 
-    assets.register("js_pre", js_pre)
-    assets.register("js_post", js_post)
+    assets.register("lib", lib)
+    assets.register("js", js)
     assets.register("styles", styles)
 
     # Error handlers, if the error is not a HTTP error, return 500
