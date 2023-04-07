@@ -12,7 +12,7 @@
         <img src="https://img.shields.io/badge/Gitea-34495E?style=for-the-badge&logo=gitea&logoColor=5D9425">
     </a>
     <img src="https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white">
-    <img src="https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white">
+    <img src="https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge">
     <a href="https://github.com/Fluffy-Bean/onlylegs/blob/main/LICENSE">
         <img src="https://img.shields.io/github/license/Fluffy-Bean/onlylegs?style=for-the-badge">
     </a>
