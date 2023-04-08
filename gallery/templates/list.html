@@ -96,7 +96,7 @@
 {% block content %}
     <div class="banner-small">
         <div class="banner-content">
-            <h1 class="banner-header">{{ config.WEBSITE.name }}</h1>
+            <h1 class="banner-header">{{ config.WEBSITE_CONF.name }}</h1>
             {% if groups|length == 0 %}
                 <p class="banner-info">No groups!!!!</p>
             {% elif groups|length == 69 %}
@@ -127,10 +127,10 @@
                     <div class="images size-{{ group.images|length }}">
                         {% if group.images|length > 0 %}
                             {% for image in group.images %}
-                                <img data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load" class="data-{{ loop.index }}"/>
+                                <img data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load" class="data-{{ loop.index }}" {% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}/>
                             {% endfor %}
                         {% else %}
-                            <img src="{{ url_for('static', filename='error.png') }}" class="loaded"/>
+                            <img src="{{ url_for('static', filename='error.png') }}" class="loaded" alt="Error thumbnail"/>
                         {% endif %}
                     </div>
                 </a>

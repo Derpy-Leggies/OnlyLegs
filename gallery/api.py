@@ -21,26 +21,28 @@ from gallery.utils import metadata as mt
 from gallery.utils.generate_image import generate_thumbnail
 
 
-blueprint = Blueprint('api', __name__, url_prefix='/api')
+blueprint = Blueprint("api", __name__, url_prefix="/api")
 db_session = sessionmaker(bind=db.engine)
 db_session = db_session()
 
 
-@blueprint.route('/file/<file_name>', methods=['GET'])
+@blueprint.route("/file/<file_name>", methods=["GET"])
 def file(file_name):
     """
     Returns a file from the uploads folder
     r for resolution, 400x400 or thumb for thumbnail
     """
-    res = request.args.get('r', default=None, type=str)  # Type of file (thumb, etc)
-    ext = request.args.get('e', default=None, type=str)  # File extension
+    res = request.args.get("r", default=None, type=str)  # Type of file (thumb, etc)
+    ext = request.args.get("e", default=None, type=str)  # File extension
     file_name = secure_filename(file_name)  # Sanitize file name
 
     # if no args are passed, return the raw file
     if not res and not ext:
-        if not os.path.exists(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name)):
+        if not os.path.exists(
+            os.path.join(current_app.config["UPLOAD_FOLDER"], file_name)
+        ):
             abort(404)
-        return send_from_directory(current_app.config['UPLOAD_FOLDER'], file_name)
+        return send_from_directory(current_app.config["UPLOAD_FOLDER"], file_name)
 
     thumb = generate_thumbnail(file_name, res, ext)
     if not thumb:
@@ -49,13 +51,13 @@ def file(file_name):
     return send_from_directory(os.path.dirname(thumb), os.path.basename(thumb))
 
 
-@blueprint.route('/upload', methods=['POST'])
+@blueprint.route("/upload", methods=["POST"])
 @login_required
 def upload():
     """
     Uploads an image to the server and saves it to the database
     """
-    form_file = request.files['file']
+    form_file = request.files["file"]
     form = request.form
 
     # If no image is uploaded, return 404 error
@@ -63,41 +65,45 @@ def upload():
         return abort(404)
 
     # Get file extension, generate random name and set file path
-    img_ext = pathlib.Path(form_file.filename).suffix.replace('.', '').lower()
+    img_ext = pathlib.Path(form_file.filename).suffix.replace(".", "").lower()
     img_name = "GWAGWA_" + str(uuid4())
-    img_path = os.path.join(current_app.config['UPLOAD_FOLDER'], img_name+'.'+img_ext)
+    img_path = os.path.join(
+        current_app.config["UPLOAD_FOLDER"], img_name + "." + img_ext
+    )
 
     # Check if file extension is allowed
-    if img_ext not in current_app.config['ALLOWED_EXTENSIONS'].keys():
-        logging.info('File extension not allowed: %s', img_ext)
+    if img_ext not in current_app.config["ALLOWED_EXTENSIONS"].keys():
+        logging.info("File extension not allowed: %s", img_ext)
         abort(403)
 
     # Save file
     try:
         form_file.save(img_path)
     except OSError as err:
-        logging.info('Error saving file %s because of %s', img_path, err)
+        logging.info("Error saving file %s because of %s", img_path, err)
         abort(500)
 
     img_exif = mt.Metadata(img_path).yoink()  # Get EXIF data
     img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
 
     # Save to database
-    query = db.Posts(author_id=current_user.id,
-                     filename=img_name + '.' + img_ext,
-                     mimetype=img_ext,
-                     exif=img_exif,
-                     colours=img_colors,
-                     description=form['description'],
-                     alt=form['alt'])
+    query = db.Posts(
+        author_id=current_user.id,
+        filename=img_name + "." + img_ext,
+        mimetype=img_ext,
+        exif=img_exif,
+        colours=img_colors,
+        description=form["description"],
+        alt=form["alt"],
+    )
 
     db_session.add(query)
     db_session.commit()
 
-    return 'Gwa Gwa'  # Return something so the browser doesn't show an error
+    return "Gwa Gwa"  # Return something so the browser doesn't show an error
 
 
-@blueprint.route('/delete/<int:image_id>', methods=['POST'])
+@blueprint.route("/delete/<int:image_id>", methods=["POST"])
 @login_required
 def delete_image(image_id):
     """
@@ -113,14 +119,16 @@ def delete_image(image_id):
 
     # Delete file
     try:
-        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], img.filename))
+        os.remove(os.path.join(current_app.config["UPLOAD_FOLDER"], img.filename))
     except FileNotFoundError:
-        logging.warning('File not found: %s, already deleted or never existed', img.filename)
+        logging.warning(
+            "File not found: %s, already deleted or never existed", img.filename
+        )
 
     # Delete cached files
-    cache_path = os.path.join(platformdirs.user_config_dir('onlylegs'), 'cache')
-    cache_name = img.filename.rsplit('.')[0]
-    for cache_file in pathlib.Path(cache_path).glob(cache_name + '*'):
+    cache_path = os.path.join(platformdirs.user_config_dir("onlylegs"), "cache")
+    cache_name = img.filename.rsplit(".")[0]
+    for cache_file in pathlib.Path(cache_path).glob(cache_name + "*"):
         os.remove(cache_file)
 
     # Delete from database
@@ -134,36 +142,38 @@ def delete_image(image_id):
     # Commit all changes
     db_session.commit()
 
-    logging.info('Removed image (%s) %s', image_id, img.filename)
-    flash(['Image was all in Le Head!', '1'])
-    return 'Gwa Gwa'
+    logging.info("Removed image (%s) %s", image_id, img.filename)
+    flash(["Image was all in Le Head!", "1"])
+    return "Gwa Gwa"
 
 
-@blueprint.route('/group/create', methods=['POST'])
+@blueprint.route("/group/create", methods=["POST"])
 @login_required
 def create_group():
     """
     Creates a group
     """
-    new_group = db.Groups(name=request.form['name'],
-                          description=request.form['description'],
-                          author_id=current_user.id)
+    new_group = db.Groups(
+        name=request.form["name"],
+        description=request.form["description"],
+        author_id=current_user.id,
+    )
 
     db_session.add(new_group)
     db_session.commit()
 
-    return ':3'
+    return ":3"
 
 
-@blueprint.route('/group/modify', methods=['POST'])
+@blueprint.route("/group/modify", methods=["POST"])
 @login_required
 def modify_group():
     """
     Changes the images in a group
     """
-    group_id = request.form['group']
-    image_id = request.form['image']
-    action = request.form['action']
+    group_id = request.form["group"]
+    image_id = request.form["image"]
+    action = request.form["action"]
 
     group = db_session.query(db.Groups).filter_by(id=group_id).first()
 
@@ -172,28 +182,31 @@ def modify_group():
     elif group.author_id != current_user.id:
         abort(403)
 
-    if action == 'add':
-        if not (db_session.query(db.GroupJunction)
-                          .filter_by(group_id=group_id, post_id=image_id)
-                          .first()):
-            db_session.add(db.GroupJunction(group_id=group_id,
-                                            post_id=image_id))
-    elif request.form['action'] == 'remove':
-        (db_session.query(db.GroupJunction)
-                   .filter_by(group_id=group_id, post_id=image_id)
-                   .delete())
+    if action == "add":
+        if not (
+            db_session.query(db.GroupJunction)
+            .filter_by(group_id=group_id, post_id=image_id)
+            .first()
+        ):
+            db_session.add(db.GroupJunction(group_id=group_id, post_id=image_id))
+    elif request.form["action"] == "remove":
+        (
+            db_session.query(db.GroupJunction)
+            .filter_by(group_id=group_id, post_id=image_id)
+            .delete()
+        )
 
     db_session.commit()
 
-    return ':3'
+    return ":3"
 
 
-@blueprint.route('/group/delete', methods=['POST'])
+@blueprint.route("/group/delete", methods=["POST"])
 def delete_group():
     """
     Deletes a group
     """
-    group_id = request.form['group']
+    group_id = request.form["group"]
 
     group = db_session.query(db.Groups).filter_by(id=group_id).first()
 
@@ -206,5 +219,5 @@ def delete_group():
     db_session.query(db.GroupJunction).filter_by(group_id=group_id).delete()
     db_session.commit()
 
-    flash(['Group yeeted!', '1'])
-    return ':3'
+    flash(["Group yeeted!", "1"])
+    return ":3"

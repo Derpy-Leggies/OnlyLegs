@@ -9,6 +9,7 @@ class OnlyLegs(Application):
     """
     Gunicorn application
     """
+
     def __init__(self, options={}):  # pylint: disable=W0102, W0231
         self.usage = None
         self.callable = None
@@ -27,7 +28,7 @@ class OnlyLegs(Application):
 
     @staticmethod
     def prog():  # pylint: disable=C0116, E0202
-        return 'OnlyLegs'
+        return "OnlyLegs"
 
     def load(self):
-        return util.import_app('gallery:create_app()')
+        return util.import_app("gallery:create_app()")

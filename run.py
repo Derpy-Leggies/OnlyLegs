@@ -5,7 +5,8 @@ from setup.args import PORT, ADDRESS, WORKERS, DEBUG
 from setup.configuration import Configuration
 
 
-print("""
+print(
+    """
  ::::::::  ::::    ::: :::     :::   ::: :::        ::::::::: :::::::::   ::::::::
 :+:    :+: :+:+:   :+: :+:     :+:   :+: :+:        :+:       :+:    :+: :+:    :+:
 +:+    +:+ :+:+:+  +:+ +:+      +:+ +:+  +:+        +:+       +:+        +:+
@@ -14,8 +15,9 @@ print("""
 #+#    #+# #+#   #+#+# #+#        #+#    #+#        #+#       #+#    #+# #+#    #+#
  ########  ###    #### ########## ###    ########## ######### #########   ########
 
-                     Created by Fluffy Bean - Version 23.04.05
-""")
+                     Created by Fluffy Bean - Version 23.04.08
+"""
+)
 
 
 # Run pre-startup checks and load configuration
@@ -24,6 +26,7 @@ Configuration()
 
 if DEBUG:
     from gallery import create_app
+
     create_app().run(host=ADDRESS, port=PORT, debug=True, threaded=True)
 else:
     from setup.runner import OnlyLegs  # pylint: disable=C0412
@@ -33,8 +36,8 @@ else:
     sys.argv = [sys.argv[0]]
 
     options = {
-        'bind': f'{ADDRESS}:{PORT}',
-        'workers': WORKERS,
+        "bind": f"{ADDRESS}:{PORT}",
+        "workers": WORKERS,
     }
 
     OnlyLegs(options).run()

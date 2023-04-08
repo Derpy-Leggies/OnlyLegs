@@ -1,11 +1,3 @@
-let webpSupport = false;
-try {
-    new Image().src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
-    webpSupport = true;
-} catch (e) {
-    webpSupport = false;
-}
-
 // fade in images
 function imgFade(obj, time = 250) {
     obj.style.transition = `opacity ${time}ms`;
@@ -14,6 +6,7 @@ function imgFade(obj, time = 250) {
 // Lazy load images when they are in view
 function loadOnView() {
     const lazyLoad = document.querySelectorAll('#lazy-load');
+    const webpSupport = checkWebpSupport();
 
     for (let i = 0; i < lazyLoad.length; i++) {
         let image = lazyLoad[i];
@@ -71,11 +64,10 @@ window.onload = function () {
             infoButton.classList.add('show');
         }
         infoButton.onclick = function () {
-            popUpShow('OnlyLegs on Flask',
-                      'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and ' +
-                      '<a href="https://www.gent.media/manrope">Manrope</a> <br>' +
-                      'Made by Fluffy and others with ❤️ <br>' +
-                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.05</a>');
+            popUpShow('OnlyLegs',
+                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.08</a> ' +
+                      'using <a href="https://phosphoricons.com/">Phosphoricons</a> and Flask.' +
+                      '<br>Made by Fluffy and others with ❤️');
         }
     }
 };
