@@ -5,13 +5,19 @@
     color: RGB($fg-white)
 
     .link
-        color: inherit
+        padding: 0.1rem 0.3rem
+
+        text-decoration: none
+
+        background-color: RGB($fg-white)
+        color: RGB($fg-black)
+        border-radius: $rad-inner
 
         cursor: pointer
-        text-decoration: underline
 
         &:hover
-            text-decoration: none
+            background-color: RGB($fg-black)
+            color: RGB($fg-white)
 
     &::after
         content: ''

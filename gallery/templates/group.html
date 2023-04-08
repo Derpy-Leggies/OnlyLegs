@@ -184,6 +184,15 @@
                 color: {{ text_colour }} !important;
             }
 
+            .banner-content .link {
+                background-color: {{ text_colour }} !important;
+                color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
+            }
+            .banner-content .link:hover {
+                background-color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
+                color: {{ text_colour }} !important;
+            }
+
             .banner-filter {
                 background: linear-gradient(90deg, rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}),
                                                    rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
@@ -214,7 +223,7 @@
             <img src="{{ url_for('api.file', file_name=images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;" alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"/>
             <span class="banner-filter"></span>
             <div class="banner-content">
-                <p class="banner-info">By <a href="{{ url_for('profile.profile', id=group.author_id) }}" class="link">{{ group.author_username }}</a> - {{ images|length }} Images</p>
+                <p class="banner-info"><a href="{{ url_for('profile.profile', id=group.author_id) }}" class="link">{{ group.author_username }}</a> · {{ images|length }} Images</p>
                 <h1 class="banner-header">{{ group.name }}</h1>
                 <p class="banner-subtitle">{{ group.description }}</p>
                 <div class="pill-row">

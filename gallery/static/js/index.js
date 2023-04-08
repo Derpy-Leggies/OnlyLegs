@@ -64,11 +64,10 @@ window.onload = function () {
             infoButton.classList.add('show');
         }
         infoButton.onclick = function () {
-            popUpShow('OnlyLegs on Flask',
-                      'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and ' +
-                      '<a href="https://www.gent.media/manrope">Manrope</a> <br>' +
+            popUpShow('OnlyLegs',
+                      'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and Flask<br>' +
                       'Made by Fluffy and others with ❤️ <br>' +
-                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.06</a>');
+                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.08</a>');
         }
     }
 };

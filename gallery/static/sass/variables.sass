@@ -33,7 +33,7 @@ $rad-inner: var(--rad-inner)
 $animation-smooth: var(--animation-smooth)
 $animation-bounce: var(--animation-bounce)
 
-$font: 'Manrope', sans-serif
+$font: 'Rubik', sans-serif
 $breakpoint: 800px
 
 
@@ -77,8 +77,10 @@ $breakpoint: 800px
 // I have no clue if its webassets or libsass thats doing this shit
 // But one of them is trying to "correct" the path, and 404-ing the
 // font, so enjoy this path fuckery
+
 @font-face
-    font-family: 'Manrope'
-    src: url('../../../../static/fonts/Manrope[wght].woff2') format('woff2')
+    font-family: 'Rubik'
+    src: url('../../../../static/fonts/Rubik.ttf') format('truetype')
     font-style: normal
     font-display: swap
+    font-weight: 300 900
