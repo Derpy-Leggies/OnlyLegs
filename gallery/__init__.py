@@ -89,7 +89,7 @@ def create_app(test_config=None):
         "js/*.js", filters="jsmin", output="gen/index.js", depends="js/*.js"
     )
     styles = Bundle(
-        "sass/*.sass", filters="libsass,cssmin", output="gen/styles.css", depends='sass/**/*.sass'
+        "sass/*.sass", filters="libsass, cssmin", output="gen/styles.css", depends='sass/**/*.sass'
     )
 
     assets.register("lib", lib)
