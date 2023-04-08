@@ -1,10 +1,10 @@
 // fade in images
-async function imgFade(obj, time = 250) {
+function imgFade(obj, time = 250) {
     obj.style.transition = `opacity ${time}ms`;
     obj.style.opacity = 1;
 }
 // Lazy load images when they are in view
-async function loadOnView() {
+function loadOnView() {
     const lazyLoad = document.querySelectorAll('#lazy-load');
     const webpSupport = checkWebpSupport();
 
@@ -65,9 +65,9 @@ window.onload = function () {
         }
         infoButton.onclick = function () {
             popUpShow('OnlyLegs',
-                      'Using <a href="https://phosphoricons.com/">Phosphoricons</a> and Flask<br>' +
-                      'Made by Fluffy and others with ❤️ <br>' +
-                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.08</a>');
+                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.08</a> ' +
+                      'using <a href="https://phosphoricons.com/">Phosphoricons</a> and Flask.' +
+                      '<br>Made by Fluffy and others with ❤️');
         }
     }
 };

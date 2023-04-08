@@ -51,48 +51,6 @@ def file(file_name):
     return send_from_directory(os.path.dirname(thumb), os.path.basename(thumb))
 
 
-# @blueprint.route('/page', methods=['get'])
-# def page():
-#     """
-#     Returns a json object with all the images
-#     info required to generate a page
-#     """
-#     page_num = request.args.get('page', default=1, type=int)
-#     limit = current_app.config['UPLOAD_CONF']['max-load']
-
-#     if not page_num:
-#         abort(400, 'No page number specified')
-#     if not isinstance(page_num, int):
-#         abort(400, 'Page number is not a number')
-#     if int(page_num) < 1:
-#         abort(400, 'Page number is less than 1')
-
-#     # get the total number of images in the database
-#     # calculate the total number of pages, and make sure the page number is valid
-#     total_images = db_session.query(db.Posts.id).count()
-#     pages = ceil(max(total_images, limit) / limit)
-#     if page_num > pages:
-#         abort(404, 'You have gone above and beyond, but this isnt a fairy tale.')
-
-#     # get the images for the current page
-#     images = (db_session.query(db.Posts.filename, db.Posts.alt, db.Posts.colours,
-#                                db.Posts.created_at, db.Posts.id)
-#                         .order_by(db.Posts.id.desc())
-#                         .offset((page_num - 1) * limit)
-#                         .limit(limit)
-#                         .all())
-#     image_list = []
-#     for image in images:
-#         image_list.append({
-#             'id': image.id,
-#             'filename': image.filename,
-#             'alt': image.alt,
-#             'colours': image.colours,
-#             'created_at': image.created_at,
-#         })
-#     return jsonify(image_list)
-
-
 @blueprint.route("/upload", methods=["POST"])
 @login_required
 def upload():
