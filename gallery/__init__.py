@@ -36,7 +36,7 @@ cache = Cache(config={"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 300}
 compress = Compress()
 
 
-def create_app(test_config=None):
+def create_app(test_config=None):  # pylint: disable=R0914
     """
     Create and configure the main app
     """
@@ -85,7 +85,7 @@ def create_app(test_config=None):
     lib = Bundle(
         "lib/*.js", filters="jsmin", output="gen/lib.js", depends="lib/*.js"
     )
-    js = Bundle(
+    scripts = Bundle(
         "js/*.js", filters="jsmin", output="gen/index.js", depends="js/*.js"
     )
     styles = Bundle(
@@ -93,7 +93,7 @@ def create_app(test_config=None):
     )
 
     assets.register("lib", lib)
-    assets.register("js", js)
+    assets.register("js", scripts)
     assets.register("styles", styles)
 
     # Error handlers, if the error is not a HTTP error, return 500

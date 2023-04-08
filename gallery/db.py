@@ -44,8 +44,8 @@ class Users(base, UserMixin):  # pylint: disable=too-few-public-methods, C0103
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     joined_at = Column(
-        DateTime, nullable=False, server_default=func.now()
-    )  # pylint: disable=E1102
+        DateTime, nullable=False, server_default=func.now()  # pylint: disable=E1102
+    )
 
     posts = relationship("Posts", backref="users")
     groups = relationship("Groups", backref="users")
@@ -66,8 +66,8 @@ class Posts(base):  # pylint: disable=too-few-public-methods, C0103
     id = Column(Integer, primary_key=True)
     author_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(
-        DateTime, nullable=False, server_default=func.now()
-    )  # pylint: disable=E1102
+        DateTime, nullable=False, server_default=func.now()  # pylint: disable=E1102
+    )
     filename = Column(String, unique=True, nullable=False)
     mimetype = Column(String, nullable=False)
     exif = Column(PickleType, nullable=False)
@@ -91,8 +91,8 @@ class Groups(base):  # pylint: disable=too-few-public-methods, C0103
     description = Column(String, nullable=False)
     author_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(
-        DateTime, nullable=False, server_default=func.now()
-    )  # pylint: disable=E1102
+        DateTime, nullable=False, server_default=func.now()  # pylint: disable=E1102
+    )
 
     junction = relationship("GroupJunction", backref="groups")
 
@@ -107,8 +107,8 @@ class GroupJunction(base):  # pylint: disable=too-few-public-methods, C0103
 
     id = Column(Integer, primary_key=True)
     date_added = Column(
-        DateTime, nullable=False, server_default=func.now()
-    )  # pylint: disable=E1102
+        DateTime, nullable=False, server_default=func.now()  # pylint: disable=E1102
+    )
     group_id = Column(Integer, ForeignKey("groups.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
 
@@ -127,8 +127,8 @@ class Logs(base):  # pylint: disable=too-few-public-methods, C0103
     code = Column(Integer, nullable=False)
     note = Column(String, nullable=False)
     created_at = Column(
-        DateTime, nullable=False, server_default=func.now()
-    )  # pylint: disable=E1102
+        DateTime, nullable=False, server_default=func.now()  # pylint: disable=E1102
+    )
 
 
 class Bans(base):  # pylint: disable=too-few-public-methods, C0103
@@ -143,8 +143,8 @@ class Bans(base):  # pylint: disable=too-few-public-methods, C0103
     code = Column(Integer, nullable=False)
     note = Column(String, nullable=False)
     banned_at = Column(
-        DateTime, nullable=False, server_default=func.now()
-    )  # pylint: disable=E1102
+        DateTime, nullable=False, server_default=func.now()  # pylint: disable=E1102
+    )
 
 
 # check if database file exists, if not create it
