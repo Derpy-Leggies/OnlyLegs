@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "onlylegs"
-version = "23.04.08"
+version = "23.04.09"
 description = "Gallery built for fast and simple image management"
 authors = ["Fluffy-Bean <michal-gdula@protonmail.com>"]
 license = "MIT"
