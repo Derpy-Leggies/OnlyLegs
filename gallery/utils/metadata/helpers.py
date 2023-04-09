@@ -54,7 +54,7 @@ def focal_length(value):
     except TypeError:
         calculated = value
 
-    return str(round(calculated, 1)) + " mm"
+    return str(calculated) + " mm"
 
 
 def exposure(value):
