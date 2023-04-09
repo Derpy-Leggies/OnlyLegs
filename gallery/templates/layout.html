@@ -30,6 +30,11 @@
         type="image/svg+xml"
         media="(prefers-color-scheme: dark)"/>
 
+    <link
+        rel="prefetch"
+        href="{{url_for('static', filename='fonts/font.css')}}"
+        type="stylesheet"/>
+
     {% assets "scripts" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
