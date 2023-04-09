@@ -53,7 +53,7 @@ def focal_length(value):
         calculated = value[0] / value[1]
     except TypeError:
         calculated = value
-    
+
     return str(round(calculated, 1)) + " mm"
 
 
@@ -68,11 +68,7 @@ def color_space(value):
     """
     Maps the value of the color space to a human readable format
     """
-    value_map = {
-        0: "Reserved",
-        1: "sRGB",
-        65535: "Uncalibrated"
-    }
+    value_map = {0: "Reserved", 1: "sRGB", 65535: "Uncalibrated"}
     try:
         return value_map[int(value)]
     except KeyError:
@@ -158,11 +154,7 @@ def resolution_unit(value):
     """
     Maps the value of the resolution unit to a human readable format
     """
-    value_map = {
-        1: "No absolute unit of measurement",
-        2: "Inch",
-        3: "Centimeter"
-    }
+    value_map = {1: "No absolute unit of measurement", 2: "Inch", 3: "Centimeter"}
     try:
         return value_map[int(value)]
     except KeyError:
@@ -398,17 +390,20 @@ def pixel_dimension(value):
     """
     return str(value) + " px"
 
+
 def title(value):
     """
     Maps the value of the title to a human readable format
     """
     return str(value.title())
 
+
 def subject_distance(value):
     """
     Maps the value of the subject distance to a human readable format
     """
     return str(value) + " m"
+
 
 def subject_distance_range(value):
     """
