@@ -85,10 +85,6 @@
         <span></span>
     </div>
 
-    <div class="image-fullscreen" onclick="imageFullscreenOff()">
-        <img src="" alt="{{ image.alt }}"/>
-    </div>
-
     <div class="image-grid">
         <div class="image-block">
             <div class="image-container">
@@ -145,22 +141,6 @@
         </div>
     
         <div class="info-container">
-            {% if image.post_description %}
-                <div class="info-tab">
-                    <div class="info-header">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H40V56H216V200ZM184,96a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,96Zm0,32a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,128Zm0,32a8,8,0,0,1-8,8H80a8,8,0,0,1,0-16h96A8,8,0,0,1,184,160Z"></path></svg>
-                        <h2>Description</h2>
-                        <button class="collapse-indicator">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -8 24 24" fill="currentColor">
-                                <path d="M7.071 5.314l4.95-4.95a1 1 0 1 1 1.414 1.414L7.778 7.435a1 1 0 0 1-1.414 0L.707 1.778A1 1 0 1 1 2.121.364l4.95 4.95z"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="info-table">
-                        <p>{{ image.post_description }}</p>
-                    </div>
-                </div>
-            {% endif %}
             <div class="info-tab">
                 <div class="info-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"></path></svg>
@@ -181,6 +161,12 @@
                             <td>Upload date</td>
                             <td><span class="time">{{ image.created_at }}</span></td>
                         </tr>
+                        {% if image.description %}
+                            <tr>
+                                <td>Description</td>
+                                <td>{{ image.description }}</td>
+                            </tr>
+                        {% endif %}
                     </table>
                     <div class="img-colours">
                         {% for col in image.colours %}
