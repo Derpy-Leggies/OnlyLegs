@@ -82,18 +82,15 @@ def create_app(test_config=None):  # pylint: disable=R0914
         msg = "You are not authorized to view this page!!!!"
         return render_template("error.html", error=error, msg=msg), error
 
-    lib = Bundle(
-        "lib/*.js", filters="jsmin", output="gen/lib.js", depends="lib/*.js"
-    )
     scripts = Bundle(
-        "js/*.js", filters="jsmin", output="gen/index.js", depends="js/*.js"
+        "js/*.js", filters="jsmin", output="gen/js.js", depends="js/*.js"
     )
+
     styles = Bundle(
         "sass/*.sass", filters="libsass, cssmin", output="gen/styles.css", depends='sass/**/*.sass'
     )
 
-    assets.register("lib", lib)
-    assets.register("js", scripts)
+    assets.register("scripts", scripts)
     assets.register("styles", styles)
 
     # Error handlers, if the error is not a HTTP error, return 500
