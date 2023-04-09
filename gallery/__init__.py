@@ -83,11 +83,17 @@ def create_app(test_config=None):  # pylint: disable=R0914
         return render_template("error.html", error=error, msg=msg), error
 
     scripts = Bundle(
-        "js/*.js", filters="jsmin", output="gen/js.js", depends="js/*.js"
+        "js/*.js",
+        filters="jsmin",
+        output="gen/js.js",
+        depends="js/*.js"
     )
 
     styles = Bundle(
-        "sass/*.sass", filters="libsass, cssmin", output="gen/styles.css", depends='sass/**/*.sass'
+        "sass/*.sass",
+        filters="libsass, cssmin",
+        output="gen/styles.css",
+        depends="sass/**/*.sass",
     )
 
     assets.register("scripts", scripts)
