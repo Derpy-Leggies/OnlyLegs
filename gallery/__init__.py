@@ -2,41 +2,31 @@
 Onlylegs Gallery
 This is the main app file, it loads all the other files and sets up the app
 """
-
 # Import system modules
 import os
 import logging
 
 # Flask
-from flask_compress import Compress
-from flask_caching import Cache
-from flask_assets import Environment, Bundle
-from flask_login import LoginManager
+from flask_assets import Bundle
 from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
+
+from gallery.extensions import db, migrate, login_manager, assets, compress, cache
+from gallery.models import Users
+from gallery.views import index, image, group, settings, profile
+from gallery import api
+from gallery import auth
 
 # Configuration
 import platformdirs
 from dotenv import load_dotenv
 from yaml import safe_load
 
-# Import database
-from sqlalchemy.orm import sessionmaker
-from gallery import db
-
 
 USER_DIR = platformdirs.user_config_dir("onlylegs")
 
 
-db_session = sessionmaker(bind=db.engine)
-db_session = db_session()
-login_manager = LoginManager()
-assets = Environment()
-cache = Cache(config={"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 300})
-compress = Compress()
-
-
-def create_app(test_config=None):  # pylint: disable=R0914
+def create_app():  # pylint: disable=R0914
     """
     Create and configure the main app
     """
@@ -54,7 +44,7 @@ def create_app(test_config=None):  # pylint: disable=R0914
     # App configuration
     app.config.from_mapping(
         SECRET_KEY=os.environ.get("FLASK_SECRET"),
-        DATABASE=os.path.join(app.instance_path, "gallery.sqlite3"),
+        SQLALCHEMY_DATABASE_URI=("sqlite:///gallery.sqlite3"),
         UPLOAD_FOLDER=os.path.join(USER_DIR, "uploads"),
         ALLOWED_EXTENSIONS=conf["upload"]["allowed-extensions"],
         MAX_CONTENT_LENGTH=1024 * 1024 * conf["upload"]["max-size"],
@@ -63,10 +53,8 @@ def create_app(test_config=None):  # pylint: disable=R0914
         WEBSITE_CONF=conf["website"],
     )
 
-    if test_config is None:
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        app.config.from_mapping(test_config)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
     login_manager.init_app(app)
     login_manager.login_view = "gallery.index"
@@ -74,30 +62,13 @@ def create_app(test_config=None):  # pylint: disable=R0914
 
     @login_manager.user_loader
     def load_user(user_id):
-        return db_session.query(db.Users).filter_by(alt_id=user_id).first()
+        return Users.query.filter_by(alt_id=user_id).first()
 
     @login_manager.unauthorized_handler
     def unauthorized():
         error = 401
         msg = "You are not authorized to view this page!!!!"
         return render_template("error.html", error=error, msg=msg), error
-
-    scripts = Bundle(
-        "js/*.js",
-        filters="jsmin",
-        output="gen/js.js",
-        depends="js/*.js"
-    )
-
-    styles = Bundle(
-        "sass/*.sass",
-        filters="libsass, cssmin",
-        output="gen/styles.css",
-        depends="sass/**/*.sass",
-    )
-
-    assets.register("scripts", scripts)
-    assets.register("styles", styles)
 
     # Error handlers, if the error is not a HTTP error, return 500
     @app.errorhandler(Exception)
@@ -109,30 +80,30 @@ def create_app(test_config=None):  # pylint: disable=R0914
             err.code,
         )
 
-    # Load login, registration and logout manager
-    from gallery import auth
+    scripts = Bundle("js/*.js", filters="jsmin", output="gen/js.js", depends="js/*.js")
 
+    styles = Bundle(
+        "sass/*.sass",
+        filters="libsass, cssmin",
+        output="gen/styles.css",
+        depends="sass/**/*.sass",
+    )
+
+    assets.register("scripts", scripts)
+    assets.register("styles", styles)
+
+    # Load all the blueprints
     app.register_blueprint(auth.blueprint)
-
-    # Load the API
-    from gallery import api
-
     app.register_blueprint(api.blueprint)
-
-    # Load the different views
-    from gallery.views import index, image, group, settings, profile
-
     app.register_blueprint(index.blueprint)
     app.register_blueprint(image.blueprint)
     app.register_blueprint(group.blueprint)
     app.register_blueprint(profile.blueprint)
     app.register_blueprint(settings.blueprint)
 
-    # Log to file that the app has started
-    logging.info("Gallery started successfully!")
-
-    # Initialize extensions and return app
     assets.init_app(app)
     cache.init_app(app)
     compress.init_app(app)
+
+    logging.info("Gallery started successfully!")
     return app

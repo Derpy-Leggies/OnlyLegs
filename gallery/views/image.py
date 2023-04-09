@@ -5,13 +5,10 @@ from math import ceil
 
 from flask import Blueprint, abort, render_template, url_for, current_app
 
-from sqlalchemy.orm import sessionmaker
-from gallery import db
+from gallery.models import Posts, Users, GroupJunction, Groups
 
 
 blueprint = Blueprint("image", __name__, url_prefix="/image")
-db_session = sessionmaker(bind=db.engine)
-db_session = db_session()
 
 
 @blueprint.route("/<int:image_id>")
@@ -20,21 +17,21 @@ def image(image_id):
     Image view, shows the image and its metadata
     """
     # Get the image, if it doesn't exist, 404
-    image = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
+    image = Posts.query.filter(Posts.id == image_id).first()
     if not image:
         abort(404, "Image not found :<")
 
     # Get the image's author username
     image.author_username = (
-        db_session.query(db.Users.username)
-        .filter(db.Users.id == image.author_id)
+        Users.query.with_entities(Users.username)
+        .filter(Users.id == image.author_id)
         .first()[0]
     )
 
     # Get the image's groups
     groups = (
-        db_session.query(db.GroupJunction.group_id)
-        .filter(db.GroupJunction.post_id == image_id)
+        GroupJunction.query.with_entities(GroupJunction.group_id)
+        .filter(GroupJunction.post_id == image_id)
         .all()
     )
 
@@ -42,23 +39,23 @@ def image(image_id):
     image.groups = []
     for group in groups:
         image.groups.append(
-            db_session.query(db.Groups.id, db.Groups.name)
-            .filter(db.Groups.id == group[0])
+            Groups.query.with_entities(Groups.name, Groups.id)
+            .filter(Groups.id == group[0])
             .first()
         )
 
     # Get the next and previous images
     # Check if there is a group ID set
     next_url = (
-        db_session.query(db.Posts.id)
-        .filter(db.Posts.id > image_id)
-        .order_by(db.Posts.id.asc())
+        Posts.query.with_entities(Posts.id)
+        .filter(Posts.id > image_id)
+        .order_by(Posts.id.asc())
         .first()
     )
     prev_url = (
-        db_session.query(db.Posts.id)
-        .filter(db.Posts.id < image_id)
-        .order_by(db.Posts.id.desc())
+        Posts.query.with_entities(Posts.id)
+        .filter(Posts.id < image_id)
+        .order_by(Posts.id.desc())
         .first()
     )
 
@@ -69,7 +66,7 @@ def image(image_id):
         prev_url = url_for("image.image", image_id=prev_url[0])
 
     # Yoink all the images in the database
-    total_images = db_session.query(db.Posts.id).order_by(db.Posts.id.desc()).all()
+    total_images = Posts.query.with_entities(Posts.id).order_by(Posts.id.desc()).all()
     limit = current_app.config["UPLOAD_CONF"]["max-load"]
 
     # If the number of items is less than the limit, no point of calculating the page

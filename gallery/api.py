@@ -14,16 +14,14 @@ from flask_login import login_required, current_user
 
 from colorthief import ColorThief
 
-from sqlalchemy.orm import sessionmaker
+from gallery.extensions import db
+from gallery.models import Posts, Groups, GroupJunction
 
-from gallery import db
 from gallery.utils import metadata as mt
 from gallery.utils.generate_image import generate_thumbnail
 
 
 blueprint = Blueprint("api", __name__, url_prefix="/api")
-db_session = sessionmaker(bind=db.engine)
-db_session = db_session()
 
 
 @blueprint.route("/file/<file_name>", methods=["GET"])
@@ -87,7 +85,7 @@ def upload():
     img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
 
     # Save to database
-    query = db.Posts(
+    query = Posts(
         author_id=current_user.id,
         filename=img_name + "." + img_ext,
         mimetype=img_ext,
@@ -97,8 +95,8 @@ def upload():
         alt=form["alt"],
     )
 
-    db_session.add(query)
-    db_session.commit()
+    db.session.add(query)
+    db.session.commit()
 
     return "Gwa Gwa"  # Return something so the browser doesn't show an error
 
@@ -109,7 +107,7 @@ def delete_image(image_id):
     """
     Deletes an image from the server and database
     """
-    img = db_session.query(db.Posts).filter_by(id=image_id).first()
+    img = Posts.query.filter_by(id=image_id).first()
 
     # Check if image exists and if user is allowed to delete it (author)
     if img is None:
@@ -131,16 +129,15 @@ def delete_image(image_id):
     for cache_file in pathlib.Path(cache_path).glob(cache_name + "*"):
         os.remove(cache_file)
 
-    # Delete from database
-    db_session.query(db.Posts).filter_by(id=image_id).delete()
-
-    # Remove all entries in junction table
-    groups = db_session.query(db.GroupJunction).filter_by(post_id=image_id).all()
+    post = Posts.query.filter_by(id=image_id).first()
+    db.session.delete(post)
+    
+    groups = GroupJunction.query.filter_by(post_id=image_id).all()
     for group in groups:
-        db_session.delete(group)
+        db.session.delete(group)
 
     # Commit all changes
-    db_session.commit()
+    db.session.commit()
 
     logging.info("Removed image (%s) %s", image_id, img.filename)
     flash(["Image was all in Le Head!", "1"])
@@ -153,14 +150,14 @@ def create_group():
     """
     Creates a group
     """
-    new_group = db.Groups(
+    new_group = Groups(
         name=request.form["name"],
         description=request.form["description"],
         author_id=current_user.id,
     )
 
-    db_session.add(new_group)
-    db_session.commit()
+    db.session.add(new_group)
+    db.session.commit()
 
     return ":3"
 
@@ -175,7 +172,7 @@ def modify_group():
     image_id = request.form["image"]
     action = request.form["action"]
 
-    group = db_session.query(db.Groups).filter_by(id=group_id).first()
+    group = Groups.query.filter_by(id=group_id).first()
 
     if group is None:
         abort(404)
@@ -183,20 +180,12 @@ def modify_group():
         abort(403)
 
     if action == "add":
-        if not (
-            db_session.query(db.GroupJunction)
-            .filter_by(group_id=group_id, post_id=image_id)
-            .first()
-        ):
-            db_session.add(db.GroupJunction(group_id=group_id, post_id=image_id))
+        if not GroupJunction.query.filter_by(group_id=group_id, post_id=image_id).first():
+            db.session.add(GroupJunction(group_id=group_id, post_id=image_id))
     elif request.form["action"] == "remove":
-        (
-            db_session.query(db.GroupJunction)
-            .filter_by(group_id=group_id, post_id=image_id)
-            .delete()
-        )
+        db.session.delete(GroupJunction.query.filter_by(group_id=group_id, post_id=image_id).first())
 
-    db_session.commit()
+    db.session.commit()
 
     return ":3"
 
@@ -208,16 +197,21 @@ def delete_group():
     """
     group_id = request.form["group"]
 
-    group = db_session.query(db.Groups).filter_by(id=group_id).first()
+    group = Groups.query.filter_by(id=group_id).first()
 
     if group is None:
         abort(404)
     elif group.author_id != current_user.id:
         abort(403)
 
-    db_session.query(db.Groups).filter_by(id=group_id).delete()
-    db_session.query(db.GroupJunction).filter_by(group_id=group_id).delete()
-    db_session.commit()
+    group_del = Groups.query.filter_by(id=group_id).first()
+    db.session.delete(group_del)
+    
+    junction_del = GroupJunction.query.filter_by(group_id=group_id).all()
+    for junction in junction_del:
+        db.session.delete(junction)
+        
+    db.session.commit()
 
     flash(["Group yeeted!", "1"])
     return ":3"
