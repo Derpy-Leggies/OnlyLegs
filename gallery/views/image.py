@@ -78,7 +78,7 @@ def image(image_id):
             # Slice the list of IDs into chunks of the limit
             for j in total_images[i * limit : (i + 1) * limit]:
                 # Is our image in this chunk?
-                if image_id < j[-1]:
+                if not image_id > j[-1]:
                     return_page = i + 1
                     break
 
