@@ -77,8 +77,8 @@ class Metadata:
                             "raw": value,
                             "formatted": (
                                 getattr(
-                                    helpers,
-                                    mapping_val[key][1],  # pylint: disable=E0602
+                                    helpers,  # pylint: disable=E0602
+                                    mapping_val[key][1],
                                 )(value)
                             ),
                         }
