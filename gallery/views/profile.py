@@ -11,7 +11,7 @@ from gallery.models import Posts, Users
 blueprint = Blueprint("profile", __name__, url_prefix="/profile")
 
 
-@blueprint.route("/profile")
+@blueprint.route("/")
 def profile():
     """
     Profile overview, shows all profiles on the onlylegs gallery
