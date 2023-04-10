@@ -1,6 +1,8 @@
-gallery/static/theme
 gallery/static/.webassets-cache
 gallery/static/gen
+
+instance/
+migrations/
 
 .idea
 .vscode
@@ -11,7 +13,6 @@ venv/
 *.pyc
 __pycache__/
 
-instance/
 
 .pytest_cache/
 .coverage

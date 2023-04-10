@@ -2,12 +2,12 @@
 Onlylegs Gallery
 This is the main app file, it loads all the other files and sets up the app
 """
-# Import system modules
 import os
 import logging
+import platformdirs
 
-# Flask
 from flask_assets import Bundle
+from flask_migrate import init as migrate_init
 from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
 
@@ -17,12 +17,9 @@ from gallery.views import index, image, group, settings, profile
 from gallery import api
 from gallery import auth
 
-# Configuration
-import platformdirs
 
-
-INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"),
-                           "instance")
+INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"), "instance")
+MIGRATIONS_DIR = os.path.join(INSTACE_DIR, "migrations")
 
 
 def create_app():  # pylint: disable=R0914
@@ -32,15 +29,23 @@ def create_app():  # pylint: disable=R0914
     app = Flask(__name__, instance_path=INSTACE_DIR)
     app.config.from_pyfile("config.py")
 
+    # DATABASE
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # if database file doesn't exist, create it
+    # If database file doesn't exist, create it
     if not os.path.exists(os.path.join(INSTACE_DIR, "gallery.sqlite3")):
         print("Creating database")
         with app.app_context():
             db.create_all()
 
+    # Check if migrations directory exists, if not create it
+    if not os.path.exists(MIGRATIONS_DIR):
+        print("Creating migrations directory")
+        with app.app_context():
+            migrate_init(directory=MIGRATIONS_DIR)
+
+    # LOGIN MANAGER
     login_manager.init_app(app)
     login_manager.login_view = "gallery.index"
     login_manager.session_protection = "normal"
@@ -55,9 +60,12 @@ def create_app():  # pylint: disable=R0914
         msg = "You are not authorized to view this page!!!!"
         return render_template("error.html", error=error, msg=msg), error
 
-    # Error handlers, if the error is not a HTTP error, return 500
+    # ERROR HANDLERS
     @app.errorhandler(Exception)
     def error_page(err):  # noqa
+        """
+        Error handlers, if the error is not a HTTP error, return 500
+        """
         if not isinstance(err, HTTPException):
             abort(500)
         return (
@@ -65,8 +73,10 @@ def create_app():  # pylint: disable=R0914
             err.code,
         )
 
-    scripts = Bundle("js/*.js", filters="jsmin", output="gen/js.js", depends="js/*.js")
+    # ASSETS
+    assets.init_app(app)
 
+    scripts = Bundle("js/*.js", filters="jsmin", output="gen/js.js", depends="js/*.js")
     styles = Bundle(
         "sass/*.sass",
         filters="libsass, cssmin",
@@ -77,7 +87,7 @@ def create_app():  # pylint: disable=R0914
     assets.register("scripts", scripts)
     assets.register("styles", styles)
 
-    # Load all the blueprints
+    # BLUEPRINTS
     app.register_blueprint(auth.blueprint)
     app.register_blueprint(api.blueprint)
     app.register_blueprint(index.blueprint)
@@ -86,10 +96,11 @@ def create_app():  # pylint: disable=R0914
     app.register_blueprint(profile.blueprint)
     app.register_blueprint(settings.blueprint)
 
-    assets.init_app(app)
+    # CACHE AND COMPRESS
     cache.init_app(app)
     compress.init_app(app)
 
+    # Yupee! We got there :3
     print("Done!")
     logging.info("Gallery started successfully!")
     return app
