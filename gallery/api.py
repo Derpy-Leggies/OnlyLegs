@@ -9,14 +9,12 @@ import platformdirs
 
 from flask import Blueprint, send_from_directory, abort, flash, request, current_app
 from werkzeug.utils import secure_filename
-
 from flask_login import login_required, current_user
 
 from colorthief import ColorThief
 
 from gallery.extensions import db
 from gallery.models import Posts, Groups, GroupJunction
-
 from gallery.utils import metadata as mt
 from gallery.utils.generate_image import generate_thumbnail
 
@@ -131,7 +129,7 @@ def delete_image(image_id):
 
     post = Posts.query.filter_by(id=image_id).first()
     db.session.delete(post)
-    
+
     groups = GroupJunction.query.filter_by(post_id=image_id).all()
     for group in groups:
         db.session.delete(group)
@@ -180,10 +178,14 @@ def modify_group():
         abort(403)
 
     if action == "add":
-        if not GroupJunction.query.filter_by(group_id=group_id, post_id=image_id).first():
+        if not GroupJunction.query.filter_by(
+            group_id=group_id, post_id=image_id
+        ).first():
             db.session.add(GroupJunction(group_id=group_id, post_id=image_id))
     elif request.form["action"] == "remove":
-        db.session.delete(GroupJunction.query.filter_by(group_id=group_id, post_id=image_id).first())
+        db.session.delete(
+            GroupJunction.query.filter_by(group_id=group_id, post_id=image_id).first()
+        )
 
     db.session.commit()
 
@@ -206,11 +208,11 @@ def delete_group():
 
     group_del = Groups.query.filter_by(id=group_id).first()
     db.session.delete(group_del)
-    
+
     junction_del = GroupJunction.query.filter_by(group_id=group_id).all()
     for junction in junction_del:
         db.session.delete(junction)
-        
+
     db.session.commit()
 
     flash(["Group yeeted!", "1"])

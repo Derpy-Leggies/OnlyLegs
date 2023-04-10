@@ -19,46 +19,31 @@ from gallery import auth
 
 # Configuration
 import platformdirs
-from dotenv import load_dotenv
-from yaml import safe_load
 
 
-USER_DIR = platformdirs.user_config_dir("onlylegs")
+INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"),
+                           "instance")
 
 
 def create_app():  # pylint: disable=R0914
     """
     Create and configure the main app
     """
-    app = Flask(__name__, instance_path=os.path.join(USER_DIR, "instance"))
-
-    # Get environment variables
-    load_dotenv(os.path.join(USER_DIR, ".env"))
-    print("Loaded environment variables")
-
-    # Get config file
-    with open(os.path.join(USER_DIR, "conf.yml"), encoding="utf-8", mode="r") as file:
-        conf = safe_load(file)
-        print("Loaded config")
-
-    # App configuration
-    app.config.from_mapping(
-        SECRET_KEY=os.environ.get("FLASK_SECRET"),
-        SQLALCHEMY_DATABASE_URI=("sqlite:///gallery.sqlite3"),
-        UPLOAD_FOLDER=os.path.join(USER_DIR, "uploads"),
-        ALLOWED_EXTENSIONS=conf["upload"]["allowed-extensions"],
-        MAX_CONTENT_LENGTH=1024 * 1024 * conf["upload"]["max-size"],
-        ADMIN_CONF=conf["admin"],
-        UPLOAD_CONF=conf["upload"],
-        WEBSITE_CONF=conf["website"],
-    )
+    app = Flask(__name__, instance_path=INSTACE_DIR)
+    app.config.from_pyfile("config.py")
 
     db.init_app(app)
     migrate.init_app(app, db)
 
+    # if database file doesn't exist, create it
+    if not os.path.exists(os.path.join(INSTACE_DIR, "gallery.sqlite3")):
+        print("Creating database")
+        with app.app_context():
+            db.create_all()
+
     login_manager.init_app(app)
     login_manager.login_view = "gallery.index"
-    login_manager.session_protection = "strong"
+    login_manager.session_protection = "normal"
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -105,5 +90,6 @@ def create_app():  # pylint: disable=R0914
     cache.init_app(app)
     compress.init_app(app)
 
+    print("Done!")
     logging.info("Gallery started successfully!")
     return app
