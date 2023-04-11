@@ -7,7 +7,11 @@ import logging
 import platformdirs
 
 from flask_assets import Bundle
+
 from flask_migrate import init as migrate_init
+from flask_migrate import upgrade as migrate_upgrade
+from flask_migrate import migrate as migrate_migrate
+
 from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
@@ -59,15 +63,21 @@ def create_app():  # pylint: disable=R0914
             )
 
     # Check if migrations directory exists, if not create it
-    if not os.path.exists(MIGRATIONS_DIR):
-        print("Creating migrations directory")
-        with app.app_context():
+    with app.app_context():
+        if not os.path.exists(MIGRATIONS_DIR):
+            print("Creating migrations directory")
             migrate_init(directory=MIGRATIONS_DIR)
+            
+    # Check if migrations are up to date
+    with app.app_context():
+        print("Checking for schema changes...")
+        migrate_migrate(directory=MIGRATIONS_DIR)
+        migrate_upgrade(directory=MIGRATIONS_DIR)
 
     # LOGIN MANAGER
     login_manager.init_app(app)
     login_manager.login_view = "gallery.index"
-    login_manager.session_protection = "normal"
+    # login_manager.session_protection = "strong"
 
     @login_manager.user_loader
     def load_user(user_id):
