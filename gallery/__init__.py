@@ -10,6 +10,7 @@ from flask_assets import Bundle
 from flask_migrate import init as migrate_init
 from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
+from werkzeug.security import generate_password_hash
 
 from gallery.extensions import db, migrate, login_manager, assets, compress, cache
 from gallery.models import Users
@@ -38,6 +39,24 @@ def create_app():  # pylint: disable=R0914
         print("Creating database")
         with app.app_context():
             db.create_all()
+            
+            register_user = db.Users(
+                username=app.config["ADMIN_CONF"]["username"],
+                email=app.config["ADMIN_CONF"]["username"],
+                password=generate_password_hash('changeme!', method="sha256"),
+            )
+            db.session.add(register_user)
+            db.session.commit()
+            
+            print(
+            """
+####################################################
+# DEFAULY ADMIN USER GENERATED WITH GIVEN USERNAME #
+# THE DEFAULT PASSWORD "changeme!" HAS BEEN USED,  #
+# PLEASE UPDATE IT IN THE SETTINGS!                #
+####################################################
+            """
+            )
 
     # Check if migrations directory exists, if not create it
     if not os.path.exists(MIGRATIONS_DIR):
