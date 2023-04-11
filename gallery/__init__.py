@@ -42,7 +42,7 @@ def create_app():  # pylint: disable=R0914
             
             register_user = Users(
                 username=app.config["ADMIN_CONF"]["username"],
-                email=app.config["ADMIN_CONF"]["username"],
+                email=app.config["ADMIN_CONF"]["email"],
                 password=generate_password_hash('changeme!', method="sha256"),
             )
             db.session.add(register_user)
