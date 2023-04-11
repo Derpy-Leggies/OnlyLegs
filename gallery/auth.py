@@ -86,7 +86,7 @@ def register():
         print(error)
         return jsonify(error), 400
 
-    register_user = db.Users(
+    register_user = Users(
         username=username,
         email=email,
         password=generate_password_hash(password, method="sha256"),
