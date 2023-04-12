@@ -30,8 +30,7 @@ def groups():
 
         # Get the 3 most recent images
         images = (
-            GroupJunction.query
-            .with_entities(GroupJunction.post_id)
+            GroupJunction.query.with_entities(GroupJunction.post_id)
             .filter(GroupJunction.group_id == group.id)
             .order_by(GroupJunction.date_added.desc())
             .limit(3)
@@ -41,8 +40,7 @@ def groups():
         group.images = []
         for image in images:
             group.images.append(
-                Post.query
-                .with_entities(Post.filename, Post.alt, Post.colours, Post.id)
+                Post.query.with_entities(Post.filename, Post.alt, Post.colours, Post.id)
                 .filter(Post.id == image[0])
                 .first()
             )
@@ -60,8 +58,7 @@ def group(group_id):
 
     # Get all images in the group from the junction table
     junction = (
-        GroupJunction.query
-        .with_entities(GroupJunction.post_id)
+        GroupJunction.query.with_entities(GroupJunction.post_id)
         .filter(GroupJunction.group_id == group_id)
         .order_by(GroupJunction.date_added.desc())
         .all()

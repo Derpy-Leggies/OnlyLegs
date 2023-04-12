@@ -38,8 +38,9 @@ def index():
 
     # get the images for the current page
     images = (
-        Post.query
-        .with_entities( Post.filename, Post.alt, Post.colours, Post.created_at, Post.id)
+        Post.query.with_entities(
+            Post.filename, Post.alt, Post.colours, Post.created_at, Post.id
+        )
         .order_by(Post.id.desc())
         .offset((page - 1) * limit)
         .limit(limit)

@@ -43,17 +43,17 @@ def create_app():  # pylint: disable=R0914
         print("Creating database")
         with app.app_context():
             db.create_all()
-            
+
             register_user = User(
                 username=app.config["ADMIN_CONF"]["username"],
                 email=app.config["ADMIN_CONF"]["email"],
-                password=generate_password_hash('changeme!', method="sha256"),
+                password=generate_password_hash("changeme!", method="sha256"),
             )
             db.session.add(register_user)
             db.session.commit()
-            
+
             print(
-            """
+                """
 ####################################################
 # DEFAULY ADMIN USER GENERATED WITH GIVEN USERNAME #
 # THE DEFAULT PASSWORD "changeme!" HAS BEEN USED,  #
@@ -67,7 +67,7 @@ def create_app():  # pylint: disable=R0914
         if not os.path.exists(MIGRATIONS_DIR):
             print("Creating migrations directory")
             migrate_init(directory=MIGRATIONS_DIR)
-            
+
     # Check if migrations are up to date
     with app.app_context():
         print("Checking for schema changes...")

@@ -170,7 +170,12 @@ def modify_group():
     if group.author_id != current_user.id:
         abort(403)
 
-    if action == "add" and not GroupJunction.query.filter_by(group_id=group_id, post_id=image_id).first():
+    if (
+        action == "add"
+        and not GroupJunction.query.filter_by(
+            group_id=group_id, post_id=image_id
+        ).first()
+    ):
         db.session.add(GroupJunction(group_id=group_id, post_id=image_id))
     elif request.form["action"] == "remove":
         GroupJunction.query.filter_by(group_id=group_id, post_id=image_id).delete()
