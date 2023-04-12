@@ -25,8 +25,7 @@ function popUpShow(titleText, subtitleText, bodyContent=null, userActions=null) 
     if (userActions) {
         // for each user action, add the element
         for (let i = 0; i < userActions.length; i++) {
-            let action = userActions[i];
-            actionsSelector.appendChild(action);
+            actionsSelector.appendChild(userActions[i]);
         }
     } else {
         actionsSelector.innerHTML = '<button class="btn-block" onclick="popupDissmiss()">Close</button>';
