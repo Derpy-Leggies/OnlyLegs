@@ -165,7 +165,7 @@ def modify_group():
     action = request.form["action"]
 
     group = db.get_or_404(Group, group_id)
-    image = db.get_or_404(Post, image_id)
+    db.get_or_404(Post, image_id)  # Check if image exists
 
     if group.author_id != current_user.id:
         abort(403)

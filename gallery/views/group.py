@@ -3,7 +3,7 @@ Onlylegs - Image Groups
 Why groups? Because I don't like calling these albums
 sounds more limiting that it actually is in this gallery
 """
-from flask import Blueprint, abort, render_template, url_for
+from flask import Blueprint, render_template, url_for
 
 from gallery.models import Post, User, GroupJunction, Group
 from gallery.extensions import db
