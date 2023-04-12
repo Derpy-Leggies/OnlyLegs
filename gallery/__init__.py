@@ -75,9 +75,10 @@ def create_app():  # pylint: disable=R0914
         migrate_upgrade(directory=MIGRATIONS_DIR)
 
     # LOGIN MANAGER
+    # can also set session_protection to "strong"
+    # this would protect against session hijacking
     login_manager.init_app(app)
     login_manager.login_view = "gallery.index"
-    # login_manager.session_protection = "strong"
 
     @login_manager.user_loader
     def load_user(user_id):
