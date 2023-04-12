@@ -13,10 +13,10 @@ from flask_login import login_required, current_user
 
 from colorthief import ColorThief
 
-from gallery.extensions import db
-from gallery.models import Post, Group, GroupJunction
-from gallery.utils import metadata as mt
-from gallery.utils.generate_image import generate_thumbnail
+from onlylegs.extensions import db
+from onlylegs.models import Post, Group, GroupJunction
+from onlylegs.utils import metadata as mt
+from onlylegs.utils.generate_image import generate_thumbnail
 
 
 blueprint = Blueprint("api", __name__, url_prefix="/api")

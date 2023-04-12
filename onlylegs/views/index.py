@@ -6,7 +6,7 @@ from math import ceil
 from flask import Blueprint, render_template, request, current_app
 from werkzeug.exceptions import abort
 
-from gallery.models import Post
+from onlylegs.models import Post
 
 
 blueprint = Blueprint("gallery", __name__)

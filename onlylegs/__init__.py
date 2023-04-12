@@ -16,11 +16,11 @@ from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 
-from gallery.extensions import db, migrate, login_manager, assets, compress, cache
-from gallery.views import index, image, group, settings, profile
-from gallery.models import User
-from gallery import api
-from gallery import auth
+from onlylegs.extensions import db, migrate, login_manager, assets, compress, cache
+from onlylegs.views import index, image, group, settings, profile
+from onlylegs.models import User
+from onlylegs import api
+from onlylegs import auth
 
 
 INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"), "instance")

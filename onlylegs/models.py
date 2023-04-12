@@ -3,7 +3,7 @@ OnlyLegs - Database models and ions for SQLAlchemy
 """
 from uuid import uuid4
 from flask_login import UserMixin
-from .extensions import db
+from onlylegs.extensions import db
 
 
 class GroupJunction(db.Model):  # pylint: disable=too-few-public-methods, C0103
