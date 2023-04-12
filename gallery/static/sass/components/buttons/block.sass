@@ -1,12 +1,12 @@
 @mixin btn-block($color)
     color: RGB($color)
+    box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($white, 0.2)
 
-    &:hover
+    &:hover, &:focus-visible
         background-color: RGBA($color, 0.1)
         color: RGB($color)
+        box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($color, 0.2)
 
-    &:focus-visible
-        outline: 2px solid RGBA($color, 0.3)
     
 .btn-block
     padding: 0.4rem 0.7rem
@@ -25,19 +25,19 @@
     font-weight: 400
     text-align: center
 
-    background-color: transparent
+    background-color: RGBA($white, 0.1)
     color: RGB($white)
     border: none
     border-radius: $rad-inner
+    box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($white, 0.2)
+    outline: none
 
     cursor: pointer
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, box-shadow 0.15s ease-in-out
 
-    &:hover
-        background-color: RGBA($white, 0.1)
-    
-    &:focus-visible
-        outline: 2px solid RGBA($white, 0.3)
+    &:hover, &:focus-visible
+        background-color: RGBA($white, 0.2)
+        box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($white, 0.3)
 
     &.primary
         @include btn-block($primary)
@@ -91,10 +91,11 @@
 
     background-color: RGBA($white, 0.1)
     color: RGB($white)
-
     border: none
     border-bottom: 3px solid RGBA($white, 0.1)
     border-radius: $rad-inner
+    box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($white, 0.2)
+    outline: none
 
     cursor: pointer
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
@@ -107,7 +108,6 @@
 
     &:focus
         border-color: RGB($primary)
-        outline: none
 
     &.black
         @include btn-block($black)
@@ -132,13 +132,14 @@
 
     background-color: RGBA($white, 0.1)
     color: RGB($white)
-
     border: none
     border-radius: $rad-inner
+    box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($white, 0.2)
+    outline: none
 
     cursor: pointer
     overflow: hidden
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.15s ease-in-out
 
     input
         position: absolute
@@ -153,20 +154,20 @@
         text-align: center
         overflow: hidden
 
-    &:hover
+    &:hover, &:focus-visible
         background-color: RGBA($white, 0.2)
         color: RGB($white)
-
-    &:focus-visible
-        outline: 2px solid RGBA($white, 0.3)
+        box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($white, 0.3)
 
     &.active
         background-color: RGBA($primary, 0.2)
         color: RGB($primary)
+        box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($primary, 0.3)
 
     &.edging
         background-color: RGBA($white, 0.2)
         color: RGB($white)
+        box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($white, 0.3)
 
         input
             display: none // So it doesnt get in the way of the drop as that breaks things
@@ -174,3 +175,4 @@
     &.error
         background-color: RGBA($critical, 0.2)
         color: RGB($critical)
+        box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($critical, 0.3)
