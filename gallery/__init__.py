@@ -17,8 +17,8 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 
 from gallery.extensions import db, migrate, login_manager, assets, compress, cache
-from gallery.models import Users
 from gallery.views import index, image, group, settings, profile
+from gallery.models import User
 from gallery import api
 from gallery import auth
 
@@ -44,7 +44,7 @@ def create_app():  # pylint: disable=R0914
         with app.app_context():
             db.create_all()
             
-            register_user = Users(
+            register_user = User(
                 username=app.config["ADMIN_CONF"]["username"],
                 email=app.config["ADMIN_CONF"]["email"],
                 password=generate_password_hash('changeme!', method="sha256"),
@@ -81,7 +81,7 @@ def create_app():  # pylint: disable=R0914
 
     @login_manager.user_loader
     def load_user(user_id):
-        return Users.query.filter_by(alt_id=user_id).first()
+        return User.query.filter_by(alt_id=user_id).first()
 
     @login_manager.unauthorized_handler
     def unauthorized():

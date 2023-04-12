@@ -5,7 +5,8 @@ sounds more limiting that it actually is in this gallery
 """
 from flask import Blueprint, abort, render_template, url_for
 
-from gallery.models import Posts, Users, GroupJunction, Groups
+from gallery.models import Post, User, GroupJunction, Group
+from gallery.extensions import db
 from gallery.utils import contrast
 
 
@@ -17,19 +18,20 @@ def groups():
     """
     Group overview, shows all image groups
     """
-    groups = Groups.query.all()
+    groups = Group.query.all()
 
     # For each group, get the 3 most recent images
     for group in groups:
         group.author_username = (
-            Users.query.with_entities(Users.username)
-            .filter(Users.id == group.author_id)
+            User.query.with_entities(User.username)
+            .filter(User.id == group.author_id)
             .first()[0]
         )
 
         # Get the 3 most recent images
         images = (
-            GroupJunction.query.with_entities(GroupJunction.post_id)
+            GroupJunction.query
+            .with_entities(GroupJunction.post_id)
             .filter(GroupJunction.group_id == group.id)
             .order_by(GroupJunction.date_added.desc())
             .limit(3)
@@ -39,10 +41,9 @@ def groups():
         group.images = []
         for image in images:
             group.images.append(
-                Posts.query.with_entities(
-                    Posts.filename, Posts.alt, Posts.colours, Posts.id
-                )
-                .filter(Posts.id == image[0])
+                Post.query
+                .with_entities(Post.filename, Post.alt, Post.colours, Post.id)
+                .filter(Post.id == image[0])
                 .first()
             )
 
@@ -55,21 +56,12 @@ def group(group_id):
     Group view, shows all images in a group
     """
     # Get the group, if it doesn't exist, 404
-    group = Groups.query.filter(Groups.id == group_id).first()
-
-    if group is None:
-        abort(404, "Group not found! D:")
-
-    # Get the group's author username
-    group.author_username = (
-        Users.query.with_entities(Users.username)
-        .filter(Users.id == group.author_id)
-        .first()[0]
-    )
+    group = db.get_or_404(Group, group_id, description="Group not found! D:")
 
     # Get all images in the group from the junction table
     junction = (
-        GroupJunction.query.with_entities(GroupJunction.post_id)
+        GroupJunction.query
+        .with_entities(GroupJunction.post_id)
         .filter(GroupJunction.group_id == group_id)
         .order_by(GroupJunction.date_added.desc())
         .all()
@@ -78,7 +70,7 @@ def group(group_id):
     # Get the image data for each image in the group
     images = []
     for image in junction:
-        images.append(Posts.query.filter(Posts.id == image[0]).first())
+        images.append(Post.query.filter(Post.id == image[0]).first())
 
     # Check contrast for the first image in the group for the banner
     text_colour = "rgb(var(--fg-black))"
@@ -98,16 +90,7 @@ def group_post(group_id, image_id):
     Image view, shows the image and its metadata from a specific group
     """
     # Get the image, if it doesn't exist, 404
-    image = Posts.query.filter(Posts.id == image_id).first()
-    if image is None:
-        abort(404, "Image not found")
-
-    # Get the image's author username
-    image.author_username = (
-        Users.query.with_entities(Users.username)
-        .filter(Users.id == image.author_id)
-        .first()[0]
-    )
+    image = db.get_or_404(Post, image_id, description="Image not found :<")
 
     # Get all groups the image is in
     groups = (
@@ -120,8 +103,8 @@ def group_post(group_id, image_id):
     image.groups = []
     for group in groups:
         image.groups.append(
-            Groups.query.with_entities(Groups.id, Groups.name)
-            .filter(Groups.id == group[0])
+            Group.query.with_entities(Group.id, Group.name)
+            .filter(Group.id == group[0])
             .first()
         )
 

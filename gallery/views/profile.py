@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request
 from werkzeug.exceptions import abort
 from flask_login import current_user
 
-from gallery.models import Posts, Users
+from gallery.models import Post, User
 
 
 blueprint = Blueprint("profile", __name__, url_prefix="/profile")
@@ -26,11 +26,11 @@ def profile():
             abort(404, "You must be logged in to view your own profile!")
 
     # Get the user's data
-    user = Users.query.filter(Users.id == user_id).first()
+    user = User.query.filter(User.id == user_id).first()
 
     if not user:
         abort(404, "User not found :c")
 
-    images = Posts.query.filter(Posts.author_id == user_id).all()
+    images = Post.query.filter(Post.author_id == user_id).all()
 
     return render_template("profile.html", user=user, images=images)
