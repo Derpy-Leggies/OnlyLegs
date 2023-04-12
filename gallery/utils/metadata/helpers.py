@@ -42,7 +42,7 @@ def shutter(value):
     """
     Formats the shutter speed into a standard format
     """
-    return str(value) + "s"
+    return str(value) + " s"
 
 
 def focal_length(value):
@@ -50,16 +50,18 @@ def focal_length(value):
     Formats the focal length into a standard format
     """
     try:
-        return str(value[0] / value[1]) + "mm"
+        calculated = value[0] / value[1]
     except TypeError:
-        return str(value) + "mm"
+        calculated = value
+
+    return str(calculated) + " mm"
 
 
 def exposure(value):
     """
     Formats the exposure value into a standard format
     """
-    return str(value) + "EV"
+    return str(value) + " EV"
 
 
 def color_space(value):
@@ -78,28 +80,28 @@ def flash(value):
     Maps the value of the flash to a human readable format
     """
     value_map = {
-        0: "Flash did not fire",
-        1: "Flash fired",
+        0: "Did not fire",
+        1: "Fired",
         5: "Strobe return light not detected",
         7: "Strobe return light detected",
-        9: "Flash fired, compulsory flash mode",
-        13: "Flash fired, compulsory flash mode, return light not detected",
-        15: "Flash fired, compulsory flash mode, return light detected",
-        16: "Flash did not fire, compulsory flash mode",
-        24: "Flash did not fire, auto mode",
-        25: "Flash fired, auto mode",
-        29: "Flash fired, auto mode, return light not detected",
-        31: "Flash fired, auto mode, return light detected",
-        32: "No flash function",
-        65: "Flash fired, red-eye reduction mode",
-        69: "Flash fired, red-eye reduction mode, return light not detected",
-        71: "Flash fired, red-eye reduction mode, return light detected",
-        73: "Flash fired, compulsory flash mode, red-eye reduction mode",
-        77: "Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",
-        79: "Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",
-        89: "Flash fired, auto mode, red-eye reduction mode",
-        93: "Flash fired, auto mode, return light not detected, red-eye reduction mode",
-        95: "Flash fired, auto mode, return light detected, red-eye reduction mode",
+        9: "Fired, compulsory",
+        13: "Fired, compulsory, return light not detected",
+        15: "Fired, compulsory, return light detected",
+        16: "Did not fire, compulsory",
+        24: "Did not fire, auto mode",
+        25: "Fired, auto mode",
+        29: "Fired, auto mode, return light not detected",
+        31: "Fired, auto mode, return light detected",
+        32: "No function",
+        65: "Fired, red-eye reduction mode",
+        69: "Fired, red-eye reduction mode, return light not detected",
+        71: "Fired, red-eye reduction mode, return light detected",
+        73: "Fired, compulsory, red-eye reduction mode",
+        77: "Fired, compulsory, red-eye reduction mode, return light not detected",
+        79: "Fired, compulsory, red-eye reduction mode, return light detected",
+        89: "Fired, auto mode, red-eye reduction mode",
+        93: "Fired, auto mode, return light not detected, red-eye reduction mode",
+        95: "Fired, auto mode, return light detected, red-eye reduction mode",
     }
     try:
         return value_map[int(value)]
@@ -213,8 +215,8 @@ def white_balance(value):
     Maps the value of the white balance to a human readable format
     """
     value_map = {
-        0: "Auto white balance",
-        1: "Manual white balance",
+        0: "Auto",
+        1: "Manual",
     }
     try:
         return value_map[int(value)]
@@ -227,8 +229,8 @@ def exposure_mode(value):
     Maps the value of the exposure mode to a human readable format
     """
     value_map = {
-        0: "Auto exposure",
-        1: "Manual exposure",
+        0: "Auto",
+        1: "Manual",
         2: "Auto bracket",
     }
     try:
@@ -386,4 +388,34 @@ def pixel_dimension(value):
     """
     Maps the value of the pixel dimension to a human readable format
     """
-    return str(value) + "px"
+    return str(value) + " px"
+
+
+def title(value):
+    """
+    Maps the value of the title to a human readable format
+    """
+    return str(value.title())
+
+
+def subject_distance(value):
+    """
+    Maps the value of the subject distance to a human readable format
+    """
+    return str(value) + " m"
+
+
+def subject_distance_range(value):
+    """
+    Maps the value of the subject distance range to a human readable format
+    """
+    value_map = {
+        0: "Unknown",
+        1: "Macro",
+        2: "Close view",
+        3: "Distant view",
+    }
+    try:
+        return value_map[int(value)]
+    except KeyError:
+        return None

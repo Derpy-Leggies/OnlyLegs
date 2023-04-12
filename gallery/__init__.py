@@ -2,79 +2,87 @@
 Onlylegs Gallery
 This is the main app file, it loads all the other files and sets up the app
 """
-
-# Import system modules
 import os
 import logging
+import platformdirs
 
-# Flask
-from flask_compress import Compress
-from flask_caching import Cache
-from flask_assets import Environment, Bundle
-from flask_login import LoginManager
+from flask_assets import Bundle
+
+from flask_migrate import init as migrate_init
+from flask_migrate import upgrade as migrate_upgrade
+from flask_migrate import migrate as migrate_migrate
+
 from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
+from werkzeug.security import generate_password_hash
 
-# Configuration
-import platformdirs
-from dotenv import load_dotenv
-from yaml import safe_load
-
-# Import database
-from sqlalchemy.orm import sessionmaker
-from gallery import db
+from gallery.extensions import db, migrate, login_manager, assets, compress, cache
+from gallery.views import index, image, group, settings, profile
+from gallery.models import User
+from gallery import api
+from gallery import auth
 
 
-USER_DIR = platformdirs.user_config_dir("onlylegs")
+INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"), "instance")
+MIGRATIONS_DIR = os.path.join(INSTACE_DIR, "migrations")
 
 
-db_session = sessionmaker(bind=db.engine)
-db_session = db_session()
-login_manager = LoginManager()
-assets = Environment()
-cache = Cache(config={"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 300})
-compress = Compress()
-
-
-def create_app(test_config=None):  # pylint: disable=R0914
+def create_app():  # pylint: disable=R0914
     """
     Create and configure the main app
     """
-    app = Flask(__name__, instance_path=os.path.join(USER_DIR, "instance"))
+    app = Flask(__name__, instance_path=INSTACE_DIR)
+    app.config.from_pyfile("config.py")
 
-    # Get environment variables
-    load_dotenv(os.path.join(USER_DIR, ".env"))
-    print("Loaded environment variables")
+    # DATABASE
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-    # Get config file
-    with open(os.path.join(USER_DIR, "conf.yml"), encoding="utf-8", mode="r") as file:
-        conf = safe_load(file)
-        print("Loaded config")
+    # If database file doesn't exist, create it
+    if not os.path.exists(os.path.join(INSTACE_DIR, "gallery.sqlite3")):
+        print("Creating database")
+        with app.app_context():
+            db.create_all()
 
-    # App configuration
-    app.config.from_mapping(
-        SECRET_KEY=os.environ.get("FLASK_SECRET"),
-        DATABASE=os.path.join(app.instance_path, "gallery.sqlite3"),
-        UPLOAD_FOLDER=os.path.join(USER_DIR, "uploads"),
-        ALLOWED_EXTENSIONS=conf["upload"]["allowed-extensions"],
-        MAX_CONTENT_LENGTH=1024 * 1024 * conf["upload"]["max-size"],
-        ADMIN_CONF=conf["admin"],
-        UPLOAD_CONF=conf["upload"],
-        WEBSITE_CONF=conf["website"],
-    )
+            register_user = User(
+                username=app.config["ADMIN_CONF"]["username"],
+                email=app.config["ADMIN_CONF"]["email"],
+                password=generate_password_hash("changeme!", method="sha256"),
+            )
+            db.session.add(register_user)
+            db.session.commit()
 
-    if test_config is None:
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        app.config.from_mapping(test_config)
+            print(
+                """
+####################################################
+# DEFAULY ADMIN USER GENERATED WITH GIVEN USERNAME #
+# THE DEFAULT PASSWORD "changeme!" HAS BEEN USED,  #
+# PLEASE UPDATE IT IN THE SETTINGS!                #
+####################################################
+            """
+            )
 
+    # Check if migrations directory exists, if not create it
+    with app.app_context():
+        if not os.path.exists(MIGRATIONS_DIR):
+            print("Creating migrations directory")
+            migrate_init(directory=MIGRATIONS_DIR)
+
+    # Check if migrations are up to date
+    with app.app_context():
+        print("Checking for schema changes...")
+        migrate_migrate(directory=MIGRATIONS_DIR)
+        migrate_upgrade(directory=MIGRATIONS_DIR)
+
+    # LOGIN MANAGER
+    # can also set session_protection to "strong"
+    # this would protect against session hijacking
     login_manager.init_app(app)
     login_manager.login_view = "gallery.index"
-    login_manager.session_protection = "strong"
 
     @login_manager.user_loader
     def load_user(user_id):
-        return db_session.query(db.Users).filter_by(alt_id=user_id).first()
+        return User.query.filter_by(alt_id=user_id).first()
 
     @login_manager.unauthorized_handler
     def unauthorized():
@@ -82,23 +90,12 @@ def create_app(test_config=None):  # pylint: disable=R0914
         msg = "You are not authorized to view this page!!!!"
         return render_template("error.html", error=error, msg=msg), error
 
-    lib = Bundle(
-        "lib/*.js", filters="jsmin", output="gen/lib.js", depends="lib/*.js"
-    )
-    scripts = Bundle(
-        "js/*.js", filters="jsmin", output="gen/index.js", depends="js/*.js"
-    )
-    styles = Bundle(
-        "sass/*.sass", filters="libsass, cssmin", output="gen/styles.css", depends='sass/**/*.sass'
-    )
-
-    assets.register("lib", lib)
-    assets.register("js", scripts)
-    assets.register("styles", styles)
-
-    # Error handlers, if the error is not a HTTP error, return 500
+    # ERROR HANDLERS
     @app.errorhandler(Exception)
     def error_page(err):  # noqa
+        """
+        Error handlers, if the error is not a HTTP error, return 500
+        """
         if not isinstance(err, HTTPException):
             abort(500)
         return (
@@ -106,30 +103,34 @@ def create_app(test_config=None):  # pylint: disable=R0914
             err.code,
         )
 
-    # Load login, registration and logout manager
-    from gallery import auth
+    # ASSETS
+    assets.init_app(app)
 
+    scripts = Bundle("js/*.js", filters="jsmin", output="gen/js.js", depends="js/*.js")
+    styles = Bundle(
+        "sass/*.sass",
+        filters="libsass, cssmin",
+        output="gen/styles.css",
+        depends="sass/**/*.sass",
+    )
+
+    assets.register("scripts", scripts)
+    assets.register("styles", styles)
+
+    # BLUEPRINTS
     app.register_blueprint(auth.blueprint)
-
-    # Load the API
-    from gallery import api
-
     app.register_blueprint(api.blueprint)
-
-    # Load the different views
-    from gallery.views import index, image, group, settings, profile
-
     app.register_blueprint(index.blueprint)
     app.register_blueprint(image.blueprint)
     app.register_blueprint(group.blueprint)
     app.register_blueprint(profile.blueprint)
     app.register_blueprint(settings.blueprint)
 
-    # Log to file that the app has started
-    logging.info("Gallery started successfully!")
-
-    # Initialize extensions and return app
-    assets.init_app(app)
+    # CACHE AND COMPRESS
     cache.init_app(app)
     compress.init_app(app)
+
+    # Yupee! We got there :3
+    print("Done!")
+    logging.info("Gallery started successfully!")
     return app

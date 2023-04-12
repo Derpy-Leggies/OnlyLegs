@@ -3,16 +3,14 @@ Onlylegs - Image Groups
 Why groups? Because I don't like calling these albums
 sounds more limiting that it actually is in this gallery
 """
-from flask import Blueprint, abort, render_template, url_for
+from flask import Blueprint, render_template, url_for
 
-from sqlalchemy.orm import sessionmaker
-from gallery import db
+from gallery.models import Post, User, GroupJunction, Group
+from gallery.extensions import db
 from gallery.utils import contrast
 
 
 blueprint = Blueprint("group", __name__, url_prefix="/group")
-db_session = sessionmaker(bind=db.engine)
-db_session = db_session()
 
 
 @blueprint.route("/", methods=["GET"])
@@ -20,21 +18,21 @@ def groups():
     """
     Group overview, shows all image groups
     """
-    groups = db_session.query(db.Groups).all()
+    groups = Group.query.all()
 
     # For each group, get the 3 most recent images
     for group in groups:
         group.author_username = (
-            db_session.query(db.Users.username)
-            .filter(db.Users.id == group.author_id)
+            User.query.with_entities(User.username)
+            .filter(User.id == group.author_id)
             .first()[0]
         )
 
         # Get the 3 most recent images
         images = (
-            db_session.query(db.GroupJunction.post_id)
-            .filter(db.GroupJunction.group_id == group.id)
-            .order_by(db.GroupJunction.date_added.desc())
+            GroupJunction.query.with_entities(GroupJunction.post_id)
+            .filter(GroupJunction.group_id == group.id)
+            .order_by(GroupJunction.date_added.desc())
             .limit(3)
         )
 
@@ -42,10 +40,8 @@ def groups():
         group.images = []
         for image in images:
             group.images.append(
-                db_session.query(
-                    db.Posts.filename, db.Posts.alt, db.Posts.colours, db.Posts.id
-                )
-                .filter(db.Posts.id == image[0])
+                Post.query.with_entities(Post.filename, Post.alt, Post.colours, Post.id)
+                .filter(Post.id == image[0])
                 .first()
             )
 
@@ -58,32 +54,20 @@ def group(group_id):
     Group view, shows all images in a group
     """
     # Get the group, if it doesn't exist, 404
-    group = db_session.query(db.Groups).filter(db.Groups.id == group_id).first()
-
-    if group is None:
-        abort(404, "Group not found! D:")
-
-    # Get the group's author username
-    group.author_username = (
-        db_session.query(db.Users.username)
-        .filter(db.Users.id == group.author_id)
-        .first()[0]
-    )
+    group = db.get_or_404(Group, group_id, description="Group not found! D:")
 
     # Get all images in the group from the junction table
     junction = (
-        db_session.query(db.GroupJunction.post_id)
-        .filter(db.GroupJunction.group_id == group_id)
-        .order_by(db.GroupJunction.date_added.desc())
+        GroupJunction.query.with_entities(GroupJunction.post_id)
+        .filter(GroupJunction.group_id == group_id)
+        .order_by(GroupJunction.date_added.desc())
         .all()
     )
 
     # Get the image data for each image in the group
     images = []
     for image in junction:
-        images.append(
-            db_session.query(db.Posts).filter(db.Posts.id == image[0]).first()
-        )
+        images.append(Post.query.filter(Post.id == image[0]).first())
 
     # Check contrast for the first image in the group for the banner
     text_colour = "rgb(var(--fg-black))"
@@ -103,21 +87,12 @@ def group_post(group_id, image_id):
     Image view, shows the image and its metadata from a specific group
     """
     # Get the image, if it doesn't exist, 404
-    image = db_session.query(db.Posts).filter(db.Posts.id == image_id).first()
-    if image is None:
-        abort(404, "Image not found")
-
-    # Get the image's author username
-    image.author_username = (
-        db_session.query(db.Users.username)
-        .filter(db.Users.id == image.author_id)
-        .first()[0]
-    )
+    image = db.get_or_404(Post, image_id, description="Image not found :<")
 
     # Get all groups the image is in
     groups = (
-        db_session.query(db.GroupJunction.group_id)
-        .filter(db.GroupJunction.post_id == image_id)
+        GroupJunction.query.with_entities(GroupJunction.group_id)
+        .filter(GroupJunction.post_id == image_id)
         .all()
     )
 
@@ -125,24 +100,24 @@ def group_post(group_id, image_id):
     image.groups = []
     for group in groups:
         image.groups.append(
-            db_session.query(db.Groups.id, db.Groups.name)
-            .filter(db.Groups.id == group[0])
+            Group.query.with_entities(Group.id, Group.name)
+            .filter(Group.id == group[0])
             .first()
         )
 
     # Get the next and previous images in the group
     next_url = (
-        db_session.query(db.GroupJunction.post_id)
-        .filter(db.GroupJunction.group_id == group_id)
-        .filter(db.GroupJunction.post_id > image_id)
-        .order_by(db.GroupJunction.date_added.asc())
+        GroupJunction.query.with_entities(GroupJunction.post_id)
+        .filter(GroupJunction.group_id == group_id)
+        .filter(GroupJunction.post_id > image_id)
+        .order_by(GroupJunction.date_added.asc())
         .first()
     )
     prev_url = (
-        db_session.query(db.GroupJunction.post_id)
-        .filter(db.GroupJunction.group_id == group_id)
-        .filter(db.GroupJunction.post_id < image_id)
-        .order_by(db.GroupJunction.date_added.desc())
+        GroupJunction.query.with_entities(GroupJunction.post_id)
+        .filter(GroupJunction.group_id == group_id)
+        .filter(GroupJunction.post_id < image_id)
+        .order_by(GroupJunction.date_added.desc())
         .first()
     )
 

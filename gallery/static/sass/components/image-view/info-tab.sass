@@ -1,5 +1,5 @@
 .info-container
-    width: 25rem
+    width: 27rem
     height: 100vh
 
     position: absolute
@@ -17,7 +17,7 @@
     transition: left 0.3s cubic-bezier(0.76, 0, 0.17, 1)
 
     &.collapsed
-        left: -25rem
+        left: -27rem
 
 .info-tab
     width: 100%
@@ -39,8 +39,8 @@
             transform: rotate(90deg)
 
         .info-table
+            height: 0
             padding: 0
-            opacity: 0
 
 .collapse-indicator
     margin: 0
@@ -126,11 +126,6 @@
     .link
         margin: 0
         padding: 0
-        
-        font-size: 1rem
-        font-weight: 500
-        text-align: center
-        line-height: 1
 
         color: RGB($primary)
 
@@ -150,43 +145,31 @@
         border-collapse: collapse
 
         tr
-            margin: 0
-            padding: 0
-
-            width: 100%
-
             white-space: nowrap
 
             td
                 padding-bottom: 0.5rem
 
+                max-width: 0
+
+                font-size: 1rem
+                font-weight: 400
+
+                vertical-align: top
+
             td:first-child
                 padding-right: 0.5rem
 
                 width: 50%
-                max-width: 0
 
                 overflow: hidden
                 text-overflow: ellipsis
                 white-space: nowrap
-
-                font-size: 1rem
-                font-weight: 400
             td:last-child
-                padding: 0
-
                 width: 50%
-                max-width: 0
 
-                overflow: hidden
-                text-overflow: ellipsis
-                white-space: nowrap
-
-                font-size: 1rem
-                font-weight: 400
-
-            td.empty-table
-                opacity: 0.3
+                white-space: normal
+                word-break: break-word
 
         tr:last-of-type td
             padding-bottom: 0

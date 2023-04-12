@@ -119,9 +119,9 @@
     {% if groups %}
         <div class="gallery-grid">
             {% for group in groups %}
-                <a id="group-{{ group.id }}" class="group-item" href="{{ url_for('group.group', group_id=group.id) }}">
+                <a id="group-{{ group.id }}" class="group-item" href="{{ url_for('group.group', group_id=group.id) }}" {% if group.images|length > 0 %} style="background-color: rgba({{ group.images.0.colours.0.0 }}, {{ group.images.0.colours.0.1 }}, {{ group.images.0.colours.0.2 }}, 0.4);" {% endif %}>
                     <div class="image-filter">
-                        <p class="image-subtitle">By {{ group.author_username }}</p>
+                        <p class="image-subtitle">By {{ group.author.username }}</p>
                         <p class="image-title">{{ group.name }}</p>
                     </div>
                     <div class="images size-{{ group.images|length }}">

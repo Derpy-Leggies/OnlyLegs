@@ -10,13 +10,11 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flask_login import login_user, logout_user, login_required
 
-from sqlalchemy.orm import sessionmaker
-from gallery import db
+from gallery.extensions import db
+from gallery.models import User
 
 
 blueprint = Blueprint("auth", __name__, url_prefix="/auth")
-db_session = sessionmaker(bind=db.engine)
-db_session = db_session()
 
 
 @blueprint.route("/login", methods=["POST"])
@@ -30,7 +28,7 @@ def login():
     password = request.form["password"].strip()
     remember = bool(request.form["remember-me"])
 
-    user = db_session.query(db.Users).filter_by(username=username).first()
+    user = User.query.filter_by(username=username).first()
 
     if not user or not check_password_hash(user.password, password):
         logging.error("Login attempt from %s", request.remote_addr)
@@ -79,7 +77,7 @@ def register():
     elif password_repeat != password:
         error.append("Passwords do not match!")
 
-    user_exists = db_session.query(db.Users).filter_by(username=username).first()
+    user_exists = User.query.filter_by(username=username).first()
     if user_exists:
         error.append("User already exists!")
 
@@ -88,13 +86,13 @@ def register():
         print(error)
         return jsonify(error), 400
 
-    register_user = db.Users(
+    register_user = User(
         username=username,
         email=email,
         password=generate_password_hash(password, method="sha256"),
     )
-    db_session.add(register_user)
-    db_session.commit()
+    db.session.add(register_user)
+    db.session.commit()
 
     logging.info("User %s registered", username)
     return "ok", 200

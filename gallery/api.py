@@ -9,21 +9,17 @@ import platformdirs
 
 from flask import Blueprint, send_from_directory, abort, flash, request, current_app
 from werkzeug.utils import secure_filename
-
 from flask_login import login_required, current_user
 
 from colorthief import ColorThief
 
-from sqlalchemy.orm import sessionmaker
-
-from gallery import db
+from gallery.extensions import db
+from gallery.models import Post, Group, GroupJunction
 from gallery.utils import metadata as mt
 from gallery.utils.generate_image import generate_thumbnail
 
 
 blueprint = Blueprint("api", __name__, url_prefix="/api")
-db_session = sessionmaker(bind=db.engine)
-db_session = db_session()
 
 
 @blueprint.route("/file/<file_name>", methods=["GET"])
@@ -87,7 +83,7 @@ def upload():
     img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
 
     # Save to database
-    query = db.Posts(
+    query = Post(
         author_id=current_user.id,
         filename=img_name + "." + img_ext,
         mimetype=img_ext,
@@ -97,8 +93,8 @@ def upload():
         alt=form["alt"],
     )
 
-    db_session.add(query)
-    db_session.commit()
+    db.session.add(query)
+    db.session.commit()
 
     return "Gwa Gwa"  # Return something so the browser doesn't show an error
 
@@ -109,40 +105,33 @@ def delete_image(image_id):
     """
     Deletes an image from the server and database
     """
-    img = db_session.query(db.Posts).filter_by(id=image_id).first()
+    post = Post.query.filter_by(id=image_id).first()
 
     # Check if image exists and if user is allowed to delete it (author)
-    if img is None:
+    if post is None:
         abort(404)
-    if img.author_id != current_user.id:
+    if post.author_id != current_user.id:
         abort(403)
 
     # Delete file
     try:
-        os.remove(os.path.join(current_app.config["UPLOAD_FOLDER"], img.filename))
+        os.remove(os.path.join(current_app.config["UPLOAD_FOLDER"], post.filename))
     except FileNotFoundError:
         logging.warning(
-            "File not found: %s, already deleted or never existed", img.filename
+            "File not found: %s, already deleted or never existed", post.filename
         )
 
     # Delete cached files
     cache_path = os.path.join(platformdirs.user_config_dir("onlylegs"), "cache")
-    cache_name = img.filename.rsplit(".")[0]
+    cache_name = post.filename.rsplit(".")[0]
     for cache_file in pathlib.Path(cache_path).glob(cache_name + "*"):
         os.remove(cache_file)
 
-    # Delete from database
-    db_session.query(db.Posts).filter_by(id=image_id).delete()
+    GroupJunction.query.filter_by(post_id=image_id).delete()
+    db.session.delete(post)
+    db.session.commit()
 
-    # Remove all entries in junction table
-    groups = db_session.query(db.GroupJunction).filter_by(post_id=image_id).all()
-    for group in groups:
-        db_session.delete(group)
-
-    # Commit all changes
-    db_session.commit()
-
-    logging.info("Removed image (%s) %s", image_id, img.filename)
+    logging.info("Removed image (%s) %s", image_id, post.filename)
     flash(["Image was all in Le Head!", "1"])
     return "Gwa Gwa"
 
@@ -153,14 +142,14 @@ def create_group():
     """
     Creates a group
     """
-    new_group = db.Groups(
+    new_group = Group(
         name=request.form["name"],
         description=request.form["description"],
         author_id=current_user.id,
     )
 
-    db_session.add(new_group)
-    db_session.commit()
+    db.session.add(new_group)
+    db.session.commit()
 
     return ":3"
 
@@ -175,29 +164,23 @@ def modify_group():
     image_id = request.form["image"]
     action = request.form["action"]
 
-    group = db_session.query(db.Groups).filter_by(id=group_id).first()
+    group = db.get_or_404(Group, group_id)
+    db.get_or_404(Post, image_id)  # Check if image exists
 
-    if group is None:
-        abort(404)
-    elif group.author_id != current_user.id:
+    if group.author_id != current_user.id:
         abort(403)
 
-    if action == "add":
-        if not (
-            db_session.query(db.GroupJunction)
-            .filter_by(group_id=group_id, post_id=image_id)
-            .first()
-        ):
-            db_session.add(db.GroupJunction(group_id=group_id, post_id=image_id))
+    if (
+        action == "add"
+        and not GroupJunction.query.filter_by(
+            group_id=group_id, post_id=image_id
+        ).first()
+    ):
+        db.session.add(GroupJunction(group_id=group_id, post_id=image_id))
     elif request.form["action"] == "remove":
-        (
-            db_session.query(db.GroupJunction)
-            .filter_by(group_id=group_id, post_id=image_id)
-            .delete()
-        )
+        GroupJunction.query.filter_by(group_id=group_id, post_id=image_id).delete()
 
-    db_session.commit()
-
+    db.session.commit()
     return ":3"
 
 
@@ -207,17 +190,16 @@ def delete_group():
     Deletes a group
     """
     group_id = request.form["group"]
-
-    group = db_session.query(db.Groups).filter_by(id=group_id).first()
+    group = Group.query.filter_by(id=group_id).first()
 
     if group is None:
         abort(404)
     elif group.author_id != current_user.id:
         abort(403)
 
-    db_session.query(db.Groups).filter_by(id=group_id).delete()
-    db_session.query(db.GroupJunction).filter_by(group_id=group_id).delete()
-    db_session.commit()
+    GroupJunction.query.filter_by(group_id=group_id).delete()
+    db.session.delete(group)
+    db.session.commit()
 
     flash(["Group yeeted!", "1"])
     return ":3"

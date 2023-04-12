@@ -1,19 +1,19 @@
 function popUpShow(titleText, subtitleText, bodyContent=null, userActions=null) {
     // Get popup elements
-    let popupSelector = document.querySelector('.pop-up');
-    let headerSelector = document.querySelector('.pop-up-header');
-    let actionsSelector = document.querySelector('.pop-up-controlls');
+    const popupSelector = document.querySelector('.pop-up');
+    const headerSelector = document.querySelector('.pop-up-header');
+    const actionsSelector = document.querySelector('.pop-up-controlls');
 
     // Clear popup elements
     headerSelector.innerHTML = '';
     actionsSelector.innerHTML = '';
 
     // Set popup header and subtitle
-    let titleElement = document.createElement('h2');
+    const titleElement = document.createElement('h2');
     titleElement.innerHTML = titleText;
     headerSelector.appendChild(titleElement);
 
-    let subtitleElement = document.createElement('p');
+    const subtitleElement = document.createElement('p');
     subtitleElement.innerHTML = subtitleText;
     headerSelector.appendChild(subtitleElement);
 
@@ -25,8 +25,7 @@ function popUpShow(titleText, subtitleText, bodyContent=null, userActions=null) 
     if (userActions) {
         // for each user action, add the element
         for (let i = 0; i < userActions.length; i++) {
-            let action = userActions[i];
-            actionsSelector.appendChild(action);
+            actionsSelector.appendChild(userActions[i]);
         }
     } else {
         actionsSelector.innerHTML = '<button class="btn-block" onclick="popupDissmiss()">Close</button>';
@@ -39,7 +38,7 @@ function popUpShow(titleText, subtitleText, bodyContent=null, userActions=null) 
 }
 
 function popupDissmiss() {
-    let popupSelector = document.querySelector('.pop-up');
+    const popupSelector = document.querySelector('.pop-up');
 
     document.querySelector("html").style.overflow = "auto";
     popupSelector.classList.remove('active');

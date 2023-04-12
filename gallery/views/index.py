@@ -6,13 +6,10 @@ from math import ceil
 from flask import Blueprint, render_template, request, current_app
 from werkzeug.exceptions import abort
 
-from sqlalchemy.orm import sessionmaker
-from gallery import db
+from gallery.models import Post
 
 
 blueprint = Blueprint("gallery", __name__)
-db_session = sessionmaker(bind=db.engine)
-db_session = db_session()
 
 
 @blueprint.route("/")
@@ -30,7 +27,7 @@ def index():
 
     # get the total number of images in the database
     # calculate the total number of pages, and make sure the page number is valid
-    total_images = db_session.query(db.Posts.id).count()
+    total_images = Post.query.with_entities(Post.id).count()
     pages = ceil(max(total_images, limit) / limit)
     if page > pages:
         abort(
@@ -41,14 +38,10 @@ def index():
 
     # get the images for the current page
     images = (
-        db_session.query(
-            db.Posts.filename,
-            db.Posts.alt,
-            db.Posts.colours,
-            db.Posts.created_at,
-            db.Posts.id,
+        Post.query.with_entities(
+            Post.filename, Post.alt, Post.colours, Post.created_at, Post.id
         )
-        .order_by(db.Posts.id.desc())
+        .order_by(Post.id.desc())
         .offset((page - 1) * limit)
         .limit(limit)
         .all()
