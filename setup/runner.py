@@ -31,4 +31,4 @@ class OnlyLegs(Application):
         return "OnlyLegs"
 
     def load(self):
-        return util.import_app("gallery:create_app()")
+        return util.import_app("onlylegs:create_app()")

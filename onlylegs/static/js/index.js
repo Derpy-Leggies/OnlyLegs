@@ -65,7 +65,7 @@ window.onload = function () {
         }
         infoButton.onclick = function () {
             popUpShow('OnlyLegs',
-                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.10</a> ' +
+                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.12</a> ' +
                       'using <a href="https://phosphoricons.com/">Phosphoricons</a> and Flask.' +
                       '<br>Made by Fluffy and others with ❤️');
         }
