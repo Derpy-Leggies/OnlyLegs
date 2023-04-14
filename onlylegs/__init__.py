@@ -18,9 +18,9 @@ from werkzeug.security import generate_password_hash
 
 from onlylegs.extensions import db, migrate, login_manager, assets, compress, cache
 from onlylegs.views import index, image, group, settings, profile
-from onlylegs.models import User
 from onlylegs import api
 from onlylegs import auth
+from onlylegs.models import User
 
 
 INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"), "instance")
@@ -78,7 +78,7 @@ def create_app():  # pylint: disable=R0914
     # can also set session_protection to "strong"
     # this would protect against session hijacking
     login_manager.init_app(app)
-    login_manager.login_view = "gallery.index"
+    login_manager.login_view = "onlylegs.index"
 
     @login_manager.user_loader
     def load_user(user_id):
