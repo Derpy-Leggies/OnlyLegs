@@ -10,8 +10,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flask_login import login_user, logout_user, login_required
 
-from gallery.extensions import db
-from gallery.models import User
+from onlylegs.extensions import db
+from onlylegs.models import User
 
 
 blueprint = Blueprint("auth", __name__, url_prefix="/auth")

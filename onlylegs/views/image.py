@@ -3,8 +3,8 @@ Onlylegs - Image View
 """
 from math import ceil
 from flask import Blueprint, render_template, url_for, current_app
-from gallery.models import Post, GroupJunction, Group
-from gallery.extensions import db
+from onlylegs.models import Post, GroupJunction, Group
+from onlylegs.extensions import db
 
 
 blueprint = Blueprint("image", __name__, url_prefix="/image")

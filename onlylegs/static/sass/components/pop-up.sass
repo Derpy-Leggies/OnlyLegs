@@ -25,9 +25,9 @@
 
     .pop-up-wrapper
         margin: 0
-        padding: 0
+        padding: 1rem
 
-        width: 621px
+        width: 460px
         height: auto
 
         position: absolute
@@ -46,8 +46,8 @@
         transition: transform 0.2s $animation-smooth
 
     .pop-up-header
-        margin: 0
-        padding: 1rem
+        margin: 0 0 0.5rem 0
+        padding: 0
 
         width: 100%
         height: auto
@@ -102,17 +102,6 @@
             &:hover
                 text-decoration: underline
 
-        img
-            margin: auto
-            padding: 0
-
-            width: auto
-            height: auto
-            max-width: 100%
-            max-height: 40vh
-
-            border-radius: $rad-inner
-
         form
             margin: 0
             padding: 0
@@ -128,7 +117,7 @@
 
     .pop-up-controlls
         margin: 0
-        padding: 0.25rem
+        padding: 0
 
         width: 100%
         height: auto
@@ -136,9 +125,9 @@
         display: flex
         flex-direction: row
         justify-content: flex-end
-        gap: 0.25rem
+        gap: 0.5rem
 
-        background-color: RGB($bg-100)
+        // background-color: RGB($bg-100)
 
     &.active
         opacity: 1
@@ -158,8 +147,9 @@
             img 
                 max-height: 50vh
 
-        .pop-up-controlls button
-            width: 100%
+        .pop-up-controlls
+            button
+                width: 100%
     
         &.active
             opacity: 1

@@ -16,11 +16,11 @@ from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 
-from gallery.extensions import db, migrate, login_manager, assets, compress, cache
-from gallery.views import index, image, group, settings, profile
-from gallery.models import User
-from gallery import api
-from gallery import auth
+from onlylegs.extensions import db, migrate, login_manager, assets, compress, cache
+from onlylegs.views import index, image, group, settings, profile
+from onlylegs import api
+from onlylegs import auth
+from onlylegs.models import User
 
 
 INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"), "instance")
@@ -78,21 +78,21 @@ def create_app():  # pylint: disable=R0914
     # can also set session_protection to "strong"
     # this would protect against session hijacking
     login_manager.init_app(app)
-    login_manager.login_view = "gallery.index"
+    login_manager.login_view = "onlylegs.index"
 
     @login_manager.user_loader
-    def load_user(user_id):
+    def load_user(user_id):  # skipcq: PTC-W0065
         return User.query.filter_by(alt_id=user_id).first()
 
     @login_manager.unauthorized_handler
-    def unauthorized():
+    def unauthorized():  # skipcq: PTC-W0065
         error = 401
         msg = "You are not authorized to view this page!!!!"
         return render_template("error.html", error=error, msg=msg), error
 
     # ERROR HANDLERS
     @app.errorhandler(Exception)
-    def error_page(err):  # noqa
+    def error_page(err):  # skipcq: PTC-W0065
         """
         Error handlers, if the error is not a HTTP error, return 500
         """
@@ -106,7 +106,7 @@ def create_app():  # pylint: disable=R0914
     # ASSETS
     assets.init_app(app)
 
-    scripts = Bundle("js/*.js", filters="jsmin", output="gen/js.js", depends="js/*.js")
+    scripts = Bundle("js/*.js", output="gen/js.js", depends="js/*.js")  # filter jsmin is broken :c
     styles = Bundle(
         "sass/*.sass",
         filters="libsass, cssmin",

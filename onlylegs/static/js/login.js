@@ -3,6 +3,7 @@ function showLogin() {
     // Create elements
     cancelBtn = document.createElement('button');
     cancelBtn.classList.add('btn-block');
+    cancelBtn.classList.add('transparent');
     cancelBtn.innerHTML = 'nuuuuuuuu';
     cancelBtn.onclick = popupDissmiss;
 
@@ -61,9 +62,9 @@ function login(event) {
     // AJAX takes control of subby form :3
     event.preventDefault();
 
-    let formUsername = document.querySelector("#username").value;
-    let formPassword = document.querySelector("#password").value;
-    let formRememberMe = document.querySelector("#remember-me").checked;
+    const formUsername = document.querySelector("#username").value;
+    const formPassword = document.querySelector("#password").value;
+    const formRememberMe = document.querySelector("#remember-me").checked;
 
     if (formUsername === "" || formPassword === "") {
         addNotification("Please fill in all fields!!!!", 3);
@@ -100,6 +101,7 @@ function showRegister() {
     // Create buttons
     cancelBtn = document.createElement('button');
     cancelBtn.classList.add('btn-block');
+    cancelBtn.classList.add('transparent');
     cancelBtn.innerHTML = 'nuuuuuuuu';
     cancelBtn.onclick = popupDissmiss;
 
@@ -156,10 +158,10 @@ function register(event) {
     // AJAX takes control of subby form
     event.preventDefault();
 
-    let formUsername = document.querySelector("#username").value;
-    let formEmail = document.querySelector("#email").value;
-    let formPassword = document.querySelector("#password").value;
-    let formPasswordRepeat = document.querySelector("#password-repeat").value;
+    const formUsername = document.querySelector("#username").value;
+    const formEmail = document.querySelector("#email").value;
+    const formPassword = document.querySelector("#password").value;
+    const formPasswordRepeat = document.querySelector("#password-repeat").value;
 
     if (formUsername === "" || formEmail === "" || formPassword === "" || formPasswordRepeat === "") {
         addNotification("Please fill in all fields!!!!", 3);

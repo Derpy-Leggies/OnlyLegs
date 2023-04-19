@@ -15,7 +15,7 @@ print(
 #+#    #+# #+#   #+#+# #+#        #+#    #+#        #+#       #+#    #+# #+#    #+#
  ########  ###    #### ########## ###    ########## ######### #########   ########
 
-                     Created by Fluffy Bean - Version 23.04.10
+                     Created by Fluffy Bean - Version 0.1.0
 """
 )
 
@@ -25,7 +25,7 @@ Configuration()
 
 
 if DEBUG:
-    from gallery import create_app
+    from onlylegs import create_app
 
     create_app().run(host=ADDRESS, port=PORT, debug=True, threaded=True)
 else:

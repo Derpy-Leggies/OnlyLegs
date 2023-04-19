@@ -9,12 +9,12 @@ function loadOnView() {
     const webpSupport = checkWebpSupport();
 
     for (let i = 0; i < lazyLoad.length; i++) {
-        let image = lazyLoad[i];
+        const image = lazyLoad[i];
         if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
             if (!image.src && webpSupport) {
-                image.src = image.getAttribute('data-src') + '&e=webp'
+                image.src = `${image.getAttribute('data-src')}&e=webp`;
             } else if (!image.src) {
-                image.src = image.getAttribute('data-src')
+                image.src = image.getAttribute('data-src');
             }
         }
     }
@@ -23,27 +23,24 @@ function loadOnView() {
 window.onload = function () {
     loadOnView();
 
-    let times = document.querySelectorAll('.time');
+    const times = document.querySelectorAll('.time');
     for (let i = 0; i < times.length; i++) {
         // Remove milliseconds
         const raw = times[i].innerHTML.split('.')[0];
 
         // Parse YYYY-MM-DD HH:MM:SS to Date object
-        const time = raw.split(' ')[1]
+        const time = raw.split(' ')[1];
         const date = raw.split(' ')[0].split('-');
 
-        // Format to YYYY/MM/DD HH:MM:SS
-        let formatted = date[0] + '/' + date[1] + '/' + date[2] + ' ' + time + ' UTC';
-
-        // Convert to UTC Date object
-        let dateTime = new Date(formatted);
+        // Format to YYYY/MM/DD HH:MM:SS and convert to UTC Date object
+        const dateTime = new Date(`${date[0]}/${date[1]}/${date[2]} ${time} UTC`);
 
         // Convert to local time
-        times[i].innerHTML = dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString();
+        times[i].innerHTML = `${dateTime.toLocaleDateString()} ${dateTime.toLocaleTimeString()}`;
     }
 
     // Top Of Page button
-    let topOfPage = document.querySelector('.top-of-page');
+    const topOfPage = document.querySelector('.top-of-page');
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
         topOfPage.classList.add('show');
     } else {
@@ -55,8 +52,7 @@ window.onload = function () {
     }
 
     // Info button
-    let infoButton = document.querySelector('.info-button');
-
+    const infoButton = document.querySelector('.info-button');
     if (infoButton) {
         if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
             infoButton.classList.remove('show');
@@ -65,7 +61,7 @@ window.onload = function () {
         }
         infoButton.onclick = function () {
             popUpShow('OnlyLegs',
-                      '<a href="https://github.com/Fluffy-Bean/onlylegs">V23.04.10</a> ' +
+                      '<a href="https://github.com/Fluffy-Bean/onlylegs">v0.1.0</a> ' +
                       'using <a href="https://phosphoricons.com/">Phosphoricons</a> and Flask.' +
                       '<br>Made by Fluffy and others with ❤️');
         }
@@ -75,7 +71,7 @@ window.onscroll = function () {
     loadOnView();
 
     // Top Of Page button
-    let topOfPage = document.querySelector('.top-of-page');
+    const topOfPage = document.querySelector('.top-of-page');
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
         topOfPage.classList.add('show');
     } else {
@@ -83,8 +79,7 @@ window.onscroll = function () {
     }
 
     // Info button
-    let infoButton = document.querySelector('.info-button');
-
+    const infoButton = document.querySelector('.info-button');
     if (infoButton) {
         if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
             infoButton.classList.remove('show');

@@ -28,13 +28,13 @@ function popUpShow(titleText, subtitleText, bodyContent=null, userActions=null) 
             actionsSelector.appendChild(userActions[i]);
         }
     } else {
-        actionsSelector.innerHTML = '<button class="btn-block" onclick="popupDissmiss()">Close</button>';
+        actionsSelector.innerHTML = '<button class="btn-block transparent" onclick="popupDissmiss()">Close</button>';
     }
 
     // Stop scrolling and show popup
     document.querySelector("html").style.overflow = "hidden";
     popupSelector.style.display = 'block';
-    setTimeout(function() { popupSelector.classList.add('active') }, 5);  // 2ms delay to allow for css transition >:C
+    setTimeout(() => { popupSelector.classList.add('active') }, 5);  // 2ms delay to allow for css transition >:C
 }
 
 function popupDissmiss() {
@@ -42,5 +42,5 @@ function popupDissmiss() {
 
     document.querySelector("html").style.overflow = "auto";
     popupSelector.classList.remove('active');
-    setTimeout(function() { popupSelector.style.display = 'none'; }, 200);
+    setTimeout(() => { popupSelector.style.display = 'none'; }, 200);
 }

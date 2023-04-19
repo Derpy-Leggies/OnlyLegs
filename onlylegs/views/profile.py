@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request
 from werkzeug.exceptions import abort
 from flask_login import current_user
 
-from gallery.models import Post, User
+from onlylegs.models import Post, User
 
 
 blueprint = Blueprint("profile", __name__, url_prefix="/profile")

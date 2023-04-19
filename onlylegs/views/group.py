@@ -5,9 +5,9 @@ sounds more limiting that it actually is in this gallery
 """
 from flask import Blueprint, render_template, url_for
 
-from gallery.models import Post, User, GroupJunction, Group
-from gallery.extensions import db
-from gallery.utils import contrast
+from onlylegs.models import Post, User, GroupJunction, Group
+from onlylegs.extensions import db
+from onlylegs.utils import contrast
 
 
 blueprint = Blueprint("group", __name__, url_prefix="/group")

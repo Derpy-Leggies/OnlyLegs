@@ -9,23 +9,23 @@ window.addEventListener("drop", (event) => {
 
 // open upload tab
 function openUploadTab() {
-    let uploadTab = document.querySelector(".upload-panel");
+    const uploadTab = document.querySelector(".upload-panel");
 
     // Stop scrolling and open upload tab
     document.querySelector("html").style.overflow = "hidden";
     uploadTab.style.display = "block";
-    setTimeout(function () { uploadTab.classList.add("open"); }, 5);
+    setTimeout(() => { uploadTab.classList.add("open"); }, 5);
 }
 
 // close upload tab
 function closeUploadTab() {
-    let uploadTab = document.querySelector(".upload-panel");
-    let uploadTabContainer = document.querySelector(".upload-panel .container");
+    const uploadTab = document.querySelector(".upload-panel");
+    const uploadTabContainer = document.querySelector(".upload-panel .container");
 
     // un-Stop scrolling and close upload tab
     document.querySelector("html").style.overflow = "auto";
     uploadTab.classList.remove("open");
-    setTimeout(function () {
+    setTimeout(() => {
         uploadTab.style.display = "none";
 
         uploadTabContainer.style.transform = "";
@@ -35,7 +35,7 @@ function closeUploadTab() {
 
 // toggle upload tab
 function toggleUploadTab() {
-    let uploadTab = document.querySelector(".upload-panel");
+    const uploadTab = document.querySelector(".upload-panel");
 
     if (uploadTab.classList.contains("open")) {
         closeUploadTab();
@@ -47,15 +47,15 @@ function toggleUploadTab() {
 function tabDragStart(event) {
     event.preventDefault();
 
-    let uploadTab = document.querySelector(".upload-panel .container");
-    let offset = uploadTab.getBoundingClientRect().y;
+    const uploadTab = document.querySelector(".upload-panel .container");
+    const offset = uploadTab.getBoundingClientRect().y;
 
     uploadTab.classList.add("dragging");
 
-    document.addEventListener('touchmove', event => {
+    document.addEventListener('touchmove', moving => {
         if (uploadTab.classList.contains("dragging")) {
-            if (event.touches[0].clientY - offset >= 0) {
-                uploadTab.dataset.lastY = event.touches[0].clientY;
+            if (moving.touches[0].clientY - offset >= 0) {
+                uploadTab.dataset.lastY = moving.touches[0].clientY;
             } else {
                 uploadTab.dataset.lastY = offset;
             }
@@ -67,7 +67,7 @@ function tabDragStart(event) {
 function tabDragStopped(event) {
     event.preventDefault();
     
-    let uploadTab = document.querySelector(".upload-panel .container");
+    const uploadTab = document.querySelector(".upload-panel .container");
 
     uploadTab.classList.remove("dragging");
 
@@ -76,7 +76,7 @@ function tabDragStopped(event) {
     } else {
         uploadTab.style.transition = "transform 0.25s cubic-bezier(0.76, 0, 0.17, 1)";
         uploadTab.style.transform = "translateY(0px)";
-        setTimeout(function () { uploadTab.style.transition = ""; }, 250);
+        setTimeout(() => { uploadTab.style.transition = ""; }, 250);
     }
 }
 
@@ -85,16 +85,16 @@ function tabDragStopped(event) {
 function fileActivate(event) {
     event.preventDefault()
 
-    let fileDrop = document.querySelector('.fileDrop-block');
-    let fileDropTitle = fileDrop.querySelector('.status');
+    const fileDrop = document.querySelector('.fileDrop-block');
+    const fileDropTitle = fileDrop.querySelector('.status');
 
     fileDrop.classList.remove('error');
     fileDrop.classList.add('edging');
     fileDropTitle.innerHTML = 'Drop to upload!';
 }
 function fileDefault() {
-    let fileDrop = document.querySelector('.fileDrop-block');
-    let fileDropTitle = fileDrop.querySelector('.status');
+    const fileDrop = document.querySelector('.fileDrop-block');
+    const fileDropTitle = fileDrop.querySelector('.status');
 
     fileDrop.classList.remove('error');
     fileDrop.classList.remove('edging');
@@ -104,8 +104,8 @@ function fileDefault() {
 function fileDropHandle(event) {
     event.preventDefault()
 
-    let fileDrop = document.querySelector('.fileDrop-block');
-    let fileUpload = fileDrop.querySelector('#file');
+    const fileDrop = document.querySelector('.fileDrop-block');
+    const fileUpload = fileDrop.querySelector('#file');
 
     fileUpload.files = event.dataTransfer.files;
     
@@ -114,9 +114,9 @@ function fileDropHandle(event) {
 }
 
 function fileChanged() {
-    let dropBlock = document.querySelector('.fileDrop-block');
-    let dropBlockStatus = dropBlock.querySelector('.status');
-    let dropBlockInput = dropBlock.querySelector('#file');
+    const dropBlock = document.querySelector('.fileDrop-block');
+    const dropBlockStatus = dropBlock.querySelector('.status');
+    const dropBlockInput = dropBlock.querySelector('#file');
 
     if (dropBlockInput.value !== "") {
         dropBlock.classList.add('active');
@@ -127,12 +127,12 @@ function fileChanged() {
 }
 
 function clearUpload() {
-    let fileDrop = document.querySelector('#uploadForm');
+    const fileDrop = document.querySelector('#uploadForm');
 
-    let fileUpload = fileDrop.querySelector('#file');
-    let fileAlt = fileDrop.querySelector('#alt');
-    let fileDescription = fileDrop.querySelector('#description');
-    let fileTags = fileDrop.querySelector('#tags');
+    const fileUpload = fileDrop.querySelector('#file');
+    const fileAlt = fileDrop.querySelector('#alt');
+    const fileDescription = fileDrop.querySelector('#description');
+    const fileTags = fileDrop.querySelector('#tags');
 
     fileUpload.value = "";
     fileAlt.value = "";
@@ -169,21 +169,21 @@ function clearUpload() {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Function to upload images
-    let uploadTab = document.querySelector(".upload-panel");
+    const uploadTab = document.querySelector(".upload-panel");
 
     if (!uploadTab) { return; } // If upload tab doesn't exist, don't run this code :3
 
-    let uploadTabDrag = uploadTab.querySelector("#dragIndicator");
-    let uploadForm = uploadTab.querySelector('#uploadForm');
+    const uploadTabDrag = uploadTab.querySelector("#dragIndicator");
+    const uploadForm = uploadTab.querySelector('#uploadForm');
     // let jobList = document.querySelector(".upload-jobs");
     
-    let fileDrop = uploadForm.querySelector('.fileDrop-block');
-    let fileDropTitle = fileDrop.querySelector('.status');
-    let fileUpload = fileDrop.querySelector('#file');
+    const fileDrop = uploadForm.querySelector('.fileDrop-block');
+    const fileDropTitle = fileDrop.querySelector('.status');
+    const fileUpload = fileDrop.querySelector('#file');
 
-    let fileAlt = uploadForm.querySelector('#alt');
-    let fileDescription = uploadForm.querySelector('#description');
-    let fileTags = uploadForm.querySelector('#tags');
+    const fileAlt = uploadForm.querySelector('#alt');
+    const fileDescription = uploadForm.querySelector('#description');
+    const fileTags = uploadForm.querySelector('#tags');
 
 
     clearUpload();
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Make form
-        let formData = new FormData();
+        const formData = new FormData();
 
         formData.append("file", fileUpload.files[0]);
         formData.append("alt", fileAlt.value);
