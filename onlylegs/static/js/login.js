@@ -3,6 +3,7 @@ function showLogin() {
     // Create elements
     cancelBtn = document.createElement('button');
     cancelBtn.classList.add('btn-block');
+    cancelBtn.classList.add('transparent');
     cancelBtn.innerHTML = 'nuuuuuuuu';
     cancelBtn.onclick = popupDissmiss;
 
@@ -100,6 +101,7 @@ function showRegister() {
     // Create buttons
     cancelBtn = document.createElement('button');
     cancelBtn.classList.add('btn-block');
+    cancelBtn.classList.add('transparent');
     cancelBtn.innerHTML = 'nuuuuuuuu';
     cancelBtn.onclick = popupDissmiss;
 

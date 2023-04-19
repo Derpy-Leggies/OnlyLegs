@@ -28,7 +28,7 @@ function popUpShow(titleText, subtitleText, bodyContent=null, userActions=null) 
             actionsSelector.appendChild(userActions[i]);
         }
     } else {
-        actionsSelector.innerHTML = '<button class="btn-block" onclick="popupDissmiss()">Close</button>';
+        actionsSelector.innerHTML = '<button class="btn-block transparent" onclick="popupDissmiss()">Close</button>';
     }
 
     // Stop scrolling and show popup
