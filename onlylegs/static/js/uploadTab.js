@@ -52,10 +52,10 @@ function tabDragStart(event) {
 
     uploadTab.classList.add("dragging");
 
-    document.addEventListener('touchmove', event => {
+    document.addEventListener('touchmove', moving => {
         if (uploadTab.classList.contains("dragging")) {
-            if (event.touches[0].clientY - offset >= 0) {
-                uploadTab.dataset.lastY = event.touches[0].clientY;
+            if (moving.touches[0].clientY - offset >= 0) {
+                uploadTab.dataset.lastY = moving.touches[0].clientY;
             } else {
                 uploadTab.dataset.lastY = offset;
             }

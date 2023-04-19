@@ -10,7 +10,8 @@ class OnlyLegs(Application):
     Gunicorn application
     """
 
-    def __init__(self, options={}):  # skipcq: PYL-W0231 # pylint: disable=W0231, W0102
+    # TODO: Make this not shit, thanks
+    def __init__(self, options={}):  # skipcq: PYL-W0231 # pylint: disable=W0231
         self.usage = None
         self.callable = None
         self.options = options
