@@ -69,10 +69,10 @@ def create_app():  # pylint: disable=R0914
             migrate_init(directory=MIGRATIONS_DIR)
 
     # Check if migrations are up to date
-    with app.app_context():
-        print("Checking for schema changes...")
-        migrate_migrate(directory=MIGRATIONS_DIR)
-        migrate_upgrade(directory=MIGRATIONS_DIR)
+    # with app.app_context():
+    #     print("Checking for schema changes...")
+    #     migrate_migrate(directory=MIGRATIONS_DIR)
+    #     migrate_upgrade(directory=MIGRATIONS_DIR)
 
     # LOGIN MANAGER
     # can also set session_protection to "strong"
