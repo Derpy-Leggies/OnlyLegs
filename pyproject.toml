@@ -25,7 +25,6 @@ libsass = "^0.22.0"
 jsmin = "^3.0.1"
 cssmin = "^0.2.0"
 pylint = "^2.16.3"
-black = "^23.3.0"
 
 [build-system]
 requires = ["poetry-core"]

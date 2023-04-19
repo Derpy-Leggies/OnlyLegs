@@ -81,7 +81,7 @@ def create_app():  # pylint: disable=R0914
     login_manager.login_view = "onlylegs.index"
 
     @login_manager.user_loader
-    def load_user(user_id):
+    def load_user(user_id):  # skipcq: PTC-W0065
         return User.query.filter_by(alt_id=user_id).first()
 
     @login_manager.unauthorized_handler
