@@ -85,14 +85,14 @@ def create_app():  # pylint: disable=R0914
         return User.query.filter_by(alt_id=user_id).first()
 
     @login_manager.unauthorized_handler
-    def unauthorized():
+    def unauthorized():  # skipcq: PTC-W0065
         error = 401
         msg = "You are not authorized to view this page!!!!"
         return render_template("error.html", error=error, msg=msg), error
 
     # ERROR HANDLERS
     @app.errorhandler(Exception)
-    def error_page(err):  # noqa
+    def error_page(err):  # skipcq: PTC-W0065
         """
         Error handlers, if the error is not a HTTP error, return 500
         """
