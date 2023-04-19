@@ -10,11 +10,11 @@ function addNotification(notificationText, notificationLevel) {
     // Create notification element
     const notification = document.createElement('div');
     notification.classList.add('sniffle__notification');
-    notification.onclick = function() {
+    notification.onclick = () => {
         if (notification) {
             notification.classList.add('hide');
 
-            setTimeout(function() {
+            setTimeout(() => {
                 notificationContainer.removeChild(notification);
             }, 500);
         }
@@ -48,15 +48,14 @@ function addNotification(notificationText, notificationLevel) {
 
     // Append notification to container
     notificationContainer.appendChild(notification);
-    setTimeout(function() { notification.classList.add('show'); }, 5);
+    setTimeout(() => { notification.classList.add('show'); }, 5);
 
     // Remove notification after 5 seconds
-    setTimeout(function() {
+    setTimeout(() => {
         if (notification) {
             notification.classList.add('hide');
-
-            setTimeout(function() {
-                notificationContainer.removeChild(notification);
+            setTimeout(() => { 
+                notificationContainer.removeChild(notification); 
             }, 500);
         }
     }, 5000);

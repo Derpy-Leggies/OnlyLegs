@@ -9,7 +9,7 @@ function loadOnView() {
     const webpSupport = checkWebpSupport();
 
     for (let i = 0; i < lazyLoad.length; i++) {
-        let image = lazyLoad[i];
+        const image = lazyLoad[i];
         if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
             if (!image.src && webpSupport) {
                 image.src = `${image.getAttribute('data-src')}&e=webp`;

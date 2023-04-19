@@ -14,7 +14,7 @@ function openUploadTab() {
     // Stop scrolling and open upload tab
     document.querySelector("html").style.overflow = "hidden";
     uploadTab.style.display = "block";
-    setTimeout(function () { uploadTab.classList.add("open"); }, 5);
+    setTimeout(() => { uploadTab.classList.add("open"); }, 5);
 }
 
 // close upload tab
@@ -25,7 +25,7 @@ function closeUploadTab() {
     // un-Stop scrolling and close upload tab
     document.querySelector("html").style.overflow = "auto";
     uploadTab.classList.remove("open");
-    setTimeout(function () {
+    setTimeout(() => {
         uploadTab.style.display = "none";
 
         uploadTabContainer.style.transform = "";
@@ -76,7 +76,7 @@ function tabDragStopped(event) {
     } else {
         uploadTab.style.transition = "transform 0.25s cubic-bezier(0.76, 0, 0.17, 1)";
         uploadTab.style.transform = "translateY(0px)";
-        setTimeout(function () { uploadTab.style.transition = ""; }, 250);
+        setTimeout(() => { uploadTab.style.transition = ""; }, 250);
     }
 }
 
