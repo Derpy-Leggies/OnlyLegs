@@ -10,7 +10,7 @@ class OnlyLegs(Application):
     Gunicorn application
     """
 
-    def __init__(self, options={}):  # pylint: disable=W0102  skipcq: PYL-W0231
+    def __init__(self, options={}):  # skipcq: PYL-W0231 # pylint: disable=W0231, W0102
         self.usage = None
         self.callable = None
         self.options = options
@@ -27,7 +27,7 @@ class OnlyLegs(Application):
         return cfg
 
     @staticmethod
-    def prog():  # pylint: disable=C0116  skipcq: PYL-E0202
+    def prog():  # skipcq: PYL-E0202 # pylint: disable=E0202, C0116
         return "OnlyLegs"
 
     def load(self):
