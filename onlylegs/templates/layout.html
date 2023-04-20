@@ -68,18 +68,18 @@
             <!--<img src="{{url_for('static', filename='icon.png')}}" alt="Logo" class="logo" onload="this.style.opacity=1;" style="opacity:0">-->
 
             <a href="{{ url_for('gallery.index') }}{% block page_index %}{% endblock %}" class="navigation-item {% block nav_home %}{% endblock %}">
-                <i class="ph ph-images-square"></i>
+                <i class="ph-fill ph-images-square"></i>
                 <span class="tool-tip">Home<i class="ph-fill ph-caret-left"></i></span>
             </a>
 
             <a href="{{ url_for('group.groups') }}" class="navigation-item {% block nav_groups %}{% endblock %}">
-                <i class="ph ph-package"></i>
+                <i class="ph-fill ph-package"></i>
                 <span class="tool-tip">Groups<i class="ph-fill ph-caret-left"></i></span>
             </a>
 
             {% if current_user.is_authenticated %}
                 <button class="navigation-item {% block nav_upload %}{% endblock %}" onclick="toggleUploadTab()">
-                    <i class="ph ph-upload"></i>
+                    <i class="ph-fill ph-upload"></i>
                     <span class="tool-tip">Upload<i class="ph-fill ph-caret-left"></i></span>
                 </button>
             {% endif %}
@@ -88,17 +88,17 @@
 
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('profile.profile') }}" class="navigation-item {% block nav_profile %}{% endblock %}">
-                    <i class="ph ph-folder-simple-user"></i>
+                    <i class="ph-fill ph-folder-simple-user"></i>
                     <span class="tool-tip">Profile<i class="ph-fill ph-caret-left"></i></span>
                 </a>
             
                 <a href="{{ url_for('settings.general') }}" class="navigation-item {% block nav_settings %}{% endblock %}">
-                    <i class="ph ph-gear-fine"></i>
+                    <i class="ph-fill ph-gear-fine"></i>
                     <span class="tool-tip">Settings<i class="ph-fill ph-caret-left"></i></span>
                 </a>
             {% else %}
                 <button class="navigation-item {% block nav_login %}{% endblock %}" onclick="showLogin()">
-                    <i class="ph ph-sign-in"></i>
+                    <i class="ph-fill ph-sign-in"></i>
                     <span class="tool-tip">Login<i class="ph-fill ph-caret-left"></i></span>
                 </button>
             {% endif %}
