@@ -4,11 +4,11 @@ Tools for generating images and thumbnails
 
 import os
 from PIL import Image, ImageOps
-from onlylegs.config import UPLOAD_FOLDER, CACHE_FOLDER
+from onlylegs.config import MEDIA_FOLDER, CACHE_FOLDER
 from werkzeug.utils import secure_filename
 
 
-def generate_thumbnail(file_name, resolution, ext=None):
+def generate_thumbnail(file_path, resolution, ext=None):
     """
     Image thumbnail generator
     Uses PIL to generate a thumbnail of the image and saves it to the cache directory
@@ -21,6 +21,7 @@ def generate_thumbnail(file_name, resolution, ext=None):
         os.makedirs(CACHE_FOLDER)
 
     # no sussy business
+    file_name = os.path.basename(file_path)
     file_name, file_ext = secure_filename(file_name).rsplit(".")
     if not ext:
         ext = file_ext.strip(".")
@@ -44,11 +45,11 @@ def generate_thumbnail(file_name, resolution, ext=None):
         return os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}")
 
     # Check if image exists in the uploads directory
-    if not os.path.exists(os.path.join(UPLOAD_FOLDER, f"{file_name}.{file_ext}")):
+    if not os.path.exists(os.path.join(MEDIA_FOLDER, file_path, f"{file_name}.{file_ext}")):
         return None
 
     # Open image and rotate it based on EXIF data and get ICC profile so colors are correct
-    image = Image.open(os.path.join(UPLOAD_FOLDER, f"{file_name}.{file_ext}"))
+    image = Image.open(os.path.join(MEDIA_FOLDER, file_path, f"{file_name}.{file_ext}"))
     image_icc = image.info.get("icc_profile")
     img_x, img_y = image.size
 

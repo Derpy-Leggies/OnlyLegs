@@ -209,8 +209,7 @@
             .navigation {
                 background-color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
             }
-            .navigation-item > svg {
-                fill: {{ text_colour }} !important;
+            .navigation-item > i {
                 color: {{ text_colour }} !important;
             }
             .navigation-item.selected::before {
@@ -222,7 +221,7 @@
 {% block content %}
     {% if images %}
         <div class="banner">
-            <img src="{{ url_for('api.file', file_name=images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;" alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"/>
+            <img src="{{ url_for('api.media', path='uploads/' + images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;" alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"/>
             <span class="banner-filter"></span>
             <div class="banner-content">
                 <p class="banner-info"><a href="{{ url_for('profile.profile', id=group.author.id) }}" class="link">By {{ group.author.username }}</a></p>
@@ -268,7 +267,7 @@
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}" data-src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>

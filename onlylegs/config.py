@@ -36,6 +36,7 @@ WEBSITE_CONF = conf["website"]
 UPLOAD_FOLDER = os.path.join(user_dir, "media", "uploads")
 CACHE_FOLDER = os.path.join(user_dir, "media", "cache")
 PFP_FOLDER = os.path.join(user_dir, "media", "pfp")
+MEDIA_FOLDER = os.path.join(user_dir, "media")
 
 # Database
 INSTANCE_DIR = instance_dir

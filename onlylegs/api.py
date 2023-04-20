@@ -4,16 +4,16 @@ Onlylegs - API endpoints
 from uuid import uuid4
 import os
 import pathlib
+import re
 import logging
 
 from flask import Blueprint, send_from_directory, abort, flash, request, current_app
-from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
 
 from colorthief import ColorThief
 
 from onlylegs.extensions import db
-from onlylegs.models import Post, Group, GroupJunction
+from onlylegs.models import Post, Group, GroupJunction, User
 from onlylegs.utils import metadata as mt
 from onlylegs.utils.generate_image import generate_thumbnail
 
@@ -21,25 +21,24 @@ from onlylegs.utils.generate_image import generate_thumbnail
 blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 
-@blueprint.route("/file/<file_name>", methods=["GET"])
-def file(file_name):
+@blueprint.route("/media/<path:path>", methods=["GET"])
+def media(path):
     """
     Returns a file from the uploads folder
-    r for resolution, 400x400 or thumb for thumbnail
+    r for resolution, thumb for thumbnail etc
+    e for extension, jpg, png etc
     """
-    res = request.args.get("r", default=None, type=str)  # Type of file (thumb, etc)
-    ext = request.args.get("e", default=None, type=str)  # File extension
-    file_name = secure_filename(file_name)  # Sanitize file name
+    res = request.args.get("r", default=None, type=str)
+    ext = request.args.get("e", default=None, type=str)
+    # path = secure_filename(path)
 
     # if no args are passed, return the raw file
     if not res and not ext:
-        if not os.path.exists(
-            os.path.join(current_app.config["UPLOAD_FOLDER"], file_name)
-        ):
+        if not os.path.exists(os.path.join(current_app.config["MEDIA_FOLDER"], path)):
             abort(404)
-        return send_from_directory(current_app.config["UPLOAD_FOLDER"], file_name)
+        return send_from_directory(current_app.config["MEDIA_FOLDER"], path)
 
-    thumb = generate_thumbnail(file_name, res, ext)
+    thumb = generate_thumbnail(path, res, ext)
     if not thumb:
         abort(404)
 
@@ -197,3 +196,69 @@ def delete_group():
 
     flash(["Group yeeted!", "1"])
     return ":3"
+
+
+@blueprint.route("/user/picture/<int:user_id>", methods=["POST"])
+def user_picture(user_id):
+    """
+    Returns the profile of a user
+    """
+    user = db.get_or_404(User, user_id)
+    file = request.files["file"]
+
+    # If no image is uploaded, return 404 error
+    if not file:
+        return abort(404)
+    elif user.id != current_user.id:
+        return abort(403)
+
+    # Get file extension, generate random name and set file path
+    img_ext = pathlib.Path(file.filename).suffix.replace(".", "").lower()
+    img_name = str(user.id)
+    img_path = os.path.join(current_app.config["PFP_FOLDER"], img_name + "." + img_ext)
+
+    # Check if file extension is allowed
+    if img_ext not in current_app.config["ALLOWED_EXTENSIONS"].keys():
+        logging.info("File extension not allowed: %s", img_ext)
+        abort(403)
+        
+    if user.picture:
+        os.remove(os.path.join(current_app.config["PFP_FOLDER"], user.picture))
+
+    # Save file
+    try:
+        file.save(img_path)
+    except OSError as err:
+        logging.info("Error saving file %s because of %s", img_path, err)
+        abort(500)
+
+    img_colors = ColorThief(img_path).get_color()  # Get color palette
+
+    # Save to database
+    user.colour = img_colors
+    user.picture = str(img_name + "." + img_ext)
+    db.session.commit()
+
+    return "Gwa Gwa"  # Return something so the browser doesn't show an error
+
+@blueprint.route("/user/username/<int:user_id>", methods=["POST"])
+def user_username(user_id):
+    """
+    Returns the profile of a user
+    """
+    user = db.get_or_404(User, user_id)
+    new_name = request.form["name"]
+    
+    username_regex = re.compile(r"\b[A-Za-z0-9._-]+\b")
+
+    # Validate the form
+    if not new_name or not username_regex.match(new_name):
+        abort(400)
+    elif user.id != current_user.id:
+        return abort(403)
+    
+    # Save to database
+    user.username = new_name
+    db.session.commit()
+
+    return "Gwa Gwa"  # Return something so the browser doesn't show an error
