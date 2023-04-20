@@ -36,6 +36,8 @@
 
 .banner
     height: 30rem
+    max-height: 69vh
+
     background-color: RGB($bg-300)
 
     img
@@ -72,9 +74,8 @@
         bottom: 0
 
         display: grid
-        grid-template-columns: 1fr auto
-        grid-template-rows: 1fr auto auto
-        grid-template-areas: 'info info' 'header header' 'subtitle options'
+        grid-template-columns: auto 1fr auto
+        grid-template-areas: 'info info info' 'image header header' 'subtitle subtitle options'
 
         z-index: +2
 
@@ -108,6 +109,19 @@
         .pill-row
             margin-top: auto
             grid-area: options
+
+        .banner-picture
+            grid-area: image
+
+            margin: auto 1rem auto 0
+
+            position: relative
+
+            width: 6.9rem
+            height: 6.9rem
+
+            background-color: RGB($primary)
+            border-radius: $rad
 
 .banner-small
     height: 3.5rem
@@ -165,8 +179,12 @@
             display: none
 
     .banner
-        min-height: 17rem
+        min-height: 15rem
         height: auto
+        max-height: 30vh
+
+        .banner-filter
+            background: linear-gradient(to bottom, RGB($bg-100), transparent)
 
         .banner-content
             padding: 0.5rem
@@ -178,7 +196,7 @@
             align-items: center
 
             .banner-header
-                margin: 1rem 0
+                margin: 0.5rem 0
                 text-align: center
                 font-size: 2.5rem
 
@@ -191,6 +209,14 @@
 
             .pill-row
                 margin-top: 0rem
+
+            .banner-picture
+                margin: 0 auto
+
+                width: 4rem
+                height: 4rem
+
+                display: flex
 
     .banner-small
         .banner-content

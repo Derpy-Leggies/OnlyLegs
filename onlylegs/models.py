@@ -87,9 +87,12 @@ class User(db.Model, UserMixin):  # pylint: disable=too-few-public-methods, C010
     id = db.Column(db.Integer, primary_key=True)
     alt_id = db.Column(db.String, unique=True, nullable=False, default=str(uuid4()))
 
-    profile_picture = db.Column(db.String, nullable=True, default=None)
+    picture = db.Column(db.String, nullable=True, default=None)
+    picture_colour = db.Column(db.String, nullable=True, default=None)
+    banner = db.Column(db.String, nullable=True, default=None)
+    bannner_colour = db.Column(db.String, nullable=True, default=None)
+    
     username = db.Column(db.String, unique=True, nullable=False)
-
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     joined_at = db.Column(

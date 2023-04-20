@@ -5,7 +5,8 @@ from flask import Blueprint, render_template, request
 from werkzeug.exceptions import abort
 from flask_login import current_user
 
-from onlylegs.models import Post, User
+from onlylegs.models import Post, User, Group
+from onlylegs.extensions import db
 
 
 blueprint = Blueprint("profile", __name__, url_prefix="/profile")
@@ -26,11 +27,9 @@ def profile():
             abort(404, "You must be logged in to view your own profile!")
 
     # Get the user's data
-    user = User.query.filter(User.id == user_id).first()
-
-    if not user:
-        abort(404, "User not found :c")
+    user = db.get_or_404(User, user_id, description="User not found :<")
 
     images = Post.query.filter(Post.author_id == user_id).all()
+    groups = Group.query.filter(Group.author_id == user_id).all()
 
-    return render_template("profile.html", user=user, images=images)
+    return render_template("profile.html", user=user, images=images, groups=groups)
