@@ -16,14 +16,7 @@
         </div>
     </div>
 
-    <div class="settings-nav">
-        <a href="{{ url_for('settings.general') }}" class="settings-nav__item {% block settings_general %}{% endblock %}">General</a>
-        <a href="{{ url_for('settings.server') }}" class="settings-nav__item {% block settings_server %}{% endblock %}">Server</a>
-        <a href="{{ url_for('settings.account') }}" class="settings-nav__item {% block settings_account %}{% endblock %}">Account</a>
-        <a href="{{ url_for('settings.logs') }}" class="settings-nav__item {% block settings_logs %}{% endblock %}">Logs</a>
-    </div>
-
     <div class="settings-content">
-        {% block settings_content %}{% endblock %}
+        <h1>Gwa Gwa</h1>
     </div>
 {% endblock %}
