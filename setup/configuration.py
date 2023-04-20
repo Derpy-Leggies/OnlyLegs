@@ -45,7 +45,10 @@ class Configuration:
         """
         os.makedirs(USER_DIR)
         os.makedirs(os.path.join(USER_DIR, "instance"))
-        os.makedirs(os.path.join(USER_DIR, "uploads"))
+        os.makedirs(os.path.join(USER_DIR, "media"))
+        os.makedirs(os.path.join(USER_DIR, "media", "uploads"))
+        os.makedirs(os.path.join(USER_DIR, "media", "cache"))
+        os.makedirs(os.path.join(USER_DIR, "media", "pfp"))
 
         print("Created user directory at:", USER_DIR)
 

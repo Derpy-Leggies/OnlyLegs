@@ -3,13 +3,9 @@ Tools for generating images and thumbnails
 """
 
 import os
-import platformdirs
 from PIL import Image, ImageOps
+from onlylegs.config import UPLOAD_FOLDER, CACHE_FOLDER
 from werkzeug.utils import secure_filename
-
-
-CACHE_PATH = os.path.join(platformdirs.user_config_dir("onlylegs"), "cache")
-UPLOAD_PATH = os.path.join(platformdirs.user_config_dir("onlylegs"), "uploads")
 
 
 def generate_thumbnail(file_name, resolution, ext=None):
@@ -21,8 +17,8 @@ def generate_thumbnail(file_name, resolution, ext=None):
     ext is the file extension of the image
     """
     # Make image cache directory if it doesn't exist
-    if not os.path.exists(CACHE_PATH):
-        os.makedirs(CACHE_PATH)
+    if not os.path.exists(CACHE_FOLDER):
+        os.makedirs(CACHE_FOLDER)
 
     # no sussy business
     file_name, file_ext = secure_filename(file_name).rsplit(".")
@@ -44,15 +40,15 @@ def generate_thumbnail(file_name, resolution, ext=None):
         return None
 
     # If image has been already generated, return it from the cache
-    if os.path.exists(os.path.join(CACHE_PATH, f"{file_name}_{res_x}x{res_y}.{ext}")):
-        return os.path.join(CACHE_PATH, f"{file_name}_{res_x}x{res_y}.{ext}")
+    if os.path.exists(os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}")):
+        return os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}")
 
     # Check if image exists in the uploads directory
-    if not os.path.exists(os.path.join(UPLOAD_PATH, f"{file_name}.{file_ext}")):
+    if not os.path.exists(os.path.join(UPLOAD_FOLDER, f"{file_name}.{file_ext}")):
         return None
 
     # Open image and rotate it based on EXIF data and get ICC profile so colors are correct
-    image = Image.open(os.path.join(UPLOAD_PATH, f"{file_name}.{file_ext}"))
+    image = Image.open(os.path.join(UPLOAD_FOLDER, f"{file_name}.{file_ext}"))
     image_icc = image.info.get("icc_profile")
     img_x, img_y = image.size
 
@@ -63,7 +59,7 @@ def generate_thumbnail(file_name, resolution, ext=None):
     # Save image to cache directory
     try:
         image.save(
-            os.path.join(CACHE_PATH, f"{file_name}_{res_x}x{res_y}.{ext}"),
+            os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}"),
             icc_profile=image_icc,
         )
     except OSError:
@@ -71,11 +67,11 @@ def generate_thumbnail(file_name, resolution, ext=None):
         # so we convert to RGB and try again
         image = image.convert("RGB")
         image.save(
-            os.path.join(CACHE_PATH, f"{file_name}_{res_x}x{res_y}.{ext}"),
+            os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}"),
             icc_profile=image_icc,
         )
 
     # No need to keep the image in memory, learned the hard way
     image.close()
 
-    return os.path.join(CACHE_PATH, f"{file_name}_{res_x}x{res_y}.{ext}")
+    return os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}")

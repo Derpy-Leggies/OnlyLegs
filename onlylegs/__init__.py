@@ -4,7 +4,6 @@ This is the main app file, it loads all the other files and sets up the app
 """
 import os
 import logging
-import platformdirs
 
 from flask_assets import Bundle
 from flask_migrate import init as migrate_init
@@ -14,21 +13,17 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 
 from onlylegs.extensions import db, migrate, login_manager, assets, compress, cache
-from onlylegs.views import index, image, group, settings, profile
-from onlylegs import api
-from onlylegs import auth
+from onlylegs.config import INSTANCE_DIR, MIGRATIONS_DIR
 from onlylegs.models import User
-
-
-INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"), "instance")
-MIGRATIONS_DIR = os.path.join(INSTACE_DIR, "migrations")
+from onlylegs.views import index, image, group, settings, profile
+from onlylegs import api, auth
 
 
 def create_app():  # pylint: disable=R0914
     """
     Create and configure the main app
     """
-    app = Flask(__name__, instance_path=INSTACE_DIR)
+    app = Flask(__name__, instance_path=INSTANCE_DIR)
     app.config.from_pyfile("config.py")
 
     # DATABASE
@@ -36,7 +31,7 @@ def create_app():  # pylint: disable=R0914
     migrate.init_app(app, db, directory=MIGRATIONS_DIR)
 
     # If database file doesn't exist, create it
-    if not os.path.exists(os.path.join(INSTACE_DIR, "gallery.sqlite3")):
+    if not os.path.exists(os.path.join(INSTANCE_DIR, "gallery.sqlite3")):
         print("Creating database")
         with app.app_context():
             db.create_all()

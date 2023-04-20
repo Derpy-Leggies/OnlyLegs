@@ -5,7 +5,6 @@ from uuid import uuid4
 import os
 import pathlib
 import logging
-import platformdirs
 
 from flask import Blueprint, send_from_directory, abort, flash, request, current_app
 from werkzeug.utils import secure_filename
@@ -105,11 +104,9 @@ def delete_image(image_id):
     """
     Deletes an image from the server and database
     """
-    post = Post.query.filter_by(id=image_id).first()
+    post = db.get_or_404(Post, image_id)
 
     # Check if image exists and if user is allowed to delete it (author)
-    if post is None:
-        abort(404)
     if post.author_id != current_user.id:
         abort(403)
 
@@ -122,9 +119,8 @@ def delete_image(image_id):
         )
 
     # Delete cached files
-    cache_path = os.path.join(platformdirs.user_config_dir("onlylegs"), "cache")
     cache_name = post.filename.rsplit(".")[0]
-    for cache_file in pathlib.Path(cache_path).glob(cache_name + "*"):
+    for cache_file in pathlib.Path(current_app.config["CACHE_FOLDER"]).glob(cache_name + "*"):
         os.remove(cache_file)
 
     GroupJunction.query.filter_by(post_id=image_id).delete()
@@ -190,11 +186,9 @@ def delete_group():
     Deletes a group
     """
     group_id = request.form["group"]
-    group = Group.query.filter_by(id=group_id).first()
+    group = db.get_or_404(Group, group_id)
 
-    if group is None:
-        abort(404)
-    elif group.author_id != current_user.id:
+    if group.author_id != current_user.id:
         abort(403)
 
     GroupJunction.query.filter_by(group_id=group_id).delete()
