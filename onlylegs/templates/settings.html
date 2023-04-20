@@ -14,17 +14,27 @@
         </div>
     </div>
 
-    <div class="settings-content">
-        <h1>Gwa Gwa</h1>
+    <div class="settings-content" id="profileSettings">
+        <h2>Profile Settings</h2>
+        <form method="POST" action="{{ url_for('api.user_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
+            <h3>Profile Picture</h3>
+            <input type="file" name="file" tab-index="-1"/>
+            <input type="submit" value="Upload" class="btn-block">
+        </form>
+    
+        <form method="POST" action="{{ url_for('api.user_username', user_id=current_user.id) }}" enctype="multipart/form-data">
+            <h3>Username</h3>
+            <input type="text" name="name" class="input-block" value="{{ current_user.username }}" />
+            <input type="submit" value="Upload" class="btn-block"/>
+        </form>
     </div>
 
-    <form method="POST" action="{{ url_for('api.user_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Upload">
-    </form>
-
-    <form method="POST" action="{{ url_for('api.user_username', user_id=current_user.id) }}" enctype="multipart/form-data">
-        <input type="text" name="name">
-        <input type="submit" value="Upload">
-    </form>
+    <div class="settings-content" id="profileSettings">
+        <h2>Account Settings</h2>    
+        <form method="POST" action="" enctype="multipart/form-data">
+            <h3>Email</h3>
+            <input type="text" name="email" class="input-block" value="{{ current_user.email }}" />
+            <input type="submit" value="Upload" class="btn-block"/>
+        </form>
+    </div>
 {% endblock %}
