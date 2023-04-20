@@ -86,7 +86,7 @@
 
             &::after
                 content: ''
-                width: 8rem
+                width: 6rem
                 height: 3px
 
                 position: absolute
@@ -96,6 +96,12 @@
 
                 background-color: RGB($bg-400)
                 border-radius: $rad-inner
+
+                transition: width 0.25s $animation-bounce
+
+        &.dragging #dragIndicator::after
+            width: 9rem
+            background-color: RGB($primary)
 
     .upload-jobs
         display: flex
