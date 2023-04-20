@@ -17,6 +17,7 @@ from onlylegs.config import INSTANCE_DIR, MIGRATIONS_DIR
 from onlylegs.models import User
 from onlylegs.views import index, image, group, settings, profile
 from onlylegs import api, auth
+from onlylegs import gwagwa
 
 
 def create_app():  # pylint: disable=R0914
