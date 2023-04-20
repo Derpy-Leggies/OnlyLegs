@@ -36,7 +36,7 @@ def create_app():  # pylint: disable=R0914
 
     # DATABASE
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, directory=MIGRATIONS_DIR)
 
     # If database file doesn't exist, create it
     if not os.path.exists(os.path.join(INSTACE_DIR, "gallery.sqlite3")):
@@ -108,7 +108,7 @@ def create_app():  # pylint: disable=R0914
 
     scripts = Bundle("js/*.js", output="gen/js.js", depends="js/*.js")  # filter jsmin is broken :c
     styles = Bundle(
-        "sass/*.sass",
+        "sass/style.sass",
         filters="libsass, cssmin",
         output="gen/styles.css",
         depends="sass/**/*.sass",
