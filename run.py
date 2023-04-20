@@ -3,10 +3,14 @@ Run script for OnlyLegs
 """
 from setup.args import PORT, ADDRESS, WORKERS, DEBUG
 from setup.configuration import Configuration
+import importlib.metadata
+
+
+__version__ = importlib.metadata.version("OnlyLegs")
 
 
 print(
-    """
+f"""
  ::::::::  ::::    ::: :::     :::   ::: :::        ::::::::: :::::::::   ::::::::
 :+:    :+: :+:+:   :+: :+:     :+:   :+: :+:        :+:       :+:    :+: :+:    :+:
 +:+    +:+ :+:+:+  +:+ +:+      +:+ +:+  +:+        +:+       +:+        +:+
@@ -15,7 +19,7 @@ print(
 #+#    #+# #+#   #+#+# #+#        #+#    #+#        #+#       #+#    #+# #+#    #+#
  ########  ###    #### ########## ###    ########## ######### #########   ########
 
-                     Created by Fluffy Bean - Version 0.1.0
+                     Created by Fluffy Bean - {__version__}
 """
 )
 
