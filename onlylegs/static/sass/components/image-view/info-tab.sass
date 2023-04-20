@@ -50,10 +50,7 @@
 .collapse-indicator
     margin: 0
     padding: 0
-
-    width: 1.25rem
-    height: 1.25rem
-
+    
     position: absolute
     top: 0.6rem
     right: 0.6rem
@@ -67,8 +64,11 @@
     transition: transform 0.15s cubic-bezier(.79, .14, .15, .86)
     cursor: pointer
 
+    > i
+        font-size: 1.1rem
+        color: RGB($primary)
+
 .info-header
-    margin: 0
     padding: 0.5rem
 
     width: 100%
@@ -82,18 +82,12 @@
     background-color: RGB($bg-200)
     border-radius: $rad
 
-    svg
-        margin: 0
-        padding: 0
-
-        width: 1.25rem
-        height: 1.25rem
-
-        fill: RGB($primary)
+    > i
+        font-size: 1.25rem
+        color: RGB($primary)
 
     h2
         margin: 0
-        padding: 0
 
         font-size: 1.1rem
         font-weight: 500
