@@ -17,4 +17,14 @@
     <div class="settings-content">
         <h1>Gwa Gwa</h1>
     </div>
+
+    <form method="POST" action="{{ url_for('api.user_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+
+    <form method="POST" action="{{ url_for('api.user_username', user_id=current_user.id) }}" enctype="multipart/form-data">
+        <input type="text" name="name">
+        <input type="submit" value="Upload">
+    </form>
 {% endblock %}

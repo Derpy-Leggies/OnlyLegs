@@ -1,5 +1,21 @@
 {% extends 'layout.html' %}
+{% block head %}
+    {% if user.picture %}
+        <meta property="og:image" content="{{ url_for('api.media', path='pfp/' + user.picture) }}"/>
+    {% endif %}
+    {% if user.colour %}
+        <meta name="theme-color" content="rgb({{ user.colour.0 }}, {{ user.colour.1 }}, {{ user.colour.2 }})"/>
+    {% endif %}
 
+    <script type="text/javascript">
+    </script>
+
+    <style>
+        .banner-picture {
+            background-color: rgb({{ user.colour.0 }}, {{ user.colour.1 }}, {{ user.colour.2 }}) !important;
+        }
+    </style>
+{% endblock %}
 {% block nav_profile %}selected{% endblock %}
 {% block content %}
     <div class="banner">
@@ -11,7 +27,7 @@
         <span class="banner-filter"></span>
         <div class="banner-content">
             {% if user.picture %}
-                <img class="banner-picture" src="{{ url_for('static', filename='icon.png') }}" alt="Profile picture" onload="imgFade(this)" style="opacity:0;"/>
+                <img class="banner-picture" src="{{ url_for('api.media', path='pfp/' + user.picture) }}" alt="Profile picture" onload="imgFade(this)" style="opacity:0;"/>
             {% else %}
                 <img class="banner-picture" src="{{ url_for('static', filename='icon.png') }}" alt="Profile picture" onload="imgFade(this)" style="opacity:0;"/>
             {% endif %}
@@ -37,7 +53,7 @@
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img fetchpriority="low" alt="{{ image.alt }}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img fetchpriority="low" alt="{{ image.alt }}" data-src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>
