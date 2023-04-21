@@ -88,7 +88,18 @@
 
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('profile.profile') }}" class="navigation-item {% block nav_profile %}{% endblock %}">
-                    <i class="ph-fill ph-folder-simple-user"></i>
+                    {% if current_user.picture %}
+                        <span class="nav-pfp">
+                            <img
+                                src="{{ url_for('api.media', path='pfp/' + current_user.picture) }}?r=icon"
+                                alt="Profile picture"
+                                onload="imgFade(this)"
+                                style="opacity:0;"
+                            />
+                        </span>
+                    {% else %}
+                        <i class="ph-fill ph-folder-simple-user"></i>
+                    {% endif %}
                     <span class="tool-tip">Profile<i class="ph-fill ph-caret-left"></i></span>
                 </a>
             
