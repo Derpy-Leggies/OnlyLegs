@@ -276,12 +276,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // });
 
 
-        fetch('/api/upload', {
+        fetch('/api/media/upload', {
             method: 'POST',
             body: formData
         })
         // .then(response => response.json())
-        .then(data => { addNotification("Image uploaded successfully", 1); })
+        .then(data => {
+            addNotification("Image uploaded successfully", 1);
+        })
         .catch(error => {
             switch (response.status) {
                 case 500:
@@ -302,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
             }
         });
-
 
         clearUpload();
         
