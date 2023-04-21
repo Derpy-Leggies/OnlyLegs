@@ -1,29 +1,86 @@
 {% extends 'layout.html' %}
+{% block head %}
+    {% if user.picture %}
+        <meta property="og:image" content="{{ url_for('media_api.media', path='pfp/' + user.picture) }}"/>
+    {% endif %}
+    {% if user.colour %}
+        <meta name="theme-color" content="rgb({{ user.colour.0 }}, {{ user.colour.1 }}, {{ user.colour.2 }})"/>
+    {% endif %}
 
-{% block nav_profile %}selected{% endblock %}
+    <script type="text/javascript">
+        function moreInfo() {
+            popUpShow('{{ user.username }}',
+                        '<p>Joined: {{ user.joined_at }}</p><br>' +
+                        '<p>Images: {{ images|length }}</p><br>' +
+                        '<p>Groups: {{ groups|length }}</p>');
+        }
+    </script>
+
+    <style>
+        .banner-picture {
+            background-color: rgb({{ user.colour.0 }}, {{ user.colour.1 }}, {{ user.colour.2 }}) !important;
+        }
+    </style>
+{% endblock %}
+{% block nav_profile %}{% if user.id == current_user.id %}selected{% endif %}{% endblock %}
 {% block content %}
-    <div class="banner-small">
+    <div class="banner">
+        {% if user.banner %}
+            <img src="{{ url_for('static', filename='icon.png') }}" alt="Profile Banner" onload="imgFade(this)" style="opacity:0;"/>
+        {% else %}
+            <img src="{{ url_for('static', filename='banner.png') }}" alt="Profile Banner" onload="imgFade(this)" style="opacity:0;"/>
+        {% endif %}
+        <span class="banner-filter"></span>
         <div class="banner-content">
+            {% if user.picture %}
+                <img
+                    class="banner-picture"
+                    src="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp"
+                    alt="Profile picture"
+                    onload="imgFade(this)"
+                    style="opacity:0;"
+                />
+            {% else %}
+                <img
+                    class="banner-picture"
+                    src="{{ url_for('static', filename='icon.png') }}"
+                    alt="Profile picture"
+                    onload="imgFade(this)"
+                    style="opacity:0;"
+                />
+            {% endif %}
             <h1 class="banner-header">{{ user.username }}</h1>
-            <p class="banner-info">Member since <span class="time">{{ user.joined_at }}</span></p>
+            <p class="banner-subtitle">{{ images|length }} Images · {{ groups|length }} Groups</p>
+            <div class="pill-row">
+                <div>
+                    <button class="pill-item" onclick="profileShare()"><i class="ph ph-export"></i></button>
+                    <button class="pill-item" onclick="moreInfo()"><i class="ph ph-info"></i></button>
+                </div>
+                {% if user.id == current_user.id %}
+                    <div>
+                        <a href="{{ url_for('settings.general') }}#profileSettings" class="pill-item pill__critical"><i class="ph ph-user-circle-gear"></i></a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
+
     {% if images %}
+        <h1 class="gallery-header">Images</h1>
         <div class="gallery-grid">
             {% for image in images %}
                 <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }})">
                     <div class="image-filter">
-                        <p class="image-subtitle"></p>
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img fetchpriority="low" alt="{{ image.alt }}" data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img fetchpriority="low" alt="{{ image.alt }}" data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>
     {% else %}
         <div class="big-text">
             <h1>*crickets chirping*</h1>
-            <p>There are no images here yet, upload some!</p>
+            <p>There are no images here yet, oopsie!</p>
         </div>
     {% endif %}
 {% endblock %}

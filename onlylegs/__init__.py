@@ -4,42 +4,42 @@ This is the main app file, it loads all the other files and sets up the app
 """
 import os
 import logging
-import platformdirs
 
 from flask_assets import Bundle
-
 from flask_migrate import init as migrate_init
-from flask_migrate import upgrade as migrate_upgrade
-from flask_migrate import migrate as migrate_migrate
 
 from flask import Flask, render_template, abort
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import generate_password_hash
 
 from onlylegs.extensions import db, migrate, login_manager, assets, compress, cache
-from onlylegs.views import index, image, group, settings, profile
-from onlylegs import api
-from onlylegs import auth
+from onlylegs.config import INSTANCE_DIR, MIGRATIONS_DIR
 from onlylegs.models import User
-
-
-INSTACE_DIR = os.path.join(platformdirs.user_config_dir("onlylegs"), "instance")
-MIGRATIONS_DIR = os.path.join(INSTACE_DIR, "migrations")
+from onlylegs.views import (
+    index as view_index,
+    image as view_image,
+    group as view_group,
+    settings as view_settings,
+    profile as view_profile,
+)
+from onlylegs.api import media as api_media, group as api_group, account as api_account
+from onlylegs import auth as view_auth
+from onlylegs import gwagwa
 
 
 def create_app():  # pylint: disable=R0914
     """
     Create and configure the main app
     """
-    app = Flask(__name__, instance_path=INSTACE_DIR)
+    app = Flask(__name__, instance_path=INSTANCE_DIR)
     app.config.from_pyfile("config.py")
 
     # DATABASE
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db, directory=MIGRATIONS_DIR)
 
     # If database file doesn't exist, create it
-    if not os.path.exists(os.path.join(INSTACE_DIR, "gallery.sqlite3")):
+    if not os.path.exists(os.path.join(INSTANCE_DIR, "gallery.sqlite3")):
         print("Creating database")
         with app.app_context():
             db.create_all()
@@ -67,12 +67,6 @@ def create_app():  # pylint: disable=R0914
         if not os.path.exists(MIGRATIONS_DIR):
             print("Creating migrations directory")
             migrate_init(directory=MIGRATIONS_DIR)
-
-    # Check if migrations are up to date
-    with app.app_context():
-        print("Checking for schema changes...")
-        migrate_migrate(directory=MIGRATIONS_DIR)
-        migrate_upgrade(directory=MIGRATIONS_DIR)
 
     # LOGIN MANAGER
     # can also set session_protection to "strong"
@@ -106,9 +100,11 @@ def create_app():  # pylint: disable=R0914
     # ASSETS
     assets.init_app(app)
 
-    scripts = Bundle("js/*.js", output="gen/js.js", depends="js/*.js")  # filter jsmin is broken :c
+    scripts = Bundle(
+        "js/*.js", output="gen/js.js", depends="js/*.js"
+    )  # filter jsmin is broken :c
     styles = Bundle(
-        "sass/*.sass",
+        "sass/style.sass",
         filters="libsass, cssmin",
         output="gen/styles.css",
         depends="sass/**/*.sass",
@@ -118,13 +114,17 @@ def create_app():  # pylint: disable=R0914
     assets.register("styles", styles)
 
     # BLUEPRINTS
-    app.register_blueprint(auth.blueprint)
-    app.register_blueprint(api.blueprint)
-    app.register_blueprint(index.blueprint)
-    app.register_blueprint(image.blueprint)
-    app.register_blueprint(group.blueprint)
-    app.register_blueprint(profile.blueprint)
-    app.register_blueprint(settings.blueprint)
+    app.register_blueprint(view_auth.blueprint)
+    app.register_blueprint(view_index.blueprint)
+    app.register_blueprint(view_image.blueprint)
+    app.register_blueprint(view_group.blueprint)
+    app.register_blueprint(view_profile.blueprint)
+    app.register_blueprint(view_settings.blueprint)
+
+    # APIS
+    app.register_blueprint(api_media.blueprint)
+    app.register_blueprint(api_group.blueprint)
+    app.register_blueprint(api_account.blueprint)
 
     # CACHE AND COMPRESS
     cache.init_app(app)

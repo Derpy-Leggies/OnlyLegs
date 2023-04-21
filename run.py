@@ -1,12 +1,13 @@
 """
 Run script for OnlyLegs
 """
+import importlib.metadata
 from setup.args import PORT, ADDRESS, WORKERS, DEBUG
 from setup.configuration import Configuration
 
 
 print(
-    """
+    f"""
  ::::::::  ::::    ::: :::     :::   ::: :::        ::::::::: :::::::::   ::::::::
 :+:    :+: :+:+:   :+: :+:     :+:   :+: :+:        :+:       :+:    :+: :+:    :+:
 +:+    +:+ :+:+:+  +:+ +:+      +:+ +:+  +:+        +:+       +:+        +:+
@@ -15,12 +16,11 @@ print(
 #+#    #+# #+#   #+#+# #+#        #+#    #+#        #+#       #+#    #+# #+#    #+#
  ########  ###    #### ########## ###    ########## ######### #########   ########
 
-                     Created by Fluffy Bean - Version 0.1.0
+                     Created by Fluffy Bean - {importlib.metadata.version("OnlyLegs")}
 """
 )
 
 
-# Run pre-startup checks and load configuration
 Configuration()
 
 

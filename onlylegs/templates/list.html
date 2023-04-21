@@ -67,7 +67,7 @@
                 formData.append("name", formName);
                 formData.append("description", formDescription);
             
-                fetch('{{ url_for('api.create_group') }}', {
+                fetch('{{ url_for('group_api.create_group') }}', {
                     method: 'POST',
                     body: formData
                 }).then(response => {
@@ -108,9 +108,7 @@
             {% if current_user.is_authenticated %}
                 <div class="pill-row">
                     <div>
-                        <button class="pill-item" onclick="showCreate()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
-                        </button>
+                        <button class="pill-item" onclick="showCreate()"><i class="ph ph-plus"></i></button>
                     </div>
                 </div>
             {% endif %}
@@ -128,7 +126,7 @@
                     <div class="images size-{{ group.images|length }}">
                         {% if group.images|length > 0 %}
                             {% for image in group.images %}
-                                <img data-src="{{ url_for('api.file', file_name=image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load" class="data-{{ loop.index }}" {% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}/>
+                                <img data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load" class="data-{{ loop.index }}" {% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}/>
                             {% endfor %}
                         {% else %}
                             <img src="{{ url_for('static', filename='error.png') }}" class="loaded" alt="Error thumbnail"/>

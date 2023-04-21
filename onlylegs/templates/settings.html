@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block nav_settings %}selected{% endblock %}
+{% block content %}
+    <div class="banner-small">
+        <div class="banner-content">
+            <h1 class="banner-header">Settings</h1>
+            <p class="banner-info">{% block banner_subtitle%}{% endblock %}</p>
+            <div class="pill-row">
+                <div>
+                    <a class="pill-item pill__critical" href="{{ url_for( 'auth.logout' ) }}"><i class="ph ph-sign-out"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings-content" id="profileSettings">
+        <h2>Profile Settings</h2>
+        <form method="POST" action="{{ url_for('account_api.account_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
+            <h3>Profile Picture</h3>
+            <input type="file" name="file" tab-index="-1"/>
+            <input type="submit" value="Upload" class="btn-block">
+        </form>
+    
+        <form method="POST" action="{{ url_for('account_api.account_username', user_id=current_user.id) }}" enctype="multipart/form-data">
+            <h3>Username</h3>
+            <input type="text" name="name" class="input-block" value="{{ current_user.username }}" />
+            <input type="submit" value="Upload" class="btn-block"/>
+        </form>
+    </div>
+
+    <div class="settings-content" id="profileSettings">
+        <h2>Account Settings</h2>    
+        <form method="POST" action="" enctype="multipart/form-data">
+            <h3>Email</h3>
+            <input type="text" name="email" class="input-block" value="{{ current_user.email }}" />
+            <input type="submit" value="Upload" class="btn-block"/>
+        </form>
+    </div>
+{% endblock %}

@@ -1,10 +1,11 @@
 [tool.poetry]
-name = "onlylegs"
-version = "0.1.0"
-description = "Gallery built for fast and simple image management"
-authors = ["Fluffy-Bean <michal-gdula@protonmail.com>"]
+name = "OnlyLegs"
+version = "0.1.2"
+repository = "https://github.com/Fluffy-Bean/onlylegs"
 license = "MIT"
 readme = "README.md"
+description = "Gallery built for fast and simple image management"
+authors = ["Fluffy-Bean <michal-gdula@protonmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
