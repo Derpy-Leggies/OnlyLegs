@@ -35,7 +35,7 @@
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img fetchpriority="low" alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}" data-src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img fetchpriority="low" alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}" data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>

@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block head %}
     {% if user.picture %}
-        <meta property="og:image" content="{{ url_for('api.media', path='pfp/' + user.picture) }}"/>
+        <meta property="og:image" content="{{ url_for('media_api.media', path='pfp/' + user.picture) }}"/>
     {% endif %}
     {% if user.colour %}
         <meta name="theme-color" content="rgb({{ user.colour.0 }}, {{ user.colour.1 }}, {{ user.colour.2 }})"/>
@@ -35,7 +35,7 @@
             {% if user.picture %}
                 <img
                     class="banner-picture"
-                    src="{{ url_for('api.media', path='pfp/' + user.picture) }}?r=pfp"
+                    src="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp"
                     alt="Profile picture"
                     onload="imgFade(this)"
                     style="opacity:0;"
@@ -73,7 +73,7 @@
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img fetchpriority="low" alt="{{ image.alt }}" data-src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img fetchpriority="low" alt="{{ image.alt }}" data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>

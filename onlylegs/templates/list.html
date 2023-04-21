@@ -67,7 +67,7 @@
                 formData.append("name", formName);
                 formData.append("description", formDescription);
             
-                fetch('{{ url_for('api.create_group') }}', {
+                fetch('{{ url_for('group_api.create_group') }}', {
                     method: 'POST',
                     body: formData
                 }).then(response => {
@@ -126,7 +126,7 @@
                     <div class="images size-{{ group.images|length }}">
                         {% if group.images|length > 0 %}
                             {% for image in group.images %}
-                                <img data-src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load" class="data-{{ loop.index }}" {% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}/>
+                                <img data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load" class="data-{{ loop.index }}" {% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}/>
                             {% endfor %}
                         {% else %}
                             <img src="{{ url_for('static', filename='error.png') }}" class="loaded" alt="Error thumbnail"/>

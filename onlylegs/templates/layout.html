@@ -91,7 +91,7 @@
                     {% if current_user.picture %}
                         <span class="nav-pfp">
                             <img
-                                src="{{ url_for('api.media', path='pfp/' + current_user.picture) }}?r=icon"
+                                src="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=icon"
                                 alt="Profile picture"
                                 onload="imgFade(this)"
                                 style="opacity:0;"

@@ -51,7 +51,7 @@
                 const formData = new FormData();
                 formData.append("group", formID);
             
-                fetch('{{ url_for('api.delete_group') }}', {
+                fetch('{{ url_for('group_api.delete_group') }}', {
                     method: 'POST',
                     body: formData
                 }).then(response => {
@@ -147,7 +147,7 @@
                 formData.append("image", formImage);
                 formData.append("action", formAction);
             
-                fetch('{{ url_for('api.modify_group') }}', {
+                fetch('{{ url_for('group_api.modify_group') }}', {
                     method: 'POST',
                     body: formData
                 }).then(response => {
@@ -221,7 +221,7 @@
 {% block content %}
     {% if images %}
         <div class="banner">
-            <img src="{{ url_for('api.media', path='uploads/' + images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;" alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"/>
+            <img src="{{ url_for('media_api.media', path='uploads/' + images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;" alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"/>
             <span class="banner-filter"></span>
             <div class="banner-content">
                 <p class="banner-info"><a href="{{ url_for('profile.profile', id=group.author.id) }}" class="link">By {{ group.author.username }}</a></p>
@@ -267,7 +267,7 @@
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}" data-src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
+                    <img alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}" data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
                 </a>
             {% endfor %}
         </div>
