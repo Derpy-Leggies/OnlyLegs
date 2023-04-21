@@ -224,6 +224,10 @@ def user_picture(user_id):
         
     if user.picture:
         os.remove(os.path.join(current_app.config["PFP_FOLDER"], user.picture))
+        # Delete cached files
+        cache_name = user.picture.rsplit(".")[0]
+        for cache_file in pathlib.Path(current_app.config["CACHE_FOLDER"]).glob(cache_name + "*"):
+            os.remove(cache_file)
 
     # Save file
     try:
