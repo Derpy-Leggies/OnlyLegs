@@ -1,11 +1,10 @@
 """
 Tools for generating images and thumbnails
 """
-
 import os
 from PIL import Image, ImageOps
-from onlylegs.config import MEDIA_FOLDER, CACHE_FOLDER
 from werkzeug.utils import secure_filename
+from onlylegs.config import MEDIA_FOLDER, CACHE_FOLDER
 
 
 def generate_thumbnail(file_path, resolution, ext=None):

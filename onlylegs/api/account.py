@@ -1,7 +1,6 @@
 """
 Onlylegs - API endpoints
 """
-from uuid import uuid4
 import os
 import pathlib
 import re
@@ -31,7 +30,7 @@ def account_picture(user_id):
     # If no image is uploaded, return 404 error
     if not file:
         return jsonify({"error": "No file uploaded"}), 400
-    elif user.id != current_user.id:
+    if user.id != current_user.id:
         return jsonify({"error": "You are not allowed to do this, go away"}), 403
 
     # Get file extension, generate random name and set file path
@@ -84,7 +83,7 @@ def account_username(user_id):
     # Validate the form
     if not new_name or not username_regex.match(new_name):
         return jsonify({"error": "Username is invalid"}), 400
-    elif user.id != current_user.id:
+    if user.id != current_user.id:
         return jsonify({"error": "You are not allowed to do this, go away"}), 403
 
     # Save to database
