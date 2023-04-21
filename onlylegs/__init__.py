@@ -15,7 +15,13 @@ from werkzeug.security import generate_password_hash
 from onlylegs.extensions import db, migrate, login_manager, assets, compress, cache
 from onlylegs.config import INSTANCE_DIR, MIGRATIONS_DIR
 from onlylegs.models import User
-from onlylegs.views import index as view_index, image as view_image, group as view_group, settings as view_settings, profile as view_profile
+from onlylegs.views import (
+    index as view_index,
+    image as view_image,
+    group as view_group,
+    settings as view_settings,
+    profile as view_profile,
+)
 from onlylegs.api import media as api_media, group as api_group, account as api_account
 from onlylegs import auth as view_auth
 from onlylegs import gwagwa
@@ -114,7 +120,7 @@ def create_app():  # pylint: disable=R0914
     app.register_blueprint(view_group.blueprint)
     app.register_blueprint(view_profile.blueprint)
     app.register_blueprint(view_settings.blueprint)
-    
+
     # APIS
     app.register_blueprint(api_media.blueprint)
     app.register_blueprint(api_group.blueprint)

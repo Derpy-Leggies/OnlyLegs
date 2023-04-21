@@ -8,7 +8,15 @@ import os
 import pathlib
 import logging
 
-from flask import Blueprint, flash, abort, send_from_directory, jsonify, request, current_app
+from flask import (
+    Blueprint,
+    flash,
+    abort,
+    send_from_directory,
+    jsonify,
+    request,
+    current_app,
+)
 from flask_login import login_required, current_user
 
 from colorthief import ColorThief
@@ -61,7 +69,9 @@ def upload():
     # Get file extension, generate random name and set file path
     img_ext = pathlib.Path(form_file.filename).suffix.replace(".", "").lower()
     img_name = "GWAGWA_" + str(uuid4())
-    img_path = os.path.join(current_app.config["UPLOAD_FOLDER"], img_name + "." + img_ext)
+    img_path = os.path.join(
+        current_app.config["UPLOAD_FOLDER"], img_name + "." + img_ext
+    )
 
     # Check if file extension is allowed
     if img_ext not in current_app.config["ALLOWED_EXTENSIONS"].keys():
@@ -106,17 +116,24 @@ def delete_image(image_id):
     # Check if image exists and if user is allowed to delete it (author)
     if post.author_id != current_user.id:
         logging.info("User %s tried to delete image %s", current_user.id, image_id)
-        return jsonify({"message": "You are not allowed to delete this image, heck off"}), 403
+        return (
+            jsonify({"message": "You are not allowed to delete this image, heck off"}),
+            403,
+        )
 
     # Delete file
     try:
         os.remove(os.path.join(current_app.config["UPLOAD_FOLDER"], post.filename))
     except FileNotFoundError:
-        logging.warning("File not found: %s, already deleted or never existed", post.filename)
+        logging.warning(
+            "File not found: %s, already deleted or never existed", post.filename
+        )
 
     # Delete cached files
     cache_name = post.filename.rsplit(".")[0]
-    for cache_file in pathlib.Path(current_app.config["CACHE_FOLDER"]).glob(cache_name + "*"):
+    for cache_file in pathlib.Path(current_app.config["CACHE_FOLDER"]).glob(
+        cache_name + "*"
+    ):
         os.remove(cache_file)
 
     GroupJunction.query.filter_by(post_id=image_id).delete()

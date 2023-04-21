@@ -43,12 +43,14 @@ def account_picture(user_id):
     if img_ext not in current_app.config["ALLOWED_EXTENSIONS"].keys():
         logging.info("File extension not allowed: %s", img_ext)
         return jsonify({"error": "File extension not allowed"}), 403
-        
+
     if user.picture:
         # Delete cached files and old image
         os.remove(os.path.join(current_app.config["PFP_FOLDER"], user.picture))
         cache_name = user.picture.rsplit(".")[0]
-        for cache_file in pathlib.Path(current_app.config["CACHE_FOLDER"]).glob(cache_name + "*"):
+        for cache_file in pathlib.Path(current_app.config["CACHE_FOLDER"]).glob(
+            cache_name + "*"
+        ):
             os.remove(cache_file)
 
     # Save file
@@ -76,7 +78,7 @@ def account_username(user_id):
     """
     user = db.get_or_404(User, user_id)
     new_name = request.form["name"]
-    
+
     username_regex = re.compile(r"\b[A-Za-z0-9._-]+\b")
 
     # Validate the form
@@ -84,7 +86,7 @@ def account_username(user_id):
         return jsonify({"error": "Username is invalid"}), 400
     elif user.id != current_user.id:
         return jsonify({"error": "You are not allowed to do this, go away"}), 403
-    
+
     # Save to database
     user.username = new_name
     db.session.commit()
