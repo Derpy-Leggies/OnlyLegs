@@ -45,11 +45,11 @@ def generate_thumbnail(file_path, resolution, ext=None):
         return os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}")
 
     # Check if image exists in the uploads directory
-    if not os.path.exists(os.path.join(MEDIA_FOLDER, file_path, f"{file_name}.{file_ext}")):
+    if not os.path.exists(os.path.join(MEDIA_FOLDER, file_path)):
         return None
 
     # Open image and rotate it based on EXIF data and get ICC profile so colors are correct
-    image = Image.open(os.path.join(MEDIA_FOLDER, file_path, f"{file_name}.{file_ext}"))
+    image = Image.open(os.path.join(MEDIA_FOLDER, file_path))
     image_icc = image.info.get("icc_profile")
     img_x, img_y = image.size
 
