@@ -8,6 +8,12 @@
     {% endif %}
 
     <script type="text/javascript">
+        function moreInfo() {
+            popUpShow('{{ user.username }}',
+                        '<p>Joined: {{ user.joined_at }}</p><br>' +
+                        '<p>Images: {{ images|length }}</p><br>' +
+                        '<p>Groups: {{ groups|length }}</p>');
+        }
     </script>
 
     <style>
@@ -16,7 +22,7 @@
         }
     </style>
 {% endblock %}
-{% block nav_profile %}selected{% endblock %}
+{% block nav_profile %}{% if user.id == current_user.id %}selected{% endif %}{% endblock %}
 {% block content %}
     <div class="banner">
         {% if user.banner %}
@@ -27,9 +33,21 @@
         <span class="banner-filter"></span>
         <div class="banner-content">
             {% if user.picture %}
-                <img class="banner-picture" src="{{ url_for('api.media', path='pfp/' + user.picture) }}" alt="Profile picture" onload="imgFade(this)" style="opacity:0;"/>
+                <img
+                    class="banner-picture"
+                    src="{{ url_for('api.media', path='pfp/' + user.picture) }}?r=pfp"
+                    alt="Profile picture"
+                    onload="imgFade(this)"
+                    style="opacity:0;"
+                />
             {% else %}
-                <img class="banner-picture" src="{{ url_for('static', filename='icon.png') }}" alt="Profile picture" onload="imgFade(this)" style="opacity:0;"/>
+                <img
+                    class="banner-picture"
+                    src="{{ url_for('static', filename='icon.png') }}"
+                    alt="Profile picture"
+                    onload="imgFade(this)"
+                    style="opacity:0;"
+                />
             {% endif %}
             <h1 class="banner-header">{{ user.username }}</h1>
             <p class="banner-subtitle">{{ images|length }} Images · {{ groups|length }} Groups</p>
@@ -38,9 +56,11 @@
                     <button class="pill-item" onclick="profileShare()"><i class="ph ph-export"></i></button>
                     <button class="pill-item" onclick="moreInfo()"><i class="ph ph-info"></i></button>
                 </div>
-                <div>
-                    <a href="{{ url_for('settings.general') }}#profileSettings" class="pill-item"><i class="ph ph-user-circle-gear"></i></a>
-                </div>
+                {% if user.id == current_user.id %}
+                    <div>
+                        <a href="{{ url_for('settings.general') }}#profileSettings" class="pill-item pill__critical"><i class="ph ph-user-circle-gear"></i></a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
