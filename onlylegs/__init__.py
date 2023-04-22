@@ -101,7 +101,7 @@ def create_app():  # pylint: disable=R0914
     assets.init_app(app)
 
     scripts = Bundle(
-        "js/*.js", output="gen/js.js", depends="js/*.js"
+        "js/*.js", filters="jsmin", output="gen/js.js", depends="js/*.js"
     )  # filter jsmin is broken :c
     styles = Bundle(
         "sass/style.sass",
