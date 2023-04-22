@@ -2,7 +2,10 @@
 {% block nav_groups %}selected{% endblock %}
 {% block head %}
     {% if images %}
+        <meta property="og:image" content="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}"/>
+        <meta name="twitter:image" content="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}">
         <meta name="theme-color" content="rgb({{ images.0.colours.0.0 }}{{ images.0.colours.0.1 }}{{ images.0.colours.0.2 }})"/>
+        <meta name="twitter:card" content="summary_large_image">
     {% endif %}
 
     <script type="text/javascript">

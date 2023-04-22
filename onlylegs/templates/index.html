@@ -1,4 +1,9 @@
 {% extends 'layout.html' %}
+{% block head %}
+    <meta property="og:image" content="{{ url_for('static', filename='icon.png') }}"/>
+    <meta name="twitter:image" content="{{ url_for('static', filename='icon.png') }}"/>
+    <meta name="twitter:card" content="summary"/>
+{% endblock %}
 {% block nav_home %}selected{% endblock %}
 {% block content %}
     <div class="banner-small">
