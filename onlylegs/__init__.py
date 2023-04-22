@@ -24,6 +24,7 @@ from onlylegs.views import (
 )
 from onlylegs.api import media as api_media, group as api_group, account as api_account
 from onlylegs import auth as view_auth
+from onlylegs import filters
 from onlylegs import gwagwa
 
 
@@ -125,6 +126,9 @@ def create_app():  # pylint: disable=R0914
     app.register_blueprint(api_media.blueprint)
     app.register_blueprint(api_group.blueprint)
     app.register_blueprint(api_account.blueprint)
+    
+    # FILTERS
+    app.register_blueprint(filters.blueprint)
 
     # CACHE AND COMPRESS
     cache.init_app(app)

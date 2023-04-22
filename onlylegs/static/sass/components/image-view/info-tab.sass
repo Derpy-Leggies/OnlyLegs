@@ -188,19 +188,27 @@
     display: flex
     gap: 0.5rem
 
-    span
+    button
         margin: 0
         padding: 0
 
-        width: 1.5rem
-        height: 1.5rem
+        width: 1.6rem
+        height: 1.6rem
 
         display: flex
         justify-content: center
         align-items: center
 
         border-radius: $rad-inner
-        // border: 1px solid RGB($white)
+        border: none
+
+        i
+            font-size: 1rem
+            opacity: 0
+            transition: opacity 0.15s ease-in-out
+
+        &:hover i
+            opacity: 1
 
 .img-groups
     width: 100%

@@ -158,7 +158,9 @@
                     </table>
                     <div class="img-colours">
                         {% for col in image.colours %}
-                            <span style="background-color: rgb({{col.0}}, {{col.1}}, {{col.2}})"></span>
+                            <button style="background-color: rgb{{ col }}" onclick="copyToClipboard('rgb{{ col }}')">
+                                <i class="ph-fill ph-paint-bucket" style="{{ col|colour_contrast }}"></i>
+                            </button>
                         {% endfor %}
                     </div>
                     {% if image.groups %}
