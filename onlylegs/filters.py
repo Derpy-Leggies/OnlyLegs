@@ -6,7 +6,7 @@ from flask import Blueprint
 from onlylegs.utils import contrast
 
 
-blueprint = Blueprint('filters', __name__)
+blueprint = Blueprint("filters", __name__)
 
 
 @blueprint.app_template_filter()
@@ -18,5 +18,5 @@ def colour_contrast(colour):
     """
     bright = "var(--fg-white)"
     dark = "var(--fg-black)"
-    
+
     return "color: RGB(" + contrast.contrast(colour, dark, bright) + ");"

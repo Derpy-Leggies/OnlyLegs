@@ -126,7 +126,7 @@ def create_app():  # pylint: disable=R0914
     app.register_blueprint(api_media.blueprint)
     app.register_blueprint(api_group.blueprint)
     app.register_blueprint(api_account.blueprint)
-    
+
     # FILTERS
     app.register_blueprint(filters.blueprint)
 
