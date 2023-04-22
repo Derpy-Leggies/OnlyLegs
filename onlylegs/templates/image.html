@@ -129,7 +129,16 @@
                     <table>
                         <tr>
                             <td>Author</td>
-                            <td><a href="{{ url_for('profile.profile', id=image.author.id) }}" class="link">{{ image.author.username }}</a></td>
+                            <td>
+                                <img
+                                    src="{{ url_for('media_api.media', path='pfp/' + image.author.picture) }}"
+                                    alt="Profile Picture"
+                                    class="pfp"
+                                    onload="imgFade(this)"
+                                    style="opacity: 0;"
+                                />
+                                <a href="{{ url_for('profile.profile', id=image.author.id) }}" class="link">{{ image.author.username }}</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Upload date</td>
@@ -206,9 +215,30 @@
         let infoTab = document.querySelectorAll('.info-tab');
 
         for (let i = 0; i < infoTab.length; i++) {
-            infoTab[i].querySelector('.collapse-indicator').addEventListener('click', function() {
-                infoTab[i].classList.toggle('collapsed');
+            const tab = infoTab[i];
+
+            tab.querySelector('.collapse-indicator').addEventListener('click', function() {
+                tab.classList.toggle('collapsed');
             });
+            
+            /*
+            const tabHeader = tab.querySelector('.info-header');
+            const tabContent = tab.querySelector('.info-table');
+
+            const tabHeight = tabHeader.offsetHeight + tabContent.offsetHeight;
+
+            tab.style.height = tabHeight + 'px';
+
+            tab.querySelector('.collapse-indicator').addEventListener('click', function() {
+                if (tab.classList.contains('collapsed')) {
+                    tab.style.height = tabHeight + 'px';
+                    tab.classList.remove('collapsed');
+                } else {
+                    tab.style.height = tabHeader.offsetHeight + 'px';
+                    tab.classList.add('collapsed');
+                }
+            });
+            */
         }
     </script>
 {% endblock %}
