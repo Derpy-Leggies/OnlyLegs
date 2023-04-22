@@ -9,15 +9,6 @@
     {% endif %}
 
     <script type="text/javascript">
-        function groupShare() {
-            try {
-                navigator.clipboard.writeText(window.location.href)
-                addNotification("Copied link!", 4);
-            } catch (err) {
-                addNotification("Failed to copy link! Are you on HTTP?", 2);
-            }
-        }
-
         {% if current_user.id == group.author.id %}
             function groupDelete() {
                 cancelBtn = document.createElement('button');
@@ -240,7 +231,7 @@
                 <p class="banner-subtitle">{{ images|length }} Images · {{ group.description }}</p>
                 <div class="pill-row">
                     <div>
-                        <button class="pill-item" onclick="groupShare()"><i class="ph ph-export"></i></button>
+                        <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
                     </div>
                     {% if current_user.id == group.author.id %}
                         <div>
@@ -258,7 +249,7 @@
                 <p class="banner-info">By {{ group.author.username }}</p>
                 <div class="pill-row">
                     <div>
-                        <button class="pill-item" onclick="groupShare()"><i class="ph ph-export"></i></button>
+                        <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
                     </div>
                     {% if current_user.id == group.author.id %}
                         <div>

@@ -56,7 +56,7 @@
             <p class="banner-subtitle">{{ images|length }} Images · {{ groups|length }} Groups</p>
             <div class="pill-row">
                 <div>
-                    <button class="pill-item" onclick="profileShare()"><i class="ph ph-export"></i></button>
+                    <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
                     <button class="pill-item" onclick="moreInfo()"><i class="ph ph-info"></i></button>
                 </div>
                 {% if user.id == current_user.id %}

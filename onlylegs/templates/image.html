@@ -8,14 +8,6 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <script type="text/javascript">
-        function imageShare() {
-            try {
-                navigator.clipboard.writeText(window.location.href)
-                addNotification("Copied link!", 4);
-            } catch (err) {
-                addNotification("Failed to copy link! Are you on HTTP?", 2);
-            }
-        }
         function fullscreen() {
             let info = document.querySelector('.info-container');
             let wrapper = document.querySelector('.image-grid');
@@ -119,7 +111,7 @@
                 {% if next_url %}<div><a class="pill-item" href="{{ next_url }}"><i class="ph ph-arrow-left"></i></a></div>{% endif %}
                 <div>
                     <button class="pill-item" onclick="fullscreen()" id="fullscreenImage"><i class="ph ph-info"></i></button>
-                    <button class="pill-item" onclick="imageShare()"><i class="ph ph-export"></i></button>
+                    <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
                     <a class="pill-item" href="{{ url_for('media_api.media', path='uploads/' + image.filename) }}" download onclick="addNotification('Download started!', 4)"><i class="ph ph-file-arrow-down"></i></a>
                 </div>
                 {% if current_user.id == image.author.id %}
