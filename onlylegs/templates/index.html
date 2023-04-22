@@ -34,9 +34,9 @@
     </div>
 
     {% if images %}
-        <div class="gallery-grid">
+        <div class="gallery-grid" style="position: relative;">
             {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}">
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}; position: absolute; margin: 0;">
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
