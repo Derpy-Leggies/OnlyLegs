@@ -89,12 +89,16 @@
                 <a href="{{ url_for('profile.profile') }}" class="navigation-item {% block nav_profile %}{% endblock %}">
                     {% if current_user.picture %}
                         <span class="nav-pfp">
-                            <img
-                                src="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=icon"
-                                alt="Profile picture"
-                                onload="imgFade(this)"
-                                style="opacity:0;"
-                            />
+                            <picture>
+                                <source srcset="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=pfp&e=webp">
+                                <source srcset="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=pfp&e=png">
+                                <img
+                                    src="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=icon"
+                                    alt="Profile picture"
+                                    onload="imgFade(this)"
+                                    style="opacity:0;"
+                                />
+                            </picture>
                         </span>
                     {% else %}
                         <i class="ph-fill ph-folder-simple-user"></i>

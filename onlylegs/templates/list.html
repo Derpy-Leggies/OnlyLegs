@@ -1,9 +1,7 @@
 {% extends 'layout.html' %}
 {% block nav_groups %}selected{% endblock %}
 {% block head %}
-    {% if images %}
-        <meta name="theme-color" content="rgb({{ images.0.colours.0.0 }}{{ images.0.colours.0.1 }}{{ images.0.colours.0.2 }})"/>
-    {% endif %}
+    {% if images %}<meta name="theme-color" content="rgb{{ images.0.colours.0 }}"/>{% endif %}
 
     {% if current_user.is_authenticated %}
         <script type="text/javascript">
@@ -118,7 +116,7 @@
     {% if groups %}
         <div class="gallery-grid">
             {% for group in groups %}
-                <a id="group-{{ group.id }}" class="group-item" href="{{ url_for('group.group', group_id=group.id) }}" {% if group.images|length > 0 %} style="background-color: rgba({{ group.images.0.colours.0.0 }}, {{ group.images.0.colours.0.1 }}, {{ group.images.0.colours.0.2 }}, 0.4);" {% endif %}>
+                <a id="group-{{ group.id }}" class="group-item" href="{{ url_for('group.group', group_id=group.id) }}" {% if group.images|length > 0 %} style="background-color: rgba{{ group.images.0.colours.0 }};" {% endif %}>
                     <div class="image-filter">
                         <p class="image-subtitle">By {{ group.author.username }}</p>
                         <p class="image-title">{{ group.name }}</p>
@@ -126,14 +124,18 @@
                     <div class="images size-{{ group.images|length }}">
                         {% if group.images|length > 0 %}
                             {% for image in group.images %}
-                                <img
-                                    data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
-                                    onload="imgFade(this)"
-                                    style="opacity:0;"
-                                    id="lazy-load"
-                                    class="data-{{ loop.index }}"
-                                    {% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}
-                                />
+                                <picture>
+                                    <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
+                                    <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
+                                    <img
+                                        src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
+                                        alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
+                                        class="data-{{ loop.index }}"
+                                        onload="imgFade(this)"
+                                        style="opacity:0;"
+                                        fetchpriority="low"
+                                    />
+                                </picture>
                             {% endfor %}
                         {% else %}
                             <img src="{{ url_for('static', filename='error.png') }}" class="loaded" alt="Error thumbnail"/>

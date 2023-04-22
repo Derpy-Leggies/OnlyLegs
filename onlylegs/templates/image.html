@@ -4,7 +4,7 @@
 {% block head %}
     <meta property="og:image" content="{{ url_for('media_api.media', path='uploads/' + image.filename) }}"/>
     <meta name="twitter:image" content="{{ url_for('media_api.media', path='uploads/' + image.filename) }}">
-    <meta name="theme-color" content="rgb({{ image.colours.0.0 }}{{ image.colours.0.1 }}{{ image.colours.0.2 }})"/>
+    <meta name="theme-color" content="rgb{{ image.colours.0 }}"/>
     <meta name="twitter:card" content="summary_large_image">
 
     <script type="text/javascript">
@@ -84,28 +84,36 @@
 {% endblock %}
 {% block content %}
     <div class="background">
-        <img
-            src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
-            alt="{{ image.alt }}"
-            onload="imgFade(this)"
-            style="opacity:0;"
-        />
+        <picture>
+            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=webp">
+            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=png">
+            <img
+                src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
+                alt="{{ image.alt }}"
+                onload="imgFade(this)"
+                style="opacity:0;"
+            />
+        </picture>
         <span></span>
     </div>
     <div class="image-grid">
         <div class="image-block">
             <div class="image-container">
-                <img
-                    src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
-                    alt="{{ image.alt }}"
-                    onload="imgFade(this)"
-                    style="opacity:0;"
-                    onerror="this.src='{{ url_for('static', filename='error.png')}}'"
-                    {% if "File" in image.exif %}
-                        width="{{ image.exif.File.Width.raw }}"
-                        height="{{ image.exif.File.Height.raw }}"
-                    {% endif %}
-                />
+                <picture>
+                    <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=webp">
+                    <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=png">
+                    <img
+                        src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
+                        alt="{{ image.alt }}"
+                        onload="imgFade(this)"
+                        style="opacity:0;"
+                        onerror="this.src='{{ url_for('static', filename='error.png')}}'"
+                        {% if "File" in image.exif %}
+                            width="{{ image.exif.File.Width.raw }}"
+                            height="{{ image.exif.File.Height.raw }}"
+                        {% endif %}
+                    />
+                </picture>
             </div>
             <div class="pill-row">
                 {% if next_url %}<div><a class="pill-item" href="{{ next_url }}"><i class="ph ph-arrow-left"></i></a></div>{% endif %}

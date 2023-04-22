@@ -4,7 +4,7 @@
     {% if images %}
         <meta property="og:image" content="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}"/>
         <meta name="twitter:image" content="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}">
-        <meta name="theme-color" content="rgb({{ images.0.colours.0.0 }}{{ images.0.colours.0.1 }}{{ images.0.colours.0.2 }})"/>
+        <meta name="theme-color" content="rgb{{ images.0.colours.0 }}"/>
         <meta name="twitter:card" content="summary_large_image">
     {% endif %}
 
@@ -180,7 +180,7 @@
     <style>
         {% if images %}
             .banner::after {
-                box-shadow: 0 calc(var(--rad) * -1) 0 0 rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }});
+                box-shadow: 0 calc(var(--rad) * -1) 0 0 rgb{{ images.0.colours.0 }};
             }
             .banner-content p {
                 color: {{ text_colour }} !important;
@@ -191,26 +191,24 @@
 
             .banner-content .link {
                 background-color: {{ text_colour }} !important;
-                color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
+                color: rgb{{ images.0.colours.0 }} !important;
             }
             .banner-content .link:hover {
-                background-color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
+                background-color: rgb{{ images.0.colours.0 }} !important;
                 color: {{ text_colour }} !important;
             }
 
             .banner-filter {
-                background: linear-gradient(90deg, rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}),
-                                                   rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
+                background: linear-gradient(90deg, rgb{{ images.0.colours.0 }}, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
             }
             @media (max-width: 800px) {
                 .banner-filter {
-                    background: linear-gradient(180deg, rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 1),
-                                                        rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.5)) !important;
+                    background: linear-gradient(180deg, rgba{{ images.0.colours.0 }}), rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.5)) !important;
                 }
             }
 
             .navigation {
-                background-color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
+                background-color: rgb{{ images.0.colours.0 }} !important;
             }
             .navigation-item > i {
                 color: {{ text_colour }} !important;
@@ -224,12 +222,17 @@
 {% block content %}
     {% if images %}
         <div class="banner">
-            <img
-                src="{{ url_for('media_api.media', path='uploads/' + images.0.filename ) }}?r=prev"
-                onload="imgFade(this)"
-                style="opacity:0;"
-                alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"
-            />
+            <picture>
+                <source srcset="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}?r=prev&e=webp">
+                <source srcset="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}?r=prev&e=png">
+                <img
+                    src="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}?r=prev"
+                    alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"
+                    onload="imgFade(this)"
+                    style="opacity:0;"
+                    fetchpriority="low"
+                />
+            </picture>
             <span class="banner-filter"></span>
             <div class="banner-content">
                 <p class="banner-info"><a href="{{ url_for('profile.profile', id=group.author.id) }}" class="link">By {{ group.author.username }}</a></p>
@@ -271,17 +274,21 @@
     {% if images %}
         <div class="gallery-grid">
             {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('group.group_post', group_id=group.id, image_id=image.id) }}" style="background-color: rgb({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }})">
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('group.group_post', group_id=group.id, image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}">
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img
-                        alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
-                        data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
-                        onload="imgFade(this)"
-                        style="opacity:0;"
-                        id="lazy-load"
-                    />
+                    <picture>
+                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
+                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
+                        <img
+                            src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
+                            alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
+                            onload="imgFade(this)"
+                            style="opacity:0;"
+                            fetchpriority="low"
+                        />
+                    </picture>
                 </a>
             {% endfor %}
         </div>

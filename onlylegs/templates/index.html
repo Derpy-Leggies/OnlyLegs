@@ -36,18 +36,21 @@
     {% if images %}
         <div class="gallery-grid">
             {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }})">
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}">
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img
-                        fetchpriority="low"
-                        alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
-                        data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
-                        onload="imgFade(this)"
-                        style="opacity:0;"
-                        id="lazy-load"
-                    />
+                    <picture>
+                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
+                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
+                        <img
+                            src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
+                            alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
+                            onload="imgFade(this)"
+                            style="opacity:0;"
+                            fetchpriority="low"
+                        />
+                    </picture>
                 </a>
             {% endfor %}
         </div>

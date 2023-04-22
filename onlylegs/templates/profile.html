@@ -4,9 +4,7 @@
         <meta property="og:image" content="{{ url_for('media_api.media', path='pfp/' + user.picture) }}"/>
         <meta name="twitter:image" content="{{ url_for('media_api.media', path='pfp/' + user.picture) }}">
     {% endif %}
-    {% if user.colour %}
-        <meta name="theme-color" content="rgb({{ user.colour.0 }}, {{ user.colour.1 }}, {{ user.colour.2 }})"/>
-    {% endif %}
+    {% if user.colour %}<meta name="theme-color" content="rgb{{ user.colour }}"/>{% endif %}
     <meta name="twitter:card" content="summary">
 
     <script type="text/javascript">
@@ -20,7 +18,7 @@
 
     <style>
         .banner-picture {
-            background-color: rgb({{ user.colour.0 }}, {{ user.colour.1 }}, {{ user.colour.2 }}) !important;
+            background-color: rgb{{ user.colour }} !important;
         }
     </style>
 {% endblock %}
@@ -35,13 +33,16 @@
         <span class="banner-filter"></span>
         <div class="banner-content">
             {% if user.picture %}
-                <img
-                    class="banner-picture"
-                    src="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp"
-                    alt="Profile picture"
-                    onload="imgFade(this)"
-                    style="opacity:0;"
-                />
+                <picture class="banner-picture">
+                    <source srcset="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp&e=webp">
+                    <source srcset="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp&e=png">
+                    <img
+                        src="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp"
+                        alt="Profile picture"
+                        onload="imgFade(this)"
+                        style="opacity:0;"
+                    />
+                </picture>
             {% else %}
                 <img
                     class="banner-picture"
@@ -71,18 +72,21 @@
         <h1 class="gallery-header">Images</h1>
         <div class="gallery-grid">
             {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }})">
+                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}">
                     <div class="image-filter">
                         <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
                     </div>
-                    <img
-                        fetchpriority="low"
-                        alt="{{ image.alt }}"
-                        data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
-                        onload="imgFade(this)"
-                        style="opacity:0;"
-                        id="lazy-load"
-                    />
+                    <picture>
+                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
+                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
+                        <img
+                            src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
+                            alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
+                            onload="imgFade(this)"
+                            style="opacity:0;"
+                            fetchpriority="low"
+                        />
+                    </picture>
                 </a>
             {% endfor %}
         </div>

@@ -5,26 +5,8 @@ function imgFade(obj, time = 200) {
 
     setTimeout(() => { obj.style.animation = null; }, time);
 }
-// Lazy load images when they are in view
-function loadOnView() {
-    const lazyLoad = document.querySelectorAll('#lazy-load');
-    const webpSupport = checkWebpSupport();
-
-    for (let i = 0; i < lazyLoad.length; i++) {
-        const image = lazyLoad[i];
-        if (image.getBoundingClientRect().top < window.innerHeight && image.getBoundingClientRect().bottom > 0) {
-            if (!image.src && webpSupport) {
-                image.src = `${image.getAttribute('data-src')}&e=webp`;
-            } else if (!image.src) {
-                image.src = image.getAttribute('data-src');
-            }
-        }
-    }
-}
 
 window.onload = function () {
-    loadOnView();
-
     const times = document.querySelectorAll('.time');
     for (let i = 0; i < times.length; i++) {
         // Remove milliseconds
@@ -70,8 +52,6 @@ window.onload = function () {
     }
 };
 window.onscroll = function () {
-    loadOnView();
-
     // Top Of Page button
     const topOfPage = document.querySelector('.top-of-page');
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
@@ -89,7 +69,4 @@ window.onscroll = function () {
             infoButton.classList.add('show');
         }
     }
-};
-window.onresize = function () {
-    loadOnView();
 };
