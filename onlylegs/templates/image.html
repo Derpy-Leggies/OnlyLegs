@@ -84,7 +84,12 @@
 {% endblock %}
 {% block content %}
     <div class="background">
-        <img src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev" alt="{{ image.alt }}" onload="imgFade(this)" style="opacity:0;"/>
+        <img
+            src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
+            alt="{{ image.alt }}"
+            onload="imgFade(this)"
+            style="opacity:0;"
+        />
         <span></span>
     </div>
     <div class="image-grid">
@@ -94,7 +99,7 @@
                     src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
                     alt="{{ image.alt }}"
                     onload="imgFade(this)"
-                    style="opacity: 0;"
+                    style="opacity:0;"
                     onerror="this.src='{{ url_for('static', filename='error.png')}}'"
                     {% if "File" in image.exif %}
                         width="{{ image.exif.File.Width.raw }}"

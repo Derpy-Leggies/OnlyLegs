@@ -33,7 +33,7 @@ def generate_thumbnail(file_path, resolution, ext=None):
     if resolution in ["prev", "preview"]:
         res_x, res_y = (1920, 1080)
     elif resolution in ["thumb", "thumbnail"]:
-        res_x, res_y = (400, 400)
+        res_x, res_y = (300, 300)
     elif resolution in ["pfp", "profile"]:
         res_x, res_y = (150, 150)
     elif resolution in ["icon", "favicon"]:
