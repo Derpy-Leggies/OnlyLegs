@@ -32,13 +32,12 @@ blueprint = Blueprint("media_api", __name__, url_prefix="/api/media")
 @blueprint.route("/<path:path>", methods=["GET"])
 def media(path):
     """
-    Returns a file from the uploads folder
+    Returns image from media folder
     r for resolution, thumb for thumbnail etc
     e for extension, jpg, png etc
     """
     res = request.args.get("r", default=None, type=str)
     ext = request.args.get("e", default=None, type=str)
-    # path = secure_filename(path)
 
     # if no args are passed, return the raw file
     if not res and not ext:
@@ -46,11 +45,16 @@ def media(path):
             abort(404)
         return send_from_directory(current_app.config["MEDIA_FOLDER"], path)
 
+    # Generate thumbnail, if None is returned a server error occured
     thumb = generate_thumbnail(path, res, ext)
     if not thumb:
         abort(500)
 
-    return send_from_directory(os.path.dirname(thumb), os.path.basename(thumb))
+    response = send_from_directory(os.path.dirname(thumb), os.path.basename(thumb))
+    response.headers["Cache-Control"] = "public, max-age=31536000"
+    response.headers["Expires"] = "31536000"
+
+    return response
 
 
 @blueprint.route("/upload", methods=["POST"])

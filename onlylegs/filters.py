@@ -3,7 +3,7 @@ OnlyLegs filters
 Custom Jinja2 filters
 """
 from flask import Blueprint
-from onlylegs.utils import contrast
+from onlylegs.utils.colour import contrast
 
 
 blueprint = Blueprint("filters", __name__)
@@ -19,4 +19,4 @@ def colour_contrast(colour):
     bright = "var(--fg-white)"
     dark = "var(--fg-black)"
 
-    return "color: RGB(" + contrast.contrast(colour, dark, bright) + ");"
+    return "color: RGB(" + contrast(colour, dark, bright) + ");"
