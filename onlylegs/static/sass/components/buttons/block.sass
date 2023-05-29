@@ -59,6 +59,10 @@
     &.black
         @include btn-block($black)
 
+    &.disabled, &:disabled
+        color: RGB($fg-dim)
+        cursor: unset
+
 .input-checkbox
     padding: 0
     display: flex

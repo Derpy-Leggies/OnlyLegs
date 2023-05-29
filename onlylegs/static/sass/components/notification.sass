@@ -22,23 +22,22 @@
     margin: 0
     padding: 0
 
-    width: 450px
+    width: 24rem
     height: auto
 
     position: fixed
-    top: 0.3rem
+    bottom: 0.3rem
     right: 0.3rem
 
     display: flex
-    flex-direction: column
+    flex-direction: column-reverse
 
     z-index: 621
 
 .sniffle__notification
-    margin: 0 0 0.3rem 0
+    margin-top: 0.3rem
     padding: 0
 
-    width: 450px
     height: auto
     max-height: 100px
 
@@ -56,7 +55,7 @@
     box-sizing: border-box
     overflow: hidden
 
-    transition: all 0.25s ease-in-out, opacity 0.2s ease-in-out, transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)
+    transition: opacity 0.2s ease-in-out, transform 0.2s cubic-bezier(.68,-0.55,.27,1.55)
 
     &::after
         content: ""
@@ -89,10 +88,8 @@
     &.hide
         margin: 0
         max-height: 0
-
         opacity: 0
         transform: translateX(100%)
-
         transition: all 0.4s ease-in-out, max-height 0.2s ease-in-out
 
 .sniffle__notification-icon
@@ -130,6 +127,7 @@
 
 @media (max-width: $breakpoint)
     .notifications
+        bottom: 3.8rem
         width: calc(100vw - 0.6rem)
         height: auto
 
@@ -138,7 +136,7 @@
 
         &.hide
             opacity: 0
-            transform: translateY(-5rem)
+            transform: translateY(1rem)
     
     .sniffle__notification-time
         width: 100%

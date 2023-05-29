@@ -1,0 +1,260 @@
+.info-container
+    padding: 0.5rem 0 0 0.5rem
+    width: 27rem
+    position: absolute
+    top: 0
+    left: 0
+    bottom: 0
+    background-image: linear-gradient(90deg, $bg-transparent, transparent)
+    overflow-y: auto
+    transition: left 0.3s cubic-bezier(0.76, 0, 0.17, 1)
+    z-index: 2
+    -ms-overflow-style: none
+    scrollbar-width: none
+    &::-webkit-scrollbar
+        display: none
+
+    &.collapsed
+        left: -27rem
+@media (max-width: 1100px)
+    .info-container
+        padding: 0 0.5rem 0 0.5rem
+        width: 100%
+        position: relative
+        background: none
+        // While probably not the best way of doing this
+        // Not bothered to fight with CSS today
+        &.collapsed
+            left: 0
+
+details
+    margin-bottom: 0.5rem
+    padding: 0.5rem
+    display: flex
+    flex-direction: column
+    background-color: RGB($bg-300)
+    color: RGB($fg-white)
+    border-radius: $rad
+    overflow: hidden
+
+    summary
+        height: 1.5rem
+        display: flex
+        flex-direction: row
+        justify-content: flex-start
+        align-items: center
+        position: relative
+        color: RGB($primary)
+
+        > i
+            margin-right: 0
+            font-size: 1.25rem
+
+            &.collapse-indicator
+                transition: transform 0.15s cubic-bezier(.79, .14, .15, .86)
+
+        h2
+            margin: 0 0.5rem
+            font-size: 1.1rem
+            font-weight: 500
+
+    &[open]
+        summary
+            margin-bottom: 0.5rem
+
+            > i.collapse-indicator
+                transform: rotate(90deg)
+
+    p
+        margin: 0
+        padding: 0
+
+        font-size: 1rem
+        font-weight: 400
+
+        text-overflow: ellipsis
+        overflow: hidden
+
+    .link
+        margin: 0
+        padding: 0
+
+        color: RGB($primary)
+
+        cursor: pointer
+        text-decoration: none
+
+        &:hover
+            text-decoration: underline
+
+    .pfp
+        width: 1.1rem
+        height: 1.1rem
+
+        border-radius: $rad-inner
+
+        object-fit: cover
+
+    table
+        margin: 0
+        padding: 0
+
+        width: 100%
+
+        overflow-x: hidden
+        border-collapse: collapse
+
+        tr
+            white-space: nowrap
+
+            td
+                padding-bottom: 0.5rem
+
+                max-width: 0
+
+                font-size: 1rem
+                font-weight: 400
+
+                vertical-align: top
+
+                > *
+                    vertical-align: top
+
+            td:first-child
+                padding-right: 0.5rem
+
+                width: 50%
+
+                overflow: hidden
+                text-overflow: ellipsis
+                white-space: nowrap
+            td:last-child
+                width: 50%
+
+                white-space: normal
+                word-break: break-word
+
+        tr:last-of-type td
+            padding-bottom: 0
+
+.img-colours
+    width: 100%
+
+    display: flex
+    gap: 0.5rem
+
+    button
+        margin: 0
+        padding: 0
+
+        width: 1.6rem
+        height: 1.6rem
+
+        display: flex
+        justify-content: center
+        align-items: center
+
+        border-radius: $rad-inner
+        border: none
+
+        i
+            font-size: 1rem
+            opacity: 0
+            transition: opacity 0.15s ease-in-out
+
+        &:hover i
+            opacity: 1
+
+.img-groups
+    width: 100%
+    display: flex
+    flex-wrap: wrap
+    gap: 0.5rem
+
+.image-container
+    padding: 0.5rem
+    position: absolute
+    top: 0
+    left: 27rem
+    right: 0
+    bottom: 0
+    z-index: 2
+    transition: left 0.3s cubic-bezier(0.76, 0, 0.17, 1), padding 0.3s cubic-bezier(0.76, 0, 0.17, 1)
+
+    picture
+        margin: auto
+        width: 100%
+        height: 100%
+        display: flex
+        overflow: hidden
+
+        img
+            margin: auto
+            padding: 0
+            width: auto
+            height: auto
+            max-width: 100%
+            max-height: 100%
+            object-fit: contain
+            object-position: center
+            border-radius: $rad
+
+    &.collapsed
+        padding: 0
+        left: 0
+
+        picture img
+            border-radius: 0
+@media (max-width: 1100px)
+    .image-container
+        position: relative
+        left: 0
+
+        picture
+            margin: 0 auto
+            max-height: 69vh
+
+            img
+                max-height: 69vh
+
+        &.collapsed
+            padding: 0.5rem
+            left: 0
+
+            picture img
+                border-radius: $rad
+
+.background
+    position: absolute
+    inset: 0
+    background-color: RGB($bg-300)
+    background-image: linear-gradient(to right, RGB($bg-400) 15%, RGB($bg-200) 35%, RGB($bg-400) 50%)
+    background-size: 1000px 640px
+    animation: imgLoading 1.8s linear infinite forwards
+    user-select: none
+    overflow: hidden
+    z-index: 1
+
+    img
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100vh
+        background-color: RGB($fg-white)
+        filter: blur(1rem) saturate(1.2)
+        transform: scale(1.1)
+        object-fit: cover
+        object-position: center center
+
+    &::after
+        content: ''
+        position: absolute
+        inset: 0
+        width: 100%
+        height: 100%
+        z-index: +1
+
+@media (max-width: 1100px)
+    #fullscreenImage
+        display: none
