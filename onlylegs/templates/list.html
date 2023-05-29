@@ -1,5 +1,6 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% block nav_groups %}selected{% endblock %}
+
 {% block head %}
     {% if images %}<meta name="theme-color" content="rgb{{ images.0.colours.0 }}"/>{% endif %}
 
@@ -92,7 +93,8 @@
         </script>
     {% endif %}
 {% endblock %}
-{% block content %}
+
+{% block header %}
     <div class="banner-small">
         <div class="banner-content">
             <h1 class="banner-header">{{ config.WEBSITE_CONF.name }}</h1>
@@ -112,11 +114,18 @@
             {% endif %}
         </div>
     </div>
+{% endblock %}
 
+{% block content %}
     {% if groups %}
         <div class="gallery-grid">
             {% for group in groups %}
-                <a id="group-{{ group.id }}" class="group-item" href="{{ url_for('group.group', group_id=group.id) }}" {% if group.images|length > 0 %} style="background-color: rgba{{ group.images.0.colours.0 }};" {% endif %}>
+                <a
+                        class="group-item square"
+                        id="group-{{ group.id }}"
+                        href="{{ url_for('group.group', group_id=group.id) }}"
+                        {% if group.images|length > 0 %} style="background-color: rgba{{ group.images.0.colours.0 }};"{% endif %}
+                >
                     <div class="image-filter">
                         <p class="image-subtitle">By {{ group.author.username }}</p>
                         <p class="image-title">{{ group.name }}</p>

@@ -1,4 +1,7 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
+{% from 'macros/image.html' import gallery_item %}
+{% block nav_profile %}{% if user.id == current_user.id %}selected{% endif %}{% endblock %}
+
 {% block head %}
     {% if user.picture %}
         <meta property="og:image" content="{{ url_for('media_api.media', path='pfp/' + user.picture) }}"/>
@@ -22,8 +25,8 @@
         }
     </style>
 {% endblock %}
-{% block nav_profile %}{% if user.id == current_user.id %}selected{% endif %}{% endblock %}
-{% block content %}
+
+{% block header %}
     <div class="banner">
         {% if user.banner %}
             <img src="{{ url_for('static', filename='icon.png') }}" alt="Profile Banner" onload="imgFade(this)" style="opacity:0;"/>
@@ -67,28 +70,13 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
+{% block content %}
     {% if images %}
         <h1 class="gallery-header">Images</h1>
         <div class="gallery-grid">
-            {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}">
-                    <div class="image-filter">
-                        <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
-                    </div>
-                    <picture>
-                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
-                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
-                        <img
-                            src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
-                            alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
-                            onload="imgFade(this)"
-                            style="opacity:0;"
-                            fetchpriority="low"
-                        />
-                    </picture>
-                </a>
-            {% endfor %}
+            {% for image in images %}{{ gallery_item(image) }}{% endfor %}
         </div>
     {% else %}
         <div class="big-text">
@@ -97,4 +85,3 @@
         </div>
     {% endif %}
 {% endblock %}
-

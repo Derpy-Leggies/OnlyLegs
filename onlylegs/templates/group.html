@@ -1,5 +1,7 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
+{% from 'macros/image.html' import gallery_item %}
 {% block nav_groups %}selected{% endblock %}
+
 {% block head %}
     {% if images %}
         <meta property="og:image" content="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}"/>
@@ -170,16 +172,21 @@
 
     <style>
         {% if images %}
-            .banner::after {
-                box-shadow: 0 calc(var(--rad) * -1) 0 0 rgb{{ images.0.colours.0 }};
-            }
-            .banner-content p {
+            :root { --bg-100: {{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }} }
+
+            body {
+                background: rgb{{ images.0.colours.0 }} !important;
                 color: {{ text_colour }} !important;
             }
-            .banner-content h1 {
-                color: {{ text_colour }} !important;
+            main {
+                background: rgba(var(--white), 0.6) !important;
             }
 
+            .banner-header,
+            .banner-info,
+            .banner-subtitle {
+                color: {{ text_colour }} !important;
+            }
             .banner-content .link {
                 background-color: {{ text_colour }} !important;
                 color: rgb{{ images.0.colours.0 }} !important;
@@ -189,28 +196,22 @@
                 color: {{ text_colour }} !important;
             }
 
-            .banner-filter {
-                background: linear-gradient(90deg, rgb{{ images.0.colours.0 }}, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
+
+            @media (min-width: 800px) {
+                .banner-filter {
+                    background: linear-gradient(90deg, rgb{{ images.0.colours.0 }}, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
+                }
             }
             @media (max-width: 800px) {
                 .banner-filter {
-                    background: linear-gradient(180deg, rgba{{ images.0.colours.0 }}, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.5)) !important;
+                    background: linear-gradient(180deg, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.4), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.3)) !important;
                 }
-            }
-
-            .navigation {
-                background-color: rgb{{ images.0.colours.0 }} !important;
-            }
-            .navigation-item > i {
-                color: {{ text_colour }} !important;
-            }
-            .navigation-item.selected::before {
-                background-color: {{ text_colour }} !important;
             }
         {% endif %}
     </style>
 {% endblock %}
-{% block content %}
+
+{% block header %}
     {% if images %}
         <div class="banner">
             <picture>
@@ -219,9 +220,7 @@
                 <img
                     src="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}?r=prev"
                     alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"
-                    onload="imgFade(this)"
-                    style="opacity:0;"
-                    fetchpriority="low"
+                    onload="imgFade(this)" style="opacity:0;"
                 />
             </picture>
             <span class="banner-filter"></span>
@@ -261,27 +260,12 @@
             </div>
         </div>
     {% endif %}
+{% endblock %}
 
+{% block content %}
     {% if images %}
         <div class="gallery-grid">
-            {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('group.group_post', group_id=group.id, image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}">
-                    <div class="image-filter">
-                        <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
-                    </div>
-                    <picture>
-                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
-                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
-                        <img
-                            src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
-                            alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
-                            onload="imgFade(this)"
-                            style="opacity:0;"
-                            fetchpriority="low"
-                        />
-                    </picture>
-                </a>
-            {% endfor %}
+            {% for image in images %}{{ gallery_item(image) }}{% endfor %}
         </div>
     {% else %}
         <div class="big-text">

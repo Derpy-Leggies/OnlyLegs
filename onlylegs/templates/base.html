@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{{ config.WEBSITE_CONF.name }}</title>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{ config.WEBSITE_CONF.motto }}"/>
     <meta name="author" content="{{ config.WEBSITE_CONF.author }}"/>
 
@@ -15,8 +15,6 @@
 
     <meta name="twitter:title" content="{{ config.WEBSITE_CONF.name }}"/>
     <meta name="twitter:description" content="{{ config.WEBSITE_CONF.motto }}"/>
-
-    <link rel="manifest" href="static/manifest.json"/>
 
     <!-- phosphor icons!!! -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -32,26 +30,15 @@
         type="image/svg+xml"
         media="(prefers-color-scheme: dark)"/>
 
-    <link
-        rel="prefetch"
-        href="{{url_for('static', filename='fonts/font.css')}}"
-        type="stylesheet"/>
-
-    {% assets "scripts" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
-
-    {% assets "styles" %}
-        <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" defer>
-    {% endassets %}
-    
+    <link rel="manifest" href="static/manifest.json"/>
+    <link rel="prefetch" href="{{url_for('static', filename='fonts/font.css')}}" type="stylesheet"/>
+    {% assets "scripts" %} <script type="text/javascript" src="{{ ASSET_URL }}"></script> {% endassets %}
+    {% assets "styles" %} <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" defer> {% endassets %}
     {% block head %}{% endblock %}
 </head>
 <body>
     <div class="notifications"></div>
-
     <button class="top-of-page" aria-label="Jump to top of page"><i class="ph ph-arrow-up"></i></button>
-    {% if request.path == "/" %}<button class="info-button" aria-label="Show info on gallery"><i class="ph ph-question"></i></button>{% endif %}
 
     <div class="pop-up">
         <span class="pop-up__click-off" onclick="popupDissmiss()"></span>
@@ -61,63 +48,56 @@
         </div>
     </div>
 
-    <div class="wrapper">
+    <nav>
+        <a href="{{ url_for('gallery.index') }}{% block page_index %}{% endblock %}" class="navigation-item {% block nav_home %}{% endblock %}" aria-label="Home Page">
+            <i class="ph-fill ph-images-square"></i>
+        </a>
 
-        <div class="navigation">
-            <!--<img src="{{url_for('static', filename='icon.png')}}" alt="Logo" class="logo" onload="this.style.opacity=1;" style="opacity:0">-->
+        <a href="{{ url_for('group.groups') }}" class="navigation-item {% block nav_groups %}{% endblock %}" aria-label="Photo Groups">
+            <i class="ph-fill ph-package"></i>
+        </a>
 
-            <a href="{{ url_for('gallery.index') }}{% block page_index %}{% endblock %}" class="navigation-item {% block nav_home %}{% endblock %}" aria-label="Home Page">
-                <i class="ph-fill ph-images-square"></i>
-                <span class="tool-tip">Home<i class="ph-fill ph-caret-left"></i></span>
+        {% if current_user.is_authenticated %}
+            <button class="navigation-item {% block nav_upload %}{% endblock %}" onclick="toggleUploadTab()" aria-label="Upload Photo">
+                <i class="ph-fill ph-upload"></i>
+            </button>
+        {% endif %}
+
+        <span class="navigation-spacer"></span>
+
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('profile.profile') }}" class="navigation-item {% block nav_profile %}{% endblock %}" aria-label="Profile Page">
+                {% if current_user.picture %}
+                    <span class="nav-pfp">
+                        <picture>
+                            <source srcset="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=pfp&e=webp">
+                            <source srcset="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=pfp&e=png">
+                            <img
+                                src="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=icon"
+                                alt="Profile picture"
+                                onload="imgFade(this)"
+                                style="opacity:0;"
+                            />
+                        </picture>
+                    </span>
+                {% else %}
+                    <i class="ph-fill ph-folder-simple-user"></i>
+                {% endif %}
             </a>
 
-            <a href="{{ url_for('group.groups') }}" class="navigation-item {% block nav_groups %}{% endblock %}" aria-label="Photo Groups">
-                <i class="ph-fill ph-package"></i>
-                <span class="tool-tip">Groups<i class="ph-fill ph-caret-left"></i></span>
+            <a href="{{ url_for('settings.general') }}" class="navigation-item {% block nav_settings %}{% endblock %}" aria-label="Gallery Settings">
+                <i class="ph-fill ph-gear-fine"></i>
             </a>
+        {% else %}
+            <button class="navigation-item {% block nav_login %}{% endblock %}" onclick="showLogin()" aria-label="Sign up or Login">
+                <i class="ph-fill ph-sign-in"></i>
+            </button>
+        {% endif %}
+    </nav>
 
-            {% if current_user.is_authenticated %}
-                <button class="navigation-item {% block nav_upload %}{% endblock %}" onclick="toggleUploadTab()" aria-label="Upload Photo">
-                    <i class="ph-fill ph-upload"></i>
-                    <span class="tool-tip">Upload<i class="ph-fill ph-caret-left"></i></span>
-                </button>
-            {% endif %}
+    <header>{% block header %}{% endblock %}</header>
 
-            <span class="navigation-spacer"></span>
-
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('profile.profile') }}" class="navigation-item {% block nav_profile %}{% endblock %}" aria-label="Profile Page">
-                    {% if current_user.picture %}
-                        <span class="nav-pfp">
-                            <picture>
-                                <source srcset="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=pfp&e=webp">
-                                <source srcset="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=pfp&e=png">
-                                <img
-                                    src="{{ url_for('media_api.media', path='pfp/' + current_user.picture) }}?r=icon"
-                                    alt="Profile picture"
-                                    onload="imgFade(this)"
-                                    style="opacity:0;"
-                                />
-                            </picture>
-                        </span>
-                    {% else %}
-                        <i class="ph-fill ph-folder-simple-user"></i>
-                    {% endif %}
-                    <span class="tool-tip">Profile<i class="ph-fill ph-caret-left"></i></span>
-                </a>
-            
-                <a href="{{ url_for('settings.general') }}" class="navigation-item {% block nav_settings %}{% endblock %}" aria-label="Gallery Settings">
-                    <i class="ph-fill ph-gear-fine"></i>
-                    <span class="tool-tip">Settings<i class="ph-fill ph-caret-left"></i></span>
-                </a>
-            {% else %}
-                <button class="navigation-item {% block nav_login %}{% endblock %}" onclick="showLogin()" aria-label="Sign up or Login">
-                    <i class="ph-fill ph-sign-in"></i>
-                    <span class="tool-tip">Login<i class="ph-fill ph-caret-left"></i></span>
-                </button>
-            {% endif %}
-        </div>
-
+    <main>
         {% if current_user.is_authenticated %}
             <div class="upload-panel">
                 <span class="click-off" onclick="closeUploadTab()"></span>
@@ -142,20 +122,8 @@
             </div>
         {% endif %}
 
-        <div class="content">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </div>
-
-    <script type="text/javascript">
-        // Show notifications on page load
-        {% for message in get_flashed_messages() %}
-            addNotification('{{ message[0] }}', {{ message[1] }});
-        {% endfor %}
-    </script>
-
-    {% block script %}{% endblock %}
+        {% block content %}{% endblock %}
+    </main>
 
     <script type="text/javascript">
         keepSquare();
@@ -204,10 +172,8 @@
             }
         }
 
-        window.onresize = () => {
-            keepSquare();
-            makeGrid();
-        }
+        window.onload = () => { keepSquare(); }
+        window.onresize = () => { keepSquare(); }
         window.onscroll = () => {
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
                 topOfPage.classList.add('show');
@@ -223,6 +189,12 @@
                 }
             }
         }
+
+        {% for message in get_flashed_messages() %}
+            addNotification('{{ message[0] }}', {{ message[1] }});
+        {% endfor %}
     </script>
+
+    {% block script %}{% endblock %}
 </body>
 </html>

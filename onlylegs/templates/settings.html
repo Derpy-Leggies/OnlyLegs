@@ -1,7 +1,7 @@
-{% extends 'layout.html' %}
-
+{% extends 'base.html' %}
 {% block nav_settings %}selected{% endblock %}
-{% block content %}
+
+{% block header %}
     <div class="banner-small">
         <div class="banner-content">
             <h1 class="banner-header">Settings</h1>
@@ -13,7 +13,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
+{% block content %}
     <div class="info-tab" id="profileSettings" style="margin: 0.5rem 0.5rem 0 0.5rem">
         <div class="info-header">
             <i class="ph ph-info"></i>

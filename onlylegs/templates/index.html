@@ -1,16 +1,17 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
+{% from 'macros/image.html' import gallery_item %}
 {% block head %}
     <meta property="og:image" content="{{ url_for('static', filename='icon.png') }}"/>
     <meta name="twitter:image" content="{{ url_for('static', filename='icon.png') }}"/>
     <meta name="twitter:card" content="summary"/>
 {% endblock %}
-{% block nav_home %}selected{% endblock %}
-{% block content %}
+
+{% block header %}
     <div class="banner-small">
         <div class="banner-content">
             <h1 class="banner-header">{{ config.WEBSITE_CONF.name }}</h1>
-            {% if total_images == 0 %}
-                <p class="banner-info">0 images D:</p>
+            {% if not total_images %}
+                <p class="banner-info">0 images!</p>
             {% elif total_images == 69 %}
                 <p class="banner-info">{{ total_images }} images, nice</p>
             {% else %}
@@ -20,39 +21,33 @@
             {% if pages > 1 %}
                 <div class="pill-row">
                     <div>
-                        {% if pages > 4 %}<a class="pill-item" href="{{ url_for('gallery.index') }}"><i class="ph ph-arrow-line-left"></i></a>{% endif %}
-                        <a class="pill-item" href="{% if (page - 1) > 1 %} {{ url_for('gallery.index', page=page-1) }} {% else %} {{ url_for('gallery.index') }} {% endif %}"><i class="ph ph-arrow-left"></i></a>
+                        {% if pages > 4 %}
+                            <a class="pill-item" href="{{ url_for('gallery.index') }}"><i class="ph ph-caret-double-left"></i></a>
+                        {% else %}
+                            <button class="pill-item disabled"><i class="ph ph-caret-double-left"></i></button>
+                        {% endif %}
+                        <a class="pill-item" href="{% if (page - 1) > 1 %} {{ url_for('gallery.index', page=page - 1) }} {% else %} {{ url_for('gallery.index') }} {% endif %}"><i class="ph ph-caret-left"></i></a>
                     </div>
                     <span class="pill-text">{{ page }} / {{ pages }}</span>
                     <div>
-                        <a class="pill-item" href="{% if (page + 1) < pages %} {{ url_for('gallery.index', page=page+1) }} {% else %} {{ url_for('gallery.index', page=pages) }} {% endif %}"><i class="ph ph-arrow-right"></i></a>
-                        {% if pages > 4 %}<a class="pill-item" href="{{ url_for('gallery.index', page=pages) }}"><i class="ph ph-arrow-line-right"></i></a>{% endif %}
+                        <a class="pill-item" href="{% if (page + 1) < pages %} {{ url_for('gallery.index', page=page + 1) }} {% else %} {{ url_for('gallery.index', page=pages) }} {% endif %}"><i class="ph ph-caret-right"></i></a>
+                        {% if pages > 4 %}
+                            <a class="pill-item" href="{{ url_for('gallery.index', page=pages) }}"><i class="ph ph-caret-double-right"></i></a>
+                        {% else %}
+                            <button class="pill-item disabled"><i class="ph ph-caret-double-right"></i></button>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
         </div>
     </div>
+{% endblock %}
 
+{% block nav_home %}selected{% endblock %}
+{% block content %}
     {% if images %}
-        <div class="gallery-grid" style="position: relative;">
-            {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}; position: absolute; margin: 0;">
-                    <div class="image-filter">
-                        <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
-                    </div>
-                    <picture>
-                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
-                        <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
-                        <img
-                            src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
-                            alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
-                            onload="imgFade(this)"
-                            style="opacity:0;"
-                            fetchpriority="low"
-                        />
-                    </picture>
-                </a>
-            {% endfor %}
+        <div class="gallery-grid">
+            {% for image in images %}{{ gallery_item(image) }}{% endfor %}
         </div>
     {% else %}
         <div class="big-text">

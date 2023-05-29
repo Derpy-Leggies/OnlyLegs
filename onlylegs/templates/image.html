@@ -1,6 +1,7 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% block page_index %}
 {% if return_page %}?page={{ return_page }}{% endif %}{% endblock %}
+
 {% block head %}
     <meta property="og:image" content="{{ url_for('media_api.media', path='uploads/' + image.filename) }}"/>
     <meta name="twitter:image" content="{{ url_for('media_api.media', path='uploads/' + image.filename) }}">
@@ -10,14 +11,16 @@
     <script type="text/javascript">
         function fullscreen() {
             let info = document.querySelector('.info-container');
-            let wrapper = document.querySelector('.image-grid');
+            let image = document.querySelector('.image-container');
 
             if (info.classList.contains('collapsed')) {
                 info.classList.remove('collapsed');
-                wrapper.classList.remove('collapsed');
+                image.classList.remove('collapsed');
+                document.cookie = "image-info=0"
             } else {
                 info.classList.add('collapsed');
-                wrapper.classList.add('collapsed');
+                image.classList.add('collapsed');
+                document.cookie = "image-info=1"
             }
         }
 
@@ -68,45 +71,17 @@
     </script>
 
     <style>
-        .background span {
+        .background::after {
             background-image: linear-gradient(to top, rgba({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }}, 0.8),
                                                       rgba({{ image.colours.1.0 }}, {{ image.colours.1.1 }}, {{ image.colours.1.2 }}, 0.2));
         }
     </style>
 {% endblock %}
-{% block content %}
-    <div class="background">
-        <picture>
-            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=webp">
-            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=png">
-            <img
-                src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
-                alt="{{ image.alt }}"
-                onload="imgFade(this)"
-                style="opacity:0;"
-            />
-        </picture>
-        <span></span>
-    </div>
-    <div class="image-grid">
-        <div class="image-block">
-            <div class="image-container">
-                <picture>
-                    <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=webp">
-                    <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=png">
-                    <img
-                        src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
-                        alt="{{ image.alt }}"
-                        onload="imgFade(this)"
-                        style="opacity:0;"
-                        onerror="this.src='{{ url_for('static', filename='error.png')}}'"
-                        {% if "File" in image.exif %}
-                            width="{{ image.exif.File.Width.raw }}"
-                            height="{{ image.exif.File.Height.raw }}"
-                        {% endif %}
-                    />
-                </picture>
-            </div>
+
+{% block header %}
+    <div class="banner-small">
+        <div class="banner-content">
+            <h1 class="banner-header">{{ config.WEBSITE_CONF.name }}</h1>
             <div class="pill-row">
                 {% if next_url %}<div><a class="pill-item" href="{{ next_url }}"><i class="ph ph-arrow-left"></i></a></div>{% endif %}
                 <div>
@@ -123,61 +98,78 @@
                 {% if prev_url %}<div><a class="pill-item" href="{{ prev_url }}"><i class="ph ph-arrow-right"></i></a></div>{% endif %}
             </div>
         </div>
-        <div class="info-container">
-            <div class="info-tab">
-                <div class="info-header">
-                    <i class="ph ph-info"></i>
-                    <h2>Info</h2>
-                    <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
-                </div>
-                <div class="info-table">
-                    <table>
-                        <tr>
-                            <td>Author</td>
-                            <td>
-                                <img
-                                    src="{{ url_for('media_api.media', path='pfp/' + image.author.picture) }}"
-                                    alt="Profile Picture"
-                                    class="pfp"
-                                    onload="imgFade(this)"
-                                    style="opacity: 0;"
-                                />
-                                <a href="{{ url_for('profile.profile', id=image.author.id) }}" class="link">{{ image.author.username }}</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Upload date</td>
-                            <td><span class="time">{{ image.created_at }}</span></td>
-                        </tr>
-                        {% if image.description %}
-                            <tr>
-                                <td>Description</td>
-                                <td>{{ image.description }}</td>
-                            </tr>
-                        {% endif %}
-                    </table>
-                    <div class="img-colours">
-                        {% for col in image.colours %}
-                            <button style="background-color: rgb{{ col }}" onclick="copyToClipboard('rgb{{ col }}')">
-                                <i class="ph-fill ph-paint-bucket" style="{{ col|colour_contrast }}"></i>
-                            </button>
-                        {% endfor %}
-                    </div>
-                    {% if image.groups %}
-                        <div class="img-groups">
-                            {% for group in image.groups %}
-                                <a href="{{ url_for('group.group', group_id=group.id) }}" class="tag-icon">
-                                    <i class="ph ph-package"></i>{{ group['name'] }}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="background">
+        <picture>
+            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=webp">
+            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=png">
+            <img src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev" alt="{{ image.alt }}" onload="imgFade(this)" style="opacity:0;"/>
+        </picture>
+    </div>
+
+    <div class="image-container {% if close_tab %}collapsed{% endif %}">
+        <picture>
+            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=webp">
+            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev&e=png">
+            <img
+                src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
+                alt="{{ image.alt }}"
+                onload="imgFade(this)"
+                style="opacity:0;"
+                {% if "File" in image.exif %}
+                    width="{{ image.exif.File.Width.raw }}"
+                    height="{{ image.exif.File.Height.raw }}"
+                {% endif %}
+            />
+        </picture>
+    </div>
+
+    <div class="info-container {% if close_tab %}collapsed{% endif %}">
+        <details open>
+            <summary>
+                <i class="ph ph-info"></i><h2>Info</h2><span style="width: 100%"></span>
+                <i class="ph ph-caret-down collapse-indicator"></i>
+            </summary>
+
+            <table>
+                <tr>
+                    <td>Author</td>
+                    <td>
+                        <img src="{{ url_for('media_api.media', path='pfp/' + image.author.picture) }}" alt="Profile Picture" class="pfp" onload="imgFade(this)" style="opacity: 0;"/>
+                        <a href="{{ url_for('profile.profile', id=image.author.id) }}" class="link">{{ image.author.username }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Upload date</td>
+                    <td><span class="time">{{ image.created_at }}</span></td>
+                </tr>
+                {% if image.description %}
+                    <tr>
+                        <td>Description</td>
+                        <td>{{ image.description }}</td>
+                    </tr>
+                {% endif %}
+            </table>
+            <div class="img-colours">
+                {% for col in image.colours %}
+                    <button style="background-color: rgb{{ col }}" onclick="copyToClipboard('rgb{{ col }}')"><i class="ph-fill ph-paint-bucket" style="{{ col|colour_contrast }}"></i></button>
+                {% endfor %}
             </div>
-            {% for tag in image.exif %}
-                <div class="info-tab">
-                    <div class="info-header">
-                        {% if tag == 'Photographer' %}
+            {% if image.groups %}
+                <div class="img-groups">
+                    {% for group in image.groups %}
+                        <a href="{{ url_for('group.group', group_id=group.id) }}" class="tag-icon"><i class="ph ph-package"></i>{{ group['name'] }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </details>
+        {% for tag in image.exif %}
+            <details open>
+                <summary>
+                    {% if tag == 'Photographer' %}
                             <i class="ph ph-person"></i><h2>Photographer</h2>
                         {% elif tag == 'Camera' %}
                             <i class="ph ph-camera"></i><h2>Camera</h2>
@@ -188,63 +180,55 @@
                         {% else %}
                             <i class="ph ph-file-image"></i><h2>{{ tag }}</h2>
                         {% endif %}
-                        <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
-                    </div>
-                    <div class="info-table">
-                        <table>
-                            {% for subtag in image.exif[tag] %}
-                                <tr>
-                                    <td>{{ subtag }}</td>
-                                    {% if image.exif[tag][subtag]['formatted'] %}
-                                        {% if image.exif[tag][subtag]['type'] == 'date' %}
-                                            <td><span class="time">{{ image.exif[tag][subtag]['formatted'] }}</span></td>
-                                        {% else %}
-                                            <td>{{ image.exif[tag][subtag]['formatted'] }}</td>
-                                        {% endif %}
-                                    {% elif image.exif[tag][subtag]['raw'] %}
-                                        <td>{{ image.exif[tag][subtag]['raw'] }}</td>
-                                    {% else %}
-                                        <td class="empty-table">Oops, an error</td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+                        <span style="width: 100%"></span>
+                        <i class="ph ph-caret-down collapse-indicator"></i>
+                </summary>
+                <table>
+                    {% for subtag in image.exif[tag] %}
+                        <tr>
+                            <td>{{ subtag }}</td>
+                            {% if image.exif[tag][subtag]['formatted'] %}
+                                {% if image.exif[tag][subtag]['type'] == 'date' %}
+                                    <td><span class="time">{{ image.exif[tag][subtag]['formatted'] }}</span></td>
+                                {% else %}
+                                    <td>{{ image.exif[tag][subtag]['formatted'] }}</td>
+                                {% endif %}
+                            {% elif image.exif[tag][subtag]['raw'] %}
+                                <td>{{ image.exif[tag][subtag]['raw'] }}</td>
+                            {% else %}
+                                <td class="empty-table">Oops, an error</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </details>
+        {% endfor %}
     </div>
 {% endblock %}
 
 {% block script %}
     <script type="text/javascript">
-        let infoTab = document.querySelectorAll('.info-tab');
-
-        for (let i = 0; i < infoTab.length; i++) {
-            const tab = infoTab[i];
-
-            tab.querySelector('.collapse-indicator').addEventListener('click', function() {
-                tab.classList.toggle('collapsed');
-            });
-            
-            /*
-            const tabHeader = tab.querySelector('.info-header');
-            const tabContent = tab.querySelector('.info-table');
-
-            const tabHeight = tabHeader.offsetHeight + tabContent.offsetHeight;
-
-            tab.style.height = tabHeight + 'px';
-
-            tab.querySelector('.collapse-indicator').addEventListener('click', function() {
-                if (tab.classList.contains('collapsed')) {
-                    tab.style.height = tabHeight + 'px';
-                    tab.classList.remove('collapsed');
-                } else {
-                    tab.style.height = tabHeader.offsetHeight + 'px';
-                    tab.classList.add('collapsed');
+        function getCookie(cname) {
+            let name = cname + "=";
+            let ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
                 }
-            });
-            */
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
         }
+
+        /*
+        if (getCookie("image-info")) {
+            document.querySelector('.info-container').classList.add('collapsed');
+            document.querySelector('.image-container').classList.add('collapsed');
+        }
+        */
+         */
     </script>
 {% endblock %}
