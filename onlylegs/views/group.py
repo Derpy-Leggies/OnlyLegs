@@ -3,11 +3,11 @@ Onlylegs - Image Groups
 Why groups? Because I don't like calling these albums
 sounds more limiting that it actually is in this gallery
 """
-from flask import Blueprint, render_template, url_for
+from flask import Blueprint, render_template, url_for, request
 
 from onlylegs.models import Post, User, GroupJunction, Group
 from onlylegs.extensions import db
-from onlylegs.utils import contrast
+from onlylegs.utils.colour import contrast
 
 
 blueprint = Blueprint("group", __name__, url_prefix="/group")
@@ -72,7 +72,7 @@ def group(group_id):
     # Check contrast for the first image in the group for the banner
     text_colour = "rgb(var(--fg-black))"
     if images:
-        text_colour = contrast.contrast(
+        text_colour = contrast(
             images[0].colours[0], "rgb(var(--fg-black))", "rgb(var(--fg-white))"
         )
 
@@ -127,6 +127,14 @@ def group_post(group_id, image_id):
     if prev_url:
         prev_url = url_for("group.group_post", group_id=group_id, image_id=prev_url[0])
 
+    close_tab = True
+    if request.cookies.get("image-info") == "0":
+        close_tab = False
+
     return render_template(
-        "image.html", image=image, next_url=next_url, prev_url=prev_url
+        "image.html",
+        image=image,
+        next_url=next_url,
+        prev_url=prev_url,
+        close_tab=close_tab,
     )

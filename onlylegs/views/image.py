@@ -2,7 +2,7 @@
 Onlylegs - Image View
 """
 from math import ceil
-from flask import Blueprint, render_template, url_for, current_app
+from flask import Blueprint, render_template, url_for, current_app, request
 from onlylegs.models import Post, GroupJunction, Group
 from onlylegs.extensions import db
 
@@ -72,10 +72,15 @@ def image(image_id):
                     return_page = i + 1
                     break
 
+    close_tab = True
+    if request.cookies.get("image-info") == "0":
+        close_tab = False
+
     return render_template(
         "image.html",
         image=image,
         next_url=next_url,
         prev_url=prev_url,
         return_page=return_page,
+        close_tab=close_tab,
     )
