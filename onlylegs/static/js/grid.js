@@ -8,6 +8,21 @@ function makeGrid() {
     const maxWidth = container.clientWidth - gap;
     const maxHeight = 13 * 16;
 
+
+    if (window.innerWidth < 800) {
+        for (let i = 0; i < images.length; i++) {
+            images[i].style.height = images[i].offsetWidth + 'px';
+
+            images[i].style.width = null;
+            images[i].style.left = null;
+            images[i].style.top = null;
+        }
+        
+        container.style.height = null;
+        return;
+    }
+
+
     // Calculate the width and height of each image
     let calculated = {};
     for (let i = 0; i < images.length; i++) {
@@ -37,15 +52,13 @@ function makeGrid() {
         let currectLength = 0;
 
         // While the row is not full add images to it
-        while (currectLength < maxWidth) {
+        while (currectLength < maxWidth && i !== images.length) {
             currentRow.push(i);
             currectLength += calculated[i]["width"];
             i++;
         }
-        // currentRow.push(i);
-        // currectLength += calculated[i]["width"];
-
-        // Go back one image as it can't be added to the row
+        
+        // Go back one image since the last one pushed the row over the limit
         i--;
 
         // Calculate the amount of space required to fill the row
@@ -70,4 +83,6 @@ function makeGrid() {
         nextTop += maxHeight + gap;
         nextLeft = gap;
     }
+
+    container.style.height = nextTop + 'px';
 }

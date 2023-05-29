@@ -1,11 +1,6 @@
 function keepSquare() {
-    const images = document.querySelectorAll('.gallery-item');
-    for (let i = 0; i < images.length; i++) {
-        images[i].style.height = images[i].offsetWidth + 'px';
-    }
-
-    const groups = document.querySelectorAll('.group-item');
-    for (let i = 0; i < groups.length; i++) {
-        groups[i].style.height = groups[i].offsetWidth + 'px';
+    let square = document.getElementsByClassName('square')
+    for (let i = 0; i < square.length; i++) {
+        square[i].style.height = square[i].offsetWidth + 'px';
     }
 }
