@@ -57,59 +57,23 @@ nav
             object-fit: cover
             border-radius: $rad-inner
 
-    .tool-tip
-        padding: 0.4rem 0.7rem
-
-        display: block
-
-        position: absolute
-        top: 50%
-        left: 3rem
-        transform: translateY(-50%)
-
-        font-size: 0.9rem
-        font-weight: 500
-
-        background-color: RGB($bg-100)
-        color: RGB($fg-white)
-        opacity: 0
-        border-radius: $rad-inner
-
-        transition: opacity 0.2s cubic-bezier(.76,0,.17,1), left 0.2s cubic-bezier(.76,0,.17,1)
-
-        pointer-events: none
-
-        > i
-            display: block
-
-            position: absolute
-            top: 50%
-            left: -0.45rem
-            transform: translateY(-50%)
-            
-            font-size: 0.75rem
-
-            color: RGB($bg-100)
-
     &:hover
         > i, .nav-pfp
             background: RGBA($fg-white, 0.1)
 
-        span
-            opacity: 1
-            left: 3.9rem
-
     &.selected
+        color: RGB($primary)
+
         &::before
             content: ''
             display: block
 
             position: absolute
-            top: 3px
-            left: 3px
+            top: 0.5rem
+            left: 0.2rem
 
             width: 3px
-            height: calc(100% - 6px)
+            height: calc(100% - 1rem)
 
             background-color: currentColor
             border-radius: $rad-inner

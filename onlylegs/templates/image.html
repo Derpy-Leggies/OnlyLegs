@@ -170,18 +170,18 @@
             <details open>
                 <summary>
                     {% if tag == 'Photographer' %}
-                            <i class="ph ph-person"></i><h2>Photographer</h2>
-                        {% elif tag == 'Camera' %}
-                            <i class="ph ph-camera"></i><h2>Camera</h2>
-                        {% elif tag == 'Software' %}
-                            <i class="ph ph-desktop-tower"></i><h2>Software</h2>
-                        {% elif tag == 'File' %}
-                            <i class="ph ph-file-image"></i><h2>File</h2>
-                        {% else %}
-                            <i class="ph ph-file-image"></i><h2>{{ tag }}</h2>
-                        {% endif %}
-                        <span style="width: 100%"></span>
-                        <i class="ph ph-caret-down collapse-indicator"></i>
+                        <i class="ph ph-person"></i><h2>Photographer</h2>
+                    {% elif tag == 'Camera' %}
+                        <i class="ph ph-camera"></i><h2>Camera</h2>
+                    {% elif tag == 'Software' %}
+                        <i class="ph ph-desktop-tower"></i><h2>Software</h2>
+                    {% elif tag == 'File' %}
+                        <i class="ph ph-file-image"></i><h2>File</h2>
+                    {% else %}
+                        <i class="ph ph-file-image"></i><h2>{{ tag }}</h2>
+                    {% endif %}
+                    <span style="width: 100%"></span>
+                    <i class="ph ph-caret-down collapse-indicator"></i>
                 </summary>
                 <table>
                     {% for subtag in image.exif[tag] %}
@@ -204,31 +204,4 @@
             </details>
         {% endfor %}
     </div>
-{% endblock %}
-
-{% block script %}
-    <script type="text/javascript">
-        function getCookie(cname) {
-            let name = cname + "=";
-            let ca = document.cookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
-
-        /*
-        if (getCookie("image-info")) {
-            document.querySelector('.info-container').classList.add('collapsed');
-            document.querySelector('.image-container').classList.add('collapsed');
-        }
-        */
-         */
-    </script>
 {% endblock %}

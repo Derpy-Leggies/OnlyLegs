@@ -22,7 +22,7 @@ from colorthief import ColorThief
 
 from onlylegs.extensions import db
 from onlylegs.models import Post, GroupJunction
-from onlylegs.utils import metadata as mt
+from onlylegs.utils.metadata import yoink
 from onlylegs.utils.generate_image import generate_thumbnail
 
 
@@ -88,7 +88,7 @@ def upload():
         logging.info("Error saving file %s because of %s", img_path, err)
         return jsonify({"message": "Error saving file"}), 500
 
-    img_exif = mt.Metadata(img_path).yoink()  # Get EXIF data
+    img_exif = yoink(img_path)  # Get EXIF data
     img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
 
     # Save to database
