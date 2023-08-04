@@ -25,9 +25,9 @@ Configuration()
 
 
 if DEBUG:
-    from onlylegs import create_app
+    from onlylegs.app import app
 
-    create_app().run(host=ADDRESS, port=PORT, debug=True, threaded=True)
+    app.run(host=ADDRESS, port=PORT, debug=True, threaded=True)
 else:
     from setup.runner import OnlyLegs  # pylint: disable=C0412
     import sys

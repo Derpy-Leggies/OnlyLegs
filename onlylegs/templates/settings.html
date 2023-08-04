@@ -23,12 +23,12 @@
             <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
         </div>
         <div class="info-table">
-            <form method="POST" action="{{ url_for('account_api.account_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ url_for('api.account_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
                 <h3>Profile Picture</h3>
                 <input type="file" name="file" tab-index="-1"/>
                 <input type="submit" value="Upload" class="btn-block">
             </form>
-            <form method="POST" action="{{ url_for('account_api.account_username', user_id=current_user.id) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ url_for('api.account_username', user_id=current_user.id) }}" enctype="multipart/form-data">
                 <h3>Username</h3>
                 <input type="text" name="name" class="input-block" value="{{ current_user.username }}" />
                 <input type="submit" value="Upload" class="btn-block"/>

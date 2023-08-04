@@ -4,8 +4,8 @@
 
 {% block head %}
     {% if images %}
-        <meta property="og:image" content="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}"/>
-        <meta name="twitter:image" content="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}">
+        <meta property="og:image" content="{{ url_for('api.media', path='uploads/' + images.0.filename) }}"/>
+        <meta name="twitter:image" content="{{ url_for('api.media', path='uploads/' + images.0.filename) }}">
         <meta name="theme-color" content="rgb{{ images.0.colours.0 }}"/>
         <meta name="twitter:card" content="summary_large_image">
     {% endif %}
@@ -47,7 +47,7 @@
                 const formData = new FormData();
                 formData.append("group", formID);
             
-                fetch('{{ url_for('group_api.delete_group') }}', {
+                fetch('{{ url_for('api.delete_group') }}', {
                     method: 'POST',
                     body: formData
                 }).then(response => {
@@ -143,7 +143,7 @@
                 formData.append("image", formImage);
                 formData.append("action", formAction);
             
-                fetch('{{ url_for('group_api.modify_group') }}', {
+                fetch('{{ url_for('api.modify_group') }}', {
                     method: 'POST',
                     body: formData
                 }).then(response => {
@@ -185,9 +185,9 @@
 
             .navigation-item.selected { color: {{ text_colour }} !important; }
 
-            .banner-header,
-            .banner-info,
-            .banner-subtitle {
+            .banner .banner-content .banner-header,
+            .banner .banner-content .banner-info,
+            .banner .banner-content .banner-subtitle {
                 color: {{ text_colour }} !important;
             }
             .banner-content .link {
@@ -215,10 +215,10 @@
     {% if images %}
         <div class="banner">
             <picture>
-                <source srcset="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}?r=prev&e=webp">
-                <source srcset="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}?r=prev&e=png">
+                <source srcset="{{ url_for('api.media', path='uploads/' + images.0.filename) }}?r=prev&e=webp">
+                <source srcset="{{ url_for('api.media', path='uploads/' + images.0.filename) }}?r=prev&e=png">
                 <img
-                    src="{{ url_for('media_api.media', path='uploads/' + images.0.filename) }}?r=prev"
+                    src="{{ url_for('api.media', path='uploads/' + images.0.filename) }}?r=prev"
                     alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"
                     onload="imgFade(this)" style="opacity:0;"
                 />

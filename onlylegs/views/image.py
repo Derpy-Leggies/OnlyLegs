@@ -3,7 +3,7 @@ Onlylegs - Image View
 """
 from math import ceil
 from flask import Blueprint, render_template, url_for, current_app, request
-from onlylegs.models import Post, GroupJunction, Group
+from onlylegs.models import Pictures, AlbumJunction, Albums
 from onlylegs.extensions import db
 
 
@@ -16,12 +16,12 @@ def image(image_id):
     Image view, shows the image and its metadata
     """
     # Get the image, if it doesn't exist, 404
-    image = db.get_or_404(Post, image_id, description="Image not found :<")
+    image = db.get_or_404(Pictures, image_id, description="Image not found :<")
 
     # Get all groups the image is in
     groups = (
-        GroupJunction.query.with_entities(GroupJunction.group_id)
-        .filter(GroupJunction.post_id == image_id)
+        AlbumJunction.query.with_entities(AlbumJunction.album_id)
+        .filter(AlbumJunction.picture_id == image_id)
         .all()
     )
 
@@ -29,23 +29,23 @@ def image(image_id):
     image.groups = []
     for group in groups:
         image.groups.append(
-            Group.query.with_entities(Group.id, Group.name)
-            .filter(Group.id == group[0])
+            Albums.query.with_entities(Albums.id, Albums.name)
+            .filter(Albums.id == group[0])
             .first()
         )
 
     # Get the next and previous images
     # Check if there is a group ID set
     next_url = (
-        Post.query.with_entities(Post.id)
-        .filter(Post.id > image_id)
-        .order_by(Post.id.asc())
+        Pictures.query.with_entities(Pictures.id)
+        .filter(Pictures.id > image_id)
+        .order_by(Pictures.id.asc())
         .first()
     )
     prev_url = (
-        Post.query.with_entities(Post.id)
-        .filter(Post.id < image_id)
-        .order_by(Post.id.desc())
+        Pictures.query.with_entities(Pictures.id)
+        .filter(Pictures.id < image_id)
+        .order_by(Pictures.id.desc())
         .first()
     )
 
@@ -56,7 +56,9 @@ def image(image_id):
         prev_url = url_for("image.image", image_id=prev_url[0])
 
     # Yoink all the images in the database
-    total_images = Post.query.with_entities(Post.id).order_by(Post.id.desc()).all()
+    total_images = (
+        Pictures.query.with_entities(Pictures.id).order_by(Pictures.id.desc()).all()
+    )
     limit = current_app.config["UPLOAD_CONF"]["max-load"]
 
     # If the number of items is less than the limit, no point of calculating the page

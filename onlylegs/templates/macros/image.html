@@ -1,11 +1,19 @@
 {% macro gallery_item(image) %}
-    <a id="image-{{ image.id }}" class="gallery-item square" href="{{ url_for('image.image', image_id=image.id) }}" style="background-color: rgb{{ image.colours.0 }}">
-        <div class="image-filter"><p class="image-title"><span class="time">{{ image.created_at }}</span></p></div>
+    <a
+        id="image-{{ image.id }}"
+        class="gallery-item square"
+        href="{{ url_for('image.image', image_id=image.id) }}"
+        style="background-color: rgb{{ image.colours.0 }}"
+        draggable="false">
+        <div class="image-filter">
+            <p class="image-subtitle">By {{ image.username }}</p>
+            <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
+        </div>
         <picture>
-            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
-            <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
+            <source srcset="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
+            <source srcset="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
             <img
-                src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
+                src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb"
                 alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
                 onload="imgFade(this)"
                 style="opacity:0;"

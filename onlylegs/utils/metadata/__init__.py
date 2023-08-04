@@ -18,10 +18,10 @@ def yoink(file_path):
     """
     if not os.path.isfile(file_path):
         return None
-    
+
     img_exif = {}
     file = Image.open(file_path)
-    
+
     img_exif["FileName"] = os.path.basename(file_path)
     img_exif["FileSize"] = os.path.getsize(file_path)
     img_exif["FileFormat"] = img_exif["FileName"].split(".")[-1]
@@ -34,9 +34,9 @@ def yoink(file_path):
                 img_exif[value] = tags[tag]
     except TypeError:
         pass
-    
+
     file.close()
-    
+
     return _format_data(img_exif)
 
 

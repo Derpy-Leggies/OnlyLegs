@@ -4,8 +4,8 @@
 
 {% block head %}
     {% if user.picture %}
-        <meta property="og:image" content="{{ url_for('media_api.media', path='pfp/' + user.picture) }}"/>
-        <meta name="twitter:image" content="{{ url_for('media_api.media', path='pfp/' + user.picture) }}">
+        <meta property="og:image" content="{{ url_for('api.media', path='pfp/' + user.picture) }}"/>
+        <meta name="twitter:image" content="{{ url_for('api.media', path='pfp/' + user.picture) }}">
     {% endif %}
     {% if user.colour %}<meta name="theme-color" content="rgb{{ user.colour }}"/>{% endif %}
     <meta name="twitter:card" content="summary">
@@ -37,10 +37,10 @@
         <div class="banner-content">
             {% if user.picture %}
                 <picture class="banner-picture">
-                    <source srcset="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp&e=webp">
-                    <source srcset="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp&e=png">
+                    <source srcset="{{ url_for('api.media', path='pfp/' + user.picture) }}?r=pfp&e=webp">
+                    <source srcset="{{ url_for('api.media', path='pfp/' + user.picture) }}?r=pfp&e=png">
                     <img
-                        src="{{ url_for('media_api.media', path='pfp/' + user.picture) }}?r=pfp"
+                        src="{{ url_for('api.media', path='pfp/' + user.picture) }}?r=pfp"
                         alt="Profile picture"
                         onload="imgFade(this)"
                         style="opacity:0;"

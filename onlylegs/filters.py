@@ -3,7 +3,7 @@ OnlyLegs filters
 Custom Jinja2 filters
 """
 from flask import Blueprint
-from onlylegs.utils.colour import contrast
+from onlylegs.utils import colour as colour_utils
 
 
 blueprint = Blueprint("filters", __name__)
@@ -16,7 +16,5 @@ def colour_contrast(colour):
     a css variable based on the contrast of text required to be readable
     "color: var(--fg-white);" or "color: var(--fg-black);"
     """
-    bright = "var(--fg-white)"
-    dark = "var(--fg-black)"
-
-    return "color: RGB(" + contrast(colour, dark, bright) + ");"
+    colour_obj = colour_utils.Colour(colour)
+    return "rgb(var(--fg-black));" if colour_obj.is_light() else "rgb(var(--fg-white));"

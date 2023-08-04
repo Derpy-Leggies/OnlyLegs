@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "OnlyLegs"
-version = "0.1.4"
+version = "0.1.5"
 repository = "https://github.com/Fluffy-Bean/onlylegs"
 license = "MIT"
 readme = "README.md"

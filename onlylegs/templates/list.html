@@ -66,7 +66,7 @@
                 formData.append("name", formName);
                 formData.append("description", formDescription);
             
-                fetch('{{ url_for('group_api.create_group') }}', {
+                fetch('{{ url_for('api.create_group') }}', {
                     method: 'POST',
                     body: formData
                 }).then(response => {
@@ -134,10 +134,10 @@
                         {% if group.images|length > 0 %}
                             {% for image in group.images %}
                                 <picture>
-                                    <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
-                                    <source srcset="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
+                                    <source srcset="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb&e=webp">
+                                    <source srcset="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb&e=png">
                                     <img
-                                        src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb"
+                                        src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=thumb"
                                         alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}"
                                         class="data-{{ loop.index }}"
                                         onload="imgFade(this)"
