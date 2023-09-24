@@ -15,7 +15,7 @@ from flask import (
     jsonify,
 )
 from flask_login import current_user
-from onlylegs.models import Pictures, AlbumJunction, Albums
+from onlylegs.models import Pictures, AlbumJunction, Albums, Exif
 from onlylegs.extensions import db
 
 
@@ -28,7 +28,8 @@ def image(image_id):
     Image view, shows the image and its metadata
     """
     # Get the image, if it doesn't exist, 404
-    image = db.get_or_404(Pictures, image_id, description="Image not found :<")
+    image_record = db.get_or_404(Pictures, image_id, description="Image not found :<")
+    image_record_exif = Exif.query.filter(Exif.picture_id == image_id).all()
 
     # Get all groups the image is in
     groups = (
@@ -38,9 +39,9 @@ def image(image_id):
     )
 
     # Get the group data for each group the image is in
-    image.groups = []
+    image_record.groups = []
     for group in groups:
-        image.groups.append(
+        image_record.groups.append(
             Albums.query.with_entities(Albums.id, Albums.name)
             .filter(Albums.id == group[0])
             .first()
@@ -72,9 +73,8 @@ def image(image_id):
     limit = current_app.config["UPLOAD_CONF"]["max-load"]
 
     # If the number of items is less than the limit, no point of calculating the page
-    if len(total_images) <= limit:
-        return_page = None
-    else:
+    return_page = None
+    if len(total_images) > limit:
         # How many pages should there be
         for i in range(ceil(len(total_images) / limit)):
             # Slice the list of IDs into chunks of the limit
@@ -90,7 +90,8 @@ def image(image_id):
 
     return render_template(
         "image.html",
-        image=image,
+        image=image_record,
+        image_exif=image_record_exif,
         next_url=next_url,
         prev_url=prev_url,
         return_page=return_page,

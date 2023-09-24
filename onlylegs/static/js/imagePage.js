@@ -12,6 +12,69 @@ function imageFullscreen() {
         document.cookie = "image-info=1"
     }
 }
+
+function imageShowOptionsPopup(obj) {
+    // let title = 'Options';
+    // let subtitle = null;
+    //
+    // let body = document.createElement('div');
+    //     body.style.cssText = 'display: flex; flex-direction: column; gap: 0.5rem;';
+    //
+    // let copyBtn = document.createElement('button');
+    //     copyBtn.classList.add('btn-block');
+    //     copyBtn.innerHTML = 'Copy URL';
+    //     copyBtn.onclick = () => {
+    //         copyToClipboard(window.location.href)
+    //     }
+    //
+    // let downloadBtn = document.createElement('a');
+    //     downloadBtn.classList.add('btn-block');
+    //     downloadBtn.innerHTML = 'Download';
+    //     downloadBtn.href = '/api/media/uploads/' + image_data["filename"];
+    //     downloadBtn.download = '';
+    //
+    // body.appendChild(copyBtn);
+    // body.appendChild(downloadBtn);
+    //
+    // if (image_data["owner"]) {
+    //     let editBtn = document.createElement('button');
+    //         editBtn.classList.add('btn-block');
+    //         editBtn.classList.add('critical');
+    //         editBtn.innerHTML = 'Edit';
+    //         editBtn.onclick = imageEditPopup;
+    //
+    //     let deleteBtn = document.createElement('button');
+    //         deleteBtn.classList.add('btn-block');
+    //         deleteBtn.classList.add('critical');
+    //         deleteBtn.innerHTML = 'Delete';
+    //         deleteBtn.onclick = imageDeletePopup;
+    //
+    //     body.appendChild(editBtn);
+    //     body.appendChild(deleteBtn);
+    // }
+    //
+    // popupShow(title, subtitle, body, [popupCancelButton]);
+
+    showContextMenu(obj, [
+        {
+            'value': 'Edit',
+            'function': () => {
+                dissmissContextMenu();
+                imageEditPopup();
+            },
+            'type': 'critical'
+        },
+        {
+            'value': 'Delete',
+            'function': () => {
+                dissmissContextMenu();
+                imageDeletePopup();
+            },
+            'type': 'critical'
+        }
+    ], 'button')
+}
+
 function imageDeletePopup() {
     let title = 'DESTRUCTION!!!!!!';
     let subtitle =
@@ -92,7 +155,6 @@ function imageEditConfirm(event) {
         body: form,
     }).then(response => {
         if (response.ok) {
-            popupDismiss();
             window.location.reload();
         } else {
             addNotification('Image *clings*', 2);

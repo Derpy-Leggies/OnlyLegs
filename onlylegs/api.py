@@ -7,6 +7,9 @@ import re
 import logging
 from uuid import uuid4
 
+from PIL import Image
+from PIL.ExifTags import TAGS
+
 from flask import (
     Blueprint,
     abort,
@@ -20,8 +23,7 @@ from flask_login import login_required, current_user
 from colorthief import ColorThief
 
 from onlylegs.extensions import db
-from onlylegs.models import Users, Pictures
-from onlylegs.utils.metadata import yoink
+from onlylegs.models import Users, Pictures, Exif
 from onlylegs.utils.generate_image import generate_thumbnail
 
 
@@ -137,46 +139,91 @@ def upload():
     """
     Uploads an image to the server and saves it to the database
     """
-    form_file = request.files.get("file", None)
-    form = request.form
+    image_description = request.form.get("description", "").strip()
+    image_alt = request.form.get("alt", "").strip()
+    image_file = request.files.get("file", None)
 
-    if not form_file:
+    if not image_file:
         return jsonify({"message": "No file"}), 400
 
     # Get file extension, generate random name and set file path
-    img_ext = pathlib.Path(form_file.filename).suffix.replace(".", "").lower()
-    img_name = "GWAGWA_" + str(uuid4())
-    img_path = os.path.join(
-        current_app.config["UPLOAD_FOLDER"], img_name + "." + img_ext
-    )
+    image_mime = pathlib.Path(image_file.filename).suffix.replace(".", "").lower()
+    image_name = "GWAGWA_" + str(uuid4())
+    image_filename = image_name + "." + image_mime
+    save_path = os.path.join(current_app.config["UPLOAD_FOLDER"], image_filename)
 
-    # Check if file extension is allowed
-    if img_ext not in current_app.config["ALLOWED_EXTENSIONS"].keys():
-        logging.info("File extension not allowed: %s", img_ext)
+    if image_mime not in current_app.config["ALLOWED_EXTENSIONS"].keys():
+        logging.info("File extension not allowed: %s", image_mime)
         return jsonify({"message": "File extension not allowed"}), 403
 
-    # Save file
-    try:
-        form_file.save(img_path)
-    except OSError as err:
-        logging.info("Error saving file %s because of %s", img_path, err)
-        return jsonify({"message": "Error saving file"}), 500
+    image_file.save(save_path)
 
-    img_exif = yoink(img_path)  # Get EXIF data
-    img_colors = ColorThief(img_path).get_palette(color_count=3)  # Get color palette
+    image_colours = ColorThief(save_path).get_palette(color_count=3)
 
-    # Save to database
-    query = Pictures(
+    image_record = Pictures(
         author_id=current_user.id,
-        filename=img_name + "." + img_ext,
-        mimetype=img_ext,
-        exif=img_exif,
-        colours=img_colors,
-        description=form["description"],
-        alt=form["alt"],
+        filename=image_filename,
+        mimetype=image_mime,
+        colours=image_colours,
+        description=image_description,
+        alt=image_alt,
     )
+    db.session.add(image_record)
+    db.session.commit()
 
-    db.session.add(query)
+    image_exif = []
+    with Image.open(save_path) as file:
+        image_exif.append(
+            Exif(
+                picture_id=image_record.id,
+                key="FileName",
+                value=image_filename,
+            )
+        )
+        image_exif.append(
+            Exif(
+                picture_id=image_record.id,
+                key="FileSize",
+                value=os.path.getsize(save_path),
+            )
+        )
+        image_exif.append(
+            Exif(
+                picture_id=image_record.id,
+                key="FileFormat",
+                value=image_mime,
+            )
+        )
+        image_exif.append(
+            Exif(
+                picture_id=image_record.id,
+                key="FileWidth",
+                value=file.size[0],
+            )
+        )
+        image_exif.append(
+            Exif(
+                picture_id=image_record.id,
+                key="FileHeight",
+                value=file.size[1],
+            )
+        )
+
+        try:
+            tags = file._getexif()
+            for tag, value in TAGS.items():
+                if tag in tags:
+                    image_exif.append(
+                        Exif(
+                            picture_id=image_record.id,
+                            key=value,
+                            value=tags[tag],
+                        )
+                    )
+        except TypeError:
+            pass
+
+    db.session.add_all(image_exif)
     db.session.commit()
 
     return jsonify({"message": "File uploaded"}), 200
