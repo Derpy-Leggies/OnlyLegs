@@ -132,3 +132,7 @@ compress.init_app(app)
 # Yupee! We got there :3
 print("Done!")
 logging.info("Gallery started successfully!")
+
+
+if __name__ == "__main__":
+    app.run()
