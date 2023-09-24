@@ -9,7 +9,6 @@ from uuid import uuid4
 
 from flask import (
     Blueprint,
-    flash,
     abort,
     send_from_directory,
     jsonify,
@@ -21,7 +20,7 @@ from flask_login import login_required, current_user
 from colorthief import ColorThief
 
 from onlylegs.extensions import db
-from onlylegs.models import Users, Pictures, Albums, AlbumJunction
+from onlylegs.models import Users, Pictures
 from onlylegs.utils.metadata import yoink
 from onlylegs.utils.generate_image import generate_thumbnail
 
@@ -111,8 +110,8 @@ def media(path):
     r for resolution, thumb for thumbnail etc
     e for extension, jpg, png etc
     """
-    res = request.args.get("r", default=None).strip()
-    ext = request.args.get("e", default=None).strip()
+    res = request.args.get("r", "").strip()
+    ext = request.args.get("e", "").strip()
 
     # if no args are passed, return the raw file
     if not res and not ext:
@@ -181,113 +180,3 @@ def upload():
     db.session.commit()
 
     return jsonify({"message": "File uploaded"}), 200
-
-
-@blueprint.route("/media/delete/<int:image_id>", methods=["POST"])
-@login_required
-def delete_image(image_id):
-    """
-    Deletes an image from the server and database
-    """
-    post = db.get_or_404(Pictures, image_id)
-
-    # Check if image exists and if user is allowed to delete it (author)
-    if post.author_id != current_user.id:
-        logging.info("User %s tried to delete image %s", current_user.id, image_id)
-        return (
-            jsonify({"message": "You are not allowed to delete this image, heck off"}),
-            403,
-        )
-
-    # Delete file
-    try:
-        os.remove(os.path.join(current_app.config["UPLOAD_FOLDER"], post.filename))
-    except FileNotFoundError:
-        logging.warning(
-            "File not found: %s, already deleted or never existed", post.filename
-        )
-
-    # Delete cached files
-    cache_name = post.filename.rsplit(".")[0]
-    for cache_file in pathlib.Path(current_app.config["CACHE_FOLDER"]).glob(
-        cache_name + "*"
-    ):
-        os.remove(cache_file)
-
-    AlbumJunction.query.filter_by(picture_id=image_id).delete()
-    db.session.delete(post)
-    db.session.commit()
-
-    logging.info("Removed image (%s) %s", image_id, post.filename)
-    flash(["Image was all in Le Head!", "1"])
-    return jsonify({"message": "Image deleted"}), 200
-
-
-@blueprint.route("/group/create", methods=["POST"])
-@login_required
-def create_group():
-    """
-    Creates a group
-    """
-    group_name = request.form.get("name", "").strip()
-    group_description = request.form.get("description", "").strip()
-    group_author = current_user.id
-
-    new_group = Albums(
-        name=group_name,
-        description=group_description,
-        author_id=group_author,
-    )
-
-    db.session.add(new_group)
-    db.session.commit()
-
-    return jsonify({"message": "Group created", "id": new_group.id})
-
-
-@blueprint.route("/group/modify", methods=["POST"])
-@login_required
-def modify_group():
-    """
-    Changes the images in a group
-    """
-    group_id = request.form.get("group", "").strip()
-    image_id = request.form.get("image", "").strip()
-    action = request.form.get("action", "").strip()
-
-    group = db.get_or_404(Albums, group_id)
-    db.get_or_404(Pictures, image_id)  # Check if image exists
-
-    if group.author_id != current_user.id:
-        return jsonify({"message": "You are not the owner of this group"}), 403
-
-    junction_exist = AlbumJunction.query.filter_by(
-        album_id=group_id, picture_id=image_id
-    ).first()
-
-    if action == "add" and not junction_exist:
-        db.session.add(AlbumJunction(album_id=group_id, picture_id=image_id))
-    elif request.form["action"] == "remove":
-        AlbumJunction.query.filter_by(album_id=group_id, picture_id=image_id).delete()
-
-    db.session.commit()
-    return jsonify({"message": "Group modified"})
-
-
-@blueprint.route("/group/delete", methods=["POST"])
-def delete_group():
-    """
-    Deletes a group
-    """
-    group_id = request.form.get("group", "").strip()
-    group = db.get_or_404(Albums, group_id)
-
-    if group.author_id != current_user.id:
-        return jsonify({"message": "You are not the owner of this group"}), 403
-
-    AlbumJunction.query.filter_by(album_id=group_id).delete()
-    db.session.delete(group)
-    db.session.commit()
-
-    flash(["Group yeeted!", "1"])
-    return jsonify({"message": "Group deleted"})

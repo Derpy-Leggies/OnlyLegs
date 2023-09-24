@@ -1,8 +1,20 @@
 """
 Onlylegs - Image View
 """
+import os
+import logging
+import pathlib
 from math import ceil
-from flask import Blueprint, render_template, url_for, current_app, request
+from flask import (
+    Blueprint,
+    render_template,
+    url_for,
+    current_app,
+    request,
+    flash,
+    jsonify,
+)
+from flask_login import current_user
 from onlylegs.models import Pictures, AlbumJunction, Albums
 from onlylegs.extensions import db
 
@@ -10,7 +22,7 @@ from onlylegs.extensions import db
 blueprint = Blueprint("image", __name__, url_prefix="/image")
 
 
-@blueprint.route("/<int:image_id>")
+@blueprint.route("/<int:image_id>", methods=["GET"])
 def image(image_id):
     """
     Image view, shows the image and its metadata
@@ -50,10 +62,8 @@ def image(image_id):
     )
 
     # If there is a next or previous image, get the url
-    if next_url:
-        next_url = url_for("image.image", image_id=next_url[0])
-    if prev_url:
-        prev_url = url_for("image.image", image_id=prev_url[0])
+    next_url = url_for("image.image", image_id=next_url[0]) if next_url else None
+    prev_url = url_for("image.image", image_id=prev_url[0]) if prev_url else None
 
     # Yoink all the images in the database
     total_images = (
@@ -86,3 +96,60 @@ def image(image_id):
         return_page=return_page,
         close_tab=close_tab,
     )
+
+
+@blueprint.route("/<int:image_id>", methods=["PUT"])
+def image_put(image_id):
+    """
+    Update the image metadata
+    """
+    image_record = db.get_or_404(Pictures, image_id, description="Image not found :<")
+
+    image_record.description = request.form.get("description", image_record.description)
+    image_record.alt = request.form.get("alt", image_record.alt)
+
+    print(request.form.get("description"))
+
+    db.session.commit()
+
+    flash(["Image updated!", "1"])
+    return "OK", 200
+
+
+@blueprint.route("/<int:image_id>", methods=["DELETE"])
+def image_delete(image_id):
+    image_record = db.get_or_404(Pictures, image_id)
+
+    # Check if image exists and if user is allowed to delete it (author)
+    if image_record.author_id != current_user.id:
+        logging.info("User %s tried to delete image %s", current_user.id, image_id)
+        return (
+            jsonify({"message": "You are not allowed to delete this image, heck off"}),
+            403,
+        )
+
+    # Delete file
+    try:
+        os.remove(
+            os.path.join(current_app.config["UPLOAD_FOLDER"], image_record.filename)
+        )
+    except FileNotFoundError:
+        logging.warning(
+            "File not found: %s, already deleted or never existed",
+            image_record.filename,
+        )
+
+    # Delete cached files
+    cache_name = image_record.filename.rsplit(".")[0]
+    for cache_file in pathlib.Path(current_app.config["CACHE_FOLDER"]).glob(
+        cache_name + "*"
+    ):
+        os.remove(cache_file)
+
+    AlbumJunction.query.filter_by(picture_id=image_id).delete()
+    db.session.delete(image_record)
+    db.session.commit()
+
+    logging.info("Removed image (%s) %s", image_id, image_record.filename)
+    flash(["Image was all in Le Head!", "1"])
+    return jsonify({"message": "Image deleted"}), 200

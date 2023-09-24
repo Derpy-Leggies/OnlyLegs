@@ -36,7 +36,7 @@
     <button class="top-of-page" aria-label="Jump to top of page"><i class="ph ph-arrow-up"></i></button>
 
     <div class="pop-up">
-        <span class="pop-up__click-off" onclick="popupDissmiss()"></span>
+        <span class="pop-up__click-off" onclick="popupDismiss()"></span>
         <div class="pop-up-wrapper">
             <div class="pop-up-header"></div>
             <div class="pop-up-controlls"></div>
@@ -160,7 +160,7 @@
                 infoButton.classList.add('show');
             }
             infoButton.onclick = () => {
-                popUpShow('OnlyLegs',
+                popupShow('OnlyLegs',
                             '<a href="https://github.com/Fluffy-Bean/onlylegs">v{{ config['APP_VERSION'] }}</a> ' +
                             'using <a href="https://phosphoricons.com/">Phosphoricons</a> and Flask.' +
                             '<br>Made by Fluffy and others with ❤️');

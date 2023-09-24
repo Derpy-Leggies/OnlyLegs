@@ -9,65 +9,11 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <script type="text/javascript">
-        function fullscreen() {
-            let info = document.querySelector('.info-container');
-            let image = document.querySelector('.image-container');
-
-            if (info.classList.contains('collapsed')) {
-                info.classList.remove('collapsed');
-                image.classList.remove('collapsed');
-                document.cookie = "image-info=0"
-            } else {
-                info.classList.add('collapsed');
-                image.classList.add('collapsed');
-                document.cookie = "image-info=1"
-            }
-        }
-
-        {% if current_user.id == image.author.id %}
-            function imageDelete() {
-                cancelBtn = document.createElement('button');
-                cancelBtn.classList.add('btn-block');
-                cancelBtn.classList.add('transparent');
-                cancelBtn.innerHTML = 'nuuuuuuuu';
-                cancelBtn.onclick = popupDissmiss;
-
-                deleteBtn = document.createElement('button');
-                deleteBtn.classList.add('btn-block');
-                deleteBtn.classList.add('critical');
-                deleteBtn.innerHTML = 'Dewww eeeet!';
-                deleteBtn.onclick = deleteConfirm;
-                
-                popUpShow('DESTRUCTION!!!!!!',
-                          'Do you want to delete this image along with all of its data??? ' +
-                          'This action is irreversible!',
-                          null,
-                          [cancelBtn, deleteBtn]);
-            }
-            function deleteConfirm() {
-                popupDissmiss();
-
-                fetch('{{ url_for('api.delete_image', image_id=image['id']) }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'delete'
-                    })
-                }).then(function(response) {
-                    if (response.ok) {
-                        window.location.href = '/';
-                    } else {
-                        addNotification(`Image *clings*`, 2);
-                    }
-                });
-            }
-
-            function imageEdit() {
-                addNotification("Not an option, oops!", 3);
-            }
-        {% endif %}
+        const image_data = {
+            'id': {{ image.id }},
+            'description': '{{ image.description }}',
+            'alt': '{{ image.alt }}',
+        };
     </script>
 
     <style>
@@ -85,14 +31,14 @@
             <div class="pill-row">
                 {% if next_url %}<div><a class="pill-item" href="{{ next_url }}"><i class="ph ph-arrow-left"></i></a></div>{% endif %}
                 <div>
-                    <button class="pill-item" onclick="fullscreen()" id="fullscreenImage"><i class="ph ph-info"></i></button>
+                    <button class="pill-item" onclick="imageFullscreen()" id="fullscreenImage"><i class="ph ph-info"></i></button>
                     <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
                     <a class="pill-item" href="{{ url_for('api.media', path='uploads/' + image.filename) }}" download onclick="addNotification('Download started!', 4)"><i class="ph ph-file-arrow-down"></i></a>
                 </div>
                 {% if current_user.id == image.author.id %}
                     <div>
-                        <button class="pill-item pill__critical" onclick="imageDelete()"><i class="ph ph-trash"></i></button>
-                        <button class="pill-item pill__critical" onclick="imageEdit()"><i class="ph ph-pencil-simple"></i></button>
+                        <button class="pill-item pill__critical" onclick="imageDeletePopup()"><i class="ph ph-trash"></i></button>
+                        <button class="pill-item pill__critical" onclick="imageEditPopup()"><i class="ph ph-pencil-simple"></i></button>
                     </div>
                 {% endif %}
                 {% if prev_url %}<div><a class="pill-item" href="{{ prev_url }}"><i class="ph ph-arrow-right"></i></a></div>{% endif %}

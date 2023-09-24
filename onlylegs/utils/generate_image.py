@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from onlylegs.config import MEDIA_FOLDER, CACHE_FOLDER
 
 
-def generate_thumbnail(file_path, resolution, ext=None):
+def generate_thumbnail(file_path, resolution, ext=""):
     """
     Image thumbnail generator
     Uses PIL to generate a thumbnail of the image and saves it to the cache directory
@@ -25,25 +25,25 @@ def generate_thumbnail(file_path, resolution, ext=None):
     if not ext:
         ext = file_ext.strip(".")
 
-    # PIL doesnt like jpg so we convert it to jpeg
-    if ext.lower() == "jpg":
-        ext = "jpeg"
+    ext = "jpeg" if ext.lower() == "jpg" else ext.lower()
 
     # Set resolution based on preset resolutions
-    if resolution in ["prev", "preview"]:
+    if resolution in ("prev", "preview"):
         res_x, res_y = (1920, 1080)
-    elif resolution in ["thumb", "thumbnail"]:
+    elif resolution in ("thumb", "thumbnail"):
         res_x, res_y = (300, 300)
-    elif resolution in ["pfp", "profile"]:
+    elif resolution in ("pfp", "profile"):
         res_x, res_y = (150, 150)
-    elif resolution in ["icon", "favicon"]:
+    elif resolution in ("icon", "favicon"):
         res_x, res_y = (30, 30)
     else:
         return None
 
+    cache_file_name = "{}_{}x{}.{}".format(file_name, res_x, res_y, ext).lower()
+
     # If image has been already generated, return it from the cache
-    if os.path.exists(os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}")):
-        return os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}")
+    if os.path.exists(os.path.join(CACHE_FOLDER, cache_file_name)):
+        return os.path.join(CACHE_FOLDER, cache_file_name)
 
     # Check if image exists in the uploads directory
     if not os.path.exists(os.path.join(MEDIA_FOLDER, file_path)):
@@ -61,7 +61,7 @@ def generate_thumbnail(file_path, resolution, ext=None):
     # Save image to cache directory
     try:
         image.save(
-            os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}"),
+            os.path.join(CACHE_FOLDER, cache_file_name),
             icc_profile=image_icc,
         )
     except OSError:
@@ -69,11 +69,11 @@ def generate_thumbnail(file_path, resolution, ext=None):
         # so we convert to RGB and try again
         image = image.convert("RGB")
         image.save(
-            os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}"),
+            os.path.join(CACHE_FOLDER, cache_file_name),
             icc_profile=image_icc,
         )
 
     # No need to keep the image in memory, learned the hard way
     image.close()
 
-    return os.path.join(CACHE_FOLDER, f"{file_name}_{res_x}x{res_y}.{ext}")
+    return os.path.join(CACHE_FOLDER, cache_file_name)

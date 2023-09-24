@@ -3,8 +3,8 @@ Onlylegs - Image Groups
 Why groups? Because I don't like calling these albums
 sounds more limiting that it actually is in this gallery
 """
-from flask import Blueprint, render_template, url_for, request
-
+from flask import Blueprint, render_template, url_for, request, flash, jsonify
+from flask_login import login_required, current_user
 from onlylegs.models import Pictures, Users, AlbumJunction, Albums
 from onlylegs.extensions import db
 from onlylegs.utils import colour
@@ -50,7 +50,29 @@ def groups():
     return render_template("list.html", groups=groups)
 
 
-@blueprint.route("/<int:group_id>")
+@blueprint.route("/", methods=["POST"])
+@login_required
+def groups_post():
+    """
+    Creates a group
+    """
+    group_name = request.form.get("name", "").strip()
+    group_description = request.form.get("description", "").strip()
+
+    new_group = Albums(
+        name=group_name,
+        description=group_description,
+        author_id=current_user.id,
+    )
+
+    db.session.add(new_group)
+    db.session.commit()
+
+    flash(["Group created!", "1"])
+    return jsonify({"message": "Group created", "id": new_group.id})
+
+
+@blueprint.route("/<int:group_id>", methods=["GET"])
 def group(group_id):
     """
     Group view, shows all images in a group
@@ -84,6 +106,54 @@ def group(group_id):
     return render_template(
         "group.html", group=group, images=images, text_colour=text_colour
     )
+
+
+@blueprint.route("/<int:group_id>", methods=["PUT"])
+@login_required
+def group_put(group_id):
+    """
+    Changes the images in a group
+    """
+    image_id = request.form.get("imageId", "").strip()
+    action = request.form.get("action", "").strip()
+
+    group_record = db.get_or_404(Albums, group_id)
+    db.get_or_404(Pictures, image_id)  # Check if image exists
+
+    if group_record.author_id != current_user.id:
+        return jsonify({"message": "You are not the owner of this group"}), 403
+
+    junction_exist = AlbumJunction.query.filter_by(
+        album_id=group_id, picture_id=image_id
+    ).first()
+
+    if action == "add" and not junction_exist:
+        db.session.add(AlbumJunction(album_id=group_id, picture_id=image_id))
+    elif request.form["action"] == "remove":
+        AlbumJunction.query.filter_by(album_id=group_id, picture_id=image_id).delete()
+
+    db.session.commit()
+    flash(["Group modified!", "1"])
+    return jsonify({"message": "Group modified"})
+
+
+@blueprint.route("/<int:group_id>", methods=["DELETE"])
+@login_required
+def group_delete(group_id):
+    """
+    Deletes a group
+    """
+    group_record = db.get_or_404(Albums, group_id)
+
+    if group_record.author_id != current_user.id:
+        return jsonify({"message": "You are not the owner of this group"}), 403
+
+    AlbumJunction.query.filter_by(album_id=group_id).delete()
+    db.session.delete(group_record)
+    db.session.commit()
+
+    flash(["Group yeeted!", "1"])
+    return jsonify({"message": "Group deleted"})
 
 
 @blueprint.route("/<int:group_id>/<int:image_id>")

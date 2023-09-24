@@ -3,95 +3,6 @@
 
 {% block head %}
     {% if images %}<meta name="theme-color" content="rgb{{ images.0.colours.0 }}"/>{% endif %}
-
-    {% if current_user.is_authenticated %}
-        <script type="text/javascript">
-            function showCreate() {
-                // Create elements
-                cancelBtn = document.createElement('button');
-                cancelBtn.classList.add('btn-block');
-                cancelBtn.classList.add('transparent');
-                cancelBtn.innerHTML = 'nuuuuuuuu';
-                cancelBtn.onclick = popupDissmiss;
-
-                submitBtn = document.createElement('button');
-                submitBtn.classList.add('btn-block');
-                submitBtn.classList.add('primary');
-                submitBtn.innerHTML = 'Submit!!';
-                submitBtn.type = 'submit';
-                submitBtn.setAttribute('form', 'createForm');
-
-                // Create form
-                createForm = document.createElement('form');
-                createForm.id = 'createForm';
-                createForm.setAttribute('onsubmit', 'return create(event);');
-
-                titleInput = document.createElement('input');
-                titleInput.classList.add('input-block');
-                titleInput.type = 'text';
-                titleInput.placeholder = 'Group namey';
-                titleInput.id = 'name';
-
-                descriptionInput = document.createElement('input');
-                descriptionInput.classList.add('input-block');
-                descriptionInput.type = 'text';
-                descriptionInput.placeholder = 'What it about????';
-                descriptionInput.id = 'description';
-
-                createForm.appendChild(titleInput);
-                createForm.appendChild(descriptionInput);
-
-                popUpShow(
-                    'New stuff!',
-                    'Image groups are a simple way to "group" images together, are you ready?',
-                    createForm,
-                    [cancelBtn, submitBtn]
-                );
-            }
-
-            function create(event) {
-                // AJAX takes control of subby form :3
-                event.preventDefault();
-            
-                let formName = document.querySelector("#name").value;
-                let formDescription = document.querySelector("#description").value;
-            
-                if (!formName) {
-                    addNotification("Group name must be set!", 3);
-                    return;
-                }
-            
-                // Make form
-                const formData = new FormData();
-                formData.append("name", formName);
-                formData.append("description", formDescription);
-            
-                fetch('{{ url_for('api.create_group') }}', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => {
-                    if (response.status === 200) {
-                        addNotification('Group created!', 1);
-                        popupDissmiss();
-                    } else {
-                        switch (response.status) {
-                            case 500:
-                                addNotification('Server exploded, F\'s in chat', 2);
-                                break;
-                            case 403:
-                                addNotification('None but devils play past here... Bad information', 2);
-                                break;
-                            default:
-                                addNotification('Error logging in, blame someone', 2);
-                                break;
-                        }
-                    }
-                }).catch(error => {
-                    addNotification('Error making group! :c', 2);
-                });
-            }
-        </script>
-    {% endif %}
 {% endblock %}
 
 {% block header %}
@@ -108,7 +19,7 @@
             {% if current_user.is_authenticated %}
                 <div class="pill-row">
                     <div>
-                        <button class="pill-item" onclick="showCreate()"><i class="ph ph-plus"></i></button>
+                        <button class="pill-item" onclick="groupCreatePopup()"><i class="ph ph-plus"></i></button>
                     </div>
                 </div>
             {% endif %}

@@ -1,4 +1,4 @@
-function popUpShow(titleText, subtitleText, bodyContent=null, userActions=null) {
+function popupShow(titleText, subtitleText, bodyContent=null, userActions=null) {
     // Get popup elements
     const popupSelector = document.querySelector('.pop-up');
     const headerSelector = document.querySelector('.pop-up-header');
@@ -9,38 +9,47 @@ function popUpShow(titleText, subtitleText, bodyContent=null, userActions=null) 
     actionsSelector.innerHTML = '';
 
     // Set popup header and subtitle
-    const titleElement = document.createElement('h2');
-    titleElement.innerHTML = titleText;
-    headerSelector.appendChild(titleElement);
+    let titleElement = document.createElement('h2');
+        titleElement.innerHTML = titleText;
+        headerSelector.appendChild(titleElement);
 
-    const subtitleElement = document.createElement('p');
-    subtitleElement.innerHTML = subtitleText;
-    headerSelector.appendChild(subtitleElement);
+    let subtitleElement = document.createElement('p');
+        subtitleElement.innerHTML = subtitleText;
+        headerSelector.appendChild(subtitleElement);
 
-    if (bodyContent) {
-        headerSelector.appendChild(bodyContent);
-    }
+    if (bodyContent) { headerSelector.appendChild(bodyContent) }
 
     // Set buttons that will be displayed
     if (userActions) {
-        // for each user action, add the element
-        for (let i = 0; i < userActions.length; i++) {
-            actionsSelector.appendChild(userActions[i]);
-        }
+        userActions.forEach((action) => {
+            actionsSelector.appendChild(action);
+        });
     } else {
-        actionsSelector.innerHTML = '<button class="btn-block transparent" onclick="popupDissmiss()">Close</button>';
+        let closeButton = document.createElement('button');
+            closeButton.classList.add('btn-block');
+            closeButton.classList.add('transparent');
+            closeButton.innerHTML = 'Yeet!';
+            closeButton.onclick = popupDismiss;
+        actionsSelector.appendChild(closeButton);
     }
 
     // Stop scrolling and show popup
     document.querySelector("html").style.overflow = "hidden";
     popupSelector.style.display = 'block';
-    setTimeout(() => { popupSelector.classList.add('active') }, 5);  // 2ms delay to allow for css transition >:C
+
+    // 5ms delay to allow for css transition >:C
+    setTimeout(() => { popupSelector.classList.add('active') }, 5);
 }
 
-function popupDissmiss() {
+function popupDismiss() {
     const popupSelector = document.querySelector('.pop-up');
-
     document.querySelector("html").style.overflow = "auto";
     popupSelector.classList.remove('active');
     setTimeout(() => { popupSelector.style.display = 'none'; }, 200);
 }
+
+const popupCancelButton = document.createElement('button');
+      popupCancelButton.classList.add('btn-block');
+      popupCancelButton.classList.add('transparent');
+      popupCancelButton.innerHTML = 'nuuuuuuuu';
+      popupCancelButton.onclick = popupDismiss;
