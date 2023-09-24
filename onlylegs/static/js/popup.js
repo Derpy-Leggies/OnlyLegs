@@ -9,13 +9,17 @@ function popupShow(titleText, subtitleText, bodyContent=null, userActions=null) 
     actionsSelector.innerHTML = '';
 
     // Set popup header and subtitle
-    let titleElement = document.createElement('h2');
-        titleElement.innerHTML = titleText;
-        headerSelector.appendChild(titleElement);
+    if (titleText) {
+        let titleElement = document.createElement('h2');
+            titleElement.innerHTML = titleText;
+            headerSelector.appendChild(titleElement);
+    }
 
-    let subtitleElement = document.createElement('p');
-        subtitleElement.innerHTML = subtitleText;
-        headerSelector.appendChild(subtitleElement);
+    if (subtitleText) {
+        let subtitleElement = document.createElement('p');
+            subtitleElement.innerHTML = subtitleText;
+            headerSelector.appendChild(subtitleElement);
+    }
 
     if (bodyContent) { headerSelector.appendChild(bodyContent) }
 

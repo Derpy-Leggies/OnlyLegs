@@ -13,7 +13,8 @@
             'id': {{ image.id }},
             'description': '{{ image.description }}',
             'alt': '{{ image.alt }}',
-        };
+            'filename': '{{ image.filename }}',
+        }
     </script>
 
     <style>
@@ -31,16 +32,12 @@
             <div class="pill-row">
                 {% if next_url %}<div><a class="pill-item" href="{{ next_url }}"><i class="ph ph-arrow-left"></i></a></div>{% endif %}
                 <div>
-                    <button class="pill-item" onclick="imageFullscreen()" id="fullscreenImage"><i class="ph ph-info"></i></button>
+                    <button class="pill-item" onclick="imageFullscreen()"><i class="ph ph-info"></i></button>
                     <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
-                    <a class="pill-item" href="{{ url_for('api.media', path='uploads/' + image.filename) }}" download onclick="addNotification('Download started!', 4)"><i class="ph ph-file-arrow-down"></i></a>
+                    {% if image.author.id == current_user.id %}
+                        <button class="pill-item pill__critical" onclick="imageShowOptionsPopup(this)"><i class="ph-fill ph-dots-three-outline-vertical"></i></button>
+                    {% endif %}
                 </div>
-                {% if current_user.id == image.author.id %}
-                    <div>
-                        <button class="pill-item pill__critical" onclick="imageDeletePopup()"><i class="ph ph-trash"></i></button>
-                        <button class="pill-item pill__critical" onclick="imageEditPopup()"><i class="ph ph-pencil-simple"></i></button>
-                    </div>
-                {% endif %}
                 {% if prev_url %}<div><a class="pill-item" href="{{ prev_url }}"><i class="ph ph-arrow-right"></i></a></div>{% endif %}
             </div>
         </div>
@@ -116,42 +113,20 @@
                 </div>
             {% endif %}
         </details>
-        {% for tag in image.exif %}
-            <details open>
-                <summary>
-                    {% if tag == 'Photographer' %}
-                        <i class="ph ph-person"></i><h2>Photographer</h2>
-                    {% elif tag == 'Camera' %}
-                        <i class="ph ph-camera"></i><h2>Camera</h2>
-                    {% elif tag == 'Software' %}
-                        <i class="ph ph-desktop-tower"></i><h2>Software</h2>
-                    {% elif tag == 'File' %}
-                        <i class="ph ph-file-image"></i><h2>File</h2>
-                    {% else %}
-                        <i class="ph ph-file-image"></i><h2>{{ tag }}</h2>
-                    {% endif %}
-                    <span style="width: 100%"></span>
-                    <i class="ph ph-caret-down collapse-indicator"></i>
-                </summary>
-                <table>
-                    {% for subtag in image.exif[tag] %}
-                        <tr>
-                            <td>{{ subtag }}</td>
-                            {% if image.exif[tag][subtag]['formatted'] %}
-                                {% if image.exif[tag][subtag]['type'] == 'date' %}
-                                    <td><span class="time">{{ image.exif[tag][subtag]['formatted'] }}</span></td>
-                                {% else %}
-                                    <td>{{ image.exif[tag][subtag]['formatted'] }}</td>
-                                {% endif %}
-                            {% elif image.exif[tag][subtag]['raw'] %}
-                                <td>{{ image.exif[tag][subtag]['raw'] }}</td>
-                            {% else %}
-                                <td class="empty-table">Oops, an error</td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </table>
-            </details>
-        {% endfor %}
+        <details open>
+            <summary>
+                <i class="ph ph-file-image"></i><h2>Metadata</h2>
+                <span style="width: 100%"></span>
+                <i class="ph ph-caret-down collapse-indicator"></i>
+            </summary>
+            <table>
+                {% for tag in image_exif %}
+                    <tr>
+                        <td>{{ tag.key }}</td>
+                        <td>{{ tag.value }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </details>
     </div>
 {% endblock %}

@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from onlylegs.extensions import db
 
 
-class AlbumJunction(db.Model):  # pylint: disable=too-few-public-methods, C0103
+class AlbumJunction(db.Model):
     """
     Junction table for picturess and albums
     Joins with picturess and albums
@@ -26,7 +26,7 @@ class AlbumJunction(db.Model):  # pylint: disable=too-few-public-methods, C0103
     )
 
 
-class Pictures(db.Model):  # pylint: disable=too-few-public-methods, C0103
+class Pictures(db.Model):
     """
     Pictures table
     """
@@ -38,7 +38,6 @@ class Pictures(db.Model):  # pylint: disable=too-few-public-methods, C0103
 
     filename = db.Column(db.String, unique=True, nullable=False)
     mimetype = db.Column(db.String, nullable=False)
-    exif = db.Column(db.PickleType, nullable=False)
     colours = db.Column(db.PickleType, nullable=False)
 
     description = db.Column(db.String, nullable=False)
@@ -51,9 +50,24 @@ class Pictures(db.Model):  # pylint: disable=too-few-public-methods, C0103
     )
 
     album_fk = db.relationship("AlbumJunction", backref="pictures")
+    exif_fk = db.relationship("Exif", backref="pictures")
 
 
-class Albums(db.Model):  # pylint: disable=too-few-public-methods, C0103
+class Exif(db.Model):
+    """
+    Exif data for pictures
+    """
+
+    __tablename__ = "exif"
+
+    id = db.Column(db.Integer, primary_key=True)
+    picture_id = db.Column(db.Integer, db.ForeignKey("pictures.id"))
+
+    key = db.Column(db.String, nullable=False)
+    value = db.Column(db.String, nullable=False)
+
+
+class Albums(db.Model):
     """
     albums table
     """
@@ -75,7 +89,7 @@ class Albums(db.Model):  # pylint: disable=too-few-public-methods, C0103
     album_fk = db.relationship("AlbumJunction", backref="albums")
 
 
-class Users(db.Model, UserMixin):  # pylint: disable=too-few-public-methods, C0103
+class Users(db.Model, UserMixin):
     """
     Users table
     """
