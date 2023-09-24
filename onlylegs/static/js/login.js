@@ -5,7 +5,7 @@ function showLogin() {
     cancelBtn.classList.add('btn-block');
     cancelBtn.classList.add('transparent');
     cancelBtn.innerHTML = 'nuuuuuuuu';
-    cancelBtn.onclick = popupDissmiss;
+    cancelBtn.onclick = popupDismiss;
 
     loginBtn = document.createElement('button');
     loginBtn.classList.add('btn-block');
@@ -50,7 +50,7 @@ function showLogin() {
     loginForm.appendChild(passwordInput);
     loginForm.appendChild(rememberMeSpan);
 
-    popUpShow(
+    popupShow(
         'Login!',
         'Need an account? <span class="link" onclick="showRegister()">Register!</span>',
         loginForm,
@@ -103,7 +103,7 @@ function showRegister() {
     cancelBtn.classList.add('btn-block');
     cancelBtn.classList.add('transparent');
     cancelBtn.innerHTML = 'nuuuuuuuu';
-    cancelBtn.onclick = popupDissmiss;
+    cancelBtn.onclick = popupDismiss;
 
     registerBtn = document.createElement('button');
     registerBtn.classList.add('btn-block');
@@ -146,7 +146,7 @@ function showRegister() {
     registerForm.appendChild(passwordInput);
     registerForm.appendChild(passwordInputRepeat);
     
-    popUpShow(
+    popupShow(
         'Who are you?',
         'Already have an account? <span class="link" onclick="showLogin()">Login!</span>',
         registerForm,

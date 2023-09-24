@@ -20,25 +20,9 @@
             background-color: RGB($fg-black)
             color: RGB($fg-white)
 
-    &::after
-        content: ''
-
-        width: $rad
-        height: calc(#{$rad} * 2)
-
-        position: absolute
-        bottom: calc(#{$rad} * -2)
-        left: 0
-
-        background-color: RGB($bg-bright)
-        border-radius: $rad 0 0 0
-        box-shadow: 0 calc(#{$rad} * -1) 0 0 RGB($bg-100)
-
 .banner
     height: 30rem
     max-height: 69vh
-
-    background-color: RGB($bg-300)
 
     img
         position: absolute
@@ -122,10 +106,10 @@
 
             background-color: RGB($primary)
             border-radius: $rad
+            overflow: hidden
 
 .banner-small
     height: 3.5rem
-    background-color: RGB($bg-100)
 
     .banner-content
         padding: 0 0.5rem

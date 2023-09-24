@@ -1,215 +1,157 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
 {% block page_index %}
 {% if return_page %}?page={{ return_page }}{% endif %}{% endblock %}
+
 {% block head %}
-    <meta property="og:image" content="{{ url_for('media_api.media', path='uploads/' + image.filename) }}"/>
-    <meta name="theme-color" content="rgb({{ image.colours.0.0 }}{{ image.colours.0.1 }}{{ image.colours.0.2 }})"/>
+    <meta property="og:image" content="{{ url_for('api.media', path='uploads/' + image.filename) }}"/>
+    <meta name="twitter:image" content="{{ url_for('api.media', path='uploads/' + image.filename) }}">
+    <meta name="theme-color" content="rgb{{ image.colours.0 }}"/>
+    <meta name="twitter:card" content="summary_large_image">
 
     <script type="text/javascript">
-        function imageShare() {
-            try {
-                navigator.clipboard.writeText(window.location.href)
-                addNotification("Copied link!", 4);
-            } catch (err) {
-                addNotification("Failed to copy link! Are you on HTTP?", 2);
-            }
-        }
-        function fullscreen() {
-            let info = document.querySelector('.info-container');
-            let wrapper = document.querySelector('.image-grid');
-
-            if (info.classList.contains('collapsed')) {
-                info.classList.remove('collapsed');
-                wrapper.classList.remove('collapsed');
-            } else {
-                info.classList.add('collapsed');
-                wrapper.classList.add('collapsed');
-            }
-        }
-
-        {% if current_user.id == image.author.id %}
-            function imageDelete() {
-                cancelBtn = document.createElement('button');
-                cancelBtn.classList.add('btn-block');
-                cancelBtn.classList.add('transparent');
-                cancelBtn.innerHTML = 'nuuuuuuuu';
-                cancelBtn.onclick = popupDissmiss;
-
-                deleteBtn = document.createElement('button');
-                deleteBtn.classList.add('btn-block');
-                deleteBtn.classList.add('critical');
-                deleteBtn.innerHTML = 'Dewww eeeet!';
-                deleteBtn.onclick = deleteConfirm;
-                
-                popUpShow('DESTRUCTION!!!!!!',
-                          'Do you want to delete this image along with all of its data??? ' +
-                          'This action is irreversible!',
-                          null,
-                          [cancelBtn, deleteBtn]);
-            }
-            function deleteConfirm() {
-                popupDissmiss();
-
-                fetch('{{ url_for('media_api.delete_image', image_id=image['id']) }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'delete'
-                    })
-                }).then(function(response) {
-                    if (response.ok) {
-                        window.location.href = '/';
-                    } else {
-                        addNotification(`Image *clings*`, 2);
-                    }
-                });
-            }
-
-            function imageEdit() {
-                addNotification("Not an option, oops!", 3);
-            }
-        {% endif %}
+        const image_data = {
+            'id': {{ image.id }},
+            'description': '{{ image.description }}',
+            'alt': '{{ image.alt }}',
+        };
     </script>
 
     <style>
-        .background span {
+        .background::after {
             background-image: linear-gradient(to top, rgba({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }}, 0.8),
                                                       rgba({{ image.colours.1.0 }}, {{ image.colours.1.1 }}, {{ image.colours.1.2 }}, 0.2));
         }
     </style>
 {% endblock %}
-{% block content %}
-    <div class="background">
-        <img src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev" alt="{{ image.alt }}" onload="imgFade(this)" style="opacity:0;"/>
-        <span></span>
-    </div>
 
-    <div class="image-grid">
-        <div class="image-block">
-            <div class="image-container">
-                <img
-                    src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=prev"
-                    alt="{{ image.alt }}"
-                    onload="imgFade(this)"
-                    style="opacity: 0;"
-                    onerror="this.src='{{ url_for('static', filename='error.png')}}'"
-                    {% if "File" in image.exif %}
-                        width="{{ image.exif.File.Width.raw }}"
-                        height="{{ image.exif.File.Height.raw }}"
-                    {% endif %}
-                />
-            </div>
-
+{% block header %}
+    <div class="banner-small">
+        <div class="banner-content">
+            <h1 class="banner-header">{{ config.WEBSITE_CONF.name }}</h1>
             <div class="pill-row">
                 {% if next_url %}<div><a class="pill-item" href="{{ next_url }}"><i class="ph ph-arrow-left"></i></a></div>{% endif %}
                 <div>
-                    <button class="pill-item" onclick="fullscreen()" id="fullscreenImage"><i class="ph ph-info"></i></button>
-                    <button class="pill-item" onclick="imageShare()"><i class="ph ph-export"></i></button>
-                    <a class="pill-item" href="{{ url_for('media_api.media', path='uploads/' + image.filename) }}" download onclick="addNotification('Download started!', 4)"><i class="ph ph-file-arrow-down"></i></a>
+                    <button class="pill-item" onclick="imageFullscreen()" id="fullscreenImage"><i class="ph ph-info"></i></button>
+                    <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
+                    <a class="pill-item" href="{{ url_for('api.media', path='uploads/' + image.filename) }}" download onclick="addNotification('Download started!', 4)"><i class="ph ph-file-arrow-down"></i></a>
                 </div>
                 {% if current_user.id == image.author.id %}
                     <div>
-                        <button class="pill-item pill__critical" onclick="imageDelete()"><i class="ph ph-trash"></i></button>
-                        <button class="pill-item pill__critical" onclick="imageEdit()"><i class="ph ph-pencil-simple"></i></button>
+                        <button class="pill-item pill__critical" onclick="imageDeletePopup()"><i class="ph ph-trash"></i></button>
+                        <button class="pill-item pill__critical" onclick="imageEditPopup()"><i class="ph ph-pencil-simple"></i></button>
                     </div>
                 {% endif %}
                 {% if prev_url %}<div><a class="pill-item" href="{{ prev_url }}"><i class="ph ph-arrow-right"></i></a></div>{% endif %}
             </div>
         </div>
-    
-        <div class="info-container">
-            <div class="info-tab">
-                <div class="info-header">
-                    <i class="ph ph-info"></i>
-                    <h2>Info</h2>
-                    <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
-                </div>
-                <div class="info-table">
-                    <table>
-                        <tr>
-                            <td>Author</td>
-                            <td><a href="{{ url_for('profile.profile', id=image.author.id) }}" class="link">{{ image.author.username }}</a></td>
-                        </tr>
-                        <tr>
-                            <td>Upload date</td>
-                            <td><span class="time">{{ image.created_at }}</span></td>
-                        </tr>
-                        {% if image.description %}
-                            <tr>
-                                <td>Description</td>
-                                <td>{{ image.description }}</td>
-                            </tr>
-                        {% endif %}
-                    </table>
-                    <div class="img-colours">
-                        {% for col in image.colours %}
-                            <span style="background-color: rgb({{col.0}}, {{col.1}}, {{col.2}})"></span>
-                        {% endfor %}
-                    </div>
-                    {% if image.groups %}
-                        <div class="img-groups">
-                            {% for group in image.groups %}
-                                <a href="{{ url_for('group.group', group_id=group.id) }}" class="tag-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M223.68,66.15,135.68,18a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32l80.34,44-29.77,16.3-80.35-44ZM128,120,47.66,76l33.9-18.56,80.34,44ZM40,90l80,43.78v85.79L40,175.82Zm176,85.78h0l-80,43.79V133.82l32-17.51V152a8,8,0,0,0,16,0V107.55L216,90v85.77Z"></path></svg>
-                                    {{ group['name'] }}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>       
-            {% for tag in image.exif %}
-                <div class="info-tab">
-                    <div class="info-header">
-                        {% if tag == 'Photographer' %}
-                            <i class="ph ph-person"></i><h2>Photographer</h2>
-                        {% elif tag == 'Camera' %}
-                            <i class="ph ph-camera"></i><h2>Camera</h2>
-                        {% elif tag == 'Software' %}
-                            <i class="ph ph-desktop-tower"></i><h2>Software</h2>
-                        {% elif tag == 'File' %}
-                            <i class="ph ph-file-image"></i><h2>File</h2>
-                        {% else %}
-                            <i class="ph ph-file-image"></i><h2>{{ tag }}</h2>
-                        {% endif %}
-                        <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
-                    </div>
-                    <div class="info-table">
-                        <table>
-                            {% for subtag in image.exif[tag] %}
-                                <tr>
-                                    <td>{{ subtag }}</td>
-                                    {% if image.exif[tag][subtag]['formatted'] %}
-                                        {% if image.exif[tag][subtag]['type'] == 'date' %}
-                                            <td><span class="time">{{ image.exif[tag][subtag]['formatted'] }}</span></td>
-                                        {% else %}
-                                            <td>{{ image.exif[tag][subtag]['formatted'] }}</td>
-                                        {% endif %}
-                                    {% elif image.exif[tag][subtag]['raw'] %}
-                                        <td>{{ image.exif[tag][subtag]['raw'] }}</td>
-                                    {% else %}
-                                        <td class="empty-table">Oops, an error</td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
     </div>
 {% endblock %}
 
-{% block script %}
-    <script type="text/javascript">
-        let infoTab = document.querySelectorAll('.info-tab');
+{% block content %}
+    <div class="background">
+        <picture>
+            <source srcset="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=prev&e=webp">
+            <source srcset="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=prev&e=png">
+            <img src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=prev" alt="{{ image.alt }}" onload="imgFade(this)" style="opacity:0;"/>
+        </picture>
+    </div>
 
-        for (let i = 0; i < infoTab.length; i++) {
-            infoTab[i].querySelector('.collapse-indicator').addEventListener('click', function() {
-                infoTab[i].classList.toggle('collapsed');
-            });
-        }
-    </script>
+    <div class="image-container {% if close_tab %}collapsed{% endif %}">
+        <picture>
+            <source srcset="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=prev&e=webp">
+            <source srcset="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=prev&e=png">
+            <img
+                src="{{ url_for('api.media', path='uploads/' + image.filename) }}?r=prev"
+                alt="{{ image.alt }}"
+                onload="imgFade(this)"
+                style="opacity:0;"
+                {% if "File" in image.exif %}
+                    width="{{ image.exif.File.Width.raw }}"
+                    height="{{ image.exif.File.Height.raw }}"
+                {% endif %}
+            />
+        </picture>
+    </div>
+
+    <div class="info-container {% if close_tab %}collapsed{% endif %}">
+        <details open>
+            <summary>
+                <i class="ph ph-info"></i><h2>Info</h2><span style="width: 100%"></span>
+                <i class="ph ph-caret-down collapse-indicator"></i>
+            </summary>
+
+            <table>
+                <tr>
+                    <td>Author</td>
+                    <td>
+                        {% if image.author.picture %}
+                            <img src="{{ url_for('api.media', path='pfp/' + image.author.picture) }}" alt="Profile Picture" class="pfp" onload="imgFade(this)" style="opacity: 0;"/>
+                        {% endif %}
+                        <a href="{{ url_for('profile.profile', id=image.author.id) }}" class="link">{{ image.author.username }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Upload date</td>
+                    <td><span class="time">{{ image.created_at }}</span></td>
+                </tr>
+                {% if image.description %}
+                    <tr>
+                        <td>Description</td>
+                        <td>{{ image.description }}</td>
+                    </tr>
+                {% endif %}
+            </table>
+            <div class="img-colours">
+                {% for col in image.colours %}
+                    <button style="background-color: rgb{{ col }}" onclick="copyToClipboard('rgb{{ col }}')">
+                        <i class="ph-fill ph-paint-bucket" style="color:{{ col|colour_contrast }};"></i>
+                    </button>
+                {% endfor %}
+            </div>
+            {% if image.groups %}
+                <div class="img-groups">
+                    {% for group in image.groups %}
+                        <a href="{{ url_for('group.group', group_id=group.id) }}" class="tag-icon"><i class="ph ph-package"></i>{{ group['name'] }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </details>
+        {% for tag in image.exif %}
+            <details open>
+                <summary>
+                    {% if tag == 'Photographer' %}
+                        <i class="ph ph-person"></i><h2>Photographer</h2>
+                    {% elif tag == 'Camera' %}
+                        <i class="ph ph-camera"></i><h2>Camera</h2>
+                    {% elif tag == 'Software' %}
+                        <i class="ph ph-desktop-tower"></i><h2>Software</h2>
+                    {% elif tag == 'File' %}
+                        <i class="ph ph-file-image"></i><h2>File</h2>
+                    {% else %}
+                        <i class="ph ph-file-image"></i><h2>{{ tag }}</h2>
+                    {% endif %}
+                    <span style="width: 100%"></span>
+                    <i class="ph ph-caret-down collapse-indicator"></i>
+                </summary>
+                <table>
+                    {% for subtag in image.exif[tag] %}
+                        <tr>
+                            <td>{{ subtag }}</td>
+                            {% if image.exif[tag][subtag]['formatted'] %}
+                                {% if image.exif[tag][subtag]['type'] == 'date' %}
+                                    <td><span class="time">{{ image.exif[tag][subtag]['formatted'] }}</span></td>
+                                {% else %}
+                                    <td>{{ image.exif[tag][subtag]['formatted'] }}</td>
+                                {% endif %}
+                            {% elif image.exif[tag][subtag]['raw'] %}
+                                <td>{{ image.exif[tag][subtag]['raw'] }}</td>
+                            {% else %}
+                                <td class="empty-table">Oops, an error</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </details>
+        {% endfor %}
+    </div>
 {% endblock %}

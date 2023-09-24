@@ -1,4 +1,0 @@
-{
-    "IMAGES_UPLOADED": "%s images uploaded!",
-    "DONT USE THIS": "variable:format(data), jinja2 doesnt use the same method as Django does, odd"
-}

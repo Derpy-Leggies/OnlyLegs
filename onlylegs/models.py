@@ -6,18 +6,18 @@ from flask_login import UserMixin
 from onlylegs.extensions import db
 
 
-class GroupJunction(db.Model):  # pylint: disable=too-few-public-methods, C0103
+class AlbumJunction(db.Model):  # pylint: disable=too-few-public-methods, C0103
     """
-    Junction table for posts and groups
-    Joins with posts and groups
+    Junction table for picturess and albums
+    Joins with picturess and albums
     """
 
-    __tablename__ = "group_junction"
+    __tablename__ = "album_junction"
 
     id = db.Column(db.Integer, primary_key=True)
 
-    group_id = db.Column(db.Integer, db.ForeignKey("group.id"))
-    post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
+    album_id = db.Column(db.Integer, db.ForeignKey("albums.id"))
+    picture_id = db.Column(db.Integer, db.ForeignKey("pictures.id"))
 
     date_added = db.Column(
         db.DateTime,
@@ -26,16 +26,15 @@ class GroupJunction(db.Model):  # pylint: disable=too-few-public-methods, C0103
     )
 
 
-class Post(db.Model):  # pylint: disable=too-few-public-methods, C0103
+class Pictures(db.Model):  # pylint: disable=too-few-public-methods, C0103
     """
-    Post table
+    Pictures table
     """
 
-    __tablename__ = "post"
+    __tablename__ = "pictures"
 
     id = db.Column(db.Integer, primary_key=True)
-
-    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     filename = db.Column(db.String, unique=True, nullable=False)
     mimetype = db.Column(db.String, nullable=False)
@@ -51,37 +50,37 @@ class Post(db.Model):  # pylint: disable=too-few-public-methods, C0103
         server_default=db.func.now(),  # pylint: disable=E1102
     )
 
-    junction = db.relationship("GroupJunction", backref="posts")
+    album_fk = db.relationship("AlbumJunction", backref="pictures")
 
 
-class Group(db.Model):  # pylint: disable=too-few-public-methods, C0103
+class Albums(db.Model):  # pylint: disable=too-few-public-methods, C0103
     """
-    Group table
+    albums table
     """
 
-    __tablename__ = "group"
+    __tablename__ = "albums"
 
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
 
-    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     created_at = db.Column(
         db.DateTime,
         nullable=False,
         server_default=db.func.now(),  # pylint: disable=E1102
     )
 
-    junction = db.relationship("GroupJunction", backref="groups")
+    album_fk = db.relationship("AlbumJunction", backref="albums")
 
 
-class User(db.Model, UserMixin):  # pylint: disable=too-few-public-methods, C0103
+class Users(db.Model, UserMixin):  # pylint: disable=too-few-public-methods, C0103
     """
-    User table
+    Users table
     """
 
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     # Gallery used information
     id = db.Column(db.Integer, primary_key=True)
@@ -100,8 +99,8 @@ class User(db.Model, UserMixin):  # pylint: disable=too-few-public-methods, C010
         server_default=db.func.now(),  # pylint: disable=E1102
     )
 
-    posts = db.relationship("Post", backref="author")
-    groups = db.relationship("Group", backref="author")
+    pictures_fk = db.relationship("Pictures", backref="author")
+    albums_fk = db.relationship("Albums", backref="author")
 
     def get_id(self):
         return str(self.alt_id)

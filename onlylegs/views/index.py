@@ -2,11 +2,9 @@
 Onlylegs Gallery - Index view
 """
 from math import ceil
-
 from flask import Blueprint, render_template, request, current_app
 from werkzeug.exceptions import abort
-
-from onlylegs.models import Post
+from onlylegs.models import Pictures, Users
 
 
 blueprint = Blueprint("gallery", __name__)
@@ -17,31 +15,32 @@ def index():
     """
     Home page of the website, shows the feed of the latest images
     """
-    # meme
-    if request.args.get("coffee") == "please":
-        abort(418)
-
     # pagination, defaults to page 1 if no page is specified
     page = request.args.get("page", default=1, type=int)
     limit = current_app.config["UPLOAD_CONF"]["max-load"]
 
     # get the total number of images in the database
     # calculate the total number of pages, and make sure the page number is valid
-    total_images = Post.query.with_entities(Post.id).count()
+    total_images = Pictures.query.with_entities(Pictures.id).count()
     pages = ceil(max(total_images, limit) / limit)
     if page > pages:
-        abort(
+        return abort(
             404,
-            "You have reached the far and beyond, "
-            + "but you will not find your answers here.",
+            "You have reached the far and beyond, but you will not find your answers here.",
         )
 
     # get the images for the current page
     images = (
-        Post.query.with_entities(
-            Post.filename, Post.alt, Post.colours, Post.created_at, Post.id
+        Pictures.query.with_entities(
+            Pictures.filename,
+            Pictures.alt,
+            Pictures.colours,
+            Pictures.created_at,
+            Pictures.id,
+            Users.username,
         )
-        .order_by(Post.id.desc())
+        .join(Users)
+        .order_by(Pictures.id.desc())
         .offset((page - 1) * limit)
         .limit(limit)
         .all()

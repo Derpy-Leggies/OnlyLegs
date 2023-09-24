@@ -1,0 +1,9 @@
+{% macro header_small(title, subtitle, buttons) %}
+    <div class="banner-small">
+        <div class="banner-content">
+            <h1 class="banner-header">{{ title }}</h1>
+            <p class="banner-info">{{ subtitle }}</p>
+            <div class="pill-row">{{ buttons }}</div>
+        </div>
+    </div>
+{% endmacro %}

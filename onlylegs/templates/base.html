@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ config.WEBSITE_CONF.name }}</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="{{ config.WEBSITE_CONF.motto }}">
+    <meta name="author" content="{{ config.WEBSITE_CONF.author }}">
+
+    <meta property="og:title" content="{{ config.WEBSITE_CONF.name }}">
+    <meta property="og:description" content="{{ config.WEBSITE_CONF.motto }}">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:title" content="{{ config.WEBSITE_CONF.name }}">
+    <meta name="twitter:description" content="{{ config.WEBSITE_CONF.motto }}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+
+    <!-- phosphor icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="{{url_for('static', filename='icon.png')}}" type="image/png">
+
+    {% assets "scripts" %} <script type="text/javascript" src="{{ ASSET_URL }}"></script> {% endassets %}
+    {% assets "styles" %} <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" defer> {% endassets %}
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="notifications"></div>
+    <button class="top-of-page" aria-label="Jump to top of page"><i class="ph ph-arrow-up"></i></button>
+
+    <div class="pop-up">
+        <span class="pop-up__click-off" onclick="popupDismiss()"></span>
+        <div class="pop-up-wrapper">
+            <div class="pop-up-header"></div>
+            <div class="pop-up-controlls"></div>
+        </div>
+    </div>
+
+    <nav>
+        <a href="{{ url_for('gallery.index') }}{% block page_index %}{% endblock %}" class="navigation-item {% block nav_home %}{% endblock %}" aria-label="Home Page">
+            <i class="ph-fill ph-images-square"></i>
+        </a>
+
+        <a href="{{ url_for('group.groups') }}" class="navigation-item {% block nav_groups %}{% endblock %}" aria-label="Photo Groups">
+            <i class="ph-fill ph-package"></i>
+        </a>
+
+        {% if current_user.is_authenticated %}
+            <button class="navigation-item {% block nav_upload %}{% endblock %}" onclick="toggleUploadTab()" aria-label="Upload Photo">
+                <i class="ph-fill ph-upload"></i>
+            </button>
+        {% endif %}
+
+        <span class="navigation-spacer"></span>
+
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('profile.profile') }}" class="navigation-item {% block nav_profile %}{% endblock %}" aria-label="Profile Page">
+                {% if current_user.picture %}
+                    <span class="nav-pfp">
+                        <picture>
+                            <source srcset="{{ url_for('api.media', path='pfp/' + current_user.picture) }}?r=pfp&e=webp">
+                            <source srcset="{{ url_for('api.media', path='pfp/' + current_user.picture) }}?r=pfp&e=png">
+                            <img
+                                src="{{ url_for('api.media', path='pfp/' + current_user.picture) }}?r=icon"
+                                alt="Profile picture"
+                                onload="imgFade(this)"
+                                style="opacity:0;"
+                            >
+                        </picture>
+                    </span>
+                {% else %}
+                    <i class="ph-fill ph-folder-simple-user"></i>
+                {% endif %}
+            </a>
+
+            <a href="{{ url_for('settings.general') }}" class="navigation-item {% block nav_settings %}{% endblock %}" aria-label="Gallery Settings">
+                <i class="ph-fill ph-gear-fine"></i>
+            </a>
+        {% else %}
+            <button class="navigation-item {% block nav_login %}{% endblock %}" onclick="showLogin()" aria-label="Sign up or Login">
+                <i class="ph-fill ph-sign-in"></i>
+            </button>
+        {% endif %}
+    </nav>
+
+    <header>{% block header %}{% endblock %}</header>
+
+    <main>
+        {% if current_user.is_authenticated %}
+            <div class="upload-panel">
+                <span class="click-off" onclick="closeUploadTab()"></span>
+                <div class="container">
+                    <span id="dragIndicator"></span>
+                    <h3>Upload stuffs</h3>
+                    <p>May the world see your stuff 👀</p>
+                    <form id="uploadForm">
+                        <button class="fileDrop-block" type="button">
+                            <i class="ph ph-upload"></i>
+                            <span class="status">Choose or Drop file</span>
+                            <input type="file" id="file" tab-index="-1">
+                        </button>
+
+                        <input class="input-block" type="text" placeholder="alt" id="alt">
+                        <input class="input-block" type="text" placeholder="description" id="description">
+                        <input class="input-block" type="text" placeholder="tags" id="tags">
+                        <button class="btn-block primary" type="submit">Upload</button>
+                    </form>
+                    <div class="upload-jobs"></div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script type="text/javascript">
+        keepSquare();
+
+        const times = document.querySelectorAll('.time');
+        for (let i = 0; i < times.length; i++) {
+            // Remove milliseconds
+            const raw = times[i].innerHTML.split('.')[0];
+    
+            // Parse YYYY-MM-DD HH:MM:SS to Date object
+            const time = raw.split(' ')[1];
+            const date = raw.split(' ')[0].split('-');
+    
+            // Format to YYYY/MM/DD HH:MM:SS and convert to UTC Date object
+            const dateTime = new Date(`${date[0]}/${date[1]}/${date[2]} ${time} UTC`);
+    
+            // Convert to local time
+            times[i].innerHTML = `${dateTime.toLocaleDateString()} ${dateTime.toLocaleTimeString()}`;
+        }
+    
+        // Top Of Page button
+        const topOfPage = document.querySelector('.top-of-page');
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+            topOfPage.classList.add('show');
+        } else {
+            topOfPage.classList.remove('show');
+        }
+        topOfPage.onclick = () => {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    
+        // Info button
+        const infoButton = document.querySelector('.info-button');
+        if (infoButton) {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+                infoButton.classList.remove('show');
+            } else {
+                infoButton.classList.add('show');
+            }
+            infoButton.onclick = () => {
+                popupShow('OnlyLegs',
+                            '<a href="https://github.com/Fluffy-Bean/onlylegs">v{{ config['APP_VERSION'] }}</a> ' +
+                            'using <a href="https://phosphoricons.com/">Phosphoricons</a> and Flask.' +
+                            '<br>Made by Fluffy and others with ❤️');
+            }
+        }
+
+        window.onload = () => { keepSquare(); }
+        window.onresize = () => { keepSquare(); }
+        window.onscroll = () => {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+                topOfPage.classList.add('show');
+            } else {
+                topOfPage.classList.remove('show');
+            }
+        
+            if (infoButton) {
+                if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 20) {
+                    infoButton.classList.remove('show');
+                } else {
+                    infoButton.classList.add('show');
+                }
+            }
+        }
+
+        {% for message in get_flashed_messages() %}
+            addNotification('{{ message[0] }}', {{ message[1] }});
+        {% endfor %}
+    </script>
+
+    {% block script %}{% endblock %}
+</body>
+</html>

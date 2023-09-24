@@ -1,7 +1,7 @@
-{% extends 'layout.html' %}
-
+{% extends 'base.html' %}
 {% block nav_settings %}selected{% endblock %}
-{% block content %}
+
+{% block header %}
     <div class="banner-small">
         <div class="banner-content">
             <h1 class="banner-header">Settings</h1>
@@ -13,28 +13,53 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <div class="settings-content" id="profileSettings">
-        <h2>Profile Settings</h2>
-        <form method="POST" action="{{ url_for('account_api.account_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
-            <h3>Profile Picture</h3>
-            <input type="file" name="file" tab-index="-1"/>
-            <input type="submit" value="Upload" class="btn-block">
-        </form>
-    
-        <form method="POST" action="{{ url_for('account_api.account_username', user_id=current_user.id) }}" enctype="multipart/form-data">
-            <h3>Username</h3>
-            <input type="text" name="name" class="input-block" value="{{ current_user.username }}" />
-            <input type="submit" value="Upload" class="btn-block"/>
-        </form>
+{% block content %}
+    <div class="info-tab" id="profileSettings" style="margin: 0.5rem 0.5rem 0 0.5rem">
+        <div class="info-header">
+            <i class="ph ph-info"></i>
+            <h2>Profile Settings</h2>
+            <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
+        </div>
+        <div class="info-table">
+            <form method="POST" action="{{ url_for('api.account_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
+                <h3>Profile Picture</h3>
+                <input type="file" name="file" tab-index="-1"/>
+                <input type="submit" value="Upload" class="btn-block">
+            </form>
+            <form method="POST" action="{{ url_for('api.account_username', user_id=current_user.id) }}" enctype="multipart/form-data">
+                <h3>Username</h3>
+                <input type="text" name="name" class="input-block" value="{{ current_user.username }}" />
+                <input type="submit" value="Upload" class="btn-block"/>
+            </form>
+        </div>
     </div>
 
-    <div class="settings-content" id="profileSettings">
-        <h2>Account Settings</h2>    
-        <form method="POST" action="" enctype="multipart/form-data">
-            <h3>Email</h3>
-            <input type="text" name="email" class="input-block" value="{{ current_user.email }}" />
-            <input type="submit" value="Upload" class="btn-block"/>
-        </form>
+    <div class="info-tab" id="profileSettings" style="margin: 0.5rem 0.5rem 0 0.5rem">
+        <div class="info-header">
+            <i class="ph ph-info"></i>
+            <h2>Account Settings</h2>
+            <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
+        </div>
+        <div class="info-table">
+            <form method="POST" action="" enctype="multipart/form-data">
+                <h3>Email</h3>
+                <input type="text" name="email" class="input-block" value="{{ current_user.email }}" />
+                <input type="submit" value="Upload" class="btn-block"/>
+            </form>
+        </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        let infoTab = document.querySelectorAll('.info-tab');
+
+        for (let i = 0; i < infoTab.length; i++) {
+            infoTab[i].querySelector('.collapse-indicator').addEventListener('click', function() {
+                infoTab[i].classList.toggle('collapsed');
+            });
+        }
+    </script>
 {% endblock %}

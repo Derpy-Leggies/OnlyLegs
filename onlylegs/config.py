@@ -3,6 +3,7 @@ Gallery configuration file
 """
 import os
 import platformdirs
+import importlib.metadata
 from dotenv import load_dotenv
 from yaml import safe_load
 
@@ -41,3 +42,6 @@ MEDIA_FOLDER = os.path.join(user_dir, "media")
 # Database
 INSTANCE_DIR = instance_dir
 MIGRATIONS_DIR = os.path.join(INSTANCE_DIR, "migrations")
+
+# App
+APP_VERSION = importlib.metadata.version("OnlyLegs")

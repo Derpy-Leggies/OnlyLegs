@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request
 from werkzeug.exceptions import abort
 from flask_login import current_user
 
-from onlylegs.models import Post, User, Group
+from onlylegs.models import Pictures, Users, Albums
 from onlylegs.extensions import db
 
 
@@ -27,9 +27,9 @@ def profile():
             abort(404, "You must be logged in to view your own profile!")
 
     # Get the user's data
-    user = db.get_or_404(User, user_id, description="User not found :<")
+    user = db.get_or_404(Users, user_id, description="User not found :<")
 
-    images = Post.query.filter(Post.author_id == user_id).all()
-    groups = Group.query.filter(Group.author_id == user_id).all()
+    images = Pictures.query.filter(Pictures.author_id == user_id).all()
+    groups = Albums.query.filter(Albums.author_id == user_id).all()
 
     return render_template("profile.html", user=user, images=images, groups=groups)

@@ -11,7 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, logout_user, login_required
 
 from onlylegs.extensions import db
-from onlylegs.models import User
+from onlylegs.models import Users
 
 
 blueprint = Blueprint("auth", __name__, url_prefix="/auth")
@@ -28,7 +28,7 @@ def login():
     password = request.form["password"].strip()
     remember = bool(request.form["remember-me"])
 
-    user = User.query.filter_by(username=username).first()
+    user = Users.query.filter_by(username=username).first()
 
     if not user or not check_password_hash(user.password, password):
         logging.error("Login attempt from %s", request.remote_addr)
@@ -77,7 +77,7 @@ def register():
     elif password_repeat != password:
         error.append("Passwords do not match!")
 
-    user_exists = User.query.filter_by(username=username).first()
+    user_exists = Users.query.filter_by(username=username).first()
     if user_exists:
         error.append("User already exists!")
 
@@ -86,7 +86,7 @@ def register():
         print(error)
         return jsonify(error), 400
 
-    register_user = User(
+    register_user = Users(
         username=username,
         email=email,
         password=generate_password_hash(password, method="sha256"),

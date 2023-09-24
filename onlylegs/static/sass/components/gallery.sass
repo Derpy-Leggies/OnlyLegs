@@ -24,8 +24,6 @@
     margin: 0.35rem
     padding: 0
 
-    height: auto
-
     position: relative
 
     border-radius: $rad-inner
@@ -44,8 +42,7 @@
         height: auto
 
         position: absolute
-        left: 0
-        bottom: 0
+        inset: 0
 
         display: flex
         flex-direction: column
@@ -88,19 +85,6 @@
         object-position: center
 
         background-color: RGB($bg-bright)
-        filter: blur(0.5rem)
-        opacity: 0
-
-        transition: all 0.2s cubic-bezier(.79, .14, .15, .86)
-
-        &.loaded
-            filter: blur(0)
-            opacity: 1
-
-    &:after
-        content: ""
-        display: block
-        padding-bottom: 100%
 
     &:hover
         box-shadow: 0 0.2rem 0.4rem 0.1rem RGBA($bg-100, 0.6)
@@ -111,8 +95,6 @@
 .group-item
     margin: 0.35rem
     padding: 0
-
-    height: auto
 
     position: relative
 
@@ -178,8 +160,7 @@
             height: 100%
 
             position: absolute
-            top: 0
-            left: 0
+            inset: 0
 
             object-fit: cover
             object-position: center
@@ -187,14 +168,8 @@
             background-color: RGB($bg-bright)
             border-radius: $rad-inner
             box-shadow: 0 0 0.4rem 0.25rem RGBA($bg-100, 0.1)
-            filter: blur(0.5rem)
-            opacity: 0
 
-            transition: all 0.2s cubic-bezier(.79, .14, .15, .86)
-
-            &.loaded
-                filter: blur(0)
-                opacity: 1
+            transition: transform 0.2s cubic-bezier(.79, .14, .15, .86)
 
         &.size-1
             .data-1
@@ -218,11 +193,6 @@
             .data-3
                 transform: scale(0.6) rotate(-1deg) translate(-15%, -23%)
                 z-index: +1
-
-    &:after
-        content: ""
-        display: block
-        padding-bottom: 100%
 
     &:hover
         .images
@@ -252,3 +222,7 @@
 @media (max-width: 800px)
     .gallery-grid
         grid-template-columns: auto auto auto
+
+    .gallery-item
+        margin: 0.35rem
+        position: relative

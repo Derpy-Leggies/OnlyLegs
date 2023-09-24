@@ -1,227 +1,76 @@
-{% extends 'layout.html' %}
+{% extends 'base.html' %}
+{% from 'macros/image.html' import gallery_item %}
 {% block nav_groups %}selected{% endblock %}
+
 {% block head %}
     {% if images %}
-        <meta name="theme-color" content="rgb({{ images.0.colours.0.0 }}{{ images.0.colours.0.1 }}{{ images.0.colours.0.2 }})"/>
+        <meta property="og:image" content="{{ url_for('api.media', path='uploads/' + images.0.filename) }}"/>
+        <meta name="twitter:image" content="{{ url_for('api.media', path='uploads/' + images.0.filename) }}">
+        <meta name="theme-color" content="rgb{{ images.0.colours.0 }}"/>
+        <meta name="twitter:card" content="summary_large_image">
     {% endif %}
 
     <script type="text/javascript">
-        function groupShare() {
-            try {
-                navigator.clipboard.writeText(window.location.href)
-                addNotification("Copied link!", 4);
-            } catch (err) {
-                addNotification("Failed to copy link! Are you on HTTP?", 2);
-            }
+        group_data = {
+            'id': {{ group.id }},
+            'name': "{{ group.name }}",
+            'description': "{{ group.description }}",
         }
-
-        {% if current_user.id == group.author.id %}
-            function groupDelete() {
-                cancelBtn = document.createElement('button');
-                cancelBtn.classList.add('btn-block');
-                cancelBtn.classList.add('transparent');
-                cancelBtn.innerHTML = 'AAAAAAAAAA';
-                cancelBtn.onclick = popupDissmiss;
-
-                deleteBtn = document.createElement('button');
-                deleteBtn.classList.add('btn-block');
-                deleteBtn.classList.add('critical');
-                deleteBtn.innerHTML = 'No ragrats!';
-                deleteBtn.onclick = deleteConfirm;
-                
-                popUpShow('Yeet!',
-                          'Are you surrrre? This action is irreversible and very final.' +
-                          ' This wont delete the images, but it will remove them from this group.',
-                          null,
-                          [cancelBtn, deleteBtn]);
-            }
-
-            function deleteConfirm(event) {
-                // AJAX takes control of subby form :3
-                event.preventDefault();
-            
-                let formID = {{ group.id }};
-            
-                if (!formID) {
-                    addNotification("Dont tamper with the JavaScript pls!", 3);
-                    return;
-                }
-            
-                // Make form
-                const formData = new FormData();
-                formData.append("group", formID);
-            
-                fetch('{{ url_for('group_api.delete_group') }}', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => {
-                    if (response.status === 200) {
-                        // Redirect to groups page
-                        window.location.href = '{{ url_for('group.groups') }}';
-                    } else {
-                        switch (response.status) {
-                            case 500:
-                                addNotification('Server exploded, F\'s in chat', 2);
-                                break;
-                            case 403:
-                                addNotification('None but devils play past here... Bad information', 2);
-                                break;
-                            default:
-                                addNotification('Error logging in, blame someone', 2);
-                                break;
-                        }
-                    }
-                }).catch(error => {
-                    addNotification('Error yeeting group!', 2);
-                });
-            }
-
-            function groupEdit() {
-                // Create elements
-                cancelBtn = document.createElement('button');
-                cancelBtn.classList.add('btn-block');
-                cancelBtn.classList.add('transparent');
-                cancelBtn.innerHTML = 'go baaaaack';
-                cancelBtn.onclick = popupDissmiss;
-
-                submitBtn = document.createElement('button');
-                submitBtn.classList.add('btn-block');
-                submitBtn.classList.add('primary');
-                submitBtn.innerHTML = 'Saveeee';
-                submitBtn.type = 'submit';
-                submitBtn.setAttribute('form', 'editForm');
-
-                // Create form
-                editForm = document.createElement('form');
-                editForm.id = 'editForm';
-                editForm.setAttribute('onsubmit', 'return edit(event);');
-
-                groupInput = document.createElement('input');
-                groupInput.classList.add('input-block');
-                groupInput.type = 'text';
-                groupInput.placeholder = 'Group ID';
-                groupInput.value = {{ group.id }};
-                groupInput.id = 'group';
-
-                imageInput = document.createElement('input');
-                imageInput.classList.add('input-block');
-                imageInput.type = 'text';
-                imageInput.placeholder = 'Image ID';
-                imageInput.id = 'image';
-
-                actionInput = document.createElement('input');
-                actionInput.classList.add('input-block');
-                actionInput.type = 'text';
-                actionInput.placeholder = 'add/remove';
-                actionInput.value = 'add';
-                actionInput.id = 'action';
-
-                editForm.appendChild(groupInput);
-                editForm.appendChild(imageInput);
-                editForm.appendChild(actionInput);
-
-                popUpShow(
-                    'Nothing stays the same',
-                    'Add, remove, or change, the power is in your hands...',
-                    editForm,
-                    [cancelBtn, submitBtn]
-                );
-            }
-
-            function edit(event) {
-                // AJAX takes control of subby form :3
-                event.preventDefault();
-            
-                let formGroup = document.querySelector("#group").value;
-                let formImage = document.querySelector("#image").value;
-                let formAction = document.querySelector("#action").value;
-            
-                if (!formGroup || !formImage || !formAction) {
-                    addNotification("All values must be set!", 3);
-                    return;
-                }
-            
-                // Make form
-                const formData = new FormData();
-                formData.append("group", formGroup);
-                formData.append("image", formImage);
-                formData.append("action", formAction);
-            
-                fetch('{{ url_for('group_api.modify_group') }}', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => {
-                    if (response.status === 200) {
-                        addNotification('Group edited!!!', 1);
-                        popupDissmiss();
-                    } else {
-                        switch (response.status) {
-                            case 500:
-                                addNotification('Server exploded, F\'s in chat', 2);
-                                break;
-                            case 403:
-                                addNotification('None but devils play past here... Bad information', 2);
-                                break;
-                            default:
-                                addNotification('Error logging in, blame someone', 2);
-                                break;
-                        }
-                    }
-                }).catch(error => {
-                    addNotification('Error!!!!! Panic!!!!', 2);
-                });
-            }
-        {% endif %}
     </script>
 
     <style>
         {% if images %}
-            .banner::after {
-                box-shadow: 0 calc(var(--rad) * -1) 0 0 rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }});
-            }
-            .banner-content p {
+            :root { --bg-100: {{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }} }
+
+            body {
+                background: rgb{{ images.0.colours.0 }} !important;
                 color: {{ text_colour }} !important;
             }
-            .banner-content h1 {
-                color: {{ text_colour }} !important;
+            main {
+                background: rgba(var(--white), 0.6) !important;
             }
 
+
+            .navigation-item.selected { color: {{ text_colour }} !important; }
+
+            .banner .banner-content .banner-header,
+            .banner .banner-content .banner-info,
+            .banner .banner-content .banner-subtitle {
+                color: {{ text_colour }} !important;
+            }
             .banner-content .link {
                 background-color: {{ text_colour }} !important;
-                color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
+                color: rgb{{ images.0.colours.0 }} !important;
             }
             .banner-content .link:hover {
-                background-color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
+                background-color: rgb{{ images.0.colours.0 }} !important;
                 color: {{ text_colour }} !important;
             }
 
             .banner-filter {
-                background: linear-gradient(90deg, rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}),
-                                                   rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
+                background: linear-gradient(90deg, rgb{{ images.0.colours.0 }}, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
             }
             @media (max-width: 800px) {
                 .banner-filter {
-                    background: linear-gradient(180deg, rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 1),
-                                                        rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.5)) !important;
+                    background: linear-gradient(180deg, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.4), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.3)) !important;
                 }
-            }
-
-            .navigation {
-                background-color: rgb({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}) !important;
-            }
-            .navigation-item > i {
-                color: {{ text_colour }} !important;
-            }
-            .navigation-item.selected::before {
-                background-color: {{ text_colour }} !important;
             }
         {% endif %}
     </style>
 {% endblock %}
-{% block content %}
+
+{% block header %}
     {% if images %}
         <div class="banner">
-            <img src="{{ url_for('media_api.media', path='uploads/' + images.0.filename ) }}?r=prev" onload="imgFade(this)" style="opacity:0;" alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"/>
+            <picture>
+                <source srcset="{{ url_for('api.media', path='uploads/' + images.0.filename) }}?r=prev&e=webp">
+                <source srcset="{{ url_for('api.media', path='uploads/' + images.0.filename) }}?r=prev&e=png">
+                <img
+                    src="{{ url_for('api.media', path='uploads/' + images.0.filename) }}?r=prev"
+                    alt="{% if images.0.alt %}{{ images.0.alt }}{% else %}Group Banner{% endif %}"
+                    onload="imgFade(this)" style="opacity:0;"
+                />
+            </picture>
             <span class="banner-filter"></span>
             <div class="banner-content">
                 <p class="banner-info"><a href="{{ url_for('profile.profile', id=group.author.id) }}" class="link">By {{ group.author.username }}</a></p>
@@ -229,12 +78,12 @@
                 <p class="banner-subtitle">{{ images|length }} Images · {{ group.description }}</p>
                 <div class="pill-row">
                     <div>
-                        <button class="pill-item" onclick="groupShare()"><i class="ph ph-export"></i></button>
+                        <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
                     </div>
                     {% if current_user.id == group.author.id %}
                         <div>
-                            <button class="pill-item pill__critical" onclick="groupDelete()"><i class="ph ph-trash"></i></button>
-                            <button class="pill-item pill__critical" onclick="groupEdit()"><i class="ph ph-pencil-simple"></i></button>
+                            <button class="pill-item pill__critical" onclick="groupDeletePopup()"><i class="ph ph-trash"></i></button>
+                            <button class="pill-item pill__critical" onclick="groupEditPopup()"><i class="ph ph-pencil-simple"></i></button>
                         </div>
                     {% endif %}
                 </div>
@@ -247,29 +96,24 @@
                 <p class="banner-info">By {{ group.author.username }}</p>
                 <div class="pill-row">
                     <div>
-                        <button class="pill-item" onclick="groupShare()"><i class="ph ph-export"></i></button>
+                        <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
                     </div>
                     {% if current_user.id == group.author.id %}
                         <div>
-                            <button class="pill-item pill__critical" onclick="groupDelete()"><i class="ph ph-trash"></i></button>
-                            <button class="pill-item pill__critical" onclick="groupEdit()"><i class="ph ph-pencil-simple"></i></button>
+                            <button class="pill-item pill__critical" onclick="groupDeletePopup()"><i class="ph ph-trash"></i></button>
+                            <button class="pill-item pill__critical" onclick="groupEditPopup()"><i class="ph ph-pencil-simple"></i></button>
                         </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     {% endif %}
+{% endblock %}
 
+{% block content %}
     {% if images %}
         <div class="gallery-grid">
-            {% for image in images %}
-                <a id="image-{{ image.id }}" class="gallery-item" href="{{ url_for('group.group_post', group_id=group.id, image_id=image.id) }}" style="background-color: rgb({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }})">
-                    <div class="image-filter">
-                        <p class="image-title"><span class="time">{{ image.created_at }}</span></p>
-                    </div>
-                    <img alt="{% if image.alt %}{{ image.alt }}{% else %}Image Thumbnail{% endif %}" data-src="{{ url_for('media_api.media', path='uploads/' + image.filename) }}?r=thumb" onload="this.classList.add('loaded');" id="lazy-load"/>
-                </a>
-            {% endfor %}
+            {% for image in images %}{{ gallery_item(image) }}{% endfor %}
         </div>
     {% else %}
         <div class="big-text">

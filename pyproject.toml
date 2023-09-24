@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "OnlyLegs"
-version = "0.1.2"
+version = "0.1.5"
 repository = "https://github.com/Fluffy-Bean/onlylegs"
 license = "MIT"
 readme = "README.md"
@@ -13,7 +13,7 @@ Flask = "^2.3.2"
 Flask-Sqlalchemy = "^3.0.3"
 Flask-Migrate = "^4.0.4"
 Flask-Compress = "^1.13"
-Flask-Caching = "^2.0.2" 
+Flask-Caching = "1.10.1" 
 Flask-Assets = "^2.0"
 Flask-Login = "^0.6.2"
 python-dotenv = "^0.21.0"
@@ -27,6 +27,7 @@ jsmin = "^3.0.1"
 cssmin = "^0.2.0"
 pylint = "^2.16.3"
 black = "^23.3.0"
+cachetools = "^5.3.0"
 
 [build-system]
 requires = ["poetry-core"]

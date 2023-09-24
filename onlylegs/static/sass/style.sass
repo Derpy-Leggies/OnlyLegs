@@ -18,15 +18,13 @@
 @import "components/buttons/pill"
 @import "components/buttons/block"
 
-@import "components/image-view/view"
+@import "components/image-view"
 @import "components/settings"
 
-// Reset
 *
     box-sizing: border-box
-    font-family: $font
-
     scrollbar-color: RGB($primary) transparent
+    font-family: $font
 
     ::-webkit-scrollbar
         width: 0.5rem
@@ -37,65 +35,48 @@
     ::-webkit-scrollbar-thumb:hover
         background: RGB($fg-white)
 
-html, body
+html
     margin: 0
     padding: 0
-
-    min-height: 100vh
-    max-width: 100vw
-
-    background-color: RGB($fg-white)
-
     scroll-behavior: smooth
-    overflow-x: hidden
 
-.wrapper
+body
     margin: 0
     padding: 0 0 0 3.5rem
 
+    max-width: 100%
     min-height: 100vh
 
+    display: grid
+    grid-template-rows: auto 1fr auto
+
+    background-color: RGB($background)
+    color: RGB($foreground)
+
+    overflow-x: hidden
+@media (max-width: $breakpoint)
+    body
+        padding: 0 0 3.5rem 0
+
+main
     display: flex
     flex-direction: column
-
-    background-color: RGB($bg-bright)
-    color: RGB($bg-100)
-
-.big-text
-    height: 20rem
-
-    display: flex
-    flex-direction: column
-    justify-content: center
-    align-items: center
-
-    color: RGB($bg-100)
-
-    h1
-        margin: 0 2rem
-        
-        font-size: 4rem
-        font-weight: 900
-        text-align: center
-
-    p
-        margin: 0 2rem
-
-        max-width: 40rem
-        font-size: 1rem
-        font-weight: 400
-        text-align: center
+    position: relative
+    background: RGBA($white, 1)
+    color: RGB($fg-black)
+    border-top-left-radius: $rad
+    overflow: hidden
+@media (max-width: $breakpoint)
+    main
+        border-top-left-radius: 0
 
 .error-page
-    width: 100%
-    height: 100vh
+    min-height: 100%
 
     display: flex
     flex-direction: column
     justify-content: center
     align-items: center
-
-    background-color: RGB($bg-bright)
 
     h1
         margin: 0 2rem
@@ -113,23 +94,8 @@ html, body
         font-size: 1.25rem
         font-weight: 400
         text-align: center
-
-        color: $fg-black
-
-
 @media (max-width: $breakpoint)
-    .wrapper
-        padding: 0 0 3.5rem 0
-
-    .big-text
-        height: calc(75vh - 3.5rem)
-
-        h1
-            font-size: 3.5rem
-
     .error-page
-        height: calc(100vh - 3.5rem)
-
         h1
             font-size: 4.5rem
 
