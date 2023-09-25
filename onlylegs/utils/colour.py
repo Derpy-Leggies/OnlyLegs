@@ -24,7 +24,7 @@ class Colour:
         ]
         lightness = (0.2126 * cont[0]) + (0.7152 * cont[1]) + (0.0722 * cont[2])
 
-        return True if lightness > threshold else False
+        return lightness > threshold
 
     def to_hsv(self):
         r, g, b = self.rgb
