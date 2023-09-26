@@ -6,12 +6,9 @@ import os
 import re
 import platformdirs
 import yaml
-from werkzeug.security import generate_password_hash
-from onlylegs.extensions import db
-from onlylegs.models import Users
 
 
-APPLICATION_ROOT = platformdirs.user_config_dir("onlyLegs")
+APPLICATION_ROOT = platformdirs.user_config_dir("onlylegs")
 REQUIRED_DIRS = {
     "root": APPLICATION_ROOT,
     "instance": os.path.join(APPLICATION_ROOT, "instance"),
@@ -57,11 +54,11 @@ def check_env():
             file.write(key + "=" + value + "\n")
 
     print(
-        "####################################################"
-        "# A NEW KEY WAS GENERATED FOR YOU! PLEASE NOTE     #"
-        "# DOWN THE FLASK_SECRET KEY LOCATED IN YOUR        #"
-        "# ~/.config/onlylegs/.env FOLDER! LOOSING THIS KEY #"
-        "# WILL RESULT IN YOU BEING UNABLE TO LOG IN!       #"
+        "####################################################",
+        "# A NEW KEY WAS GENERATED FOR YOU! PLEASE NOTE     #",
+        "# DOWN THE FLASK_SECRET KEY LOCATED IN YOUR        #",
+        "# ~/.config/onlylegs/.env FOLDER! LOOSING THIS KEY #",
+        "# WILL RESULT IN YOU BEING UNABLE TO LOG IN!       #",
         "####################################################",
         sep="\n",
     )
@@ -75,28 +72,31 @@ def check_conf():
         print("Config file already exists at:", APPLICATION_ROOT)
         return
 
-    can_continue = False
+    cant_continue = True
     username = "admin"
     name = "Admin"
     email = "admin@example.com"
 
     print("No config file found, please enter the following information:")
-    while can_continue:
-        username = input("Admin username: ")
-        name = input("Admin name: ")
-        email = input("Admin email: ")
+    while cant_continue:
+        username = input("Admin username: ").strip()
+        name = input("Admin name: ").strip()
+        email = input("Admin email: ").strip()
 
         if not username or not USERNAME_REGEX.match(username):
             print("Username is invalid!")
+            continue
         if not name:
             print("Name is invalid!")
+            continue
         if not email or not EMAIL_REGEX.match(email):
             print("Email is invalid!")
+            continue
 
         # Check if user is happy with the values
-        is_correct = input("Is this correct? (Y/n): ").lower()
-        if is_correct == "y" or is_correct == "":
-            can_continue = True
+        is_correct = input("Is this correct? (Y/n): ").lower().strip()
+        if is_correct == "y" or not is_correct:
+            cant_continue = False
 
     yaml_conf = {
         "admin": {
@@ -128,29 +128,9 @@ def check_conf():
         yaml.dump(yaml_conf, file, default_flow_style=False)
 
     print(
-        "####################################################"
-        "# A NEW CONFIG HAS BEEN GENERATED AT:              #"
-        "# ~/.config/onlylegs/conf.yml                      #"
+        "####################################################",
+        "# A NEW CONFIG HAS BEEN GENERATED AT:              #",
+        "# ~/.config/onlylegs/conf.yml                      #",
         "####################################################",
         sep="\n",
     )
-
-
-def make_admin_user(app):
-    username = app.config["ADMIN_CONF"]["username"]
-    email = app.config["ADMIN_CONF"]["email"]
-    password = generate_password_hash("changeme!", method="scrypt")
-
-    with app.app_context():
-        db.create_all()
-        db.session.add(Users(username=username, email=email, password=password))
-        db.session.commit()
-
-        print(
-            "####################################################"
-            "# DEFAULT ADMIN USER GENERATED WITH GIVEN USERNAME #"
-            '# THE DEFAULT PASSWORD "changeme!" HAS BEEN USED,  #'
-            "# PLEASE RESET IT IN THE SETTINGS!                 #"
-            "####################################################",
-            sep="\n",
-        )

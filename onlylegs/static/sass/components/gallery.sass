@@ -12,22 +12,17 @@
     font-weight: 700
     
 .gallery-grid
-    margin: 0
-    padding: 0.35rem
-
     width: 100%
 
     display: grid
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
+    gap: 0.5rem
 
 .gallery-item
-    margin: 0.35rem
-    padding: 0
-
     position: relative
 
-    border-radius: $rad-inner
-    box-shadow: 0 0.15rem 0.4rem 0.1rem RGBA($bg-100, 0.4)
+    border-radius: calc(var(--rad) / 2)
+    box-shadow: 0 0.15rem 0.4rem 0.1rem var(--black-transparent)
 
     box-sizing: border-box
     overflow: hidden
@@ -48,7 +43,7 @@
         flex-direction: column
         justify-content: flex-end
 
-        background-image: linear-gradient(to top, rgba($bg-100, 0.69), transparent)
+        background-image: linear-gradient(to top, var(--black-transparent), transparent)
         opacity: 0 // hide
 
         z-index: +4
@@ -63,8 +58,8 @@
             text-overflow: ellipsis
             overflow: hidden
 
-            color: RGB($fg-white)
-            text-shadow: 0px 0px 2px RGB($fg-black)
+            color: var(--foreground-white)
+            text-shadow: 0 0 2px var(--foreground-black)
 
         .image-title
             font-size: 0.9rem
@@ -84,21 +79,20 @@
         object-fit: cover
         object-position: center
 
-        background-color: RGB($bg-bright)
+        background-color: var(--background-bright)
 
     &:hover
-        box-shadow: 0 0.2rem 0.4rem 0.1rem RGBA($bg-100, 0.6)
+        box-shadow: 0 0.2rem 0.4rem 0.1rem var(--black-transparent)
 
         .image-filter
             opacity: 1
 
 .group-item
-    margin: 0.35rem
     padding: 0
 
     position: relative
 
-    border-radius: $rad-inner
+    border-radius: calc(var(--rad) / 2)
 
     box-sizing: border-box
     overflow: hidden
@@ -119,7 +113,7 @@
         flex-direction: column
         justify-content: flex-end
 
-        background-image: linear-gradient(to top, rgba($bg-100, 0.8), transparent)
+        background-image: linear-gradient(to top, var(--black-transparent), transparent)
 
         z-index: +4
 
@@ -132,8 +126,8 @@
             text-overflow: ellipsis
             overflow: hidden
 
-            color: RGB($fg-white)
-            text-shadow: 0px 0px 2px RGB($fg-black)
+            color: var(--foreground-white)
+            text-shadow: 0 0 2px var(--foreground-black)
 
         .image-title
             font-size: 0.9rem
@@ -165,9 +159,9 @@
             object-fit: cover
             object-position: center
 
-            background-color: RGB($bg-bright)
-            border-radius: $rad-inner
-            box-shadow: 0 0 0.4rem 0.25rem RGBA($bg-100, 0.1)
+            background-color: var(--background-800)
+            border-radius: calc(var(--rad) / 2)
+            box-shadow: 0 0 0.4rem 0.25rem var(--black-transparent)
 
             transition: transform 0.2s cubic-bezier(.79, .14, .15, .86)
 

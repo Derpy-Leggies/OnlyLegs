@@ -3,12 +3,6 @@
         width: 0
     100%
         width: 100%
-    
-@mixin notification($color)
-    color: RGB($color)
-
-    &::after
-        background-color: RGB($color)
 
 .notifications
     margin: 0
@@ -38,9 +32,9 @@
 
     position: relative
 
-    background-color: RGB($bg-300)
-    border-radius: $rad-inner
-    color: RGB($fg-white)
+    background-color: var(--background-300)
+    border-radius: calc(var(--rad) / 2)
+    color: var(--foreground-white)
     opacity: 0
     transform: scale(0.8)
 
@@ -59,19 +53,27 @@
         bottom: 0
         left: 0
 
-        background-color: RGB($fg-white)
+        background-color: var(--foreground-white)
 
         z-index: +2
         animation: notificationTimeout 5.1s ease-out forwards
 
     &.success
-        @include notification($success)
+        color: var(--success)
+        &::after
+            background-color: var(--success)
     &.warning
-        @include notification($warning)
+        color: var(--warning)
+        &::after
+            background-color: var(--warning)
     &.critical
-        @include notification($critical)
+        color: var(--danger)
+        &::after
+            background-color: var(--danger)
     &.info
-        @include notification($info)
+        color: var(--info)
+        &::after
+            background-color: var(--info)
 
     &.show
         opacity: 1
@@ -95,7 +97,7 @@
     justify-content: center
     align-items: center
 
-    background-color: RGB($bg-200)
+    background-color: var(--background-200)
 
     i
         font-size: 1.25rem
@@ -117,7 +119,7 @@
     line-height: 1
     text-align: left
 
-@media (max-width: $breakpoint)
+@media (max-width: var(--breakpoint))
     .notifications
         bottom: 3.8rem
         width: calc(100vw - 0.6rem)

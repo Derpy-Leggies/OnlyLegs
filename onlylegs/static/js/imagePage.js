@@ -21,7 +21,8 @@ function imageShowOptionsPopup(obj) {
                 dissmissContextMenu();
                 imageEditPopup();
             },
-            'type': 'critical'
+            'type': 'critical',
+            'icon': '<i class="ph-fill ph-pencil"></i>'
         },
         {
             'value': 'Delete',
@@ -29,7 +30,8 @@ function imageShowOptionsPopup(obj) {
                 dissmissContextMenu();
                 imageDeletePopup();
             },
-            'type': 'critical'
+            'type': 'critical',
+            'icon': '<i class="ph-fill ph-trash"></i>'
         }
     ], 'button')
 }

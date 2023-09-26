@@ -6,6 +6,13 @@ import platformdirs
 import importlib.metadata
 from dotenv import load_dotenv
 from yaml import safe_load
+from utils import startup
+
+
+# App Sanity Checks
+startup.check_dirs()
+startup.check_env()
+startup.check_conf()
 
 
 # Set dirs
@@ -25,7 +32,8 @@ with open(
 
 # Flask config
 SECRET_KEY = os.environ.get("FLASK_SECRET")
-SQLALCHEMY_DATABASE_URI = "sqlite:///gallery.sqlite3"
+DATABASE_NAME = "gallery.sqlite3"
+SQLALCHEMY_DATABASE_URI = "sqlite:///" + DATABASE_NAME
 MAX_CONTENT_LENGTH = 1024 * 1024 * conf["upload"]["max-size"]
 ALLOWED_EXTENSIONS = conf["upload"]["allowed-extensions"]
 

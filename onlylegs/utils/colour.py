@@ -58,7 +58,7 @@ class Colour:
             s = 0.0
         else:
             d = high - low
-            s = d / (2 - high - low) if l > 0.5 else d / (high + low)
+            s = d / (2 - high - low) if low > 0.5 else d / (high + low)
             h = {
                 r: (g - b) / d + (6 if g < b else 0),
                 g: (b - r) / d + 2,

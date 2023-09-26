@@ -1,6 +1,7 @@
 // Default theme for OnlyLegs by FluffyBean
 // Mockup link: https://www.figma.com/file/IMZT5kZr3sAngrSHSGu5di/OnlyLegs?node-id=0%3A1
 
+
 @import "variables"
 @import "animations"
 
@@ -15,7 +16,6 @@
 @import "components/gallery"
 
 @import "components/buttons/top-of-page"
-@import "components/buttons/info-button"
 @import "components/buttons/pill"
 @import "components/buttons/block"
 
@@ -24,17 +24,17 @@
 
 *
     box-sizing: border-box
-    scrollbar-color: RGB($primary) transparent
-    font-family: $font
+    scrollbar-color: var(--primary) transparent
+    font-family: var(--font-family)
 
     ::-webkit-scrollbar
         width: 0.5rem
     ::-webkit-scrollbar-track
-        background: RGB($bg-200)
+        background: var(--background-200)
     ::-webkit-scrollbar-thumb
-        background: RGB($primary)
+        background: var(--primary)
     ::-webkit-scrollbar-thumb:hover
-        background: RGB($fg-white)
+        background: var(--foreground-white)
 
 html
     margin: 0
@@ -51,27 +51,30 @@ body
     display: grid
     grid-template-rows: auto 1fr auto
 
-    background-color: RGB($background)
-    color: RGB($foreground)
+    font-family: var(--font-family)
+
+    background-color: var(--background-100)
+    color: var(--foreground-white)
 
     overflow-x: hidden
-@media (max-width: $breakpoint)
+@media (max-width: var(--breakpoint))
     body
         padding: 0 0 3.5rem 0
 
 main
     margin: 0 0.5rem 0.5rem 0
+    padding: 0.5rem
     display: flex
     flex-direction: column
     position: relative
-    background: RGBA($white, 1)
-    color: RGB($fg-black)
-    border-radius: $rad
+    background: var(--background-800)
+    color: var(--foreground-black)
+    border-radius: var(--rad)
     overflow: hidden
-@media (max-width: $breakpoint)
+@media (max-width: var(--breakpoint))
     main
-        margin: 0
-        border-radius: 0
+        margin: 0 0.5rem
+        // border-radius: 0
 
 .error-page
     min-height: 100%
@@ -88,7 +91,7 @@ main
         font-weight: 900
         text-align: center
 
-        color: $primary
+        color: var(--primary)
 
     p
         margin: 0 2rem
@@ -97,7 +100,7 @@ main
         font-size: 1.25rem
         font-weight: 400
         text-align: center
-@media (max-width: $breakpoint)
+@media (max-width: var(--breakpoint))
     .error-page
         h1
             font-size: 4.5rem

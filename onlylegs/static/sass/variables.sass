@@ -1,80 +1,50 @@
-$bg-transparent: rgba(var(--bg-dim), 0.8)
-$bg-dim: var(--bg-dim)
-$bg-bright: var(--bg-bright)
-$bg-100: var(--bg-100)
-$bg-200: var(--bg-200)
-$bg-300: var(--bg-300)
-$bg-400: var(--bg-400)
-$bg-500: var(--bg-500)
-$bg-600: var(--bg-600)
-
-$fg-dim: var(--fg-dim)
-$fg-white: var(--fg-white)
-$fg-black: var(--fg-black)
-
-$black: var(--black)
-$white: var(--white)
-$red: var(--red)
-$orange: var(--orange)
-$yellow: var(--yellow)
-$green: var(--green)
-$blue: var(--blue)
-$purple: var(--purple)
-
-$primary: var(--primary)
-$warning: var(--warning)
-$critical: var(--critical)
-$success: var(--success)
-$info: var(--info)
-
-$rad: var(--rad)
-$rad-inner: var(--rad-inner)
-
-$animation-smooth: var(--animation-smooth)
-$animation-bounce: var(--animation-bounce)
-
-$font: 'Rubik', sans-serif
-$breakpoint: 800px
-
-
-// New variables, Slowly moving over to them because I suck at planning ahead and coding reeee
-$background: var(--bg-100)
-$foreground: var(--fg-white)
-
-
 \:root
-    --bg-dim: 16, 16, 16
-    --bg-bright: 232, 227, 227
-    --bg-100: 21, 21, 21
-    --bg-200: #{red(adjust-color(rgb(21, 21, 21), $lightness: 2%)), green(adjust-color(rgb(21, 21, 21), $lightness: 2%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 2%))}
-    --bg-300: #{red(adjust-color(rgb(21, 21, 21), $lightness: 4%)), green(adjust-color(rgb(21, 21, 21), $lightness: 4%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 4%))}
-    --bg-400: #{red(adjust-color(rgb(21, 21, 21), $lightness: 6%)), green(adjust-color(rgb(21, 21, 21), $lightness: 6%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 6%))}
-    --bg-500: #{red(adjust-color(rgb(21, 21, 21), $lightness: 8%)), green(adjust-color(rgb(21, 21, 21), $lightness: 8%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 8%))}
-    --bg-600: #{red(adjust-color(rgb(21, 21, 21), $lightness: 10%)), green(adjust-color(rgb(21, 21, 21), $lightness: 10%)), blue(adjust-color(rgb(21, 21, 21), $lightness: 10%))}
+    --background-hsl-hue: 0
+    --background-hsl-saturation: 2%
 
-    --fg-dim: 102, 102, 102
-    --fg-white: 232, 227, 227
-    --fg-black: 16, 16, 16
+    --background-100: hsl(var(--background-hsl-hue), var(--background-hsl-saturation), 6%)
+    --background-200: hsl(var(--background-hsl-hue), var(--background-hsl-saturation), 8%)
+    --background-300: hsl(var(--background-hsl-hue), var(--background-hsl-saturation), 10%)
+    --background-400: hsl(var(--background-hsl-hue), var(--background-hsl-saturation), 12%)
+    --background-500: hsl(var(--background-hsl-hue), var(--background-hsl-saturation), 14%)
+    --background-600: hsl(var(--background-hsl-hue), var(--background-hsl-saturation), 16%)
+    --background-700: hsl(var(--background-hsl-hue), var(--background-hsl-saturation), 18%)
+    --background-800: rgb(232, 227, 227)
 
-    --black: 21, 21, 21
-    --white: 232, 227, 227
-    --red: 182, 100, 103
-    --orange: 217, 140, 95
-    --yellow: 217, 188, 140
-    --green: 140, 151, 125
-    --blue: 141, 163, 185
-    --purple: 169, 136, 176
+    --background-shade: hsl(var(--background-hsl-hue), var(--background-hsl-saturation), 6%, 0.5)
 
-    --primary: var(--green)  // 183, 169, 151
+    --foreground-gray: rgb(102, 102, 102)
+    --foreground-white: rgb(232, 227, 227)
+    --foreground-black: rgb(16, 16, 16)
+
+    --black: rgb(20, 20, 20)
+    --black-transparent: rgba(20, 20, 20, 0.2)
+    --white: rgb(232, 227, 227)
+    --white-transparent: rgba(232, 227, 227, 0.2)
+    --red: rgb(182, 100, 103)
+    --red-transparent: rgba(182, 100, 103, 0.1)
+    --orange: rgb(217, 140, 95)
+    --orange-transparent: rgba(217, 140, 95, 0.1)
+    --yellow: rgb(217, 188, 140)
+    --yellow-transparent: rgba(217, 188, 140, 0.1)
+    --green: rgb(140, 151, 125)
+    --green-transparent: rgba(140, 151, 125, 0.1)
+    --blue: rgb(141, 163, 185)
+    --blue-transparent: rgba(141, 163, 185, 0.1)
+    --purple: rgb(169, 136, 176)
+    --purple-transparent: rgba(169, 136, 176, 0.1)
+
+    --primary: rgb(183, 169, 151)
     --warning: var(--orange)
-    --critical: var(--red)
+    --danger: var(--red)
     --success: var(--green)
     --info: var(--blue)
 
-    --rad: 0.5rem
-    --rad-inner: calc(var(--rad) / 2)
+    --rad: 0.4rem
 
     --animation-smooth: cubic-bezier(0.76, 0, 0.17, 1)
     --animation-bounce: cubic-bezier(.68,-0.55,.27,1.55)
 
     --breakpoint: 800px
+
+    --font-family: 'Rubik', sans-serif

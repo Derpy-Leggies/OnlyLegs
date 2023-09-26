@@ -29,6 +29,13 @@
 
     {% assets "scripts" %} <script type="text/javascript" src="{{ ASSET_URL }}"></script> {% endassets %}
     {% assets "styles" %} <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" defer> {% endassets %}
+
+    <style type="text/css">
+        :root{
+            --primary: {{ config.WEBSITE_CONF.primary_color | default('rgb(198, 185, 166)') }};
+        }
+    </style>
+
     {% block head %}{% endblock %}
 </head>
 <body>

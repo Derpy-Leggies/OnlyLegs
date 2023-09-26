@@ -9,7 +9,7 @@
     height: 100vh
 
     background-color: transparent
-    color: RGB($fg-white)
+    color: var(--foreground-white)
 
     overflow: hidden
     z-index: 68
@@ -66,7 +66,7 @@
         flex-direction: column
         gap: 1rem
 
-        background-color: RGB($bg-200)
+        background-color: var(--background-200)
 
         z-index: +2
 
@@ -94,21 +94,21 @@
                 left: 50%
                 transform: translate(-50%, -50%)
 
-                background-color: RGB($bg-400)
-                border-radius: $rad-inner
+                background-color: var(--background-400)
+                border-radius: calc(var(--rad) / 2)
 
-                transition: width 0.25s $animation-bounce
+                transition: width 0.25s var(--animation-bounce)
 
         &.dragging #dragIndicator::after
             width: 9rem
-            background-color: RGB($primary)
+            background-color: var(--primary)
 
     .upload-jobs
         display: flex
         flex-direction: column
         gap: 0.5rem
 
-        border-radius: $rad
+        border-radius: var(--rad)
 
         overflow-y: auto
     
@@ -123,8 +123,8 @@
             align-items: center
             gap: 0.5rem
 
-            background-color: RGB($bg-200)
-            border-radius: $rad
+            background-color: var(--background-200)
+            border-radius: var(--rad)
 
             overflow: hidden
 
@@ -146,7 +146,7 @@
                 width: 100%
                 height: 100%
 
-                background-image: linear-gradient(to right, RGB($bg-100), transparent)
+                background-image: linear-gradient(to right, var(--background-100), transparent)
 
             .job__status
                 margin: 0
@@ -159,7 +159,7 @@
                 font-size: 1rem
                 font-weight: 600
 
-                color: RGB($fg-white)
+                color: var(--foreground-white)
 
                 z-index: +3
 
@@ -167,13 +167,13 @@
 
             .progress
                 width: 100%
-                height: $rad-inner
+                height: calc(var(--rad) / 2)
 
                 position: absolute
                 bottom: 0
                 left: -100%
 
-                background-color: RGB($primary)
+                background-color: var(--primary)
 
                 animation: uploadingLoop 1s cubic-bezier(0.76, 0, 0.17, 1) infinite
 
@@ -182,28 +182,28 @@
 
             &.critical
                 .job__status, .progress
-                    color: RGB($critical)
+                    color: var(--critical)
             &.success
                 .job__status
-                    color: RGB($success)
+                    color: var(--success)
                 .progress
                     height: 0
                     animation: none
             &.warning
                 .job__status, .progress
-                    color: RGB($warning)
+                    color: var(--warning)
 
             &.critical, &.success, &.warning
                 .progress
                     height: 0
 
     &.open
-        background-color: $bg-transparent
+        background-color: var(--background-shade)
 
         .container
             left: 0
 
-@media (max-width: $breakpoint)
+@media (max-width: var(--breakpoint))
     .upload-panel
         width: 100%
         height: calc(100vh - 3.5rem)
@@ -219,7 +219,7 @@
             left: 0
             bottom: -100vh
 
-            border-radius: $rad $rad 0 0
+            border-radius: var(--rad) var(--rad) 0 0
 
             #dragIndicator
                 display: block

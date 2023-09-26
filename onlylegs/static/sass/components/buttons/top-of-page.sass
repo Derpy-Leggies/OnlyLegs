@@ -13,9 +13,9 @@
     justify-content: center
     align-items: center
 
-    background-color: RGB($bg-300)
-    color: RGB($fg-white)
-    border-radius: $rad
+    background-color: var(--background-300)
+    color: var(--foreground-white)
+    border-radius: calc(var(--rad) / 2)
     border: none
     opacity: 0
 
@@ -28,12 +28,12 @@
         font-size: 1.25rem
 
     &:hover
-        color: RGB($primary)
+        color: var(--primary)
 
     &.show
         right: 0.75rem
         opacity: 1
 
-@media (max-width: $breakpoint)
+@media (max-width: var(--breakpoint))
     .top-of-page
         bottom: 4.25rem
