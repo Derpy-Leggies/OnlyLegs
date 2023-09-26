@@ -1,23 +1,15 @@
 @keyframes notificationTimeout
     0%
-        left: -100%
-        height: 3px
-    90%
-        left: 0%
-        height: 3px
-    95%
-        left: 0%
-        height: 0
+        width: 0
     100%
-        left: 0%
-        height: 0
+        width: 100%
     
 @mixin notification($color)
     color: RGB($color)
 
     &::after
         background-color: RGB($color)
-    
+
 .notifications
     margin: 0
     padding: 0
@@ -60,17 +52,17 @@
     &::after
         content: ""
 
-        width: 100%
+        width: 0
         height: 3px
 
         position: absolute
-        bottom: 0px
-        left: 0px
+        bottom: 0
+        left: 0
 
         background-color: RGB($fg-white)
 
         z-index: +2
-        animation: notificationTimeout 5.1s linear
+        animation: notificationTimeout 5.1s ease-out forwards
 
     &.success
         @include notification($success)
@@ -89,7 +81,7 @@
         margin: 0
         max-height: 0
         opacity: 0
-        transform: translateX(100%)
+        transform: translateY(1rem)
         transition: all 0.4s ease-in-out, max-height 0.2s ease-in-out
 
 .sniffle__notification-icon
@@ -133,10 +125,6 @@
 
     .sniffle__notification
         width: 100%
-
-        &.hide
-            opacity: 0
-            transform: translateY(1rem)
     
     .sniffle__notification-time
         width: 100%

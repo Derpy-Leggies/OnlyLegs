@@ -9,16 +9,17 @@ from yaml import safe_load
 
 
 # Set dirs
-user_dir = platformdirs.user_config_dir("onlylegs")
-instance_dir = os.path.join(user_dir, "instance")
+APPLICATION_ROOT = platformdirs.user_config_dir("onlylegs")
 
 # Load environment variables
 # print("Loading environment variables...")
-load_dotenv(os.path.join(user_dir, ".env"))
+load_dotenv(os.path.join(APPLICATION_ROOT, ".env"))
 
 # Load config from user dir
 # print("Loading config...")
-with open(os.path.join(user_dir, "conf.yml"), encoding="utf-8", mode="r") as file:
+with open(
+    os.path.join(APPLICATION_ROOT, "conf.yml"), encoding="utf-8", mode="r"
+) as file:
     conf = safe_load(file)
 
 
@@ -34,13 +35,13 @@ UPLOAD_CONF = conf["upload"]
 WEBSITE_CONF = conf["website"]
 
 # Directories
-UPLOAD_FOLDER = os.path.join(user_dir, "media", "uploads")
-CACHE_FOLDER = os.path.join(user_dir, "media", "cache")
-PFP_FOLDER = os.path.join(user_dir, "media", "pfp")
-MEDIA_FOLDER = os.path.join(user_dir, "media")
+UPLOAD_FOLDER = os.path.join(APPLICATION_ROOT, "media", "uploads")
+CACHE_FOLDER = os.path.join(APPLICATION_ROOT, "media", "cache")
+PFP_FOLDER = os.path.join(APPLICATION_ROOT, "media", "pfp")
+MEDIA_FOLDER = os.path.join(APPLICATION_ROOT, "media")
 
 # Database
-INSTANCE_DIR = instance_dir
+INSTANCE_DIR = os.path.join(APPLICATION_ROOT, "instance")
 MIGRATIONS_DIR = os.path.join(INSTANCE_DIR, "migrations")
 
 # App
