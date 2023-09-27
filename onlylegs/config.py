@@ -44,9 +44,10 @@ WEBSITE_CONF = conf["website"]
 
 # Directories
 UPLOAD_FOLDER = os.path.join(APPLICATION_ROOT, "media", "uploads")
+MEDIA_FOLDER = os.path.join(APPLICATION_ROOT, "media")
 CACHE_FOLDER = os.path.join(APPLICATION_ROOT, "media", "cache")
 PFP_FOLDER = os.path.join(APPLICATION_ROOT, "media", "pfp")
-MEDIA_FOLDER = os.path.join(APPLICATION_ROOT, "media")
+BANNER_FOLDER = os.path.join(APPLICATION_ROOT, "media", "banner")
 
 # Database
 INSTANCE_DIR = os.path.join(APPLICATION_ROOT, "instance")

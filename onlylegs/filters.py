@@ -18,7 +18,11 @@ def colour_contrast(colour):
     "color: var(--fg-white);" or "color: var(--fg-black);"
     """
     colour_obj = colour_utils.Colour(colour)
-    return "rgb(var(--fg-black));" if colour_obj.is_light() else "rgb(var(--fg-white));"
+    return (
+        "var(--foreground-black);"
+        if colour_obj.is_light()
+        else "var(--foreground-white);"
+    )
 
 
 @blueprint.app_template_filter()

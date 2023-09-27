@@ -22,15 +22,20 @@
             <i class="ph ph-caret-down collapse-indicator"></i>
         </summary>
 
-        <form method="POST" action="{{ url_for('api.account_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ url_for('settings.account_picture') }}" enctype="multipart/form-data">
             <h3>Profile Picture</h3>
             <input type="file" name="file" tab-index="-1"/>
-            <input type="submit" value="Upload" class="btn-block">
+            <button type="submit" class="btn-block">Change Profile Picture</button>
         </form>
-        <form method="POST" action="{{ url_for('api.account_username', user_id=current_user.id) }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ url_for('settings.account_banner') }}" enctype="multipart/form-data">
+            <h3>Profile Banner</h3>
+            <input type="file" name="file" tab-index="-1"/>
+            <button type="submit" class="btn-block">Change Profile Banner</button>
+        </form>
+        <form method="POST" action="{{ url_for('settings.account_username') }}" enctype="multipart/form-data">
             <h3>Username</h3>
             <input type="text" name="name" class="input-block" value="{{ current_user.username }}" />
-            <input type="submit" value="Upload" class="btn-block"/>
+            <button type="submit" class="btn-block">Change Username</button>
         </form>
     </details>
 
@@ -40,10 +45,27 @@
             <i class="ph ph-caret-down collapse-indicator"></i>
         </summary>
 
-        <form method="POST" action="" enctype="multipart/form-data">
-                <h3>Email</h3>
-                <input type="text" name="email" class="input-block" value="{{ current_user.email }}" />
-                <input type="submit" value="Upload" class="btn-block"/>
-            </form>
+        <form method="POST" action="{{ url_for('settings.account_email') }}" enctype="multipart/form-data">
+            <h3>Email</h3>
+            <input type="text" name="email" class="input-block" value="{{ current_user.email }}" />
+            <input type="password" name="current" class="input-block" placeholder="Current Password" />
+            <button type="submit" class="btn-block">Change Email</button>
+        </form>
+        <form method="POST" action="{{ url_for('settings.account_password') }}" enctype="multipart/form-data">
+            <h3>Password</h3>
+            <input type="password" name="current" class="input-block" placeholder="Current Password" />
+            <input type="password" name="password" class="input-block" placeholder="New Password" />
+            <input type="password" name="confirm" class="input-block" placeholder="Confirm Password" />
+            <button type="submit" class="btn-block">Change Password</button>
+        </form>
+    </details>
+
+    <details open>
+        <summary>
+            <i class="ph ph-info"></i><h2>Server</h2><span style="width: 100%"></span>
+            <i class="ph ph-caret-down collapse-indicator"></i>
+        </summary>
+
+        <p>Nothing here :3</p>
     </details>
 {% endblock %}

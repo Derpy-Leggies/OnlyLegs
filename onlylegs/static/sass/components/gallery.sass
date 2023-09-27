@@ -26,7 +26,7 @@
 
     box-sizing: border-box
     overflow: hidden
-    transition: box-shadow 0.2s cubic-bezier(.79, .14, .15, .86)
+    transition: box-shadow 0.2s var(--animation-smooth)
 
     .image-filter
         margin: 0
@@ -47,7 +47,7 @@
         opacity: 0 // hide
 
         z-index: +4
-        transition: opacity 0.2s cubic-bezier(.79, .14, .15, .86)
+        transition: opacity 0.2s var(--animation-smooth)
 
         .image-title,
         .image-subtitle
@@ -163,7 +163,7 @@
             border-radius: calc(var(--rad) / 2)
             box-shadow: 0 0 0.4rem 0.25rem var(--black-transparent)
 
-            transition: transform 0.2s cubic-bezier(.79, .14, .15, .86)
+            transition: transform 0.2s var(--animation-smooth)
 
         &.size-1
             .data-1
@@ -218,5 +218,5 @@
         grid-template-columns: auto auto auto
 
     .gallery-item
-        margin: 0.35rem
+        margin: 0.1rem
         position: relative

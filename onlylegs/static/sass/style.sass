@@ -57,7 +57,7 @@ body
     color: var(--foreground-white)
 
     overflow-x: hidden
-@media (max-width: var(--breakpoint))
+@media (max-width: 800px)
     body
         padding: 0 0 3.5rem 0
 
@@ -71,10 +71,13 @@ main
     color: var(--foreground-black)
     border-radius: var(--rad)
     overflow: hidden
-@media (max-width: var(--breakpoint))
+@media (max-width: 800px)
     main
         margin: 0 0.5rem
-        // border-radius: 0
+
+header
+    position: sticky
+    top: 0
 
 .error-page
     min-height: 100%
@@ -100,7 +103,7 @@ main
         font-size: 1.25rem
         font-weight: 400
         text-align: center
-@media (max-width: var(--breakpoint))
+@media (max-width: 800px)
     .error-page
         h1
             font-size: 4.5rem

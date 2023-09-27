@@ -29,7 +29,7 @@
 {% block header %}
     <div class="banner">
         {% if user.banner %}
-            <img src="{{ url_for('static', filename='icon.png') }}" alt="Profile Banner" onload="imgFade(this)" style="opacity:0;"/>
+            <img src="{{ url_for('api.media', path='banner/' + user.banner) }}" alt="Profile Banner" onload="imgFade(this)" style="opacity:0;"/>
         {% else %}
             <img src="{{ url_for('static', filename='banner.png') }}" alt="Profile Banner" onload="imgFade(this)" style="opacity:0;"/>
         {% endif %}

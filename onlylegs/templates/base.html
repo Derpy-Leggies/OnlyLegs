@@ -17,9 +17,7 @@
     <meta name="twitter:description" content="{{ config.WEBSITE_CONF.motto }}">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    <link href="https://api.fontshare.com/v2/css?f[]=switzer@101,600,701,800,501,601,900,100,700,901,400,201,401,200,300,301,801,500&display=swap" rel="stylesheet">
 
     <!-- phosphor icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -130,6 +128,10 @@
     <script type="text/javascript">
         keepSquare();
 
+        {% for message in get_flashed_messages() %}
+            addNotification('{{ message[0] }}', {{ message[1] }});
+        {% endfor %}
+
         const times = document.querySelectorAll('.time');
         for (let i = 0; i < times.length; i++) {
             // Remove milliseconds
@@ -191,10 +193,6 @@
                 }
             }
         }
-
-        {% for message in get_flashed_messages() %}
-            addNotification('{{ message[0] }}', {{ message[1] }});
-        {% endfor %}
     </script>
 
     {% block script %}{% endblock %}

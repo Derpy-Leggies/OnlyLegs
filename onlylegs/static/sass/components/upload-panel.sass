@@ -13,7 +13,7 @@
 
     overflow: hidden
     z-index: 68
-    transition: background-color 0.25s cubic-bezier(0.76, 0, 0.17, 1)
+    transition: background-color 0.25s var(--animation-smooth)
 
     h3
         margin: 0
@@ -70,7 +70,7 @@
 
         z-index: +2
 
-        transition: left 0.25s cubic-bezier(0.76, 0, 0.17, 1), bottom 0.25s cubic-bezier(0.76, 0, 0.17, 1)
+        transition: left 0.25s var(--animation-smooth), bottom 0.25s var(--animation-smooth)
 
         #dragIndicator
             display: none
@@ -97,7 +97,7 @@
                 background-color: var(--background-400)
                 border-radius: calc(var(--rad) / 2)
 
-                transition: width 0.25s var(--animation-bounce)
+                transition: width 0.25s var(--animation-smooth)
 
         &.dragging #dragIndicator::after
             width: 9rem
@@ -163,7 +163,7 @@
 
                 z-index: +3
 
-                transition: color 0.25s cubic-bezier(0.76, 0, 0.17, 1)
+                transition: color 0.25s var(--animation-smooth)
 
             .progress
                 width: 100%
@@ -175,10 +175,10 @@
 
                 background-color: var(--primary)
 
-                animation: uploadingLoop 1s cubic-bezier(0.76, 0, 0.17, 1) infinite
+                animation: uploadingLoop 1s var(--animation-smooth) infinite
 
                 z-index: +5
-                transition: left 1s cubic-bezier(0.76, 0, 0.17, 1)
+                transition: left 1s var(--animation-smooth)
 
             &.critical
                 .job__status, .progress
@@ -203,7 +203,7 @@
         .container
             left: 0
 
-@media (max-width: var(--breakpoint))
+@media (max-width: 800px)
     .upload-panel
         width: 100%
         height: calc(100vh - 3.5rem)

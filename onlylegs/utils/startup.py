@@ -16,6 +16,7 @@ REQUIRED_DIRS = {
     "uploads": os.path.join(APPLICATION_ROOT, "media", "uploads"),
     "cache": os.path.join(APPLICATION_ROOT, "media", "cache"),
     "pfp": os.path.join(APPLICATION_ROOT, "media", "pfp"),
+    "banner": os.path.join(APPLICATION_ROOT, "media", "banner"),
 }
 
 EMAIL_REGEX = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b")
@@ -28,11 +29,10 @@ def check_dirs():
     """
 
     for directory in REQUIRED_DIRS.values():
-        if os.path.exists(directory):
-            print("User directory already exists at:", directory)
-            return
-        os.makedirs(directory)
-        print("Created directory at:", directory)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+            print("Created directory at:", directory)
+        print("User directory already exists at:", directory)
 
 
 def check_env():

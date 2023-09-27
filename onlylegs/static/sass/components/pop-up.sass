@@ -38,12 +38,12 @@
         display: flex
         flex-direction: column
 
-        background-color: var(--background-200)
+        background-color: var(--background-400)
         border-radius: var(--rad)
         overflow: hidden
 
         z-index: +2
-        transition: transform 0.2s var(--animation-smooth)
+        transition: transform 0.2s var(--animation-bounce)
 
     .pop-up-header
         margin: 0 0 0.5rem 0
@@ -133,7 +133,7 @@
         .pop-up-wrapper
             transform: translate(-50%, 50%) scale(1)
 
-@media (max-width: var(--breakpoint))
+@media (max-width: 800px)
     .pop-up
         .pop-up-wrapper
             max-width: calc(100% - 0.75rem)
