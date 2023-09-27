@@ -138,8 +138,7 @@ def handle_errors():
                 render_template("error.html", error=err.code, msg=err.description),
                 err.code,
             )
-        else:
-            return str(err.code) + ": " + err.description, err.code
+        return str(err.code) + ": " + err.description, err.code
 
 
 def register_blueprints():
