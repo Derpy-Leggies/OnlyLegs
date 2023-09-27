@@ -5,6 +5,7 @@ import os
 import pathlib
 import re
 import logging
+import yaml
 from colorthief import ColorThief
 from flask import (
     Blueprint,
@@ -19,6 +20,7 @@ from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from onlylegs.extensions import db
 from onlylegs.models import Users
+from onlylegs.config import APPLICATION_ROOT
 
 
 blueprint = Blueprint("settings", __name__, url_prefix="/settings")
@@ -157,3 +159,33 @@ def account_password():
 
     flash(["Password changed! You must login now", 0])
     return redirect(url_for("auth.logout"))
+
+
+@blueprint.route("/website/style", methods=["POST"])
+@login_required
+def website_style():
+    config_file = os.path.join(APPLICATION_ROOT, "conf.yml")
+
+    website_hue = request.form.get("hue", 69, type=int)
+    website_saturation = request.form.get("saturation", 25, type=int)
+    website_rad = request.form.get("rad", "0.4rem").strip()
+    website_force_styling = request.form.get("force", False)
+
+    config = None
+    with open(config_file, "r") as file:
+        config = yaml.safe_load(file)
+
+    current_app.config["WEBSITE_CONF"]["styling"]["hue"] = website_hue
+    current_app.config["WEBSITE_CONF"]["styling"]["saturation"] = website_saturation
+    current_app.config["WEBSITE_CONF"]["styling"]["rad"] = website_rad
+    current_app.config["WEBSITE_CONF"]["styling"]["force"] = website_force_styling
+
+    config["website"]["styling"]["hue"] = website_hue
+    config["website"]["styling"]["saturation"] = website_saturation
+    config["website"]["styling"]["rad"] = website_rad
+    config["website"]["styling"]["force"] = website_force_styling
+
+    with open(config_file, "w") as file:
+        yaml.dump(config, file)
+
+    return "Website style changed", 200

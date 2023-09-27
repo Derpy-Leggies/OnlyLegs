@@ -22,12 +22,42 @@ REQUIRED_DIRS = {
 EMAIL_REGEX = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b")
 USERNAME_REGEX = re.compile(r"\b[A-Za-z0-9._%+-]+\b")
 
+config = {
+    # Version of the config file
+    "version": "0.1.7",
+    # Not really used much, but good to have for future use
+    "admin": {
+        "username": "admin",
+        "email": "admin@example.com",
+    },
+    "upload": {
+        "allowed-extensions": {
+            "jpg": "jpeg",
+            "jpeg": "jpeg",
+            "png": "png",
+            "webp": "webp",
+        },
+        # Max size in MB
+        "max-size": 69,
+        # Max images to load per page
+        "max-load": 50,
+    },
+    "website": {
+        # Website name and motto
+        # Also CSS styling, hue is the color offset for hsl
+        "name": "OnlyLegs",
+        "motto": "A gallery built for fast and simple image management!",
+        "styling": {
+            "force": False,
+            "hue": "69",
+            "saturation": "25%",
+            "rad": "0.4rem",
+        },
+    },
+}
+
 
 def check_dirs():
-    """
-    Create the user directory
-    """
-
     for directory in REQUIRED_DIRS.values():
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -36,9 +66,6 @@ def check_dirs():
 
 
 def check_env():
-    """
-    Create the .env file with default values
-    """
     if os.path.exists(os.path.join(APPLICATION_ROOT, ".env")):
         print("Environment file already exists at:", APPLICATION_ROOT)
         return
@@ -65,29 +92,22 @@ def check_env():
 
 
 def check_conf():
-    """
-    Create the YAML config file with default values
-    """
-    if os.path.exists(os.path.join(APPLICATION_ROOT, "conf.yml")):
+    config_file = os.path.join(APPLICATION_ROOT, "conf.yml")
+    if os.path.exists(config_file):
         print("Config file already exists at:", APPLICATION_ROOT)
         return
 
     cant_continue = True
     username = "admin"
-    name = "Admin"
     email = "admin@example.com"
 
     print("No config file found, please enter the following information:")
     while cant_continue:
         username = input("Admin username: ").strip()
-        name = input("Admin name: ").strip()
         email = input("Admin email: ").strip()
 
         if not username or not USERNAME_REGEX.match(username):
             print("Username is invalid!")
-            continue
-        if not name:
-            print("Name is invalid!")
             continue
         if not email or not EMAIL_REGEX.match(email):
             print("Email is invalid!")
@@ -98,34 +118,11 @@ def check_conf():
         if is_correct == "y" or not is_correct:
             cant_continue = False
 
-    yaml_conf = {
-        "admin": {
-            "name": name,
-            "username": username,
-            "email": email,
-        },
-        "upload": {
-            "allowed-extensions": {
-                "jpg": "jpeg",
-                "jpeg": "jpeg",
-                "png": "png",
-                "webp": "webp",
-            },
-            "max-size": 69,
-            "max-load": 50,
-            "rename": "GWA_{{username}}_{{time}}",
-        },
-        "website": {
-            "name": "OnlyLegs",
-            "motto": "A gallery built for fast and simple image management!",
-            "language": "en",
-        },
-    }
+    config["admin"]["username"] = username
+    config["admin"]["email"] = email
 
-    with open(
-        os.path.join(APPLICATION_ROOT, "conf.yml"), encoding="utf-8", mode="w+"
-    ) as file:
-        yaml.dump(yaml_conf, file, default_flow_style=False)
+    with open(config_file, encoding="utf-8", mode="w+") as file:
+        yaml.dump(config, file, default_flow_style=False)
 
     print(
         "####################################################",

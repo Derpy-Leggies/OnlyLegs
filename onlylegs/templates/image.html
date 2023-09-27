@@ -18,6 +18,10 @@
     </script>
 
     <style>
+        :root {
+            --background-hsl-hue: {{ image.colours.2 | hsl_hue }};
+            --background-hsl-saturation: {{ image.colours.2 | hsl_saturation }}%;
+        }
         .background::after {
             background-image: linear-gradient(to top, rgba({{ image.colours.0.0 }}, {{ image.colours.0.1 }}, {{ image.colours.0.2 }}, 0.8),
                                                       rgba({{ image.colours.1.0 }}, {{ image.colours.1.1 }}, {{ image.colours.1.2 }}, 0.2));
@@ -30,7 +34,11 @@
         <div class="banner-content">
             <h1 class="banner-header">{{ config.WEBSITE_CONF.name }}</h1>
             <div class="pill-row">
-                {% if next_url %}<div><a class="pill-item" href="{{ next_url }}"><i class="ph ph-arrow-left"></i></a></div>{% endif %}
+                <div>
+                    <a {% if next_url %}class="pill-item" href="{{ next_url }}"{% else %}class="pill-item disabled"{% endif %}>
+                        <i class="ph ph-arrow-left"></i>
+                    </a>
+                </div>
                 <div>
                     <button class="pill-item" onclick="imageFullscreen()" id="fullscreenImage"><i class="ph ph-info"></i></button>
                     <button class="pill-item" onclick="copyToClipboard(window.location.href)"><i class="ph ph-export"></i></button>
@@ -38,7 +46,11 @@
                         <button class="pill-item" onclick="imageShowOptionsPopup(this)"><i class="ph ph-list"></i></button>
                     {% endif %}
                 </div>
-                {% if prev_url %}<div><a class="pill-item" href="{{ prev_url }}"><i class="ph ph-arrow-right"></i></a></div>{% endif %}
+                <div>
+                    <a {% if prev_url %}class="pill-item" href="{{ prev_url }}"{% else %}class="pill-item disabled"{% endif %}>
+                        <i class="ph ph-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

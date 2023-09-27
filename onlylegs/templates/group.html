@@ -24,37 +24,6 @@
                 --background-hsl-hue: {{ images.0.colours.0 | hsl_hue }};
                 --background-hsl-saturation: {{ images.0.colours.0 | hsl_saturation }}%;
             }
-
-            /*
-            body {
-                color: {{ text_colour }} !important;
-            }
-
-            .navigation-item.selected {
-                color: {{ text_colour }} !important;
-            }
-
-            .banner .banner-content .banner-header,
-            .banner .banner-content .banner-info,
-            .banner .banner-content .banner-subtitle {
-                color: {{ text_colour }} !important;
-            }
-            .banner-content .link {
-                color: rgb{{ images.0.colours.0 }} !important;
-            }
-            .banner-content .link:hover {
-                color: {{ text_colour }} !important;
-            }
-
-            .banner-filter {
-                background: linear-gradient(90deg, rgb{{ images.0.colours.0 }}, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.3)) !important;
-            }
-            @media (max-width: 800px) {
-                .banner-filter {
-                    background: linear-gradient(180deg, rgba({{ images.0.colours.1.0 }}, {{ images.0.colours.1.1 }}, {{ images.0.colours.1.2 }}, 0.4), rgba({{ images.0.colours.0.0 }}, {{ images.0.colours.0.1 }}, {{ images.0.colours.0.2 }}, 0.3)) !important;
-                }
-            }
-            */
         {% endif %}
     </style>
 {% endblock %}

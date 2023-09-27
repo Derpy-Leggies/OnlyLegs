@@ -64,12 +64,11 @@
 
     &:hover
         cursor: pointer
-
         color: var(--primary)
 
-    &.disabled, &:disabled
-        color: var(--foreground-dim)
-        cursor: unset
+    &:disabled, &[disabled], &.disabled
+        color: var(--foreground-gray)
+        cursor: default
 
 .pill__critical
     color: var(--danger)

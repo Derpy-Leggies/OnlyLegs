@@ -28,10 +28,20 @@
     {% assets "scripts" %} <script type="text/javascript" src="{{ ASSET_URL }}"></script> {% endassets %}
     {% assets "styles" %} <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" defer> {% endassets %}
 
-    <style type="text/css">
-        :root{
-            --primary: {{ config.WEBSITE_CONF.primary_color | default('rgb(198, 185, 166)') }};
-        }
+    <style>
+        {% if config.WEBSITE_CONF.styling.force %}
+            :root{
+                --background-hsl-hue: {{ config.WEBSITE_CONF.styling.hue }} !important;
+                --background-hsl-saturation: {{ config.WEBSITE_CONF.styling.saturation }}% !important;
+                --rad: {{ config.WEBSITE_CONF.styling.rad }} !important;
+            }
+        {% else %}
+            :root{
+                --background-hsl-hue: {{ config.WEBSITE_CONF.styling.hue }};
+                --background-hsl-saturation: {{ config.WEBSITE_CONF.styling.saturation }}%;
+                --rad: {{ config.WEBSITE_CONF.styling.rad }};
+            }
+        {% endif %}
     </style>
 
     {% block head %}{% endblock %}

@@ -66,6 +66,36 @@
             <i class="ph ph-caret-down collapse-indicator"></i>
         </summary>
 
-        <p>Nothing here :3</p>
+        <form method="POST" action="{{ url_for('settings.website_style') }}" enctype="multipart/form-data">
+            <h3>Style</h3>
+            <input type="range" name="hue" class="input-block" placeholder="Website Hue" value="{{ config.WEBSITE_CONF.styling.hue }}"  min="0" max="360" />
+            <input type="range" name="saturation" class="input-block" placeholder="Strength of Color" value="{{ config.WEBSITE_CONF.styling.saturation }}" min="0" max="100" />
+            <input type="text" name="rad" class="input-block" placeholder="Roundy roundy" value="{{ config.WEBSITE_CONF.styling.rad }}" />
+            <input type="checkbox" name="force" class="input-block" placeholder="Force styling?" {% if config.WEBSITE_CONF.styling.force %}checked{% endif %} />
+            <button type="submit" class="btn-block">Update style</button>
+        </form>
     </details>
+
+    <footer>
+        <p>Built on coffee and love, by Fluffy</p>
+    </footer>
 {% endblock %}
+
+{% block script %}
+    <script>
+        let hue = document.querySelector('input[name=hue]');
+        let saturation = document.querySelector('input[name=saturation]');
+        let rad = document.querySelector('input[name=rad]');
+
+        hue.addEventListener('input', () => {
+            document.documentElement.style.setProperty('--background-hsl-hue', hue.value, 'important');
+        });
+        saturation.addEventListener('input', () => {
+            document.documentElement.style.setProperty('--background-hsl-saturation', saturation.value + '%', 'important');
+        });
+        rad.addEventListener('input', () => {
+            document.documentElement.style.setProperty('--rad', rad.value, 'important');
+        });
+    </script>
+{% endblock %}
+
