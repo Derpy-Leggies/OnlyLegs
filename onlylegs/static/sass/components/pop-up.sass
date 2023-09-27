@@ -7,7 +7,7 @@
 
     display: none
 
-    background-color: $bg-transparent
+    background-color: var(--background-shade)
     opacity: 0
 
     z-index: 101
@@ -38,12 +38,12 @@
         display: flex
         flex-direction: column
 
-        background-color: RGB($bg-200)
-        border-radius: $rad
+        background-color: var(--background-400)
+        border-radius: var(--rad)
         overflow: hidden
 
         z-index: +2
-        transition: transform 0.2s $animation-smooth
+        transition: transform 0.2s var(--animation-bounce)
 
     .pop-up-header
         margin: 0 0 0.5rem 0
@@ -73,7 +73,7 @@
             font-weight: 700
             text-align: left
 
-            color: RGB($fg-white)
+            color: var(--foreground-white)
         
         p
             margin: 0
@@ -84,7 +84,7 @@
             font-weight: 400
             text-align: left
 
-            color: RGB($fg-white)
+            color: var(--foreground-white)
 
             svg
                 width: 1rem
@@ -94,7 +94,7 @@
                 vertical-align: middle
 
         a, .link
-            color: RGB($primary)
+            color: var(--primary)
 
             cursor: pointer
             text-decoration: none
@@ -127,15 +127,13 @@
         justify-content: flex-end
         gap: 0.5rem
 
-        // background-color: RGB($bg-100)
-
     &.active
         opacity: 1
 
         .pop-up-wrapper
             transform: translate(-50%, 50%) scale(1)
 
-@media (max-width: $breakpoint)
+@media (max-width: 800px)
     .pop-up
         .pop-up-wrapper
             max-width: calc(100% - 0.75rem)

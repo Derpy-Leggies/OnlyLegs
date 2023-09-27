@@ -2,7 +2,7 @@
 .banner-small
     width: 100%
     position: relative
-    color: RGB($fg-white)
+    color: var(--foreground-white)
 
     .link
         padding: 0.1rem 0.3rem
@@ -10,15 +10,15 @@
         text-decoration: none
         font-weight: 500
 
-        background-color: RGB($fg-white)
-        color: RGB($fg-black)
-        border-radius: $rad-inner
+        background-color: var(--foreground-white)
+        color: var(--foreground-black)
+        border-radius: calc(var(--radius) / 2)
 
         cursor: pointer
 
         &:hover
-            background-color: RGB($fg-black)
-            color: RGB($fg-white)
+            background-color: var(--foreground-black)
+            color: var(--foreground-white)
 
 .banner
     height: 30rem
@@ -26,7 +26,8 @@
 
     img
         position: absolute
-        inset: 0
+        top: 0
+        left: 0
 
         width: 100%
         height: 100%
@@ -43,7 +44,7 @@
         width: 100%
         height: 100%
 
-        background: linear-gradient(to right, RGB($bg-100), transparent)
+        background: linear-gradient(to right, var(--background-100), transparent 80%, var(--background-100) 100%)
 
         z-index: +1
 
@@ -79,7 +80,7 @@
             font-size: 6.9rem
             font-weight: 700
 
-            color: RGB($primary)
+            color: var(--primary)
 
         .banner-info
             grid-area: info
@@ -104,8 +105,8 @@
             width: 6.9rem
             height: 6.9rem
 
-            background-color: RGB($primary)
-            border-radius: $rad
+            background-color: var(--primary)
+            border-radius: var(--rad)
             overflow: hidden
 
 .banner-small
@@ -144,7 +145,7 @@
             font-weight: 700
             font-size: 1.5rem
 
-            color: RGB($primary)
+            color: var(--primary)
 
         .banner-info
             margin-right: 0.6rem
@@ -156,7 +157,7 @@
             margin-left: auto
             width: auto
 
-@media (max-width: $breakpoint)
+@media (max-width: 800px)
     .banner,
     .banner-small
         &::after
@@ -168,7 +169,7 @@
         max-height: 30vh
 
         .banner-filter
-            background: linear-gradient(to bottom, RGB($bg-100), transparent)
+            background: linear-gradient(to top, var(--background-100), transparent)
 
         .banner-content
             padding: 0.5rem
@@ -192,7 +193,7 @@
                 display: none
 
             .pill-row
-                margin-top: 0rem
+                margin-top: 0
 
             .banner-picture
                 margin: 0 auto

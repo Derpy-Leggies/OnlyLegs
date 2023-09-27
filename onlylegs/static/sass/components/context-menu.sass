@@ -25,13 +25,13 @@
     align-items: flex-start
     gap: 0.25rem
 
-    background-color: RGB($bg-300)
-    border: 1px solid RGB($bg-200)
+    background-color: var(--background-300)
+    border: 1px solid var(--background-200)
     border-radius: 6px
 
     overflow: hidden
 
-    transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out
+    transition: transform 0.35s var(--animation-bounce), opacity 0.35s var(--animation-bounce)
     transform-origin: center center
     opacity: 0.5
     transform: scale(0, 0)
@@ -46,7 +46,7 @@
     text-align: center
     font-size: 1.2rem
     font-weight: 400
-    color: RGB($fg-white)
+    color: var(--foreground-white)
 
 .contextMenuItem
     margin: 0
@@ -61,22 +61,22 @@
     align-items: center
     gap: 0.5rem
 
-    background-color: RGB($bg-300)
-    color: RGB($fg-white)
+    background-color: var(--background-300)
+    color: var(--foreground-white)
     border: none
     border-radius: 3px
 
     cursor: pointer
 .contextMenuItem:hover
-    background-color: RGB($bg-200)
+    background-color: var(--background-200)
 .contextMenuItem__critical
-    color: RGB($critical)
+    color: var(--danger)
 .contextMenuItem__warning
-    color: RGB($warning)
+    color: var(--warning)
 .contextMenuItem__success
-    color: RGB($success)
+    color: var(--success)
 .contextMenuItem__info
-    color: RGB($primary)
+    color: var(--primary)
 
 .contextMenuText
     margin: 0
@@ -104,7 +104,7 @@
     height: 1px
 
     border: none
-    background-color: RGB($bg-200)
+    background-color: var(--background-200)
 
 .contextMenu__show
     opacity: 1

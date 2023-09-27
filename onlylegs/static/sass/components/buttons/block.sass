@@ -1,14 +1,3 @@
-@mixin btn-block($color)
-    background-color: RGBA($color, 0.1)
-    color: RGB($color)
-    // box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($white, 0.2)
-
-    &:hover, &:focus-visible
-        background-color: RGBA($color, 0.15)
-        color: RGB($color)
-        // box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($color, 0.2)
-
-    
 .btn-block
     padding: 0.4rem 0.7rem
 
@@ -26,19 +15,17 @@
     font-weight: 400
     text-align: center
 
-    background-color: RGBA($white, 0.1)
-    color: RGB($white)
+    background-color: var(--white-transparent)
+    color: var(--white)
     border: none
-    border-radius: $rad-inner
-    // box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($white, 0.2)
+    border-radius: calc(var(--rad) / 2)
     outline: none
 
     cursor: pointer
     transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, box-shadow 0.15s ease-in-out
 
     &:hover, &:focus-visible
-        background-color: RGBA($white, 0.2)
-        // box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($white, 0.3)
+        background-color: var(--white-transparent)
 
     &.transparent
         background-color: transparent
@@ -47,20 +34,50 @@
             text-decoration: underline
 
     &.primary
-        @include btn-block($primary)
-    &.critical
-        @include btn-block($critical)
-    &.warning
-        @include btn-block($warning)
+        background-color: var(--primary-transparent)
+        color: var(--primary)
+
+        &:hover, &:focus-visible
+            background-color: var(--primary)
+            color: var(--black)
     &.success
-        @include btn-block($success)
+        background-color: var(--success-transparent)
+        color: var(--success)
+
+        &:hover, &:focus-visible
+            background-color: var(--success)
+            color: var(--black)
+    &.warning
+        background-color: var(--warning-transparent)
+        color: var(--warning)
+
+        &:hover, &:focus-visible
+            background-color: var(--warning)
+            color: var(--black)
+    &.critical
+        background-color: var(--danger-transparent)
+        color: var(--danger)
+
+        &:hover, &:focus-visible
+            background-color: var(--danger)
+            color: var(--black)
     &.info
-        @include btn-block($info)
+        background-color: var(--info-transparent)
+        color: var(--info)
+
+        &:hover, &:focus-visible
+            background-color: var(--info)
+            color: var(--black)
     &.black
-        @include btn-block($black)
+        background-color: var(--black-transparent)
+        color: var(--white)
+
+        &:hover, &:focus-visible
+            background-color: var(--black)
+            color: var(--white)
 
     &.disabled, &:disabled
-        color: RGB($fg-dim)
+        color: var(--foreground-gray)
         cursor: unset
 
 .input-checkbox
@@ -77,7 +94,7 @@
         font-weight: 400
         text-align: left
         
-        color: RGB($fg-white)
+        color: var(--foreground-white)
 
 .input-block
     padding: 0.4rem 0.7rem
@@ -95,28 +112,32 @@
     font-weight: 400
     text-align: left
 
-    background-color: RGBA($white, 0.1)
-    color: RGB($white)
+    background-color: var(--white-transparent)
+    color: var(--white)
     border: none
-    border-bottom: 3px solid RGBA($white, 0.1)
-    border-radius: $rad-inner
-    // box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($white, 0.2)
+    border-bottom: 3px solid var(--white-transparent)
+    border-radius: calc(var(--rad) / 2)
     outline: none
 
     cursor: pointer
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
 
     &:not(:focus):not([value=""]):not(:placeholder-shown)
-        border-color: RGBA($white, 0.3)
+        border-color: var(--white-transparent)
 
     &:hover
-        border-color: RGBA($white, 0.3)
+        border-color: var(--white-transparent)
 
     &:focus
-        border-color: RGB($primary)
+        border-color: var(--primary)
 
     &.black
-        @include btn-block($black)
+        background-color: var(--black-transparent)
+        color: var(--white)
+
+        &:hover, &:focus-visible
+            background-color: var(--black)
+            color: var(--white)
 
 .fileDrop-block
     padding: 1rem 1.25rem
@@ -136,11 +157,10 @@
     font-weight: 400
     text-align: center
 
-    background-color: RGBA($white, 0.1)
-    color: RGB($white)
+    background-color: var(--white-transparent)
+    color: var(--white)
     border: none
-    border-radius: $rad-inner
-    // box-shadow: 0 1px 0 RGBA($black, 0.2), 0 -1px 0 RGBA($white, 0.2)
+    border-radius: calc(var(--rad) / 2)
     outline: none
 
     cursor: pointer
@@ -164,24 +184,21 @@
         overflow: hidden
 
     &:hover, &:focus-visible
-        background-color: RGBA($white, 0.2)
-        color: RGB($white)
-        // box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($white, 0.3)
+        background-color: var(--white-transparent)
+        color: var(--white)
 
     &.active
-        background-color: RGBA($primary, 0.2)
-        color: RGB($primary)
-        // box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($primary, 0.3)
+        background-color: var(--primary-transparent)
+        color: var(--primary)
 
     &.edging
-        background-color: RGBA($white, 0.2)
-        color: RGB($white)
-        // box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($white, 0.3)
+        background-color: var(--white-transparent)
+        color: var(--white)
 
         input
-            display: none // So it doesnt get in the way of the drop as that breaks things
+            // So it doesnt get in the way of the drop as that breaks things
+            display: none
 
     &.error
-        background-color: RGBA($critical, 0.2)
-        color: RGB($critical)
-        // box-shadow: 0 1px 0 RGBA($black, 0.3), 0 -1px 0 RGBA($critical, 0.3)
+        background-color: var(--danger)
+        color: var(--black)

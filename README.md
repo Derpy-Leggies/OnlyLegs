@@ -1,3 +1,7 @@
+> **IMPORTANT**  
+> This project is maintained irregularly and is still in rapid development.
+> Things maybe here now, but not again in a few weeks
+
 <div align="center">
     <img src=".github/images/OnlyLegs.png" width="200" height="200"/>
     <div id="user-content-toc">

@@ -64,7 +64,7 @@ class Exif(db.Model):
     picture_id = db.Column(db.Integer, db.ForeignKey("pictures.id"))
 
     key = db.Column(db.String, nullable=False)
-    value = db.Column(db.String, nullable=False)
+    value = db.Column(db.PickleType, nullable=False)
 
 
 class Albums(db.Model):

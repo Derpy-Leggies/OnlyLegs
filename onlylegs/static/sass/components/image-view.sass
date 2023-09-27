@@ -1,11 +1,11 @@
 .info-container
-    padding: 0.5rem 0 0 0.5rem
+    padding: 0.5rem 0 0.5rem 0.5rem
     width: 27rem
     position: absolute
     top: 0
     left: 0
     bottom: 0
-    background-image: linear-gradient(90deg, $bg-transparent, transparent)
+    background-image: linear-gradient(90deg, var(--background-shade), transparent)
     overflow-y: auto
     transition: left 0.3s cubic-bezier(0.76, 0, 0.17, 1)
     z-index: 2
@@ -18,7 +18,7 @@
         left: -27rem
 @media (max-width: 1100px)
     .info-container
-        padding: 0 0.5rem 0 0.5rem
+        padding: 0
         width: 100%
         position: relative
         background: none
@@ -32,9 +32,9 @@ details
     padding: 0.5rem
     display: flex
     flex-direction: column
-    background-color: RGB($bg-300)
-    color: RGB($fg-white)
-    border-radius: $rad
+    background-color: var(--background-300)
+    color: var(--foreground-white)
+    border-radius: var(--rad)
     overflow: hidden
 
     summary
@@ -44,7 +44,7 @@ details
         justify-content: flex-start
         align-items: center
         position: relative
-        color: RGB($primary)
+        color: var(--primary)
 
         > i
             margin-right: 0
@@ -57,13 +57,6 @@ details
             margin: 0 0.5rem
             font-size: 1.1rem
             font-weight: 500
-
-    &[open]
-        summary
-            margin-bottom: 0.5rem
-
-            > i.collapse-indicator
-                transform: rotate(90deg)
 
     p
         margin: 0
@@ -79,7 +72,7 @@ details
         margin: 0
         padding: 0
 
-        color: RGB($primary)
+        color: var(--primary)
 
         cursor: pointer
         text-decoration: none
@@ -91,7 +84,7 @@ details
         width: 1.1rem
         height: 1.1rem
 
-        border-radius: $rad-inner
+        border-radius: calc(var(--rad) / 2)
 
         object-fit: cover
 
@@ -137,6 +130,16 @@ details
         tr:last-of-type td
             padding-bottom: 0
 
+    &[open]
+        summary
+            margin-bottom: 0.5rem
+
+            > i.collapse-indicator
+                transform: rotate(90deg)
+
+    &:last-of-type
+        margin-bottom: 0
+
 .img-colours
     width: 100%
 
@@ -154,7 +157,7 @@ details
         justify-content: center
         align-items: center
 
-        border-radius: $rad-inner
+        border-radius: calc(var(--rad) / 2)
         border: none
 
         i
@@ -197,7 +200,9 @@ details
             max-height: 100%
             object-fit: contain
             object-position: center
-            border-radius: $rad
+            border-radius: var(--rad)
+
+            transition: border-radius 0.3s cubic-bezier(0.76, 0, 0.17, 1)
 
     &.collapsed
         padding: 0
@@ -207,6 +212,7 @@ details
             border-radius: 0
 @media (max-width: 1100px)
     .image-container
+        padding: 0 0 0.5rem 0
         position: relative
         left: 0
 
@@ -218,17 +224,17 @@ details
                 max-height: 69vh
 
         &.collapsed
-            padding: 0.5rem
+            padding: 0 0 0.5rem 0
             left: 0
 
             picture img
-                border-radius: $rad
+                border-radius: var(--rad)
 
 .background
     position: absolute
     inset: 0
-    background-color: RGB($bg-300)
-    background-image: linear-gradient(to right, RGB($bg-400) 15%, RGB($bg-200) 35%, RGB($bg-400) 50%)
+    background-color: var(--background-300)
+    background-image: linear-gradient(to right, var(--background-400) 15%, var(--background-200) 35%, var(--background-400) 50%)
     background-size: 1000px 640px
     animation: imgLoading 1.8s linear infinite forwards
     user-select: none
@@ -240,7 +246,7 @@ details
         inset: 0
         width: 100%
         height: 100%
-        background-color: RGB($fg-white)
+        background-color: var(--foreground-white)
         filter: blur(3rem) saturate(1.2) brightness(0.7)
         transform: scale(1.1)
         object-fit: cover

@@ -16,9 +16,8 @@
 
         display: flex
 
-        background-color: RGB($bg-200)
-        border-radius: $rad
-        // box-shadow: 0 1px 0 RGB($bg-100), 0 -1px 0 RGB($bg-300)
+        background-color: var(--background-200)
+        border-radius: var(--rad)
 
 .pill-text
     margin: 0
@@ -37,9 +36,9 @@
     font-size: 1rem
     font-weight: 400
 
-    background-color: RGB($bg-200)
-    color: RGB($fg-white)
-    border-radius: $rad
+    background-color: var(--background-200)
+    color: var(--foreground-white)
+    border-radius: var(--rad)
 
 .pill-item
     margin: 0
@@ -58,42 +57,41 @@
 
     border: none
     background-color: transparent
-    color: RGB($fg-white)
+    color: var(--foreground-white)
 
     i
         font-size: 1.25rem
 
     &:hover
         cursor: pointer
+        color: var(--primary)
 
-        color: RGB($primary)
-
-    &.disabled, &:disabled
-        color: RGB($fg-dim)
-        cursor: unset
+    &:disabled, &[disabled], &.disabled
+        color: var(--foreground-gray)
+        cursor: default
 
 .pill__critical
-    color: RGB($critical)
+    color: var(--danger)
 
     span
-        background: RGB($critical)
-        color: RGB($fg-white)
+        background: var(--danger)
+        color: var(--foreground-white)
 
         i
-            color: RGB($critical)
+            color: var(--danger)
 
     &:hover
-        color: RGB($fg-white)
+        color: var(--foreground-white)
 
 .pill__info
-    color: RGB($info)
+    color: var(--info)
 
     span
-        color: RGB($info)
+        color: var(--info)
 
     &:hover
-        color: RGB($fg-white)
+        color: var(--foreground-white)
 
-@media (max-width: $breakpoint)
+@media (max-width: var(--breakpoint))
     .tool-tip
         display: none

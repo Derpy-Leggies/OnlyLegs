@@ -1,23 +1,9 @@
 @keyframes notificationTimeout
     0%
-        left: -100%
-        height: 3px
-    90%
-        left: 0%
-        height: 3px
-    95%
-        left: 0%
-        height: 0
+        width: 0
     100%
-        left: 0%
-        height: 0
-    
-@mixin notification($color)
-    color: RGB($color)
+        width: 100%
 
-    &::after
-        background-color: RGB($color)
-    
 .notifications
     margin: 0
     padding: 0
@@ -46,9 +32,9 @@
 
     position: relative
 
-    background-color: RGB($bg-300)
-    border-radius: $rad-inner
-    color: RGB($fg-white)
+    background-color: var(--background-400)
+    border-radius: calc(var(--rad) / 2)
+    color: var(--foreground-white)
     opacity: 0
     transform: scale(0.8)
 
@@ -60,26 +46,34 @@
     &::after
         content: ""
 
-        width: 100%
+        width: 0
         height: 3px
 
         position: absolute
-        bottom: 0px
-        left: 0px
+        bottom: 0
+        left: 0
 
-        background-color: RGB($fg-white)
+        background-color: var(--foreground-white)
 
         z-index: +2
-        animation: notificationTimeout 5.1s linear
+        animation: notificationTimeout 5.1s ease-out forwards
 
     &.success
-        @include notification($success)
+        color: var(--success)
+        &::after
+            background-color: var(--success)
     &.warning
-        @include notification($warning)
+        color: var(--warning)
+        &::after
+            background-color: var(--warning)
     &.critical
-        @include notification($critical)
+        color: var(--danger)
+        &::after
+            background-color: var(--danger)
     &.info
-        @include notification($info)
+        color: var(--info)
+        &::after
+            background-color: var(--info)
 
     &.show
         opacity: 1
@@ -89,7 +83,7 @@
         margin: 0
         max-height: 0
         opacity: 0
-        transform: translateX(100%)
+        transform: translateY(1rem)
         transition: all 0.4s ease-in-out, max-height 0.2s ease-in-out
 
 .sniffle__notification-icon
@@ -103,7 +97,7 @@
     justify-content: center
     align-items: center
 
-    background-color: RGB($bg-200)
+    background-color: var(--background-300)
 
     i
         font-size: 1.25rem
@@ -125,7 +119,7 @@
     line-height: 1
     text-align: left
 
-@media (max-width: $breakpoint)
+@media (max-width: 800px)
     .notifications
         bottom: 3.8rem
         width: calc(100vw - 0.6rem)
@@ -133,10 +127,6 @@
 
     .sniffle__notification
         width: 100%
-
-        &.hide
-            opacity: 0
-            transform: translateY(1rem)
     
     .sniffle__notification-time
         width: 100%

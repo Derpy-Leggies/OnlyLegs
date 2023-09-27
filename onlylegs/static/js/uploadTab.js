@@ -141,41 +141,14 @@ function clearUpload() {
 }
 
 
-// function createJob(file) {
-//     jobContainer = document.createElement("div");
-//     jobContainer.classList.add("job");
-
-//     jobStatus = document.createElement("span");
-//     jobStatus.classList.add("job__status");
-//     jobStatus.innerHTML = "Uploading...";
-
-//     jobProgress = document.createElement("span");
-//     jobProgress.classList.add("progress");
-
-//     jobImg = document.createElement("img");
-//     jobImg.src = URL.createObjectURL(file);
-
-//     jobImgFilter = document.createElement("span");
-//     jobImgFilter.classList.add("img-filter");
-
-//     jobContainer.appendChild(jobStatus);
-//     jobContainer.appendChild(jobProgress);
-//     jobContainer.appendChild(jobImg);
-//     jobContainer.appendChild(jobImgFilter);
-    
-//     return jobContainer;
-// }
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // Function to upload images
     const uploadTab = document.querySelector(".upload-panel");
 
-    if (!uploadTab) { return; } // If upload tab doesn't exist, don't run this code :3
+    if (!uploadTab) { return }
 
     const uploadTabDrag = uploadTab.querySelector("#dragIndicator");
     const uploadForm = uploadTab.querySelector('#uploadForm');
-    // let jobList = document.querySelector(".upload-jobs");
     
     const fileDrop = uploadForm.querySelector('.fileDrop-block');
     const fileDropTitle = fileDrop.querySelector('.status');
@@ -227,54 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append("alt", fileAlt.value);
         formData.append("description", fileDescription.value);
         formData.append("tags", fileTags.value);
-
-        // jobItem = createJob(fileUpload.files[0]);
-        // jobStatus = jobItem.querySelector(".job__status");
-
-        // Upload the information
-        // $.ajax({
-        //     url: '/api/upload',
-        //     type: 'post',
-        //     data: formData,
-        //     contentType: false,
-        //     processData: false,
-        //     beforeSend: function () {
-        //         // Add job to list
-        //         jobList.appendChild(jobItem);
-        //     },
-        //     success: function (response) {
-        //         jobItem.classList.add("success");
-        //         jobStatus.innerHTML = "Uploaded successfully";
-        //         if (!document.querySelector(".upload-panel").classList.contains("open")) {
-        //             addNotification("Image uploaded successfully", 1);
-        //         }
-        //     },
-        //     error: function (response) {
-        //         jobItem.classList.add("critical");
-        //         switch (response.status) {
-        //             case 500:
-        //                 jobStatus.innerHTML = "Server exploded, F's in chat";
-        //                 break;
-        //             case 400:
-        //             case 404:
-        //                 jobStatus.innerHTML = "Error uploading. Blame yourself";
-        //                 break;
-        //             case 403:
-        //                 jobStatus.innerHTML = "None but devils play past here...";
-        //                 break;
-        //             case 413:
-        //                 jobStatus.innerHTML = "File too large!!!!!!";
-        //                 break;
-        //             default:
-        //                 jobStatus.innerHTML = "Error uploading file, blame someone";
-        //                 break;
-        //         }
-        //         if (!document.querySelector(".upload-panel").classList.contains("open")) {
-        //             addNotification("Error uploading file", 2);
-        //         }
-        //     },
-        // });
-
 
         fetch('/api/media/upload', {
             method: 'POST',

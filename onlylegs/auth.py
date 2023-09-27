@@ -105,5 +105,5 @@ def logout():
     Clear the current session, including the stored user id
     """
     logout_user()
-    flash(["Goodbye!!!", "4"])
+    flash("Goodbye!!!", "4")
     return redirect(url_for("gallery.index"))

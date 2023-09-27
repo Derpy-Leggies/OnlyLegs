@@ -16,50 +16,86 @@
 {% endblock %}
 
 {% block content %}
-    <div class="info-tab" id="profileSettings" style="margin: 0.5rem 0.5rem 0 0.5rem">
-        <div class="info-header">
-            <i class="ph ph-info"></i>
-            <h2>Profile Settings</h2>
-            <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
-        </div>
-        <div class="info-table">
-            <form method="POST" action="{{ url_for('api.account_picture', user_id=current_user.id) }}" enctype="multipart/form-data">
-                <h3>Profile Picture</h3>
-                <input type="file" name="file" tab-index="-1"/>
-                <input type="submit" value="Upload" class="btn-block">
-            </form>
-            <form method="POST" action="{{ url_for('api.account_username', user_id=current_user.id) }}" enctype="multipart/form-data">
-                <h3>Username</h3>
-                <input type="text" name="name" class="input-block" value="{{ current_user.username }}" />
-                <input type="submit" value="Upload" class="btn-block"/>
-            </form>
-        </div>
-    </div>
+    <details open>
+        <summary>
+            <i class="ph ph-info"></i><h2>Profile</h2><span style="width: 100%"></span>
+            <i class="ph ph-caret-down collapse-indicator"></i>
+        </summary>
 
-    <div class="info-tab" id="profileSettings" style="margin: 0.5rem 0.5rem 0 0.5rem">
-        <div class="info-header">
-            <i class="ph ph-info"></i>
-            <h2>Account Settings</h2>
-            <button class="collapse-indicator"><i class="ph ph-caret-down"></i></button>
-        </div>
-        <div class="info-table">
-            <form method="POST" action="" enctype="multipart/form-data">
-                <h3>Email</h3>
-                <input type="text" name="email" class="input-block" value="{{ current_user.email }}" />
-                <input type="submit" value="Upload" class="btn-block"/>
-            </form>
-        </div>
-    </div>
+        <form method="POST" action="{{ url_for('settings.account_picture') }}" enctype="multipart/form-data">
+            <h3>Profile Picture</h3>
+            <input type="file" name="file" tab-index="-1"/>
+            <button type="submit" class="btn-block">Change Profile Picture</button>
+        </form>
+        <form method="POST" action="{{ url_for('settings.account_banner') }}" enctype="multipart/form-data">
+            <h3>Profile Banner</h3>
+            <input type="file" name="file" tab-index="-1"/>
+            <button type="submit" class="btn-block">Change Profile Banner</button>
+        </form>
+        <form method="POST" action="{{ url_for('settings.account_username') }}" enctype="multipart/form-data">
+            <h3>Username</h3>
+            <input type="text" name="name" class="input-block" value="{{ current_user.username }}" />
+            <button type="submit" class="btn-block">Change Username</button>
+        </form>
+    </details>
+
+    <details open>
+        <summary>
+            <i class="ph ph-info"></i><h2>Account</h2><span style="width: 100%"></span>
+            <i class="ph ph-caret-down collapse-indicator"></i>
+        </summary>
+
+        <form method="POST" action="{{ url_for('settings.account_email') }}" enctype="multipart/form-data">
+            <h3>Email</h3>
+            <input type="text" name="email" class="input-block" value="{{ current_user.email }}" />
+            <input type="password" name="current" class="input-block" placeholder="Current Password" />
+            <button type="submit" class="btn-block">Change Email</button>
+        </form>
+        <form method="POST" action="{{ url_for('settings.account_password') }}" enctype="multipart/form-data">
+            <h3>Password</h3>
+            <input type="password" name="current" class="input-block" placeholder="Current Password" />
+            <input type="password" name="password" class="input-block" placeholder="New Password" />
+            <input type="password" name="confirm" class="input-block" placeholder="Confirm Password" />
+            <button type="submit" class="btn-block">Change Password</button>
+        </form>
+    </details>
+
+    <details open>
+        <summary>
+            <i class="ph ph-info"></i><h2>Server</h2><span style="width: 100%"></span>
+            <i class="ph ph-caret-down collapse-indicator"></i>
+        </summary>
+
+        <form method="POST" action="{{ url_for('settings.website_style') }}" enctype="multipart/form-data">
+            <h3>Style</h3>
+            <input type="range" name="hue" class="input-block" placeholder="Website Hue" value="{{ config.WEBSITE_CONF.styling.hue }}"  min="0" max="360" />
+            <input type="range" name="saturation" class="input-block" placeholder="Strength of Color" value="{{ config.WEBSITE_CONF.styling.saturation }}" min="0" max="100" />
+            <input type="text" name="rad" class="input-block" placeholder="Roundy roundy" value="{{ config.WEBSITE_CONF.styling.rad }}" />
+            <input type="checkbox" name="force" class="input-block" placeholder="Force styling?" {% if config.WEBSITE_CONF.styling.force %}checked{% endif %} />
+            <button type="submit" class="btn-block">Update style</button>
+        </form>
+    </details>
+
+    <footer>
+        <p>Built on coffee and love, by Fluffy</p>
+    </footer>
 {% endblock %}
 
 {% block script %}
-    <script type="text/javascript">
-        let infoTab = document.querySelectorAll('.info-tab');
+    <script>
+        let hue = document.querySelector('input[name=hue]');
+        let saturation = document.querySelector('input[name=saturation]');
+        let rad = document.querySelector('input[name=rad]');
 
-        for (let i = 0; i < infoTab.length; i++) {
-            infoTab[i].querySelector('.collapse-indicator').addEventListener('click', function() {
-                infoTab[i].classList.toggle('collapsed');
-            });
-        }
+        hue.addEventListener('input', () => {
+            document.documentElement.style.setProperty('--background-hsl-hue', hue.value, 'important');
+        });
+        saturation.addEventListener('input', () => {
+            document.documentElement.style.setProperty('--background-hsl-saturation', saturation.value + '%', 'important');
+        });
+        rad.addEventListener('input', () => {
+            document.documentElement.style.setProperty('--rad', rad.value, 'important');
+        });
     </script>
 {% endblock %}
+
